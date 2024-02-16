@@ -18,6 +18,7 @@ namespace RandomVideoPlayerV3
         public string tempLastFolder { get; set; }
         public bool sortCreationDate { get; set; } = true;
         public bool loopPlayer { get; set; } = true;
+        public bool timeCodeServer { get; set; } = false;
         public StringCollection favoriteCollection { get; set; } = new System.Collections.Specialized.StringCollection();
         public StringCollection customListConfig { get; set; } = new System.Collections.Specialized.StringCollection();
 

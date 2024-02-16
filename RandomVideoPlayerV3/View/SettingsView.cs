@@ -38,6 +38,7 @@ namespace RandomVideoPlayerV3.View
             tbListfolderPath.Text = pH.FolderList;
             cbDeleteToggle.Checked = sH.DeleteFull;
             cbLoopPlayer.Checked = sH.LoopPlayer;
+            cbtimeCodeServer.Checked = sH.TimeCodeServer;
 
 
             if (sH.CreationDate)
@@ -88,12 +89,15 @@ namespace RandomVideoPlayerV3.View
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.OK;
+
             pH.DefaultFolder = tbDefaultPath.Text;
             pH.RemoveFolder = tbRemovalPath.Text;
             pH.FolderList = tbListfolderPath.Text;
             fR.SaveLastSize = cbRemembersize.Checked;
             sH.DeleteFull = cbDeleteToggle.Checked;
             sH.LoopPlayer = cbLoopPlayer.Checked;
+            sH.TimeCodeServer = cbtimeCodeServer.Checked;
 
             if (rbCreationDate.Checked)
             {
@@ -114,6 +118,7 @@ namespace RandomVideoPlayerV3.View
             toolTipInfo.SetToolTip(btnClose, "Close without saving");
             toolTipInfo.SetToolTip(cbRemembersize, "Saves current window size for next startup");
             toolTipInfo.SetToolTip(cbDeleteToggle, "Choose whether to delete files completely or move them to chosen folder when using the delete button from the player");
+            toolTipInfo.SetToolTip(cbtimeCodeServer, "Activate timecode server to synchronize with MultiFunPlayer by choosing MPC-HC as the target there");
         }
 
         #region WndProc Code for clean style of the Form and regaining usabality

@@ -114,6 +114,20 @@ namespace RandomVideoPlayerV3.Model
                 _settingsInstance.Save();
             }
         }
-
+        /// <value>Defines whether the timecode server should be started</value> 
+        public bool TimeCodeServer
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.timeCodeServer;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.timeCodeServer = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }

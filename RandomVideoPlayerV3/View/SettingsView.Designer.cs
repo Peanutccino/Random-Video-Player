@@ -53,6 +53,7 @@
             btnSave = new FontAwesome.Sharp.IconButton();
             fbDialog = new FolderBrowserDialog();
             toolTipInfo = new ToolTip(components);
+            cbtimeCodeServer = new CheckBox();
             panelTop.SuspendLayout();
             panelBody.SuspendLayout();
             groupBox4.SuspendLayout();
@@ -122,6 +123,7 @@
             // 
             // groupBox4
             // 
+            groupBox4.Controls.Add(cbtimeCodeServer);
             groupBox4.Controls.Add(cbLoopPlayer);
             groupBox4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
             groupBox4.Location = new Point(3, 341);
@@ -346,6 +348,16 @@
             btnSave.UseVisualStyleBackColor = false;
             btnSave.Click += btnSave_Click;
             // 
+            // cbtimeCodeServer
+            // 
+            cbtimeCodeServer.AutoSize = true;
+            cbtimeCodeServer.Location = new Point(168, 22);
+            cbtimeCodeServer.Name = "cbtimeCodeServer";
+            cbtimeCodeServer.Size = new Size(115, 19);
+            cbtimeCodeServer.TabIndex = 1;
+            cbtimeCodeServer.Text = "Timecode Server";
+            cbtimeCodeServer.UseVisualStyleBackColor = true;
+            // 
             // SettingsView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -401,5 +413,6 @@
         private RadioButton rbCreationDate;
         private GroupBox groupBox4;
         private CheckBox cbLoopPlayer;
+        private CheckBox cbtimeCodeServer;
     }
 }

@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using Mpv.NET.Player;
+using RandomVideoPlayer.Model;
 using RandomVideoPlayerV3.Functions;
 using RandomVideoPlayerV3.Model;
 using RandomVideoPlayerV3.View;
@@ -11,6 +12,7 @@ namespace RandomVideoPlayerV3
     public partial class MainForm : Form
     {
         private MpvPlayer playerMPV;
+        private WebServer tcServer;
 
         //Initiate Classes
         private SettingsHandler sH = new SettingsHandler();
@@ -40,7 +42,12 @@ namespace RandomVideoPlayerV3
             }
             //Initialize Player Element
             playerMPV = new MpvPlayer(panelPlayerMPV.Handle) { Loop = sH.LoopPlayer, Volume = 50, KeepOpen = KeepOpen.Yes };
+            tcServer = new WebServer();
 
+            if (sH.TimeCodeServer)
+            {
+                tcServer.Start();
+            }
 
             //Set up MouseWheel Controlevents
             panelPlayerMPV.MouseWheel += new MouseEventHandler(panelPlayerMPV_MouseWheel);
@@ -196,7 +203,18 @@ namespace RandomVideoPlayerV3
             {
                 svForm.Location = new Point(this.Bounds.Location.X + (this.Bounds.Width / 2) - svForm.Width / 2, this.Bounds.Location.Y + (this.Bounds.Height / 2) - svForm.Height / 2);
             };
-            svForm.ShowDialog();
+            DialogResult result = svForm.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (sH.TimeCodeServer)
+                {
+                    tcServer.Start();
+                }
+                else
+                {
+                    tcServer.Stop();
+                }
+            }
             playerMPV.Loop = sH.LoopPlayer; //Updaze Player behavior
         }
 
@@ -269,7 +287,7 @@ namespace RandomVideoPlayerV3
         {
             try
             {
-                if (playerMPV.IsMediaLoaded && !playerMPV.IsPausedForCache)
+                if (playerMPV.IsMediaLoaded && !playerMPV.IsPausedForCache && sH.InitPlay)
                 {
                     var videoDurationSec = 100;
                     if (playerMPV.Duration.TotalSeconds > 0)
@@ -289,6 +307,12 @@ namespace RandomVideoPlayerV3
                     TimeSpan _totalSpan = TimeSpan.FromSeconds(videoDurationSec);
                     TimeSpan _currentSpan = TimeSpan.FromSeconds(videoCurrentPosSec);
                     lblDurationInfo.Text = $"{_currentSpan:hh\\:mm\\:ss} / {_totalSpan:hh\\:mm\\:ss}";
+
+                    int positionMS = (int)playerMPV.Position.TotalMilliseconds;
+                    int durationMS = (int)playerMPV.Duration.TotalMilliseconds;
+
+                    tcServer.position = positionMS.ToString();
+                    tcServer.duration = durationMS.ToString();
 
                     if (_currentSpan.TotalMilliseconds >= (_totalSpan.TotalMilliseconds - 200) && !sH.LoopPlayer)
                     {
@@ -473,6 +497,9 @@ namespace RandomVideoPlayerV3
                 sH.IsPlaying = false;
 
                 playerPause();
+
+                tcServer.filepath = videoFile;
+                tcServer.state = "2";
             }
             else
             {
@@ -515,6 +542,9 @@ namespace RandomVideoPlayerV3
                 sH.IsPlaying = false;
 
                 playerPause();
+
+                tcServer.filepath = videoFile;
+                tcServer.state = "2";
             }
             else
             {
@@ -531,6 +561,8 @@ namespace RandomVideoPlayerV3
                 sH.IsPlaying = false;
                 btnPlay.IconChar = FontAwesome.Sharp.IconChar.Play;
                 toolTipUI.SetToolTip(btnPlay, "Start playing from selected source");
+
+                tcServer.state = "1";
             }
             else
             {
@@ -538,6 +570,8 @@ namespace RandomVideoPlayerV3
                 sH.IsPlaying = true;
                 btnPlay.IconChar = FontAwesome.Sharp.IconChar.Pause;
                 toolTipUI.SetToolTip(btnPlay, "Pause playback");
+
+                tcServer.state = "2";
             }
         }
         private void panelPlayerMPV_MouseWheel(object sender, MouseEventArgs e) //Move through video by Scrolling
@@ -703,6 +737,7 @@ namespace RandomVideoPlayerV3
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            tcServer.Stop();
             fR.FormSize = fR.TempSize; //Save last known form size to property
             pH.TempRecentFolder = null;
         }

@@ -21,6 +21,7 @@
   <ItemGroup>
     <Reference Include="Mpv.NET">
       <HintPath>E:\Mpv.NET-lib--master\src\Mpv.NET\bin\Release\netstandard2.0\Mpv.NET.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
 
@@ -40,16 +41,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="lib\libmpv-2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\RVP_BlackBG.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\RVP_IconSimple.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="lib\" />
   </ItemGroup>
 
 </Project>
