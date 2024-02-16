@@ -15,19 +15,20 @@ My goal was to create a good looking, fast and efficient way to play random vide
 * Hotkeys and Mousecontrols for quick and easy control of the player
 
 ## Prerequisites
+
 The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libmpv-2.dll' instead of the outdated mpv-1.dll. (The project is sadly abandoned)
 1. Download 'libmpv-2.dll' from here: https://sourceforge.net/projects/mpv-player-windows/files/libmpv/
-   *Use 64-bit version  e.g. mpv-dev-x86_64
-2. Create a folder called 'lib' in the projects folder.
-3. Extract 'libmpv-2.dll' from the archive and move it to your 'lib' folder or drag it into visual studio directly.
-4. In your Solution Explorer, click on 'libmpv-2.dll' and select 'Properties'. Change the value for "Copy to Output Directory" to "Copy Always".
+   * Use 64-bit version  e.g. mpv-dev-x86_64
+3. Create a folder called 'lib' in the projects folder.
+4. Extract 'libmpv-2.dll' from the archive and move it to your 'lib' folder or drag it into visual studio directly.
+5. In your Solution Explorer, click on 'libmpv-2.dll' and select 'Properties'. Change the value for "Copy to Output Directory" to "Copy Always".
 
 1. Download Mpv.NET-lib- from https://github.com/hudec117/Mpv.NET-lib-
 2. Extract it and open 'Mpv.NET.csproj' in visual studio
-   *In Mpv.NET\Player\MpvPlayer.cs; find 'possibleLibMpvPaths' and rename 'mpv-1.dll' to 'libmpv-2.dll'
-   *It should look like this: "libmpv-2.dll", @"lib\libmpv-2.dll"
-   *Under Mpv.NET\API\MpvFunctions.cs; find 'LoadFunction<MpvDetachDestroy>("mpv_detach_destroy");'
-   *Rename string to "mpv_destroy"
+   * In Mpv.NET\Player\MpvPlayer.cs; find 'possibleLibMpvPaths' and rename 'mpv-1.dll' to 'libmpv-2.dll'
+   * It should look like this: "libmpv-2.dll", @"lib\libmpv-2.dll"
+   * Under Mpv.NET\API\MpvFunctions.cs; find 'LoadFunction<MpvDetachDestroy>("mpv_detach_destroy");'
+   * Rename string to "mpv_destroy"
 3. Compile 'Mpv.NET.dll' (You can add it to the RVP project folder)
 4. In visual studio with the Random Video Player open, go to project, add dependency, browse for the 'Mpv.NET.dll' and add it
 5. Check the the .dll and press ok
