@@ -15,6 +15,16 @@ My goal was to create a good looking, fast and efficient way to play random vide
 * Hotkeys and Mousecontrols for quick and easy control of the player
 * Synchronize with MultiFunPlayer while playing random videos
 
+## Current problems with Microsoft Defender
+As it seems, MS Defender does not like something in the code and gives a false positive. So far I could only reproduce this on Win 11; On Win 10 I couldn't.
+I submitted a ticket to Microsoft, but until I can resolve this issue (or not) the easiest workaround would be the following:
+* Download the file, it will fail
+* Start -> Virus & Threat Protection
+* 'Protection History'
+* Expand the header that say 'Thread quarantined'
+* under 'Actions' choose 'restore'
+
+
 ## Prerequisites
 
 The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libmpv-2.dll' instead of the outdated mpv-1.dll. (The project is sadly abandoned)
