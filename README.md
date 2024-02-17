@@ -13,6 +13,17 @@ My goal was to create a good looking, fast and efficient way to play random vide
 * Create/Save/Load custom lists filled with video files you can define
 * Quick and easy navigation
 * Hotkeys and Mousecontrols for quick and easy control of the player
+* Synchronize with MultiFunPlayer while playing random videos
+
+## Current problems with Microsoft Defender
+As it seems, MS Defender does not like something in the code and gives a false positive. So far I could only reproduce this on Win 11; On Win 10 I couldn't.
+I submitted a ticket to Microsoft, but until I can resolve this issue (or not) the easiest workaround would be the following:
+* Download the file, it will fail
+* Start -> Virus & Threat Protection
+* 'Protection History'
+* Expand the header that say 'Thread quarantined'
+* under 'Actions' choose 'restore'
+
 
 ## Prerequisites
 
@@ -41,6 +52,14 @@ The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libm
    * Open Player with your default folder, either press play or
    * Open the FileBrowser / ListBrowser to choose which folder to play from / create a list to play from
    * Switch the toggle for 'Folder/List' depending on what you want to play
+
+## Synchronize with MultiFunPlayer(MFP)
+1. Download MFP if you don't already have it https://github.com/Yoooi0/MultiFunPlayer
+2. In RVP under settings, activate 'Timecode Server'
+3. In MFP, activate 'MPC-HC' as a source
+4. While RVP is running, press connect on MFP and it starts synchronizing
+5. You need to play videos from your folder with scripts ofc.
+6. Have Fun!
   
 ## Hotkeys and stuff
 There are multiple hotkeys for ease of use:
@@ -59,3 +78,4 @@ There are multiple hotkeys for ease of use:
 * RJCodeAdvanceEN for their amazing modern ui templates https://www.youtube.com/@RJCodeAdvanceEN
 * awesome-incs library for simple and easy control implementation https://github.com/awesome-inc/FontAwesome.Sharp
 * JamesNK for their amazing library which I've used to serialize permanent settings https://github.com/JamesNK/Newtonsoft.Json
+* Yoooi0 for their incredible T-Code synchronizer https://github.com/Yoooi0/MultiFunPlayer
