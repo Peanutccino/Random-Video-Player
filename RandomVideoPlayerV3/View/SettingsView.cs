@@ -92,6 +92,7 @@ namespace RandomVideoPlayerV3.View
             this.DialogResult = DialogResult.OK;
 
             pH.DefaultFolder = tbDefaultPath.Text;
+            pH.TempRecentFolder = pH.DefaultFolder;
             pH.RemoveFolder = tbRemovalPath.Text;
             pH.FolderList = tbListfolderPath.Text;
             fR.SaveLastSize = cbRemembersize.Checked;
@@ -118,6 +119,9 @@ namespace RandomVideoPlayerV3.View
             toolTipInfo.SetToolTip(btnClose, "Close without saving");
             toolTipInfo.SetToolTip(cbRemembersize, "Saves current window size for next startup");
             toolTipInfo.SetToolTip(cbDeleteToggle, "Choose whether to delete files completely or move them to chosen folder when using the delete button from the player");
+            toolTipInfo.SetToolTip(rbCreationDate, "Use files creation date when choosing to load only the latest X files");
+            toolTipInfo.SetToolTip(rbModifiedDate, "Use files last date modified when choosing to load only the latest X files");
+            toolTipInfo.SetToolTip(cbLoopPlayer, "Loop played file or play next automatically after file is finished");
             toolTipInfo.SetToolTip(cbtimeCodeServer, "Activate timecode server to synchronize with MultiFunPlayer by choosing MPC-HC as the target there");
         }
 

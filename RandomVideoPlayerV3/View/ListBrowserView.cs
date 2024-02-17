@@ -27,9 +27,10 @@ namespace RandomVideoPlayerV3.View
         {
             if (string.IsNullOrEmpty(pH.DefaultFolder)) { pH.DefaultFolder = pH.FallbackPath; } //If Folder is not set yet, default to Fallback
 
-            tbPathView.Text = pH.DefaultFolder;
+            if (!string.IsNullOrEmpty(pH.TempRecentFolder)) { tbPathView.Text = pH.TempRecentFolder; } //Keep recently browsed folders active for consistency
+            else { tbPathView.Text = pH.DefaultFolder; }
 
-            PopulateSelected(pH.DefaultFolder);
+            PopulateSelected(tbPathView.Text);
 
             PopulateDrives();
 
@@ -150,6 +151,11 @@ namespace RandomVideoPlayerV3.View
                 lH.ClearFavoriteList();
             }
 
+            if (tbPathView.Text != null)
+            {
+                pH.TempRecentFolder = tbPathView.Text;
+            }
+
             this.Close();
         }
         private void btnLoadList_Click_1(object sender, EventArgs e)
@@ -162,9 +168,8 @@ namespace RandomVideoPlayerV3.View
             if (result == DialogResult.OK)
             {
                 lbCustomList.Items.Clear();
-                //tbDefaultPath.Text = fbDialog.SelectedPath;
                 List<string> strings = new List<string>();
-                List<string> fromTXT = System.IO.File.ReadLines(openFileDialog.FileName).ToList();
+                List<string> fromTXT = File.ReadLines(openFileDialog.FileName).ToList();
 
                 foreach (string str in fromTXT)
                 {
@@ -192,11 +197,8 @@ namespace RandomVideoPlayerV3.View
         {
             // Use LINQ to filter out duplicates based on the filename, keeping one entry for each filename
             var filteredList = TempList
-                // Group by filename
                 .GroupBy(path => Path.GetFileName(path))
-                // Select one item per group (first by default)
                 .Select(g => g.First())
-                // Optionally, if you want to preserve the original list order as much as possible
                 .OrderBy(path => TempList.IndexOf(path))
                 .ToList();
 

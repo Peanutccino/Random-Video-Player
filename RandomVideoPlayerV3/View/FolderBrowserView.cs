@@ -27,14 +27,12 @@ namespace RandomVideoPlayerV3.View
 
         private void FolderBrowserView_Load(object sender, EventArgs e)
         {
-
-
             if (string.IsNullOrEmpty(pH.DefaultFolder)) { pH.DefaultFolder = pH.FallbackPath; } //If Folder is not set yet, default to Fallback
 
             if (!string.IsNullOrEmpty(pH.TempRecentFolder)) { tbPathView.Text = pH.TempRecentFolder; } //Keep recently browsed folders active for consistency
             else { tbPathView.Text = pH.DefaultFolder; }
 
-            PopulateSelected(pH.DefaultFolder);
+            PopulateSelected(tbPathView.Text);
 
             PopulateDrives();
 

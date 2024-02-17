@@ -42,12 +42,9 @@ namespace RandomVideoPlayerV3
             }
             //Initialize Player Element
             playerMPV = new MpvPlayer(panelPlayerMPV.Handle) { Loop = sH.LoopPlayer, Volume = 50, KeepOpen = KeepOpen.Yes };
+            //Initialize WebServer
             tcServer = new WebServer();
-
-            if (sH.TimeCodeServer)
-            {
-                tcServer.Start();
-            }
+            if (sH.TimeCodeServer) { tcServer.Start(); }
 
             //Set up MouseWheel Controlevents
             panelPlayerMPV.MouseWheel += new MouseEventHandler(panelPlayerMPV_MouseWheel);
@@ -63,45 +60,12 @@ namespace RandomVideoPlayerV3
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(pH.DefaultFolder)) { pH.DefaultFolder = pH.FallbackPath; } //If Folder is not set yet, default to Fallback
-
-            if (Directory.Exists(pH.DefaultFolder))
-            {
-                pH.FolderPath = pH.DefaultFolder;
-            }
-            else
-            {
-                MessageBox.Show("Set default path not found, using fallback!");
-                pH.FolderPath = pH.FallbackPath;
-            }
-
-
-            lblCurrentInfo.Text = pH.FolderPath; //Show current Folder
+            initStartUp(); //Load default folder if set and fill playlist
+            SetupTooltips();
 
             //Load up a default image
             string img = Path.Combine(Application.StartupPath, @"Resources\RVP_BlackBG.png");
             playerMPV.Load(img, true);
-
-
-            if (lH.FolderList?.Any() == false) //Fill Playlist with all Files from FolderPath in case it wasn't done already
-            {
-                lH.fillFolderList(pH.FolderPath);
-            }
-
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            var defaultListFolder = $@"{path}\RVP_ListFolder";
-
-            if (string.IsNullOrEmpty(pH.FolderList))
-            {
-                pH.FolderList = defaultListFolder;
-
-                if (!Directory.Exists(pH.FolderList))
-                {
-                    Directory.CreateDirectory(pH.FolderList);
-                }
-            }
-
-            SetupTooltips();
         }
         private void btnPlay_Click(object sender, EventArgs e)
         {
@@ -214,6 +178,8 @@ namespace RandomVideoPlayerV3
                 {
                     tcServer.Stop();
                 }
+
+                initStartUp(); //Used to fix issues at first time startup
             }
             playerMPV.Loop = sH.LoopPlayer; //Updaze Player behavior
         }
@@ -574,6 +540,41 @@ namespace RandomVideoPlayerV3
                 tcServer.state = "2";
             }
         }
+
+        private void initStartUp()
+        {
+            if (string.IsNullOrEmpty(pH.DefaultFolder)) { pH.DefaultFolder = pH.FallbackPath; } //If Folder is not set yet, default to Fallback
+
+            if (Directory.Exists(pH.DefaultFolder))
+            {
+                pH.FolderPath = pH.DefaultFolder;
+            }
+            else
+            {
+                MessageBox.Show("Set default path not found, using fallback!");
+                pH.FolderPath = pH.FallbackPath;
+            }
+
+            if (lH.FolderList?.Any() == false) //Fill Playlist with all Files from FolderPath in case it wasn't done already
+            {
+                lblCurrentInfo.Text = pH.FolderPath; //Show current Folder
+                lH.fillFolderList(pH.FolderPath);
+            }
+
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var defaultListFolder = $@"{path}\RVP_ListFolder";
+
+            if (string.IsNullOrEmpty(pH.FolderList))
+            {
+                pH.FolderList = defaultListFolder;
+
+                if (!Directory.Exists(pH.FolderList))
+                {
+                    Directory.CreateDirectory(pH.FolderList);
+                }
+            }
+        }
+
         private void panelPlayerMPV_MouseWheel(object sender, MouseEventArgs e) //Move through video by Scrolling
         {
             if (e.Delta > 0) //Detect Scroll Up and seek forwards
