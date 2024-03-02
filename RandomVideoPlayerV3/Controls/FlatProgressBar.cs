@@ -1,4 +1,5 @@
-﻿
+﻿using Mpv.NET.API;
+using Newtonsoft.Json.Linq;
 
 namespace RandomVideoPlayerV3
 {
@@ -8,12 +9,19 @@ namespace RandomVideoPlayerV3
         private int _minimum = 0;
         private int _maximum = 100;
         private int _borderThickness = 1;
+        private int _graphThickness = 1;
         private bool mouseOver = false;
         private bool _showBorder = false;
         private Color _completedBrush = Color.DodgerBlue;
         private Color _remainingBrush = Color.Black;
         private Color _mousehoverBrush = Color.DeepSkyBlue;
         private Color _borderColor = Color.Black;
+        private Color _completedGraphBrush = Color.White;
+        private Color _remainingGraphBrush = Color.Black;
+        private Color _mouseOverColor = Color.Black;
+        private Bitmap? progressBitmap;
+        private Bitmap? remainingBitmap;
+        private List<ActionPoint> actionPoints = new List<ActionPoint>();
 
         public FlatProgressBar()
         {
@@ -76,7 +84,24 @@ namespace RandomVideoPlayerV3
                 Invalidate();
             }
         }
-
+        public Color CompletedGraphBrush
+        {
+            get { return _completedGraphBrush; }
+            set 
+            { 
+                _completedGraphBrush = value; 
+                Invalidate();
+            }
+        }
+        public Color RemainingGraphBrush
+        {
+            get { return _remainingGraphBrush; }
+            set 
+            { 
+                _remainingGraphBrush = value;
+                Invalidate();
+            }
+        }
         public Color MouseoverBrush
         {
             get { return _mousehoverBrush; }
@@ -107,6 +132,13 @@ namespace RandomVideoPlayerV3
             }
         }
 
+        public int GraphThickness
+        {
+            get { return _graphThickness; }
+            set { _graphThickness = value; }
+        }
+
+
         public bool ShowBorder
         {
             get { return _showBorder; }
@@ -132,40 +164,125 @@ namespace RandomVideoPlayerV3
             mouseOver = false;
             Invalidate();
         }
-
-        protected override void OnPaint(PaintEventArgs e)
+        protected override void OnResize(EventArgs e)
         {
-            base.OnPaint(e);
+            base.OnResize(e);
+            PreRenderGraph(); // Re-render the graph to fit the new size
+        }
 
-            var percent = (float)Value / Maximum;
-            var width = (int)(percent * Width);
+        public void LoadFunScript(string filePath)
+        {
+            string jsonContent = File.ReadAllText(filePath);
+            var jObject = JObject.Parse(jsonContent);
 
-            if (mouseOver)
+            actionPoints = jObject["actions"]
+                .Select(jt => new ActionPoint { At = (long)jt["at"], Pos = (int)jt["pos"] })
+                .ToList();
+
+            PreRenderGraph(); // Pre-render the graph after loading new data
+        }
+
+        public void DeleteActionsPoints()
+        {
+            actionPoints.Clear();
+        }
+        private void PreRenderGraph()
+        {
+            progressBitmap?.Dispose();
+            remainingBitmap?.Dispose();
+
+            if (actionPoints == null || actionPoints.Count == 0 || this.Width == 0 || this.Height == 0)
             {
-                e.Graphics.FillRectangle(new SolidBrush(_remainingBrush), 0, 0, Width, Height);
-                e.Graphics.FillRectangle(new SolidBrush(_mousehoverBrush), 0, 0, width, Height);
-
-                // Draw border if ShowBorder is true
-                if (ShowBorder)
-                {
-                    var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
-                    var pen = new Pen(_borderColor, BorderThickness);
-                    e.Graphics.DrawRectangle(pen, borderRect);
-                }
+                progressBitmap = null;
+                remainingBitmap = null;
+                return;
             }
-            else
-            {
-                e.Graphics.FillRectangle(new SolidBrush(_remainingBrush), 0, 0, Width, Height);
-                e.Graphics.FillRectangle(new SolidBrush(_completedBrush), 0, 0, width, Height);
 
-                // Draw border if ShowBorder is true
-                if (ShowBorder)
+            progressBitmap = new Bitmap(Width, Height);
+            remainingBitmap = new Bitmap(Width, Height);
+
+            using (Graphics g = Graphics.FromImage(progressBitmap))
+            {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.Clear(_completedBrush);
+
+                DrawFunscriptGraph(g, _completedGraphBrush);
+            }
+            using (Graphics g = Graphics.FromImage(remainingBitmap))
+            {
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.Clear(_remainingBrush); 
+
+                DrawFunscriptGraph(g, _remainingGraphBrush); 
+            }
+        }
+        private void DrawFunscriptGraph(Graphics g, Color graphcolor)
+        {
+            if (actionPoints.Count < 2) return;
+
+            int maxTime = Maximum;
+
+            using (Pen remainingGraphPen = new Pen(graphcolor, _graphThickness)) 
+            {
+                for (int i = 0; i < actionPoints.Count - 1; i++)
                 {
-                    var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
-                    var pen = new Pen(_borderColor, BorderThickness);
-                    e.Graphics.DrawRectangle(pen, borderRect);
+                    var startPoint = actionPoints[i];
+                    var endPoint = actionPoints[i + 1];
+
+                    float startX = (float)startPoint.At / maxTime * Width;
+                    float startY = (1 - (float)startPoint.Pos / 100) * Height;
+                    float endX = (float)endPoint.At / maxTime * Width;
+                    float endY = (1 - (float)endPoint.Pos / 100) * Height;
+
+                    g.DrawLine(remainingGraphPen, startX, startY, endX, endY);
+                    
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 }
             }
         }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            float progressPercentage = (float)Value / Maximum;
+            int progressWidth = (int)(progressPercentage * Width);
+
+            _mouseOverColor = mouseOver ? _mousehoverBrush : _completedBrush;
+
+            if (actionPoints.Count == 0 || actionPoints == null)
+            {
+                e.Graphics.FillRectangle(new SolidBrush(_remainingBrush), 0, 0, Width, Height);
+                e.Graphics.FillRectangle(new SolidBrush(_mouseOverColor), 0, 0, progressWidth, Height);
+            }
+            else
+            {
+                // Draw the pre-rendered graph bitmap
+                if (progressBitmap != null && remainingBitmap != null)
+                {
+                    Rectangle progressRect = new Rectangle(0, 0, progressWidth, Height);
+                    e.Graphics.DrawImage(progressBitmap, progressRect, progressRect, GraphicsUnit.Pixel);
+
+                    Rectangle remainingRect = new Rectangle(progressWidth, 0, Width - progressWidth, Height);
+                    e.Graphics.DrawImage(remainingBitmap, remainingRect, remainingRect, GraphicsUnit.Pixel);
+                }
+            }
+            // Draw border if ShowBorder is true
+            if (ShowBorder)
+            {
+                var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
+                var pen = new Pen(_borderColor, BorderThickness);
+                e.Graphics.DrawRectangle(pen, borderRect);
+            }
+
+        }
+
+
+
     }
+    public class ActionPoint
+    {
+        public long At { get; set; } // Time in milliseconds
+        public int Pos { get; set; } // Position value
+    }
+
+
 }

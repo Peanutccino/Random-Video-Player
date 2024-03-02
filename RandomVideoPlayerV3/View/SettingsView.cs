@@ -1,5 +1,7 @@
-﻿using RandomVideoPlayerV3.Functions;
+﻿using RandomVideoPlayer.View;
+using RandomVideoPlayerV3.Functions;
 using RandomVideoPlayerV3.Model;
+using RandomVideoPlayerV3.View;
 using System.Runtime.InteropServices;
 
 namespace RandomVideoPlayerV3.View
@@ -49,9 +51,23 @@ namespace RandomVideoPlayerV3.View
             {
                 rbModifiedDate.Checked = true;
             }
+            cbPlayVideos.Checked = sH.PlayVideos;
+            cbPlayImages.Checked = sH.PlayImages;
 
             SetupTooltips(); //Initialize Tooltips
 
+        }
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            HelpWindow helpW = new HelpWindow();
+            helpW.StartPosition = FormStartPosition.Manual;
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
+            helpW.Load += delegate (object s2, EventArgs e2)
+            {
+                helpW.Location = new Point(Bounds.Location.X + (Bounds.Width / 2) - (helpW.Width / 2), Bounds.Location.Y + (Bounds.Height / 2) - (helpW.Height / 2));
+            };
+#pragma warning restore CS8622
+            helpW.ShowDialog();
         }
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -108,6 +124,8 @@ namespace RandomVideoPlayerV3.View
             {
                 sH.CreationDate = false;
             }
+            sH.PlayVideos = cbPlayVideos.Checked;
+            sH.PlayImages = cbPlayImages.Checked;
 
             this.Close();
         }
@@ -123,6 +141,8 @@ namespace RandomVideoPlayerV3.View
             toolTipInfo.SetToolTip(rbModifiedDate, "Use files last date modified when choosing to load only the latest X files");
             toolTipInfo.SetToolTip(cbLoopPlayer, "Loop played file or play next automatically after file is finished");
             toolTipInfo.SetToolTip(cbtimeCodeServer, "Activate timecode server to synchronize with MultiFunPlayer by choosing MPC-HC as the target there");
+            toolTipInfo.SetToolTip(cbPlayVideos, "Include video files when loading a folder");
+            toolTipInfo.SetToolTip(cbPlayImages, "Include image files when loading a folder");
         }
 
         #region WndProc Code for clean style of the Form and regaining usabality
@@ -130,9 +150,6 @@ namespace RandomVideoPlayerV3.View
         protected override void WndProc(ref Message m)
         {
             const int WM_NCCALCSIZE = 0x0083;//Standar Title Bar - Snap Window
-            const int WM_SYSCOMMAND = 0x0112;
-            const int SC_MINIMIZE = 0xF020; //Minimize form (Before)
-            const int SC_RESTORE = 0xF120; //Restore form (Before)
             const int WM_NCHITTEST = 0x0084;//Win32, Mouse Input Notification: Determine what part of the window corresponds to a point, allows to resize the form.
             const int resizeAreaSize = 10;
             #region Form Resize
@@ -200,6 +217,7 @@ namespace RandomVideoPlayerV3.View
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
         #endregion
+
 
 
 

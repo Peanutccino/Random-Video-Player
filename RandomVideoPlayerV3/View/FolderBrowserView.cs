@@ -172,10 +172,18 @@ namespace RandomVideoPlayerV3.View
         {
             ListViewItem item = lvFileExplore.SelectedItems[0];
             string itemPath = item.Tag.ToString();
-            if (Directory.Exists(itemPath))
+            try
             {
-                tbPathView.Text = itemPath;
-                PopulateSelected(itemPath);
+                if (Directory.Exists(itemPath))
+                {
+                    tbPathView.Text = itemPath;
+                    PopulateSelected(itemPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Can't access folder: {0}\n\nError:\n{1}", itemPath, ex));
+                return;
             }
         }
         private void lbDriveFolders_DoubleClick(object sender, EventArgs e)
@@ -241,20 +249,26 @@ namespace RandomVideoPlayerV3.View
         {
             lvFileExplore.Items.Clear();
             DirectoryInfo dir = new DirectoryInfo(folderPath);
+            var combinedExtensions = lH.VideoExtensions.Concat(lH.ImageExtensions).ToList();
+
             foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
-            {
+            {                
                 ListViewItem item = new ListViewItem();
                 item.Text = pH.TrimText(subFolder.Name, 13, "");
                 item.ImageIndex = 0;
                 item.Tag = subFolder.FullName;
+                item.ToolTipText = subFolder.Name;
                 lvFileExplore.Items.Add(item);
             }
             foreach (FileInfo file in dir.EnumerateFiles())
             {
+                var currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
+                if (!combinedExtensions.Contains(currentFileExtension)) continue;
                 ListViewItem item = new ListViewItem();
                 item.Text = pH.TrimText(file.Name, 10, "...");
-                item.ImageIndex = 1;
+                item.ImageIndex = lH.VideoExtensions.Contains(currentFileExtension) ? 1 : 2;
                 item.Tag = file.FullName;
+                item.ToolTipText = file.Name;
                 lvFileExplore.Items.Add(item);
             }
         }

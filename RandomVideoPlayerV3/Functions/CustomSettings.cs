@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Specialized;
-using System.IO;
 namespace RandomVideoPlayerV3
 {
     public class CustomSettings
@@ -17,10 +15,13 @@ namespace RandomVideoPlayerV3
         public bool includeSubfolders { get; set; } = true;
         public string tempLastFolder { get; set; }
         public bool sortCreationDate { get; set; } = true;
+        public bool playVideos { get; set; } = true;
+        public bool playImages { get; set; } = false;
+        public bool shuffle { get; set; } = true;
         public bool loopPlayer { get; set; } = true;
         public bool timeCodeServer { get; set; } = false;
-        public StringCollection favoriteCollection { get; set; } = new System.Collections.Specialized.StringCollection();
-        public StringCollection customListConfig { get; set; } = new System.Collections.Specialized.StringCollection();
+        public StringCollection favoriteCollection { get; set; } = new StringCollection();
+        public StringCollection customListConfig { get; set; } = new StringCollection();
 
         // The path to the settings file
         private static string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RVP-Config.json");

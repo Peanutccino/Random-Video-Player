@@ -7,6 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>Resources\RVP_IconSimple.ico</ApplicationIcon>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +21,7 @@
 
   <ItemGroup>
     <Reference Include="Mpv.NET">
-      <HintPath>E:\Mpv.NET-lib--master\src\Mpv.NET\bin\Release\netstandard2.0\Mpv.NET.dll</HintPath>
+      <HintPath>..\..\..\Visual Studio Libraries\Mpv.NET - Modified\bin\Release\netstandard2.0\Mpv.NET.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

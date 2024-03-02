@@ -38,7 +38,7 @@ namespace RandomVideoPlayerV3.Model
 				_settingsInstance.Save();
 			}
 		}
-        /// <value>Used to stores directory where custom lists are saved from and loaded to</value> 
+        /// <value>Used to store directory where custom lists are saved from and loaded to</value> 
         public string FolderList
 		{
 			get 

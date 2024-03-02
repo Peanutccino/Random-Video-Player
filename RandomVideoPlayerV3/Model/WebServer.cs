@@ -18,7 +18,7 @@ namespace RandomVideoPlayer.Model
         public string position { get; set; } = ""; //2
         public string duration { get; set; } = ""; //3
         public string playbackrate { get; set; } = "1"; //4
-
+        //HTML data for MFP to read
         private string pageData =
             "<!DOCTYPE>" +
             "<html>" +
@@ -96,6 +96,7 @@ namespace RandomVideoPlayer.Model
             }
             catch (Exception ex)
             {
+                MessageBox.Show(string.Format("Error creating timecode server:\n\n{0}", ex));
                 // Log error or handle it as needed
             }
             finally

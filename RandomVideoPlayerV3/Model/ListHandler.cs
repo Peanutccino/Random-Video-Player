@@ -12,6 +12,7 @@ namespace RandomVideoPlayerV3.Model
         private IEnumerable<string> _folderList = Enumerable.Empty<string>();
         private IEnumerable<string> _playList = Enumerable.Empty<string>();
         private List<string> _vidExtensions = new List<string> { "avi", "flv", "m4v", "mkv", "mov", "mp4", "webm", "wmv", "f4v", "avchd" };
+        private List<string> _imgExtensions = new List<string> { "jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp", "webp", "avif" };
         /// <value>Tracks playlist position</value> 
         public int PlayListIndex
         {
@@ -42,6 +43,21 @@ namespace RandomVideoPlayerV3.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.includeSubfolders = value;
+                _settingsInstance.Save();
+            }
+        }
+        /// <value>Do shuffle (true) or play in parsing order (false)</value> 
+        public bool DoShuffle
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.shuffle;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.shuffle = value;
                 _settingsInstance.Save();
             }
         }
@@ -90,27 +106,65 @@ namespace RandomVideoPlayerV3.Model
                 _settingsInstance.Save();
             }
         }
+        private static List<string> GetExtensions(List<string> videoExtensions, List<string> imageExtensions, bool playVideo, bool playImage)
+        {
+            var combinedExtensions = new List<string>();
+
+            if (playVideo)
+            {
+                combinedExtensions.AddRange(videoExtensions);
+            }
+
+            if (playImage)
+            {
+                combinedExtensions.AddRange(imageExtensions);
+            }
+
+            return combinedExtensions;
+        }
         /// <value>Holds a defined number of supported file extensions</value> 
-        public List<string> VidExtensions
+        public List<string> Extensions
+        {
+            get 
+            {
+                return GetExtensions(_vidExtensions, _imgExtensions, _playVideos, _playImages);
+            }
+        }
+        public List<string> ImageExtensions 
+        {
+            get { return _imgExtensions; }  
+        }
+        public List<string> VideoExtensions
         {
             get { return _vidExtensions; }
+        }
+        private bool _playVideos
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.playVideos;
+            }
+        }
+        private bool _playImages
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.playImages;
+            }
         }
         /// <value>Shuffles current playlist for random playback</value> 
         public void PreparePlayList(bool sourceselected)
         {
             if (NeedsToPrepare)
             {
-                switch (sourceselected)
-                {
-                    case true:
-                        PlayList = CustomList;
-                        break;
-                    case false:
-                        PlayList = FolderList;
-                        break;
-                }
+                PlayList = sourceselected ? CustomList : FolderList;
+
                 PlayListIndex = 0;
-                shufflePlayList();
+
+                if(DoShuffle)
+                    shufflePlayList();
                 _needsToPrepare = false;
                 _firstPlay = true;
             }
@@ -131,7 +185,7 @@ namespace RandomVideoPlayerV3.Model
             try
             {
                 FolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
-                        .Where(s => _vidExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
+                        .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
                         .ToArray();
             }
             catch (UnauthorizedAccessException)
@@ -163,7 +217,7 @@ namespace RandomVideoPlayerV3.Model
                 if(_settingsInstance.sortCreationDate) //Set to sort by creation date
                 {
                     FolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
-                        .Where(s => _vidExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
+                        .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
                         .OrderByDescending(s => File.GetCreationTime(s)) // Order by last modified date in descending order
                         .Take(count) // Take only the top 100
                         .ToArray();
@@ -171,7 +225,7 @@ namespace RandomVideoPlayerV3.Model
                 else if(!_settingsInstance.sortCreationDate) //Set to sort by date of last modified
                 {
                     FolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
-                        .Where(s => _vidExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
+                        .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
                         .OrderByDescending(s => File.GetLastWriteTime(s)) // Order by last modified date in descending order
                         .Take(count) // Take only the top 100
                         .ToArray();

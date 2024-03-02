@@ -54,6 +54,37 @@ namespace RandomVideoPlayerV3.Model
                 _settingsInstance.Save();
 			}
 		}
+        /// <value>Plays video files (true) or images (false).</value> 
+        public bool PlayVideos
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.playVideos;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.playVideos = value;
+                _settingsInstance.Save();
+            }
+        }
+        /// <value>Plays image files (true) or images (false).</value> 
+        public bool PlayImages
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.playImages;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.playImages = value;
+                _settingsInstance.Save();
+            }
+        }
+
         /// <value>How many of the latest files should be loaded into the playlist</value> 
         public int RecentCount 
 		{

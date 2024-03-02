@@ -273,6 +273,7 @@
             lvFileExplore.LargeImageList = imageList;
             lvFileExplore.Location = new Point(126, 35);
             lvFileExplore.Name = "lvFileExplore";
+            lvFileExplore.ShowItemToolTips = true;
             lvFileExplore.Size = new Size(798, 506);
             lvFileExplore.SmallImageList = imageList;
             lvFileExplore.TabIndex = 2;
@@ -287,6 +288,7 @@
             imageList.TransparentColor = Color.Transparent;
             imageList.Images.SetKeyName(0, "folder.png");
             imageList.Images.SetKeyName(1, "film.png");
+            imageList.Images.SetKeyName(2, "image-48.png");
             // 
             // tbPathView
             // 
