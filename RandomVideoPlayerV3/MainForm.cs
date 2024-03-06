@@ -907,13 +907,41 @@ namespace RandomVideoPlayerV3
         }
         private void pbVolume_MouseDown(object sender, MouseEventArgs e) //Set Volume on Cursor position
         {
-            base.OnMouseClick(e);
+            base.OnMouseMove(e); // Ensure base event is called if needed
 
-            var percentage = (int)((float)e.X / pbVolume.Width * pbVolume.Maximum); //Get cursor position on Volume Bar
+            UpdateVolume(e); // Update volume based on mouse position
 
-            pbVolume.Value = percentage; //Set Volume Bar to cursor position
-            playerMPV.Volume = pbVolume.Value; //Set Player Volume to chosen Value
+            // Subscribe to the MouseMove event to continually update volume while mouse is down
+            pbVolume.MouseMove += pbVolume_MouseMove;
+
+            // Subscribe to the MouseUp event to stop updating volume when mouse button is released
+            pbVolume.MouseUp += pbVolume_MouseUp;
         }
+
+        private void pbVolume_MouseMove(object sender, MouseEventArgs e)
+        {
+            base.OnMouseMove(e); // Ensure base event is called if needed
+
+            UpdateVolume(e); // Update volume based on mouse position
+        }
+
+        private void pbVolume_MouseUp(object sender, MouseEventArgs e)
+        {
+            // Unsubscribe from MouseMove event when mouse button is released
+            pbVolume.MouseMove -= pbVolume_MouseMove;
+
+            // Unsubscribe from MouseUp event
+            pbVolume.MouseUp -= pbVolume_MouseUp;
+        }
+
+        private void UpdateVolume(MouseEventArgs e)
+        {
+            var percentage = (int)((float)e.X / pbVolume.Width * pbVolume.Maximum); // Get cursor position on Volume Bar
+
+            pbVolume.Value = percentage; // Set Volume Bar to cursor position
+            playerMPV.Volume = pbVolume.Value; // Set Player Volume to chosen Value
+        }
+
         private void timeVolumeCheck_Tick(object sender, EventArgs e) //Change MuteButton Icon based on Volume for visibile consistency
         {
             int volume = pbVolume.Value;
