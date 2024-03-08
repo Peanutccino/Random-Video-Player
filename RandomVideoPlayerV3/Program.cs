@@ -1,6 +1,4 @@
-using RandomVideoPlayerV3.Model;
-
-namespace RandomVideoPlayerV3
+namespace RandomVideoPlayer
 {
     internal static class Program
     {

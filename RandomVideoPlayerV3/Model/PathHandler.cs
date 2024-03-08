@@ -1,13 +1,14 @@
-﻿
-namespace RandomVideoPlayerV3.Model
+﻿using RandomVideoPlayer.Functions;
+
+namespace RandomVideoPlayer.Model
 {
     public class PathHandler
     {
-		string _fallbackPath = @"C:\"; //Default path if everything else fails
-        public string FolderPath { get; set; }
+		private static string _fallbackPath = @"C:\"; //Default path if everything else fails
+        public static string FolderPath { get; set; }
 
         /// <value>Stores user defined default directory to start from</value> 
-        public string DefaultFolder
+        public static string DefaultFolder
 		{
 			get 
 			{
@@ -22,9 +23,9 @@ namespace RandomVideoPlayerV3.Model
 			}
 		}
         /// <value>Directory that is always available in case everything else fails</value> 
-        public string FallbackPath { get { return _fallbackPath; } }
+        public static string FallbackPath { get { return _fallbackPath; } }
         /// <value>User defined folder where files are moved to when deleted with option "delete full" disabled</value> 
-        public string RemoveFolder
+        public static string RemoveFolder
 		{
 			get 
 			{
@@ -39,7 +40,7 @@ namespace RandomVideoPlayerV3.Model
 			}
 		}
         /// <value>Used to store directory where custom lists are saved from and loaded to</value> 
-        public string FolderList
+        public static string FolderList
 		{
 			get 
 			{
@@ -54,7 +55,7 @@ namespace RandomVideoPlayerV3.Model
             }
 		}
         /// <value>Stores current position within filebrowser for navigation consisteny; cleared with application exit</value> 
-        public string TempRecentFolder 
+        public static string TempRecentFolder 
 		{ 
 			get 
 			{
@@ -68,19 +69,6 @@ namespace RandomVideoPlayerV3.Model
 				_settingsInstance.Save();
 			}
 		}
-		/// <summary>
-		/// Trim string to length and optionally add string at the end (e.g. "...")
-		/// </summary>
-		/// <param name="text">String to trim</param>
-		/// <param name="length">Trim to length</param>
-		/// <param name="end">Add string to end of trimmed string</param>
-		/// <returns>Trimmed text</returns>
-        public string TrimText(string text, int length, string end)
-        {
-            int maxLength = length; // Maximum text length.
-            string truncatedText = text.Length <= maxLength ? text : text.Substring(0, maxLength) + end;
 
-            return truncatedText;
-        }
     }
 }

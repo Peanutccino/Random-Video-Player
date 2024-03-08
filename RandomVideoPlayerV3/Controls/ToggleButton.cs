@@ -1,7 +1,7 @@
 ﻿using System.Drawing.Drawing2D;
 using System.ComponentModel;
 
-namespace RandomVideoPlayerV3
+namespace RandomVideoPlayer
 {
     public class ToggleButton : CheckBox
     {

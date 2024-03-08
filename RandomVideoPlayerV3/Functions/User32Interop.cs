@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace RandomVideoPlayerV3.Model
+namespace RandomVideoPlayer.Functions
 {
     public static class User32Interop
     {

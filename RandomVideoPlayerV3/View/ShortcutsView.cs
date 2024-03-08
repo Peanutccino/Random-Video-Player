@@ -1,4 +1,4 @@
-﻿using RandomVideoPlayerV3.Functions;
+﻿using RandomVideoPlayer.Functions;
 using System.Runtime.InteropServices;
 
 namespace RandomVideoPlayer.View

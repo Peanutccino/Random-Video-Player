@@ -1,4 +1,4 @@
-﻿namespace RandomVideoPlayerV3.View
+﻿namespace RandomVideoPlayer.View
 {
     partial class SettingsView
     {
@@ -46,6 +46,7 @@
             tbListfolderPath = new TextBox();
             btnFileBrowseList = new FontAwesome.Sharp.IconButton();
             groupBox1 = new GroupBox();
+            cbIncludeScripts = new CheckBox();
             cbDeleteToggle = new CheckBox();
             tbRemovalPath = new TextBox();
             btnFileBrowseRemove = new FontAwesome.Sharp.IconButton();
@@ -139,7 +140,7 @@
             panelBody.Dock = DockStyle.Fill;
             panelBody.Location = new Point(0, 20);
             panelBody.Name = "panelBody";
-            panelBody.Size = new Size(324, 421);
+            panelBody.Size = new Size(324, 446);
             panelBody.TabIndex = 1;
             // 
             // groupBox4
@@ -150,7 +151,7 @@
             groupBox4.Controls.Add(cbtimeCodeServer);
             groupBox4.Controls.Add(cbLoopPlayer);
             groupBox4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupBox4.Location = new Point(3, 341);
+            groupBox4.Location = new Point(3, 365);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(318, 81);
             groupBox4.TabIndex = 8;
@@ -203,7 +204,7 @@
             groupBox3.Controls.Add(rbModifiedDate);
             groupBox3.Controls.Add(rbCreationDate);
             groupBox3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupBox3.Location = new Point(3, 276);
+            groupBox3.Location = new Point(3, 300);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(318, 59);
             groupBox3.TabIndex = 7;
@@ -238,7 +239,7 @@
             groupBox2.Controls.Add(tbListfolderPath);
             groupBox2.Controls.Add(btnFileBrowseList);
             groupBox2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupBox2.Location = new Point(3, 213);
+            groupBox2.Location = new Point(6, 237);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(318, 57);
             groupBox2.TabIndex = 6;
@@ -274,16 +275,27 @@
             // groupBox1
             // 
             groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox1.Controls.Add(cbIncludeScripts);
             groupBox1.Controls.Add(cbDeleteToggle);
             groupBox1.Controls.Add(tbRemovalPath);
             groupBox1.Controls.Add(btnFileBrowseRemove);
             groupBox1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
             groupBox1.Location = new Point(3, 125);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(318, 82);
+            groupBox1.Size = new Size(318, 106);
             groupBox1.TabIndex = 6;
             groupBox1.TabStop = false;
             groupBox1.Text = "Set removal folder:";
+            // 
+            // cbIncludeScripts
+            // 
+            cbIncludeScripts.AutoSize = true;
+            cbIncludeScripts.Location = new Point(9, 76);
+            cbIncludeScripts.Name = "cbIncludeScripts";
+            cbIncludeScripts.Size = new Size(182, 19);
+            cbIncludeScripts.TabIndex = 6;
+            cbIncludeScripts.Text = "Include associated .funscripts";
+            cbIncludeScripts.UseVisualStyleBackColor = true;
             // 
             // cbDeleteToggle
             // 
@@ -395,7 +407,7 @@
             btnSave.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnSave.IconSize = 25;
             btnSave.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSave.Location = new Point(0, 391);
+            btnSave.Location = new Point(0, 416);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(324, 30);
             btnSave.TabIndex = 3;
@@ -407,10 +419,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(324, 441);
+            ClientSize = new Size(324, 466);
             Controls.Add(panelBody);
             Controls.Add(panelTop);
-            MinimumSize = new Size(340, 480);
+            MinimumSize = new Size(340, 505);
             Name = "SettingsView";
             Text = "SettingsView";
             Load += SettingsView_Load;
@@ -462,5 +474,6 @@
         private FontAwesome.Sharp.IconButton btnHelp;
         private CheckBox cbPlayImages;
         private CheckBox cbPlayVideos;
+        private CheckBox cbIncludeScripts;
     }
 }

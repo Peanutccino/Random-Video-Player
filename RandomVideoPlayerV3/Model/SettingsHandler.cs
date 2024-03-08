@@ -1,46 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RandomVideoPlayer.Functions;
 
-namespace RandomVideoPlayerV3.Model
+namespace RandomVideoPlayer.Model
 {
 	public class SettingsHandler
 	{
-        private int _volumeTemp = 50;
-		private bool _sourceSelected = false; //False = Folder | True = List
-		private bool _isPlaying = false;
-        private bool _initPlay = false;
-        public int VolumeTemp
+        private static int _volumeTemp = 50;
+		private static bool _sourceSelected = false; //False = Folder | True = List
+		private static bool _isPlaying = false;
+        private static bool _initPlay = false;
+        public static int VolumeTemp
 		{
 			get { return _volumeTemp; }
 			set { _volumeTemp = value; }
 		}
-        public int VideoDuration { get; set; }
+        public static int VideoDuration { get; set; }
 
-        public int VideoRemaining { get; set; }
+        public static int VideoRemaining { get; set; }
 
         /// <value>Play from list (true) or play from folder (false).</value> 
-        public bool SourceSelected
+        public static bool SourceSelected
 		{
 			get { return _sourceSelected; }
 			set { _sourceSelected = value; }
 		}
-        public bool IsPlaying
+        public static bool IsPlaying
 		{
 			get { return _isPlaying; }
 			set { _isPlaying = value; }
 		}
         /// <value>Set to true after player is initialized for the first time</value> 
-        public bool InitPlay
+        public static bool InitPlay
 		{
 			get { return _initPlay; }
 			set { _initPlay = value; }
 		}
 
         /// <value>Uses Creation Date (true) or Last Date modified (false).</value> 
-        public bool CreationDate 
+        public static bool CreationDate 
 		{
 			get 
             {
@@ -55,7 +51,7 @@ namespace RandomVideoPlayerV3.Model
 			}
 		}
         /// <value>Plays video files (true) or images (false).</value> 
-        public bool PlayVideos
+        public static bool PlayVideos
         {
             get
             {
@@ -70,7 +66,7 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Plays image files (true) or images (false).</value> 
-        public bool PlayImages
+        public static bool PlayImages
         {
             get
             {
@@ -86,7 +82,7 @@ namespace RandomVideoPlayerV3.Model
         }
 
         /// <value>How many of the latest files should be loaded into the playlist</value> 
-        public int RecentCount 
+        public static int RecentCount 
 		{
            get 
            {
@@ -101,7 +97,7 @@ namespace RandomVideoPlayerV3.Model
            }
         }
         /// <value>Check if only the latest files should be used</value> 
-        public bool RecentChecked
+        public static bool RecentChecked
         {
             get 
             {
@@ -116,7 +112,7 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Delete videofile completely (true) or move it to set folder(false).</value> 
-        public bool DeleteFull
+        public static bool DeleteFull
         {
             get 
             {
@@ -130,8 +126,25 @@ namespace RandomVideoPlayerV3.Model
                 _settingsInstance.Save();
             }
         }
+        /// <value>Look for associated funscripts and apply delete method.</value> 
+        public static bool IncludeScripts 
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.includeScripts;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.includeScripts = value;
+                _settingsInstance.Save();
+            }
+        }
+
+
         /// <value>Loop currently played media (true) or play next media in list(false).</value> 
-        public bool LoopPlayer
+        public static bool LoopPlayer
         {
             get 
             {
@@ -146,7 +159,7 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Defines whether the timecode server should be started</value> 
-        public bool TimeCodeServer
+        public static bool TimeCodeServer
         {
             get
             {

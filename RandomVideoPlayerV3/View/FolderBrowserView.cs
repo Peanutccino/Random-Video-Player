@@ -1,16 +1,13 @@
-﻿using RandomVideoPlayerV3.Functions;
-using RandomVideoPlayerV3.Model;
+﻿using RandomVideoPlayer.Functions;
+using RandomVideoPlayer.Model;
 using System.Runtime.InteropServices;
 using ListViewItem = System.Windows.Forms.ListViewItem;
 
-namespace RandomVideoPlayerV3.View
+namespace RandomVideoPlayer.View
 {
     public partial class FolderBrowserView : Form
     {
         FormResize fR = new FormResize();
-        PathHandler pH = new PathHandler();
-        ListHandler lH = new ListHandler();
-        SettingsHandler sH = new SettingsHandler();
 
         List<string> TempList = new List<string>();
 
@@ -19,18 +16,17 @@ namespace RandomVideoPlayerV3.View
         public FolderBrowserView()
         {
             InitializeComponent();
-
             //Adjust Form for Borderless Style
-            this.Padding = new Padding(fR.BorderSize);//Border size
-            this.BackColor = Color.FromArgb(152, 251, 152);//Border color
+            this.Padding = new Padding(fR.BorderSize);
+            this.BackColor = Color.FromArgb(152, 251, 152);
         }
 
         private void FolderBrowserView_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(pH.DefaultFolder)) { pH.DefaultFolder = pH.FallbackPath; } //If Folder is not set yet, default to Fallback
+            if (string.IsNullOrEmpty(PathHandler.DefaultFolder)) { PathHandler.DefaultFolder = PathHandler.FallbackPath; } //If Folder is not set yet, default to Fallback
 
-            if (!string.IsNullOrEmpty(pH.TempRecentFolder)) { tbPathView.Text = pH.TempRecentFolder; } //Keep recently browsed folders active for consistency
-            else { tbPathView.Text = pH.DefaultFolder; }
+            if (!string.IsNullOrEmpty(PathHandler.TempRecentFolder)) { tbPathView.Text = PathHandler.TempRecentFolder; } //Keep recently browsed folders active for consistency
+            else { tbPathView.Text = PathHandler.DefaultFolder; }
 
             PopulateSelected(tbPathView.Text);
 
@@ -38,39 +34,34 @@ namespace RandomVideoPlayerV3.View
 
             HighlightDriveInListBox(tbPathView.Text);
 
-            cbUseRecent.Checked = sH.RecentChecked;
-            cbIncludeSubfolders.Checked = lH.IncludeSubfolders;
-            tbCount.Text = sH.RecentCount.ToString();
+            cbUseRecent.Checked = SettingsHandler.RecentChecked;
+            cbIncludeSubfolders.Checked = ListHandler.IncludeSubfolders;
+            tbCount.Text = SettingsHandler.RecentCount.ToString();
 
-            if (lH.FavoriteList?.Any() == true) //Load favorited folders
+            if (ListHandler.FavoriteFolderList?.Any() == true) //Load favorited folders
             {
-                foreach (string str in lH.FavoriteList)
+                foreach (string str in ListHandler.FavoriteFolderList)
                 {
                     TempList.Add(str);
 
-                    DirectoryInfo dir = new DirectoryInfo(str);
-                    string folderName = pH.TrimText(dir.Name, 19, "...");
+                    var dir = new DirectoryInfo(str);
+                    string folderName = FileManipulation.TrimText(dir.Name, 19, "...");
 
                     lbFavorites.Items.Add(folderName);
                 }
             }
-
             SetupTooltips(); //Initialize ToolTips
         }
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (TempList?.Any() == true) //If anything was modified, save the list
-            {
-                lH.FavoriteList = TempList;
-            }
-            else if (TempList.Count == 0)
-            {
-                lH.ClearFavoriteList();
-            }
+            if (TempList?.Any() == true)
+                ListHandler.FavoriteFolderList = TempList;
+            else 
+                ListHandler.ClearFavoriteFolderList();
 
-            if (tbPathView.Text != null)
+            if (!string.IsNullOrWhiteSpace(tbPathView.Text))
             {
-                pH.TempRecentFolder = tbPathView.Text;
+                PathHandler.TempRecentFolder = tbPathView.Text;
             }
 
             int recentCount;
@@ -78,16 +69,17 @@ namespace RandomVideoPlayerV3.View
             try
             {
                 recentCount = Convert.ToInt32(tbCount.Text);
+                if (recentCount <= 0) { recentCount = 0; }
             }
             catch (Exception)
             {
                 recentCount = 0;
-                MessageBox.Show("Count has to be a valid number");
+                MessageBox.Show("Recent value has to be a valid number");
             }
 
-            sH.RecentCount = recentCount;
-            sH.RecentChecked = cbUseRecent.Checked;
-            lH.IncludeSubfolders = cbIncludeSubfolders.Checked;
+            SettingsHandler.RecentCount = recentCount;
+            SettingsHandler.RecentChecked = cbUseRecent.Checked;
+            ListHandler.IncludeSubfolders = cbIncludeSubfolders.Checked;
 
             this.Close();
         }
@@ -96,18 +88,14 @@ namespace RandomVideoPlayerV3.View
             this.selectedPath = tbPathView.Text;
             this.DialogResult = DialogResult.OK;
 
-            if (TempList?.Any() == true) //If anything was modified, save the list
-            {
-                lH.FavoriteList = TempList;
-            }
-            else if (TempList.Count == 0)
-            {
-                lH.ClearFavoriteList();
-            }
+            if (TempList?.Any() == true)
+                ListHandler.FavoriteFolderList = TempList;
+            else
+                ListHandler.ClearFavoriteFolderList();
 
-            if (tbPathView.Text != null)
+            if (!string.IsNullOrWhiteSpace(tbPathView.Text))
             {
-                pH.TempRecentFolder = tbPathView.Text;
+                PathHandler.TempRecentFolder = tbPathView.Text;
             }
 
             int recentCount;
@@ -115,6 +103,7 @@ namespace RandomVideoPlayerV3.View
             try
             {
                 recentCount = Convert.ToInt32(tbCount.Text);
+                if(recentCount <= 0) { recentCount = 0; }
             }
             catch (Exception)
             {
@@ -122,9 +111,9 @@ namespace RandomVideoPlayerV3.View
                 MessageBox.Show("Count has to be a valid number");
             }
 
-            sH.RecentCount = recentCount;
-            sH.RecentChecked = cbUseRecent.Checked;
-            lH.IncludeSubfolders = cbIncludeSubfolders.Checked;
+            SettingsHandler.RecentCount = recentCount;
+            SettingsHandler.RecentChecked = cbUseRecent.Checked;
+            ListHandler.IncludeSubfolders = cbIncludeSubfolders.Checked;
 
             this.Close();
         }
@@ -139,8 +128,8 @@ namespace RandomVideoPlayerV3.View
             {
                 foreach (string str in TempList)
                 {
-                    DirectoryInfo dir = new DirectoryInfo(str);
-                    string folderName = pH.TrimText(dir.Name, 19, "...");
+                    var dir = new DirectoryInfo(str);
+                    string folderName = FileManipulation.TrimText(dir.Name, 19, "...");
 
                     lbFavorites.Items.Add(folderName);
                 }
@@ -160,8 +149,8 @@ namespace RandomVideoPlayerV3.View
         }
         private void btnBack_Click(object sender, EventArgs e)
         {
-            DirectoryInfo currentDirectory = new DirectoryInfo(tbPathView.Text);
-            DirectoryInfo parentDirectory = currentDirectory.Parent;
+            var currentDirectory = new DirectoryInfo(tbPathView.Text);
+            var parentDirectory = currentDirectory.Parent;
             if (parentDirectory != null)
             {
                 tbPathView.Text = parentDirectory.FullName;
@@ -170,7 +159,7 @@ namespace RandomVideoPlayerV3.View
         }
         private void lvFileExplore_ItemActivate(object sender, EventArgs e)
         {
-            ListViewItem item = lvFileExplore.SelectedItems[0];
+            var item = lvFileExplore.SelectedItems[0];
             string itemPath = item.Tag.ToString();
             try
             {
@@ -188,16 +177,16 @@ namespace RandomVideoPlayerV3.View
         }
         private void lbDriveFolders_DoubleClick(object sender, EventArgs e)
         {
-            if (lbDriveFolders.SelectedItems != null)
+            if (lbDriveFolders.SelectedItems.Count > 0 && lbDriveFolders.SelectedIndex >= 0)
             {
-                string driveLetter = pH.TrimText(lbDriveFolders.SelectedItem.ToString(), 3, "");
+                string driveLetter = FileManipulation.TrimText(lbDriveFolders.SelectedItem.ToString(), 3, "");
                 tbPathView.Text = driveLetter;
                 PopulateSelected(driveLetter);
             }
         }
         private void lbFavorites_DoubleClick(object sender, EventArgs e)
         {
-            if (lbFavorites.SelectedItems != null)
+            if (lbFavorites.SelectedItems.Count > 0 && lbFavorites.SelectedIndex >= 0)
             {
                 string selectedPath = TempList[lbFavorites.SelectedIndex];
                 tbPathView.Text = selectedPath;
@@ -221,13 +210,11 @@ namespace RandomVideoPlayerV3.View
                 // Check if the tooltip text is different than the item text (to avoid flickering)
                 if (toolTipInfo.GetToolTip(lbFavorites) != itemText)
                 {
-                    // Show the tooltip with the item text
                     toolTipInfo.SetToolTip(lbFavorites, itemText);
                 }
             }
             else
             {
-                // Hide the tooltip if the mouse is not over an item
                 toolTipInfo.SetToolTip(lbFavorites, "");
             }
         }
@@ -248,13 +235,13 @@ namespace RandomVideoPlayerV3.View
         private void PopulateSelected(string folderPath) //Get all files from selected and sub directories
         {
             lvFileExplore.Items.Clear();
-            DirectoryInfo dir = new DirectoryInfo(folderPath);
-            var combinedExtensions = lH.VideoExtensions.Concat(lH.ImageExtensions).ToList();
+            var dir = new DirectoryInfo(folderPath);
+            var combinedExtensions = ListHandler.VideoExtensions.Concat(ListHandler.ImageExtensions).ToList();
 
             foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
             {                
-                ListViewItem item = new ListViewItem();
-                item.Text = pH.TrimText(subFolder.Name, 13, "");
+                var item = new ListViewItem();
+                item.Text = FileManipulation.TrimText(subFolder.Name, 13, "");
                 item.ImageIndex = 0;
                 item.Tag = subFolder.FullName;
                 item.ToolTipText = subFolder.Name;
@@ -264,9 +251,9 @@ namespace RandomVideoPlayerV3.View
             {
                 var currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
                 if (!combinedExtensions.Contains(currentFileExtension)) continue;
-                ListViewItem item = new ListViewItem();
-                item.Text = pH.TrimText(file.Name, 10, "...");
-                item.ImageIndex = lH.VideoExtensions.Contains(currentFileExtension) ? 1 : 2;
+                var item = new ListViewItem();
+                item.Text = FileManipulation.TrimText(file.Name, 10, "...");
+                item.ImageIndex = ListHandler.VideoExtensions.Contains(currentFileExtension) ? 1 : 2;
                 item.Tag = file.FullName;
                 item.ToolTipText = file.Name;
                 lvFileExplore.Items.Add(item);

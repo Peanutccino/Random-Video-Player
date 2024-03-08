@@ -1,4 +1,4 @@
-﻿namespace RandomVideoPlayerV3.View
+﻿namespace RandomVideoPlayer.View
 {
     partial class FolderBrowserView
     {

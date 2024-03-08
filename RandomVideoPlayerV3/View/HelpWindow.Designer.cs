@@ -140,7 +140,7 @@
             lblVersion.Name = "lblVersion";
             lblVersion.Size = new Size(474, 35);
             lblVersion.TabIndex = 1;
-            lblVersion.Text = "v1.3 by Peanutccino";
+            lblVersion.Text = "v1.32 by Peanutccino";
             lblVersion.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblTitle

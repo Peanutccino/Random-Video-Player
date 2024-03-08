@@ -1,4 +1,4 @@
-﻿namespace RandomVideoPlayerV3
+﻿namespace RandomVideoPlayer
 {
     partial class MainForm
     {

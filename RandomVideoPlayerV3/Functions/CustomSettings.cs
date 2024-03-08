@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Specialized;
-namespace RandomVideoPlayerV3
+
+namespace RandomVideoPlayer.Functions
 {
     public class CustomSettings
     {
@@ -9,6 +10,7 @@ namespace RandomVideoPlayerV3
         public bool lastSize { get; set; } = false;
         public string removeFolder { get; set; } = @"C:\";
         public bool deleteFull { get; set; } = true;
+        public bool includeScripts { get; set; } = true;
         public string listFolder { get; set; }
         public bool recentCheckedSaved { get; set; } = false;
         public int recentCountSaved { get; set; } = 50;
@@ -23,7 +25,6 @@ namespace RandomVideoPlayerV3
         public StringCollection favoriteCollection { get; set; } = new StringCollection();
         public StringCollection customListConfig { get; set; } = new StringCollection();
 
-        // The path to the settings file
         private static string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RVP-Config.json");
 
         private static CustomSettings _instance;
@@ -45,13 +46,11 @@ namespace RandomVideoPlayerV3
                 }
             }
         }
-        // Save settings to a file
         public void Save()
         {
             string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(settingsFilePath, json);
         }
-        // Load settings from a file
         public static CustomSettings Load()
         {
             if (File.Exists(settingsFilePath))

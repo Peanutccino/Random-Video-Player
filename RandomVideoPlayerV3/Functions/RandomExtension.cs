@@ -1,11 +1,10 @@
-﻿
-namespace RandomVideoPlayerV3.Model
+﻿namespace RandomVideoPlayer.Functions
 {
     static class RandomExtension
     {
         public static IEnumerable<T> Shuffle<T>(this Random rng, IEnumerable<T> input)
         {
-            List<T> list = input.ToList(); 
+            List<T> list = input.ToList();
             int n = list.Count;
             while (n > 1)
             {

@@ -1,38 +1,38 @@
-﻿
-using RandomVideoPlayerV3.View;
-using System.Collections.Specialized;
+﻿using RandomVideoPlayer.Functions;
 
-namespace RandomVideoPlayerV3.Model
+namespace RandomVideoPlayer.Model
 {
     public class ListHandler
     {
-        private int _playListIndex = 0;
-        private bool _needsToPrepare = true;
-        private bool _firstPlay = true;
-        private IEnumerable<string> _folderList = Enumerable.Empty<string>();
-        private IEnumerable<string> _playList = Enumerable.Empty<string>();
-        private List<string> _vidExtensions = new List<string> { "avi", "flv", "m4v", "mkv", "mov", "mp4", "webm", "wmv", "f4v", "avchd" };
-        private List<string> _imgExtensions = new List<string> { "jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp", "webp", "avif" };
+        private static int _playListIndex = 0;
+        private static bool _needsToPrepare = true;
+        private static bool _firstPlay = true;
+
+        private static IEnumerable<string> _folderList = Enumerable.Empty<string>();
+        private static IEnumerable<string> _playList = Enumerable.Empty<string>();
+
+        private static List<string> _vidExtensions = new List<string> { "avi", "flv", "m4v", "mkv", "mov", "mp4", "webm", "wmv", "f4v", "avchd" };
+        private static List<string> _imgExtensions = new List<string> { "jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp", "webp", "avif" };
         /// <value>Tracks playlist position</value> 
-        public int PlayListIndex
+        public static int PlayListIndex
         {
             get { return _playListIndex; }
             set { _playListIndex = value; }
         }
         /// <value>Used to update/shuffle the playlist, when we change sources</value> 
-        public bool NeedsToPrepare
+        public static bool NeedsToPrepare
         {
             get { return _needsToPrepare; }
             set { _needsToPrepare = value; }
         }
         /// <value>Check if we are at the playlists entry point</value> 
-        public bool FirstPlay
+        public static bool FirstPlay
         {
             get { return _firstPlay; }
             set { _firstPlay = value; }
         }
         /// <value>Search for all directories and sub directories (true) or use only the current directory (false).</value> 
-        public bool IncludeSubfolders
+        public static bool IncludeSubfolders
         {
             get
             {
@@ -47,7 +47,7 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Do shuffle (true) or play in parsing order (false)</value> 
-        public bool DoShuffle
+        public static bool DoShuffle
         {
             get
             {
@@ -62,20 +62,20 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Holds shuffled playlist of the media files to play</value> 
-        public IEnumerable<string> PlayList
+        public static IEnumerable<string> PlayList
         {
             get { return _playList; }
             set { _playList = value; }
         }
 
         /// <value>Used to store all found media files from a user defined folder</value> 
-        public IEnumerable<string> FolderList
+        public static IEnumerable<string> FolderList
         {
             get { return _folderList; }
             set { _folderList = value; }
         }
         /// <value>Used to store all media files fomr a user defined list</value> 
-        public IEnumerable<string> CustomList
+        public static IEnumerable<string> CustomList
         {
             get 
             {
@@ -91,7 +91,7 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Stores added favorite folders for easier file browser navigation</value> 
-        public IEnumerable<string> FavoriteList 
+        public static IEnumerable<string> FavoriteFolderList 
         {
             get 
             {
@@ -123,22 +123,22 @@ namespace RandomVideoPlayerV3.Model
             return combinedExtensions;
         }
         /// <value>Holds a defined number of supported file extensions</value> 
-        public List<string> Extensions
+        private static List<string> Extensions
         {
             get 
             {
                 return GetExtensions(_vidExtensions, _imgExtensions, _playVideos, _playImages);
             }
         }
-        public List<string> ImageExtensions 
+        public static List<string> ImageExtensions 
         {
             get { return _imgExtensions; }  
         }
-        public List<string> VideoExtensions
+        public static List<string> VideoExtensions
         {
             get { return _vidExtensions; }
         }
-        private bool _playVideos
+        private static bool _playVideos
         {
             get
             {
@@ -146,7 +146,7 @@ namespace RandomVideoPlayerV3.Model
                 return _settingsInstance.playVideos;
             }
         }
-        private bool _playImages
+        private static bool _playImages
         {
             get
             {
@@ -155,7 +155,7 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Shuffles current playlist for random playback</value> 
-        public void PreparePlayList(bool sourceselected)
+        public static void PreparePlayList(bool sourceselected)
         {
             if (NeedsToPrepare)
             {
@@ -170,17 +170,9 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Grab all media files from set directory</value> 
-        public void fillFolderList(string folderpath)
+        public static void fillFolderList(string folderpath)
         {
-            SearchOption searchOption;
-            if (IncludeSubfolders)
-            {
-                searchOption = SearchOption.AllDirectories;
-            }
-            else
-            {
-                searchOption = SearchOption.TopDirectoryOnly;
-            }
+            SearchOption searchOption = IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
             try
             {
@@ -194,23 +186,12 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Grab only the latest (count) media files from defined directory</value> 
-        public void latestFolderList(string folderpath, int count)
+        public static void latestFolderList(string folderpath, int count)
         {
-            if (count == null || count == 0)
-            {
-                count = 10;
-            }
+            if (count <= 0) count = 10;
 
             var _settingsInstance = CustomSettings.Instance;
-            SearchOption searchOption;
-            if(IncludeSubfolders)
-            {
-                searchOption = SearchOption.AllDirectories;
-            }
-            else
-            {
-                searchOption = SearchOption.TopDirectoryOnly;
-            }
+            SearchOption searchOption = IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
             try
             {
@@ -222,7 +203,7 @@ namespace RandomVideoPlayerV3.Model
                         .Take(count) // Take only the top 100
                         .ToArray();
                 }
-                else if(!_settingsInstance.sortCreationDate) //Set to sort by date of last modified
+                else //Set to sort by date of last modified
                 {
                     FolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
                         .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
@@ -237,21 +218,21 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Delete current user defined list</value> 
-        public void ClearCustomList()
+        public static void ClearCustomList()
         {
             var _settingsInstance = CustomSettings.Instance;
             _settingsInstance.customListConfig.Clear();
             _settingsInstance.Save();
         }
         /// <value>Delete List of favorite folders</value> 
-        public void ClearFavoriteList()
+        public static void ClearFavoriteFolderList()
         {
             var _settingsInstance = CustomSettings.Instance;
             _settingsInstance.favoriteCollection.Clear();
             _settingsInstance.Save();
         }
         /// <value>Remove media file from stored custom list in case user deleted it</value> 
-        public void DeleteStringFromCustomList(string path)
+        public static void DeleteStringFromCustomList(string path)
         {
             var _settingsInstance = CustomSettings.Instance;
             if (_settingsInstance.customListConfig.Contains(path))
@@ -261,7 +242,7 @@ namespace RandomVideoPlayerV3.Model
             }
         }
         /// <value>Randomize Playlist</value> 
-        public void shufflePlayList()
+        public static void shufflePlayList()
         {
             if(PlayList?.Any() == true)
             {

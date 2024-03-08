@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RandomVideoPlayerV3.Functions
+﻿namespace RandomVideoPlayer.Functions
 {
     public class FormResize
     {
-        //private static CustomSettings _settingsInstance = CustomSettings.Load();
-
         private int _borderSize = 2;
         private bool _windowExclusiveFullscreen = false;
         private Size _tempSize;
@@ -93,7 +85,7 @@ namespace RandomVideoPlayerV3.Functions
             f.WindowState = FormWindowState.Minimized;
         }
 
-        private void PlayerIsWindowSize(Form f, Panel top, Panel bottom, Panel player) //Logic to align panels automaticcaly in window mode
+        private void PlayerIsWindowSize(Form f, Panel top, Panel bottom, Panel player) //Logic to align panels automatically in window mode
         {
             player.Location = new Point(_borderSize, top.Height + _borderSize);
             player.Size = new Size(f.Width - (_borderSize * 2), f.Height - top.Height - bottom.Height - (_borderSize * 2));

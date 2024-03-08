@@ -1,7 +1,6 @@
-﻿using Mpv.NET.API;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
-namespace RandomVideoPlayerV3
+namespace RandomVideoPlayer
 {
     public class FlatProgressBar : Control
     {
@@ -19,8 +18,10 @@ namespace RandomVideoPlayerV3
         private Color _completedGraphBrush = Color.White;
         private Color _remainingGraphBrush = Color.Black;
         private Color _mouseOverColor = Color.Black;
-        private Bitmap? progressBitmap;
-        private Bitmap? remainingBitmap;
+
+        private Bitmap progressBitmapBuffer;
+        private Bitmap remainingBitmapBuffer;
+        private readonly object bitmapLock = new object();
         private List<ActionPoint> actionPoints = new List<ActionPoint>();
 
         public FlatProgressBar()
@@ -188,18 +189,13 @@ namespace RandomVideoPlayerV3
         }
         private void PreRenderGraph()
         {
-            progressBitmap?.Dispose();
-            remainingBitmap?.Dispose();
-
             if (actionPoints == null || actionPoints.Count == 0 || this.Width == 0 || this.Height == 0)
             {
-                progressBitmap = null;
-                remainingBitmap = null;
                 return;
             }
 
-            progressBitmap = new Bitmap(Width, Height);
-            remainingBitmap = new Bitmap(Width, Height);
+            Bitmap progressBitmap = new Bitmap(Width, Height);
+            Bitmap remainingBitmap = new Bitmap(Width, Height);
 
             using (Graphics g = Graphics.FromImage(progressBitmap))
             {
@@ -215,6 +211,14 @@ namespace RandomVideoPlayerV3
 
                 DrawFunscriptGraph(g, _remainingGraphBrush); 
             }
+
+            lock (bitmapLock)
+            {
+                progressBitmapBuffer?.Dispose();
+                remainingBitmapBuffer?.Dispose();
+                progressBitmapBuffer = progressBitmap;
+                remainingBitmapBuffer = remainingBitmap;
+            }
         }
         private void DrawFunscriptGraph(Graphics g, Color graphcolor)
         {
@@ -222,7 +226,7 @@ namespace RandomVideoPlayerV3
 
             int maxTime = Maximum;
 
-            using (Pen remainingGraphPen = new Pen(graphcolor, _graphThickness)) 
+            using (Pen GraphPen = new Pen(graphcolor, _graphThickness)) 
             {
                 for (int i = 0; i < actionPoints.Count - 1; i++)
                 {
@@ -234,7 +238,7 @@ namespace RandomVideoPlayerV3
                     float endX = (float)endPoint.At / maxTime * Width;
                     float endY = (1 - (float)endPoint.Pos / 100) * Height;
 
-                    g.DrawLine(remainingGraphPen, startX, startY, endX, endY);
+                    g.DrawLine(GraphPen, startX, startY, endX, endY);
                     
                     g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 }
@@ -255,14 +259,22 @@ namespace RandomVideoPlayerV3
             }
             else
             {
+                Bitmap progressBitmapToDraw, remainingBitmapToDraw;
+
+                lock (bitmapLock)
+                {
+                    progressBitmapToDraw = progressBitmapBuffer;
+                    remainingBitmapToDraw = remainingBitmapBuffer;
+                }
+
                 // Draw the pre-rendered graph bitmap
-                if (progressBitmap != null && remainingBitmap != null)
+                if (progressBitmapToDraw != null && remainingBitmapToDraw != null)
                 {
                     Rectangle progressRect = new Rectangle(0, 0, progressWidth, Height);
-                    e.Graphics.DrawImage(progressBitmap, progressRect, progressRect, GraphicsUnit.Pixel);
+                    e.Graphics.DrawImage(progressBitmapToDraw, progressRect, progressRect, GraphicsUnit.Pixel);
 
                     Rectangle remainingRect = new Rectangle(progressWidth, 0, Width - progressWidth, Height);
-                    e.Graphics.DrawImage(remainingBitmap, remainingRect, remainingRect, GraphicsUnit.Pixel);
+                    e.Graphics.DrawImage(remainingBitmapToDraw, remainingRect, remainingRect, GraphicsUnit.Pixel);
                 }
             }
             // Draw border if ShowBorder is true
@@ -272,13 +284,9 @@ namespace RandomVideoPlayerV3
                 var pen = new Pen(_borderColor, BorderThickness);
                 e.Graphics.DrawRectangle(pen, borderRect);
             }
-
         }
-
-
-
     }
-    public class ActionPoint
+    public struct ActionPoint
     {
         public long At { get; set; } // Time in milliseconds
         public int Pos { get; set; } // Position value

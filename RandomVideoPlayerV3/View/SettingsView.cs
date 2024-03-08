@@ -1,16 +1,12 @@
-﻿using RandomVideoPlayer.View;
-using RandomVideoPlayerV3.Functions;
-using RandomVideoPlayerV3.Model;
-using RandomVideoPlayerV3.View;
+﻿using RandomVideoPlayer.Functions;
+using RandomVideoPlayer.Model;
 using System.Runtime.InteropServices;
 
-namespace RandomVideoPlayerV3.View
+namespace RandomVideoPlayer.View
 {
     public partial class SettingsView : Form
     {
         FormResize fR = new FormResize();
-        PathHandler pH = new PathHandler();
-        SettingsHandler sH = new SettingsHandler();
         public SettingsView()
         {
             InitializeComponent();
@@ -30,29 +26,30 @@ namespace RandomVideoPlayerV3.View
         }
         private void SettingsView_Load(object sender, EventArgs e)
         {
-            if (pH.DefaultFolder == null)
+            if (PathHandler.DefaultFolder == null)
             {
-                pH.DefaultFolder = pH.FallbackPath;
+                PathHandler.DefaultFolder = PathHandler.FallbackPath;
             }
-            tbRemovalPath.Text = pH.RemoveFolder;
-            tbDefaultPath.Text = pH.DefaultFolder;
+            tbRemovalPath.Text = PathHandler.RemoveFolder;
+            tbDefaultPath.Text = PathHandler.DefaultFolder;
             cbRemembersize.Checked = fR.SaveLastSize;
-            tbListfolderPath.Text = pH.FolderList;
-            cbDeleteToggle.Checked = sH.DeleteFull;
-            cbLoopPlayer.Checked = sH.LoopPlayer;
-            cbtimeCodeServer.Checked = sH.TimeCodeServer;
+            tbListfolderPath.Text = PathHandler.FolderList;
+            cbDeleteToggle.Checked = SettingsHandler.DeleteFull;
+            cbIncludeScripts.Checked = SettingsHandler.IncludeScripts;
+            cbLoopPlayer.Checked = SettingsHandler.LoopPlayer;
+            cbtimeCodeServer.Checked = SettingsHandler.TimeCodeServer;
 
 
-            if (sH.CreationDate)
+            if (SettingsHandler.CreationDate)
             {
                 rbCreationDate.Checked = true;
             }
-            else if (!sH.CreationDate)
+            else if (!SettingsHandler.CreationDate)
             {
                 rbModifiedDate.Checked = true;
             }
-            cbPlayVideos.Checked = sH.PlayVideos;
-            cbPlayImages.Checked = sH.PlayImages;
+            cbPlayVideos.Checked = SettingsHandler.PlayVideos;
+            cbPlayImages.Checked = SettingsHandler.PlayImages;
 
             SetupTooltips(); //Initialize Tooltips
 
@@ -75,7 +72,7 @@ namespace RandomVideoPlayerV3.View
         }
         private void btnFileBrowse_Click(object sender, EventArgs e)
         {
-            fbDialog.InitialDirectory = pH.DefaultFolder;
+            fbDialog.InitialDirectory = PathHandler.DefaultFolder;
 
             DialogResult result = fbDialog.ShowDialog();
             if (result == DialogResult.OK)
@@ -85,7 +82,7 @@ namespace RandomVideoPlayerV3.View
         }
         private void btnFileBrowseRemove_Click(object sender, EventArgs e)
         {
-            fbDialog.InitialDirectory = pH.DefaultFolder;
+            fbDialog.InitialDirectory = PathHandler.DefaultFolder;
 
             DialogResult result = fbDialog.ShowDialog();
             if (result == DialogResult.OK)
@@ -95,7 +92,7 @@ namespace RandomVideoPlayerV3.View
         }
         private void btnFileBrowseList_Click(object sender, EventArgs e)
         {
-            fbDialog.InitialDirectory = pH.FolderList;
+            fbDialog.InitialDirectory = PathHandler.FolderList;
 
             DialogResult result = fbDialog.ShowDialog();
             if (result == DialogResult.OK)
@@ -107,25 +104,26 @@ namespace RandomVideoPlayerV3.View
         {
             this.DialogResult = DialogResult.OK;
 
-            pH.DefaultFolder = tbDefaultPath.Text;
-            pH.TempRecentFolder = pH.DefaultFolder;
-            pH.RemoveFolder = tbRemovalPath.Text;
-            pH.FolderList = tbListfolderPath.Text;
+            PathHandler.DefaultFolder = tbDefaultPath.Text;
+            PathHandler.TempRecentFolder = PathHandler.DefaultFolder;
+            PathHandler.RemoveFolder = tbRemovalPath.Text;
+            PathHandler.FolderList = tbListfolderPath.Text;
             fR.SaveLastSize = cbRemembersize.Checked;
-            sH.DeleteFull = cbDeleteToggle.Checked;
-            sH.LoopPlayer = cbLoopPlayer.Checked;
-            sH.TimeCodeServer = cbtimeCodeServer.Checked;
+            SettingsHandler.DeleteFull = cbDeleteToggle.Checked;
+            SettingsHandler.IncludeScripts = cbIncludeScripts.Checked;
+            SettingsHandler.LoopPlayer = cbLoopPlayer.Checked;
+            SettingsHandler.TimeCodeServer = cbtimeCodeServer.Checked;
 
             if (rbCreationDate.Checked)
             {
-                sH.CreationDate = true;
+                SettingsHandler.CreationDate = true;
             }
             else if (rbModifiedDate.Checked)
             {
-                sH.CreationDate = false;
+                SettingsHandler.CreationDate = false;
             }
-            sH.PlayVideos = cbPlayVideos.Checked;
-            sH.PlayImages = cbPlayImages.Checked;
+            SettingsHandler.PlayVideos = cbPlayVideos.Checked;
+            SettingsHandler.PlayImages = cbPlayImages.Checked;
 
             this.Close();
         }
@@ -137,6 +135,7 @@ namespace RandomVideoPlayerV3.View
             toolTipInfo.SetToolTip(btnClose, "Close without saving");
             toolTipInfo.SetToolTip(cbRemembersize, "Saves current window size for next startup");
             toolTipInfo.SetToolTip(cbDeleteToggle, "Choose whether to delete files completely or move them to chosen folder when using the delete button from the player");
+            toolTipInfo.SetToolTip(cbIncludeScripts, "Choose whether RVP should look for associated script files next to the current file and delete those too");
             toolTipInfo.SetToolTip(rbCreationDate, "Use files creation date when choosing to load only the latest X files");
             toolTipInfo.SetToolTip(rbModifiedDate, "Use files last date modified when choosing to load only the latest X files");
             toolTipInfo.SetToolTip(cbLoopPlayer, "Loop played file or play next automatically after file is finished");

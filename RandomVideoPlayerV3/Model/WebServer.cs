@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RandomVideoPlayer.Model
 {
@@ -14,23 +10,23 @@ namespace RandomVideoPlayer.Model
         private bool isRunning = false;
         private const string prefix = "http://127.0.0.1:13579/";
         public string filepath { get; set; } = "";//0
-        public string state { get; set; } = "2"; //1  - State: 1 == Pause State: 2 == Play
+        public byte state { get; set; } = 2; //1  - State: 1 == Pause State: 2 == Play
         public string position { get; set; } = ""; //2
         public string duration { get; set; } = ""; //3
-        public string playbackrate { get; set; } = "1"; //4
+        public byte playbackrate { get; set; } = 1; //4
         //HTML data for MFP to read
         private string pageData =
-            "<!DOCTYPE>" +
-            "<html>" +
-            "<head>" +
-            "   <title>RVP Variables</title>" +
-            "</head>" +
-            "   <body class=\"page-variables\">" +
-            "       <p id=\"filepath\">{0}</p>" +
-            "       <p id=\"state\">{1}</p>" +
-            "       <p id=\"position\">{2}</p>" +
-            "       <p id=\"duration\">{3}</p>" +
-            "       <p id=\"playbackrate\">{4}</p>" +
+            "<!DOCTYPE>\n" +
+            "<html>\n" +
+            "<head>\n" +
+            "   <title>RVP Variables</title>\n" +
+            "</head>\n" +
+            "<body class=\"page-variables\">\n" +
+            "       <p id=\"filepath\">{0}</p>\n" +
+            "       <p id=\"state\">{1}</p>\n" +
+            "       <p id=\"position\">{2}</p>\n" +
+            "       <p id=\"duration\">{3}</p>\n" +
+            "       <p id=\"playbackrate\">{4}</p>\n" +
             "</body></html>";
 
         public WebServer()
@@ -74,7 +70,7 @@ namespace RandomVideoPlayer.Model
                 }
                 catch (HttpListenerException) // Catch the exception when listener.Stop() is called
                 {
-                    // Handle the exception if needed or ignore if we're just stopping the server
+
                 }
             }
         }
@@ -97,7 +93,6 @@ namespace RandomVideoPlayer.Model
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error creating timecode server:\n\n{0}", ex));
-                // Log error or handle it as needed
             }
             finally
             {

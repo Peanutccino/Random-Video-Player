@@ -1,4 +1,4 @@
-﻿using RandomVideoPlayerV3.Functions;
+﻿using RandomVideoPlayer.Functions;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
