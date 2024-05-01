@@ -396,6 +396,7 @@ namespace RandomVideoPlayer
                 btnNext.Enabled = true;
                 btnPrevious.Enabled = true;
                 btnRemove.Enabled = true;
+                btnListDel.Enabled = true;
                 SettingsHandler.InitPlay = true;
             }
 

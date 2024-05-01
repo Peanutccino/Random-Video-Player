@@ -93,6 +93,7 @@
             // 
             // btnListDel
             // 
+            btnListDel.Enabled = false;
             btnListDel.FlatAppearance.BorderSize = 0;
             btnListDel.FlatStyle = FlatStyle.Flat;
             btnListDel.Image = (Image)resources.GetObject("btnListDel.Image");
