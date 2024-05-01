@@ -9,11 +9,11 @@ namespace RandomVideoPlayer.Model
         private Thread serverThread;
         private bool isRunning = false;
         private const string prefix = "http://127.0.0.1:13579/";
-        public string filepath { get; set; } = "";//0
-        public byte state { get; set; } = 2; //1  - State: 1 == Pause State: 2 == Play
-        public string position { get; set; } = ""; //2
-        public string duration { get; set; } = ""; //3
-        public byte playbackrate { get; set; } = 1; //4
+        public string Filepath { get; set; } = "";//0
+        public byte State { get; set; } = 2; //1  - State: 1 == Pause State: 2 == Play
+        public string Position { get; set; } = ""; //2
+        public string Duration { get; set; } = ""; //3
+        public byte Playbackrate { get; set; } = 1; //4
         //HTML data for MFP to read
         private string pageData =
             "<!DOCTYPE>\n" +
@@ -83,7 +83,7 @@ namespace RandomVideoPlayer.Model
             {
                 if (request.RawUrl.Equals("/variables.html", StringComparison.OrdinalIgnoreCase))
                 {
-                    byte[] data = Encoding.UTF8.GetBytes(String.Format(pageData, filepath, state, position, duration, playbackrate));
+                    byte[] data = Encoding.UTF8.GetBytes(String.Format(pageData, Filepath, State, Position, Duration, Playbackrate));
                     context.Response.ContentType = "text/html";
                     context.Response.ContentLength64 = data.LongLength;
 

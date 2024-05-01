@@ -132,7 +132,7 @@ namespace RandomVideoPlayer
             }
             else
             {
-                ListHandler.fillFolderList(PathHandler.FolderPath);               
+                ListHandler.fillFolderList(PathHandler.FolderPath);
             }
 
             ListHandler.NeedsToPrepare = true; //Since we changed the content, we need to prepare the Playlist next
@@ -169,6 +169,10 @@ namespace RandomVideoPlayer
             DeleteCurrent();
         }
 
+        private void btnListDel_Click(object sender, EventArgs e)
+        {
+            DeleteCurrentFromList();
+        }
         private void btnSettings_Click(object sender, EventArgs e)
         {
             SettingsView svForm = new SettingsView();
@@ -188,6 +192,16 @@ namespace RandomVideoPlayer
                 {
                     tcServer.Stop();
                 }
+                if (SettingsHandler.DeleteFull)
+                {
+                    toolTipUI.SetToolTip(btnRemove, "Del | Delete currently played videofile completely (Change in settings)");
+                }
+                else
+                {
+                    var trashPath = PathHandler.RemoveFolder;
+                    toolTipUI.SetToolTip(btnRemove, $"Del | Move currently played videofile to '{trashPath}'");
+                }
+
                 playerMPV.Loop = SettingsHandler.LoopPlayer; //Update Player behavior
                 initStartUp(); //Used to fix issues at first time startup
             }
@@ -209,6 +223,7 @@ namespace RandomVideoPlayer
         {
             toggleShuffle();
         }
+
         private void tbSourceSelector_CheckedChanged(object sender, EventArgs e)
         {
             SettingsHandler.SourceSelected = tbSourceSelector.Checked;
@@ -282,53 +297,6 @@ namespace RandomVideoPlayer
         #endregion
 
         #region Player Controls
-        private void DeleteCurrent()
-        {
-            var currentFile = ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
-            var fileScripts = SettingsHandler.IncludeScripts ? FileManipulation.GetAssociatedFunscripts(currentFile) : new List<string>();
-
-            if (!Directory.Exists(PathHandler.RemoveFolder))
-            {
-                Directory.CreateDirectory(PathHandler.RemoveFolder);
-            }
-
-            try
-            {              
-                if (SettingsHandler.DeleteFull)
-                {
-                    File.Delete(currentFile);
-                    foreach(var script in fileScripts)
-                    {
-                        File.Delete(script);
-                    }
-                }
-                else
-                {
-                    string removalPath = Path.Combine(PathHandler.RemoveFolder, FileManipulation.GetFileName(currentFile));
-
-                    File.Move(currentFile, removalPath);
-                    foreach (var script in fileScripts)
-                    {
-                        removalPath = Path.Combine(PathHandler.RemoveFolder, FileManipulation.GetFileName(script));
-                        File.Move(script, removalPath);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error processing the file: {ex}");
-                return;
-            }
-
-            ListHandler.DeleteStringFromCustomList(currentFile); //Delete path from Properties Settings
-
-            var updatedList = ListHandler.PlayList.ToList();
-            updatedList.RemoveAt(ListHandler.PlayListIndex);
-            ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
-            ListHandler.PlayListIndex--;
-
-            playNext();
-        }
 
         private void playNext()
         {
@@ -354,7 +322,7 @@ namespace RandomVideoPlayer
             }
             else
             {
-                ListHandler.FirstPlay = false; 
+                ListHandler.FirstPlay = false;
             }
 
             string videoFile = ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
@@ -420,7 +388,7 @@ namespace RandomVideoPlayer
             SettingsHandler.IsPlaying = false;
 
             playerPlayPauseToggle();
-        }      
+        }
         private void playerPlayPauseToggle()
         {
             if (ListHandler.PlayList?.Any() == true && SettingsHandler.InitPlay == false) //First Play to get going
@@ -437,7 +405,7 @@ namespace RandomVideoPlayer
                 SettingsHandler.IsPlaying = false;
                 btnPlay.IconChar = FontAwesome.Sharp.IconChar.Play;
                 ThreadHelper.SetToolTipSafe(btnPlay, toolTipUI, "Space | Start playing from selected source");
-                tcServer.state = 1;
+                tcServer.State = 1;
             }
             else
             {
@@ -445,9 +413,71 @@ namespace RandomVideoPlayer
                 SettingsHandler.IsPlaying = true;
                 btnPlay.IconChar = FontAwesome.Sharp.IconChar.Pause;
                 ThreadHelper.SetToolTipSafe(btnPlay, toolTipUI, "Space | Pause playback");
-                tcServer.state = 2;
+                tcServer.State = 2;
             }
         }
+        private void DeleteCurrent()
+        {
+            var currentFile = ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
+            var fileScripts = SettingsHandler.IncludeScripts ? FileManipulation.GetAssociatedFunscripts(currentFile) : new List<string>();
+
+            if (!Directory.Exists(PathHandler.RemoveFolder))
+            {
+                Directory.CreateDirectory(PathHandler.RemoveFolder);
+            }
+
+            try
+            {
+                if (SettingsHandler.DeleteFull)
+                {
+                    File.Delete(currentFile);
+                    foreach (var script in fileScripts)
+                    {
+                        File.Delete(script);
+                    }
+                }
+                else
+                {
+                    string removalPath = Path.Combine(PathHandler.RemoveFolder, FileManipulation.GetFileName(currentFile));
+
+                    File.Move(currentFile, removalPath);
+                    foreach (var script in fileScripts)
+                    {
+                        removalPath = Path.Combine(PathHandler.RemoveFolder, FileManipulation.GetFileName(script));
+                        File.Move(script, removalPath);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error processing the file: {ex}");
+                return;
+            }
+
+            ListHandler.DeleteStringFromCustomList(currentFile); //Delete path from Properties Settings
+
+            var updatedList = ListHandler.PlayList.ToList();
+            updatedList.RemoveAt(ListHandler.PlayListIndex);
+            ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
+            ListHandler.PlayListIndex--;
+
+            playNext();
+        }
+
+        private void DeleteCurrentFromList()
+        {
+            var currentFile = ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
+
+            ListHandler.DeleteStringFromCustomList(currentFile); //Delete path from Properties Settings
+
+            var updatedList = ListHandler.PlayList.ToList();
+            updatedList.RemoveAt(ListHandler.PlayListIndex);
+            ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
+            ListHandler.PlayListIndex--;
+
+            playNext();
+        }
+
         private void panelPlayerMPV_MouseWheel(object sender, MouseEventArgs e) //Move through video by Scrolling
         {
             try
@@ -461,7 +491,7 @@ namespace RandomVideoPlayer
                     bool isShortVideo = SettingsHandler.VideoDuration <= 45; //Smaller seek increments in short videos
                     bool isNearEnd = SettingsHandler.VideoRemaining > 0 && SettingsHandler.VideoRemaining < 5; //Decrease seek increments at the end to trigger next etc.
 
-                    if(isShortVideo)
+                    if (isShortVideo)
                     {
                         seekValue = isNearEnd ? 1 : 2;
                     }
@@ -470,12 +500,12 @@ namespace RandomVideoPlayer
                         seekValue = isNearEnd ? 1 : 5;
                     }
                 }
-                else if(e.Delta < 0)
+                else if (e.Delta < 0)
                 {
                     seekValue = -2;
                 }
 
-                if(seekValue !=0)
+                if (seekValue != 0)
                 {
                     playerMPV.SeekAsync(seekValue, true);
                 }
@@ -483,7 +513,7 @@ namespace RandomVideoPlayer
             catch (Exception)
             {
                 //Player busy at the moment
-            }                  
+            }
         }
         private void toggleShuffle()
         {
@@ -545,10 +575,10 @@ namespace RandomVideoPlayer
                     playNext();
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 //MessageBox.Show($"Didn't work: {ex}");
-                return; 
+                return;
             }
         }
 
@@ -558,14 +588,14 @@ namespace RandomVideoPlayer
 
             SettingsHandler.VideoDuration = durationMS / 1000; //seconds
 
-            tcServer.duration = durationMS.ToString();
+            tcServer.Duration = durationMS.ToString();
 
             pbPlayerProgress.Maximum = durationMS;
 
             if (!string.IsNullOrWhiteSpace(currentFile))
             {
                 favoriteMatch = FavFunctions.IsFavoriteMatched(currentFile, tempFavorites, btnAddToFav);
-                tcServer.filepath = currentFile;
+                tcServer.Filepath = currentFile;
 
                 var currentFileExtension = Path.GetExtension(currentFile).TrimStart('.').ToLower();
                 if (ListHandler.ImageExtensions.Contains(currentFileExtension))
@@ -623,19 +653,19 @@ namespace RandomVideoPlayer
 
             // Set the label's location directly above the progress bar, horizontally centered on the cursor
             var labelX = controlRelativePosition.X - (timeOverlayLabel.Width / 2) + pbPlayerProgress.Location.X;
-            var labelY = this.Height - 95; 
+            var labelY = this.Height - 95;
 
             // Prevent the label from going beyond the left or right bounds of the progress bar
             labelX = Math.Max(labelX, panelBottom.Location.X);
             labelX = Math.Min(labelX, panelBottom.Location.X + pbPlayerProgress.Width - timeOverlayLabel.Width);
 
             timeOverlayLabel.Location = new Point(labelX, labelY);
-            timeOverlayLabel.Visible = true; 
-        }        
+            timeOverlayLabel.Visible = true;
+        }
         private void pbPlayerProgress_MouseLeave(object sender, EventArgs e)
         {
             timeOverlayLabel.Visible = false;
-        }        
+        }
         private void InitializeTimeOverlay()
         {
             timeOverlayLabel.AutoSize = true;
@@ -754,13 +784,23 @@ namespace RandomVideoPlayer
             toolTipUI.SetToolTip(btnNext, "Right Arrow | Next track");
             toolTipUI.SetToolTip(btnFileBrowse, "Choose folder to play from");
             toolTipUI.SetToolTip(btnListBrowser, "Create your own lists with selected videos");
-            toolTipUI.SetToolTip(btnRemove, "Del | Delete currently played videofile (or move it to set directory)");
+            toolTipUI.SetToolTip(btnListDel, "Remove current played videofile from custom List and Playlist (No deletion)");
             toolTipUI.SetToolTip(btnSettings, "Open settings menu");
             toolTipUI.SetToolTip(btnAddToFav, "F | Add current to favorite list");
             toolTipUI.SetToolTip(btnShuffle, "S | Toggle shuffle / Parse order");
             toolTipUI.SetToolTip(btnMuteToggle, "M | Mute sound");
             toolTipUI.SetToolTip(pbVolume, "Scroll/Click to change volume");
             toolTipUI.SetToolTip(tbSourceSelector, "Choose whether to play from selected folder or your custom list");
+
+            if(SettingsHandler.DeleteFull)
+            {
+                toolTipUI.SetToolTip(btnRemove, "Del | Delete currently played videofile completely (Change in settings)");
+            }
+            else
+            {
+                var trashPath = PathHandler.RemoveFolder;
+                toolTipUI.SetToolTip(btnRemove, $"Del | Move currently played videofile to '{trashPath}'");
+            }
         }
         //Setup Hotkeys
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -840,10 +880,10 @@ namespace RandomVideoPlayer
                     var _currentSpan = TimeSpan.FromMilliseconds(positionMS);
                     lblDurationInfo.Text = $"{_currentSpan:hh\\:mm\\:ss} / {_totalSpan:hh\\:mm\\:ss}";
 
-                    tcServer.position = positionMS.ToString();
+                    tcServer.Position = positionMS.ToString();
                     pbPlayerProgress.Refresh();
                 }
-                else if(playerMPV.IsMediaLoaded && !playerMPV.IsPausedForCache && SettingsHandler.InitPlay && SettingsHandler.VideoDuration == 0)
+                else if (playerMPV.IsMediaLoaded && !playerMPV.IsPausedForCache && SettingsHandler.InitPlay && SettingsHandler.VideoDuration == 0)
                 {
                     lblDurationInfo.Text = "00:00:00 / 00:00:00";
                 }
@@ -1025,6 +1065,7 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
+
 
     }
 }
