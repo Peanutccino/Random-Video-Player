@@ -158,8 +158,16 @@ namespace RandomVideoPlayer.Model
         public static void PreparePlayList(bool sourceselected)
         {
             if (NeedsToPrepare)
-            {
-                PlayList = sourceselected ? CustomList : FolderList;
+            {                
+                if (sourceselected)
+                {
+                    PlayList = CustomList
+                        .Where(file => Extensions.Contains(GetFileExtension(file).ToLowerInvariant()));
+                }
+                else
+                {
+                    PlayList = FolderList;
+                }
 
                 PlayListIndex = 0;
 
@@ -168,6 +176,11 @@ namespace RandomVideoPlayer.Model
                 _needsToPrepare = false;
                 _firstPlay = true;
             }
+        }
+
+        private static string GetFileExtension(string fileName)
+        {
+            return fileName.Substring(fileName.LastIndexOf('.') + 1);
         }
         /// <value>Grab all media files from set directory</value> 
         public static void fillFolderList(string folderpath)

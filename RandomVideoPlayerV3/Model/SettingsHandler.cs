@@ -8,6 +8,7 @@ namespace RandomVideoPlayer.Model
 		private static bool _sourceSelected = false; //False = Folder | True = List
 		private static bool _isPlaying = false;
         private static bool _initPlay = false;
+        private static bool _settingChanged = false;
         public static int VolumeTemp
 		{
 			get { return _volumeTemp; }
@@ -34,6 +35,13 @@ namespace RandomVideoPlayer.Model
 			get { return _initPlay; }
 			set { _initPlay = value; }
 		}
+
+        public static bool SettingChanged
+        {
+            get { return _settingChanged; }
+            set { _settingChanged = value; }
+        }
+
 
         /// <value>Uses Creation Date (true) or Last Date modified (false).</value> 
         public static bool CreationDate 

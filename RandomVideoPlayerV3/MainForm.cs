@@ -204,6 +204,8 @@ namespace RandomVideoPlayer
 
                 playerMPV.Loop = SettingsHandler.LoopPlayer; //Update Player behavior
                 initStartUp(); //Used to fix issues at first time startup
+                if (SettingsHandler.SettingChanged)
+                    playNext();
             }
         }
         private void btnAddToFav_Click(object sender, EventArgs e)

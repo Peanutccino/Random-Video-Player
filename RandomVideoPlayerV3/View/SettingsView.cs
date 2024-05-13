@@ -122,6 +122,12 @@ namespace RandomVideoPlayer.View
             {
                 SettingsHandler.CreationDate = false;
             }
+            if(cbPlayVideos.Checked != SettingsHandler.PlayVideos || cbPlayImages.Checked != SettingsHandler.PlayImages)
+            {
+                ListHandler.NeedsToPrepare = true;
+                SettingsHandler.SettingChanged = true;
+            }
+
             SettingsHandler.PlayVideos = cbPlayVideos.Checked;
             SettingsHandler.PlayImages = cbPlayImages.Checked;
 
