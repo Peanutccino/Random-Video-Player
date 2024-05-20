@@ -13,6 +13,7 @@ namespace RandomVideoPlayer.Model
 
         private static List<string> _vidExtensions = new List<string> { "avi", "flv", "m4v", "mkv", "mov", "mp4", "webm", "wmv", "f4v", "avchd" };
         private static List<string> _imgExtensions = new List<string> { "jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp", "webp", "avif" };
+
         /// <value>Tracks playlist position</value> 
         public static int PlayListIndex
         {
@@ -90,6 +91,38 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static IEnumerable<string> SelectedExtensions
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.selectedExtensions.Cast<string>();
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.selectedExtensions.Clear();
+                _settingsInstance.selectedExtensions.AddRange(value.ToArray());
+                _settingsInstance.Save();
+            }
+        }
+        public static IEnumerable<string> ExtensionFilterForList
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.extensionFilterForList.Cast<string>();
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.extensionFilterForList.Clear();
+                _settingsInstance.extensionFilterForList.AddRange(value.ToArray());
+                _settingsInstance.Save();
+            }
+        }
+
         /// <value>Stores added favorite folders for easier file browser navigation</value> 
         public static IEnumerable<string> FavoriteFolderList 
         {
@@ -106,28 +139,12 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-        private static List<string> GetExtensions(List<string> videoExtensions, List<string> imageExtensions, bool playVideo, bool playImage)
-        {
-            var combinedExtensions = new List<string>();
-
-            if (playVideo)
-            {
-                combinedExtensions.AddRange(videoExtensions);
-            }
-
-            if (playImage)
-            {
-                combinedExtensions.AddRange(imageExtensions);
-            }
-
-            return combinedExtensions;
-        }
         /// <value>Holds a defined number of supported file extensions</value> 
-        private static List<string> Extensions
+        public static List<string> Extensions
         {
             get 
             {
-                return GetExtensions(_vidExtensions, _imgExtensions, _playVideos, _playImages);
+                return new List<string>(SelectedExtensions);
             }
         }
         public static List<string> ImageExtensions 
@@ -138,22 +155,6 @@ namespace RandomVideoPlayer.Model
         {
             get { return _vidExtensions; }
         }
-        private static bool _playVideos
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.playVideos;
-            }
-        }
-        private static bool _playImages
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.playImages;
-            }
-        }
         /// <value>Shuffles current playlist for random playback</value> 
         public static void PreparePlayList(bool sourceselected)
         {
@@ -161,8 +162,15 @@ namespace RandomVideoPlayer.Model
             {                
                 if (sourceselected)
                 {
-                    PlayList = CustomList
-                        .Where(file => Extensions.Contains(GetFileExtension(file).ToLowerInvariant()));
+                    if (SettingsHandler.ApplyFilterToList)
+                    {
+                        PlayList = CustomList
+                            .Where(file => Extensions.Contains(GetFileExtension(file).ToLowerInvariant()));
+                    }
+                    else
+                    {
+                        PlayList = CustomList;
+                    }
                 }
                 else
                 {

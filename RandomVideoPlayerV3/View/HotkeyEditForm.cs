@@ -1,67 +1,73 @@
 ﻿using RandomVideoPlayer.Functions;
 using System.Runtime.InteropServices;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
+
 
 namespace RandomVideoPlayer.View
 {
-    public partial class ShortcutsView : Form
+    public partial class HotkeyEditForm : Form
     {
         FormResize fR = new FormResize();
-        public ShortcutsView()
+        private HotkeySettings settings;
+        public Keys SelectedKey { get; private set; }
+        public Keys SelectedModifiers { get; private set; }
+        public HotkeyEditForm(HotkeySetting hotkeySetting, HotkeySettings settings)
         {
             InitializeComponent();
-
+            this.settings = settings;
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
-            this.BackColor = Color.FromArgb(128, 0, 255);//Border color
-
+            this.BackColor = Color.FromArgb(179, 179, 255);//Border color
+            lblAction.Text = hotkeySetting.Action;
         }
-        private void ShortcutsView_Load(object sender, EventArgs e)
-        {
-            lvShortcuts.Columns[1].Width = lvShortcuts.Width - lvShortcuts.Columns[0].Width - 4;
-            foreach (var shortcut in shortcuts)
-            {
-                ListViewItem item = new ListViewItem();
-                item.Text = shortcut.Key;
-                item.SubItems.Add(shortcut.Value);
-                lvShortcuts.Items.Add(item);
-            }
-        }
-        private void ShortcutsView_Resize(object sender, EventArgs e)
-        {
-            fR.AdjustForm(this);
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-        private void lblTitle_MouseDown(object sender, MouseEventArgs e)
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
-        Dictionary<string, string> shortcuts = new Dictionary<string, string>
+        private void label1_MouseDown(object sender, MouseEventArgs e)
         {
-            {"Space", "Play/Pause" },
-            {"Arrow Left", "Previous Track" },
-            {"Arrow Right", "Next Track" },
-            {"RMB", "Next Track" },
-            {"MB4", "Previous Track" },
-            {"MB5", "Next Track" },
-            {"Media Play/Pause", "Play/Pause" },
-            {"Media Previous", "Previous Track" },
-            {"Media Next", "Next Track" },
-            {"Scroll player", "Seek forwards/backwards" },
-            {"Scroll volume", "Change volume" },
-            {"Double Click player", "Exclusive Fullscreen" },
-            {"F11", "Exclusive Fullscreen" },
-            {"F", "Favorite current file" },
-            {"M", "Mute player" },
-            {"S", "Toggle Shuffle" },
-            {"Delete", "Delete current file" },
-            {"Escape", "Exit application" }
-        };
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+        private void HotkeyEditForm_Resize(object sender, EventArgs e)
+        {
+            fR.AdjustForm(this);
+        }
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            if(IsDuplicateHotkey(SelectedKey, SelectedModifiers))
+            {
+                MessageBox.Show("This key combination is already assigned to another action.", "Duplicate Hotkey", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            DialogResult = DialogResult.OK;
+            this.Close();
+        }
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            SelectedModifiers = keyData & Keys.Modifiers;
+            SelectedKey = keyData & Keys.KeyCode;
+
+            if(SelectedModifiers == Keys.None)
+            {
+                lblSelectedKey.Text = $"{SelectedKey}";
+            }
+            else
+            {
+                lblSelectedKey.Text = $"{SelectedModifiers} + {SelectedKey}";
+            }
+            return true;
+        }
+        private bool IsDuplicateHotkey(Keys key, Keys modifiers)
+        {
+            return settings.Hotkeys.Any(h => h.Key == key && h.Modifiers == modifiers);
+        }
         #region WndProc Code for clean style of the Form and regaining usabality
         //Resizable Windows Form Spaghetti
         protected override void WndProc(ref Message m)
@@ -132,6 +138,7 @@ namespace RandomVideoPlayer.View
         private extern static void ReleaseCapture();
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+
         #endregion
 
 

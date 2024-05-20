@@ -12,12 +12,19 @@ namespace RandomVideoPlayer.View
         List<string> TempList = new List<string>();
         List<string> TempFavList = new List<string>();
 
+        private List<string> extensionFilter { get; set; }
+
         public ListBrowserView()
         {
             InitializeComponent();
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
             this.BackColor = Color.FromArgb(248, 111, 100);//Border color
+
+            extensionFilter = new List<string>(ListHandler.ExtensionFilterForList);
+
+            InitializeFilterBoxes();
+            InitializeCheckboxEvents();
         }
 
         private void ListBrowserView_Load(object sender, EventArgs e)
@@ -66,6 +73,10 @@ namespace RandomVideoPlayer.View
             btnAddAll.IconFont = FontAwesome.Sharp.IconFont.Solid;
 
             SetupTooltips();
+        }       
+        private void ListBrowserView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ListHandler.ExtensionFilterForList = extensionFilter;
         }
         private void btnBack_Click(object sender, EventArgs e)
         {
@@ -80,7 +91,7 @@ namespace RandomVideoPlayer.View
         private void btnAddSelected_Click(object sender, EventArgs e)
         {
             var filteredPaths = new List<string>();
-            var combinedExtensions = ListHandler.VideoExtensions.Concat(ListHandler.ImageExtensions).ToList();
+            var combinedExtensions = extensionFilter;
             lbCustomList.Items.Clear();
 
             foreach (ListViewItem item in lvFileExplore.SelectedItems)
@@ -365,12 +376,12 @@ namespace RandomVideoPlayer.View
         {
             lvFileExplore.Items.Clear();
             DirectoryInfo dir = new DirectoryInfo(folderPath);
-            var combinedExtensions = ListHandler.VideoExtensions.Concat(ListHandler.ImageExtensions).ToList();
+            var combinedExtensions = extensionFilter;
 
             foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
             {
                 ListViewItem item = new ListViewItem();
-                item.Text = FileManipulation.TrimText(subFolder.Name, 13, "");
+                item.Text = FileManipulation.TrimText(subFolder.Name, 33, "");
                 item.ImageIndex = 0;
                 item.SubItems.Add("Folder");
                 item.Tag = subFolder.FullName;
@@ -382,8 +393,15 @@ namespace RandomVideoPlayer.View
                 string currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
                 if (!combinedExtensions.Contains(currentFileExtension)) continue;
                 ListViewItem item = new ListViewItem();
-                item.Text = FileManipulation.TrimText(file.Name, 10, "...");
-                item.ImageIndex = ListHandler.VideoExtensions.Contains(currentFileExtension) ? 1 : 2;
+                item.Text = file.Name;
+                if (extensionToImageIndex.TryGetValue(currentFileExtension, out int imageIndex))
+                {
+                    item.ImageIndex = imageIndex;
+                }
+                else
+                {
+                    item.ImageIndex = 0; 
+                }
                 item.SubItems.Add(file.Extension.ToLower());
                 item.Tag = file.FullName;
                 item.ToolTipText = file.Name;
@@ -421,13 +439,91 @@ namespace RandomVideoPlayer.View
         }
         private void GrabFromDirectory(string folderPath)
         {
-            var combinedExtensions = ListHandler.VideoExtensions.Concat(ListHandler.ImageExtensions).ToList();
+            var combinedExtensions = extensionFilter;
             //Get all Files from current Directory and return all Files filtered by Extensions
             TempList.AddRange(Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
                     .Where(s => combinedExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
                     .ToArray());
 
         }
+        private void InitializeFilterBoxes()
+        {
+            foreach (Control control in panelExtensionFilter.Controls)
+            {
+                if (control is CheckBox checkBox)
+                {
+                    checkBox.Checked = extensionFilter.Contains(checkBox.Text);
+                }
+            }
+        }
+        private void InitializeCheckboxEvents()
+        {
+            cbAVI.CheckedChanged += CheckBox_CheckedChanged;
+            cbAVCHD.CheckedChanged += CheckBox_CheckedChanged;
+            cbF4V.CheckedChanged += CheckBox_CheckedChanged;
+            cbFLV.CheckedChanged += CheckBox_CheckedChanged;
+            cbM4V.CheckedChanged += CheckBox_CheckedChanged;
+            cbMKV.CheckedChanged += CheckBox_CheckedChanged;
+            cbMOV.CheckedChanged += CheckBox_CheckedChanged;
+            cbMP4.CheckedChanged += CheckBox_CheckedChanged;
+            cbWEBM.CheckedChanged += CheckBox_CheckedChanged;
+            cbWMV.CheckedChanged += CheckBox_CheckedChanged;
+
+            cbJPG.CheckedChanged += CheckBox_CheckedChanged;
+            cbJPEG.CheckedChanged += CheckBox_CheckedChanged;
+            cbPNG.CheckedChanged += CheckBox_CheckedChanged;
+            cbGIF.CheckedChanged += CheckBox_CheckedChanged;
+            cbTIF.CheckedChanged += CheckBox_CheckedChanged;
+            cbTIFF.CheckedChanged += CheckBox_CheckedChanged;
+            cbBMP.CheckedChanged += CheckBox_CheckedChanged;
+            cbWEBP.CheckedChanged += CheckBox_CheckedChanged;
+            cbAVIF.CheckedChanged += CheckBox_CheckedChanged;
+        }
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (sender is CheckBox checkBox)
+            {
+                if (checkBox.Checked)
+                {
+                    if (!extensionFilter.Contains(checkBox.Text))
+                    {
+                        extensionFilter.Add(checkBox.Text);
+                    }
+                }
+                else
+                {
+                    if (extensionFilter.Contains(checkBox.Text))
+                    {
+                        extensionFilter.Remove(checkBox.Text);
+                    }
+                }
+
+                PopulateSelected(tbPathView.Text);
+            }
+        }
+        Dictionary<string, int> extensionToImageIndex = new Dictionary<string, int>
+        {
+            { "avi", 1 },
+            { "flv", 2 },
+            { "m4v", 3 },
+            { "mkv", 4 },
+            { "mov", 5 },
+            { "mp4", 6 },
+            { "webm", 7 },
+            { "wmv", 8 },
+            { "f4v", 9 },
+            { "avchd", 10 },
+            { "jpg", 11 },
+            { "jpeg", 12 },
+            { "png", 13 },
+            { "gif", 14 },
+            { "tif", 15 },
+            { "tiff", 16 },
+            { "bmp", 17 },
+            { "webp", 18 },
+            { "avif", 19 }
+        };
+
         #endregion
 
         #region WndProc Code for clean style of the Form and regaining usabality
@@ -501,6 +597,7 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
         #endregion
+
 
 
     }

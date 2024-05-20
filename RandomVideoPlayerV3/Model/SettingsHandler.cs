@@ -4,6 +4,8 @@ namespace RandomVideoPlayer.Model
 {
 	public class SettingsHandler
 	{
+        public static double CurrentVersion = 1.34;
+
         private static int _volumeTemp = 50;
 		private static bool _sourceSelected = false; //False = Folder | True = List
 		private static bool _isPlaying = false;
@@ -58,36 +60,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
 			}
 		}
-        /// <value>Plays video files (true) or images (false).</value> 
-        public static bool PlayVideos
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.playVideos;
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.playVideos = value;
-                _settingsInstance.Save();
-            }
-        }
-        /// <value>Plays image files (true) or images (false).</value> 
-        public static bool PlayImages
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.playImages;
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.playImages = value;
-                _settingsInstance.Save();
-            }
-        }
 
         /// <value>How many of the latest files should be loaded into the playlist</value> 
         public static int RecentCount 
@@ -95,17 +67,33 @@ namespace RandomVideoPlayer.Model
            get 
            {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.recentCountSaved; 
+                return _settingsInstance.recentCount; 
            }
            set
            {
                 var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.recentCountSaved = value;
+                _settingsInstance.recentCount = value;
                 _settingsInstance.Save();
            }
         }
+        public static bool RecentCountSaved
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.recentCountSaved;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.recentCountSaved = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static int RecentCountSavedTemp { get; set; } 
         /// <value>Check if only the latest files should be used</value> 
-        public static bool RecentChecked
+        public static bool RecentCheckedSaved
         {
             get 
             {
@@ -116,6 +104,51 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.recentCheckedSaved = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool RecentChecked
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.recentChecked;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.recentChecked = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool RecentCheckedTemp { get; set; }
+        public static bool TempTriggered { get; set; } = false;
+
+        public static bool VolumeMember 
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.VolumeMember;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.VolumeMember = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int VolumeLastValue 
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.VolumeLast;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.VolumeLast = value;
                 _settingsInstance.Save();
             }
         }
@@ -166,6 +199,20 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+        public static bool ApplyFilterToList
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.applyFilterToList;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.applyFilterToList = value;
+                _settingsInstance.Save();
+            }
+        }
         /// <value>Defines whether the timecode server should be started</value> 
         public static bool TimeCodeServer
         {
@@ -178,6 +225,21 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.timeCodeServer = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool GraphEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.graphEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.graphEnabled = value;
                 _settingsInstance.Save();
             }
         }

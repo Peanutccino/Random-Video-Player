@@ -30,72 +30,36 @@
         {
             components = new System.ComponentModel.Container();
             panelTop = new Panel();
-            btnHelp = new FontAwesome.Sharp.IconButton();
             lblTitle = new Label();
             btnClose = new FontAwesome.Sharp.IconButton();
-            panelBody = new Panel();
-            groupBox4 = new GroupBox();
-            cbPlayImages = new CheckBox();
-            cbPlayVideos = new CheckBox();
-            cbtimeCodeServer = new CheckBox();
-            cbLoopPlayer = new CheckBox();
-            groupBox3 = new GroupBox();
-            rbModifiedDate = new RadioButton();
-            rbCreationDate = new RadioButton();
-            groupBox2 = new GroupBox();
-            tbListfolderPath = new TextBox();
-            btnFileBrowseList = new FontAwesome.Sharp.IconButton();
-            groupBox1 = new GroupBox();
-            cbIncludeScripts = new CheckBox();
-            cbDeleteToggle = new CheckBox();
-            tbRemovalPath = new TextBox();
-            btnFileBrowseRemove = new FontAwesome.Sharp.IconButton();
-            groupWindow = new GroupBox();
-            cbRemembersize = new CheckBox();
-            groupDefaultPath = new GroupBox();
-            tbDefaultPath = new TextBox();
-            btnFileBrowse = new FontAwesome.Sharp.IconButton();
             btnSave = new FontAwesome.Sharp.IconButton();
             fbDialog = new FolderBrowserDialog();
             toolTipInfo = new ToolTip(components);
+            splitUI = new SplitContainer();
+            panel1 = new Panel();
+            sbtnAbout = new FontAwesome.Sharp.IconButton();
+            sbtnInputs = new FontAwesome.Sharp.IconButton();
+            sbtnSync = new FontAwesome.Sharp.IconButton();
+            sbtnRemember = new FontAwesome.Sharp.IconButton();
+            sbtnPlayer = new FontAwesome.Sharp.IconButton();
+            sbtnPaths = new FontAwesome.Sharp.IconButton();
             panelTop.SuspendLayout();
-            panelBody.SuspendLayout();
-            groupBox4.SuspendLayout();
-            groupBox3.SuspendLayout();
-            groupBox2.SuspendLayout();
-            groupBox1.SuspendLayout();
-            groupWindow.SuspendLayout();
-            groupDefaultPath.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitUI).BeginInit();
+            splitUI.Panel1.SuspendLayout();
+            splitUI.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panelTop
             // 
-            panelTop.BackColor = Color.FromArgb(242, 141, 238);
-            panelTop.Controls.Add(btnHelp);
+            panelTop.BackColor = Color.FromArgb(179, 179, 255);
             panelTop.Controls.Add(lblTitle);
             panelTop.Controls.Add(btnClose);
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(324, 20);
+            panelTop.Size = new Size(654, 20);
             panelTop.TabIndex = 0;
-            // 
-            // btnHelp
-            // 
-            btnHelp.Dock = DockStyle.Right;
-            btnHelp.FlatAppearance.BorderSize = 0;
-            btnHelp.FlatAppearance.MouseOverBackColor = Color.DodgerBlue;
-            btnHelp.FlatStyle = FlatStyle.Flat;
-            btnHelp.IconChar = FontAwesome.Sharp.IconChar.QuestionCircle;
-            btnHelp.IconColor = Color.Black;
-            btnHelp.IconFont = FontAwesome.Sharp.IconFont.Solid;
-            btnHelp.IconSize = 15;
-            btnHelp.Location = new Point(264, 0);
-            btnHelp.Name = "btnHelp";
-            btnHelp.Size = new Size(30, 20);
-            btnHelp.TabIndex = 2;
-            btnHelp.UseVisualStyleBackColor = true;
-            btnHelp.Click += btnHelp_Click;
             // 
             // lblTitle
             // 
@@ -104,7 +68,7 @@
             lblTitle.Location = new Point(0, 0);
             lblTitle.Margin = new Padding(33, 0, 3, 0);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(263, 20);
+            lblTitle.Size = new Size(617, 20);
             lblTitle.TabIndex = 1;
             lblTitle.Text = "                    RVP - Settings";
             lblTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -120,284 +84,16 @@
             btnClose.IconColor = Color.Black;
             btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 15;
-            btnClose.Location = new Point(294, 0);
+            btnClose.Location = new Point(624, 0);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(30, 20);
             btnClose.TabIndex = 0;
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // 
-            // panelBody
-            // 
-            panelBody.BackColor = Color.FromArgb(255, 226, 255);
-            panelBody.Controls.Add(groupBox4);
-            panelBody.Controls.Add(groupBox3);
-            panelBody.Controls.Add(groupBox2);
-            panelBody.Controls.Add(groupBox1);
-            panelBody.Controls.Add(groupWindow);
-            panelBody.Controls.Add(groupDefaultPath);
-            panelBody.Controls.Add(btnSave);
-            panelBody.Dock = DockStyle.Fill;
-            panelBody.Location = new Point(0, 20);
-            panelBody.Name = "panelBody";
-            panelBody.Size = new Size(324, 446);
-            panelBody.TabIndex = 1;
-            // 
-            // groupBox4
-            // 
-            groupBox4.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox4.Controls.Add(cbPlayImages);
-            groupBox4.Controls.Add(cbPlayVideos);
-            groupBox4.Controls.Add(cbtimeCodeServer);
-            groupBox4.Controls.Add(cbLoopPlayer);
-            groupBox4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupBox4.Location = new Point(3, 365);
-            groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(318, 81);
-            groupBox4.TabIndex = 8;
-            groupBox4.TabStop = false;
-            groupBox4.Text = "Player behavior";
-            // 
-            // cbPlayImages
-            // 
-            cbPlayImages.AutoSize = true;
-            cbPlayImages.Location = new Point(168, 47);
-            cbPlayImages.Name = "cbPlayImages";
-            cbPlayImages.Size = new Size(107, 19);
-            cbPlayImages.TabIndex = 3;
-            cbPlayImages.Text = "Include images";
-            cbPlayImages.UseVisualStyleBackColor = true;
-            // 
-            // cbPlayVideos
-            // 
-            cbPlayVideos.AutoSize = true;
-            cbPlayVideos.Location = new Point(9, 47);
-            cbPlayVideos.Name = "cbPlayVideos";
-            cbPlayVideos.Size = new Size(103, 19);
-            cbPlayVideos.TabIndex = 2;
-            cbPlayVideos.Text = "Include videos";
-            cbPlayVideos.UseVisualStyleBackColor = true;
-            // 
-            // cbtimeCodeServer
-            // 
-            cbtimeCodeServer.AutoSize = true;
-            cbtimeCodeServer.Location = new Point(168, 22);
-            cbtimeCodeServer.Name = "cbtimeCodeServer";
-            cbtimeCodeServer.Size = new Size(115, 19);
-            cbtimeCodeServer.TabIndex = 1;
-            cbtimeCodeServer.Text = "Timecode Server";
-            cbtimeCodeServer.UseVisualStyleBackColor = true;
-            // 
-            // cbLoopPlayer
-            // 
-            cbLoopPlayer.AutoSize = true;
-            cbLoopPlayer.Location = new Point(9, 22);
-            cbLoopPlayer.Name = "cbLoopPlayer";
-            cbLoopPlayer.Size = new Size(141, 19);
-            cbLoopPlayer.TabIndex = 0;
-            cbLoopPlayer.Text = "Loop currently played";
-            cbLoopPlayer.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            groupBox3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox3.Controls.Add(rbModifiedDate);
-            groupBox3.Controls.Add(rbCreationDate);
-            groupBox3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupBox3.Location = new Point(3, 300);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(318, 59);
-            groupBox3.TabIndex = 7;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Latest filter behavior:";
-            // 
-            // rbModifiedDate
-            // 
-            rbModifiedDate.AutoSize = true;
-            rbModifiedDate.Location = new Point(168, 22);
-            rbModifiedDate.Name = "rbModifiedDate";
-            rbModifiedDate.Size = new Size(140, 19);
-            rbModifiedDate.TabIndex = 1;
-            rbModifiedDate.TabStop = true;
-            rbModifiedDate.Text = "Sort by date modified";
-            rbModifiedDate.UseVisualStyleBackColor = true;
-            // 
-            // rbCreationDate
-            // 
-            rbCreationDate.AutoSize = true;
-            rbCreationDate.Location = new Point(9, 22);
-            rbCreationDate.Name = "rbCreationDate";
-            rbCreationDate.Size = new Size(131, 19);
-            rbCreationDate.TabIndex = 0;
-            rbCreationDate.TabStop = true;
-            rbCreationDate.Text = "Sort by date created";
-            rbCreationDate.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox2.Controls.Add(tbListfolderPath);
-            groupBox2.Controls.Add(btnFileBrowseList);
-            groupBox2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupBox2.Location = new Point(6, 237);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(318, 57);
-            groupBox2.TabIndex = 6;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Set List Folderpath:";
-            // 
-            // tbListfolderPath
-            // 
-            tbListfolderPath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tbListfolderPath.BackColor = Color.FromArgb(252, 232, 252);
-            tbListfolderPath.Location = new Point(6, 22);
-            tbListfolderPath.Name = "tbListfolderPath";
-            tbListfolderPath.ReadOnly = true;
-            tbListfolderPath.Size = new Size(270, 23);
-            tbListfolderPath.TabIndex = 0;
-            // 
-            // btnFileBrowseList
-            // 
-            btnFileBrowseList.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnFileBrowseList.FlatAppearance.BorderSize = 0;
-            btnFileBrowseList.FlatStyle = FlatStyle.Flat;
-            btnFileBrowseList.IconChar = FontAwesome.Sharp.IconChar.FolderOpen;
-            btnFileBrowseList.IconColor = Color.Black;
-            btnFileBrowseList.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnFileBrowseList.IconSize = 25;
-            btnFileBrowseList.Location = new Point(282, 22);
-            btnFileBrowseList.Name = "btnFileBrowseList";
-            btnFileBrowseList.Size = new Size(30, 23);
-            btnFileBrowseList.TabIndex = 2;
-            btnFileBrowseList.UseVisualStyleBackColor = true;
-            btnFileBrowseList.Click += btnFileBrowseList_Click;
-            // 
-            // groupBox1
-            // 
-            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox1.Controls.Add(cbIncludeScripts);
-            groupBox1.Controls.Add(cbDeleteToggle);
-            groupBox1.Controls.Add(tbRemovalPath);
-            groupBox1.Controls.Add(btnFileBrowseRemove);
-            groupBox1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupBox1.Location = new Point(3, 125);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(318, 106);
-            groupBox1.TabIndex = 6;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Set removal folder:";
-            // 
-            // cbIncludeScripts
-            // 
-            cbIncludeScripts.AutoSize = true;
-            cbIncludeScripts.Location = new Point(9, 76);
-            cbIncludeScripts.Name = "cbIncludeScripts";
-            cbIncludeScripts.Size = new Size(182, 19);
-            cbIncludeScripts.TabIndex = 6;
-            cbIncludeScripts.Text = "Include associated .funscripts";
-            cbIncludeScripts.UseVisualStyleBackColor = true;
-            // 
-            // cbDeleteToggle
-            // 
-            cbDeleteToggle.AutoSize = true;
-            cbDeleteToggle.Location = new Point(9, 51);
-            cbDeleteToggle.Name = "cbDeleteToggle";
-            cbDeleteToggle.Size = new Size(207, 19);
-            cbDeleteToggle.TabIndex = 5;
-            cbDeleteToggle.Text = "Delete instead of moving to folder";
-            cbDeleteToggle.UseVisualStyleBackColor = true;
-            // 
-            // tbRemovalPath
-            // 
-            tbRemovalPath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tbRemovalPath.BackColor = Color.FromArgb(252, 232, 252);
-            tbRemovalPath.Location = new Point(6, 22);
-            tbRemovalPath.Name = "tbRemovalPath";
-            tbRemovalPath.ReadOnly = true;
-            tbRemovalPath.Size = new Size(270, 23);
-            tbRemovalPath.TabIndex = 0;
-            // 
-            // btnFileBrowseRemove
-            // 
-            btnFileBrowseRemove.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnFileBrowseRemove.FlatAppearance.BorderSize = 0;
-            btnFileBrowseRemove.FlatStyle = FlatStyle.Flat;
-            btnFileBrowseRemove.IconChar = FontAwesome.Sharp.IconChar.FolderOpen;
-            btnFileBrowseRemove.IconColor = Color.Black;
-            btnFileBrowseRemove.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnFileBrowseRemove.IconSize = 25;
-            btnFileBrowseRemove.Location = new Point(282, 22);
-            btnFileBrowseRemove.Name = "btnFileBrowseRemove";
-            btnFileBrowseRemove.Size = new Size(30, 23);
-            btnFileBrowseRemove.TabIndex = 2;
-            btnFileBrowseRemove.UseVisualStyleBackColor = true;
-            btnFileBrowseRemove.Click += btnFileBrowseRemove_Click;
-            // 
-            // groupWindow
-            // 
-            groupWindow.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupWindow.Controls.Add(cbRemembersize);
-            groupWindow.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupWindow.Location = new Point(3, 69);
-            groupWindow.Name = "groupWindow";
-            groupWindow.Size = new Size(318, 50);
-            groupWindow.TabIndex = 6;
-            groupWindow.TabStop = false;
-            groupWindow.Text = "Window Size";
-            // 
-            // cbRemembersize
-            // 
-            cbRemembersize.AutoSize = true;
-            cbRemembersize.Location = new Point(9, 22);
-            cbRemembersize.Name = "cbRemembersize";
-            cbRemembersize.Size = new Size(157, 19);
-            cbRemembersize.TabIndex = 4;
-            cbRemembersize.Text = "Remember Window Size";
-            cbRemembersize.UseVisualStyleBackColor = true;
-            // 
-            // groupDefaultPath
-            // 
-            groupDefaultPath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupDefaultPath.Controls.Add(tbDefaultPath);
-            groupDefaultPath.Controls.Add(btnFileBrowse);
-            groupDefaultPath.FlatStyle = FlatStyle.System;
-            groupDefaultPath.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            groupDefaultPath.Location = new Point(3, 6);
-            groupDefaultPath.Name = "groupDefaultPath";
-            groupDefaultPath.Size = new Size(318, 57);
-            groupDefaultPath.TabIndex = 5;
-            groupDefaultPath.TabStop = false;
-            groupDefaultPath.Text = "Set default path:";
-            // 
-            // tbDefaultPath
-            // 
-            tbDefaultPath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tbDefaultPath.BackColor = Color.FromArgb(252, 232, 252);
-            tbDefaultPath.Location = new Point(6, 22);
-            tbDefaultPath.Name = "tbDefaultPath";
-            tbDefaultPath.ReadOnly = true;
-            tbDefaultPath.Size = new Size(270, 23);
-            tbDefaultPath.TabIndex = 0;
-            // 
-            // btnFileBrowse
-            // 
-            btnFileBrowse.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnFileBrowse.FlatAppearance.BorderSize = 0;
-            btnFileBrowse.FlatStyle = FlatStyle.Flat;
-            btnFileBrowse.IconChar = FontAwesome.Sharp.IconChar.FolderOpen;
-            btnFileBrowse.IconColor = Color.Black;
-            btnFileBrowse.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnFileBrowse.IconSize = 25;
-            btnFileBrowse.Location = new Point(282, 22);
-            btnFileBrowse.Name = "btnFileBrowse";
-            btnFileBrowse.Size = new Size(30, 23);
-            btnFileBrowse.TabIndex = 2;
-            btnFileBrowse.UseVisualStyleBackColor = true;
-            btnFileBrowse.Click += btnFileBrowse_Click;
-            // 
             // btnSave
             // 
-            btnSave.BackColor = Color.FromArgb(242, 141, 238);
+            btnSave.BackColor = Color.FromArgb(179, 179, 255);
             btnSave.Dock = DockStyle.Bottom;
             btnSave.FlatAppearance.BorderSize = 0;
             btnSave.FlatStyle = FlatStyle.Flat;
@@ -407,40 +103,178 @@
             btnSave.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnSave.IconSize = 25;
             btnSave.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSave.Location = new Point(0, 416);
+            btnSave.Location = new Point(0, 546);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(324, 30);
+            btnSave.Size = new Size(172, 30);
             btnSave.TabIndex = 3;
             btnSave.Text = "Save and Close";
             btnSave.UseVisualStyleBackColor = false;
             btnSave.Click += btnSave_Click;
             // 
+            // splitUI
+            // 
+            splitUI.Dock = DockStyle.Fill;
+            splitUI.Location = new Point(0, 20);
+            splitUI.Name = "splitUI";
+            // 
+            // splitUI.Panel1
+            // 
+            splitUI.Panel1.Controls.Add(panel1);
+            // 
+            // splitUI.Panel2
+            // 
+            splitUI.Panel2.BackColor = Color.GhostWhite;
+            splitUI.Size = new Size(654, 576);
+            splitUI.SplitterDistance = 172;
+            splitUI.TabIndex = 2;
+            // 
+            // panel1
+            // 
+            panel1.BackColor = Color.GhostWhite;
+            panel1.Controls.Add(sbtnAbout);
+            panel1.Controls.Add(sbtnInputs);
+            panel1.Controls.Add(sbtnSync);
+            panel1.Controls.Add(btnSave);
+            panel1.Controls.Add(sbtnRemember);
+            panel1.Controls.Add(sbtnPlayer);
+            panel1.Controls.Add(sbtnPaths);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(172, 576);
+            panel1.TabIndex = 0;
+            // 
+            // sbtnAbout
+            // 
+            sbtnAbout.Dock = DockStyle.Top;
+            sbtnAbout.FlatAppearance.BorderSize = 0;
+            sbtnAbout.FlatStyle = FlatStyle.Flat;
+            sbtnAbout.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnAbout.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            sbtnAbout.IconColor = Color.Black;
+            sbtnAbout.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnAbout.IconSize = 30;
+            sbtnAbout.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnAbout.Location = new Point(0, 200);
+            sbtnAbout.Name = "sbtnAbout";
+            sbtnAbout.Size = new Size(172, 40);
+            sbtnAbout.TabIndex = 5;
+            sbtnAbout.Text = "About";
+            sbtnAbout.TextAlign = ContentAlignment.TopLeft;
+            sbtnAbout.UseVisualStyleBackColor = true;
+            // 
+            // sbtnInputs
+            // 
+            sbtnInputs.Dock = DockStyle.Top;
+            sbtnInputs.FlatAppearance.BorderSize = 0;
+            sbtnInputs.FlatStyle = FlatStyle.Flat;
+            sbtnInputs.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnInputs.IconChar = FontAwesome.Sharp.IconChar.Keyboard;
+            sbtnInputs.IconColor = Color.Black;
+            sbtnInputs.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnInputs.IconSize = 30;
+            sbtnInputs.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnInputs.Location = new Point(0, 160);
+            sbtnInputs.Name = "sbtnInputs";
+            sbtnInputs.Size = new Size(172, 40);
+            sbtnInputs.TabIndex = 4;
+            sbtnInputs.Text = "Inputs";
+            sbtnInputs.TextAlign = ContentAlignment.TopLeft;
+            sbtnInputs.UseVisualStyleBackColor = true;
+            // 
+            // sbtnSync
+            // 
+            sbtnSync.Dock = DockStyle.Top;
+            sbtnSync.FlatAppearance.BorderSize = 0;
+            sbtnSync.FlatStyle = FlatStyle.Flat;
+            sbtnSync.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnSync.IconChar = FontAwesome.Sharp.IconChar.Sync;
+            sbtnSync.IconColor = Color.Black;
+            sbtnSync.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnSync.IconSize = 24;
+            sbtnSync.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnSync.Location = new Point(0, 120);
+            sbtnSync.Name = "sbtnSync";
+            sbtnSync.Size = new Size(172, 40);
+            sbtnSync.TabIndex = 3;
+            sbtnSync.Text = "Sync";
+            sbtnSync.TextAlign = ContentAlignment.TopLeft;
+            sbtnSync.UseVisualStyleBackColor = true;
+            // 
+            // sbtnRemember
+            // 
+            sbtnRemember.Dock = DockStyle.Top;
+            sbtnRemember.FlatAppearance.BorderSize = 0;
+            sbtnRemember.FlatStyle = FlatStyle.Flat;
+            sbtnRemember.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnRemember.IconChar = FontAwesome.Sharp.IconChar.Bookmark;
+            sbtnRemember.IconColor = Color.Black;
+            sbtnRemember.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            sbtnRemember.IconSize = 22;
+            sbtnRemember.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnRemember.Location = new Point(0, 80);
+            sbtnRemember.Name = "sbtnRemember";
+            sbtnRemember.Size = new Size(172, 40);
+            sbtnRemember.TabIndex = 2;
+            sbtnRemember.Text = "Remember";
+            sbtnRemember.TextAlign = ContentAlignment.TopLeft;
+            sbtnRemember.UseVisualStyleBackColor = true;
+            // 
+            // sbtnPlayer
+            // 
+            sbtnPlayer.Dock = DockStyle.Top;
+            sbtnPlayer.FlatAppearance.BorderSize = 0;
+            sbtnPlayer.FlatStyle = FlatStyle.Flat;
+            sbtnPlayer.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnPlayer.IconChar = FontAwesome.Sharp.IconChar.SlidersH;
+            sbtnPlayer.IconColor = Color.Black;
+            sbtnPlayer.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnPlayer.IconSize = 26;
+            sbtnPlayer.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnPlayer.Location = new Point(0, 40);
+            sbtnPlayer.Name = "sbtnPlayer";
+            sbtnPlayer.Size = new Size(172, 40);
+            sbtnPlayer.TabIndex = 1;
+            sbtnPlayer.Text = "Player";
+            sbtnPlayer.TextAlign = ContentAlignment.TopLeft;
+            sbtnPlayer.UseVisualStyleBackColor = true;
+            // 
+            // sbtnPaths
+            // 
+            sbtnPaths.Dock = DockStyle.Top;
+            sbtnPaths.FlatAppearance.BorderSize = 0;
+            sbtnPaths.FlatStyle = FlatStyle.Flat;
+            sbtnPaths.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnPaths.IconChar = FontAwesome.Sharp.IconChar.FolderTree;
+            sbtnPaths.IconColor = Color.Black;
+            sbtnPaths.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnPaths.IconSize = 24;
+            sbtnPaths.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnPaths.Location = new Point(0, 0);
+            sbtnPaths.Name = "sbtnPaths";
+            sbtnPaths.Size = new Size(172, 40);
+            sbtnPaths.TabIndex = 0;
+            sbtnPaths.Text = "Paths";
+            sbtnPaths.TextAlign = ContentAlignment.TopLeft;
+            sbtnPaths.UseVisualStyleBackColor = true;
+            // 
             // SettingsView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(324, 466);
-            Controls.Add(panelBody);
+            BackColor = Color.GhostWhite;
+            ClientSize = new Size(654, 596);
+            Controls.Add(splitUI);
             Controls.Add(panelTop);
-            MinimumSize = new Size(340, 505);
+            MinimumSize = new Size(670, 635);
             Name = "SettingsView";
             Text = "SettingsView";
-            Load += SettingsView_Load;
             Resize += SettingsView_Resize;
             panelTop.ResumeLayout(false);
-            panelBody.ResumeLayout(false);
-            groupBox4.ResumeLayout(false);
-            groupBox4.PerformLayout();
-            groupBox3.ResumeLayout(false);
-            groupBox3.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
-            groupWindow.ResumeLayout(false);
-            groupWindow.PerformLayout();
-            groupDefaultPath.ResumeLayout(false);
-            groupDefaultPath.PerformLayout();
+            splitUI.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitUI).EndInit();
+            splitUI.ResumeLayout(false);
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -448,32 +282,17 @@
 
         private Panel panelTop;
         private FontAwesome.Sharp.IconButton btnClose;
-        private Panel panelBody;
-        private TextBox tbDefaultPath;
         private FontAwesome.Sharp.IconButton btnSave;
-        private FontAwesome.Sharp.IconButton btnFileBrowse;
         private FolderBrowserDialog fbDialog;
         private Label lblTitle;
-        private GroupBox groupDefaultPath;
-        private CheckBox cbRemembersize;
-        private GroupBox groupWindow;
-        private GroupBox groupBox1;
-        private CheckBox cbDeleteToggle;
-        private TextBox tbRemovalPath;
-        private FontAwesome.Sharp.IconButton btnFileBrowseRemove;
-        private GroupBox groupBox2;
-        private TextBox tbListfolderPath;
-        private FontAwesome.Sharp.IconButton btnFileBrowseList;
         private ToolTip toolTipInfo;
-        private GroupBox groupBox3;
-        private RadioButton rbModifiedDate;
-        private RadioButton rbCreationDate;
-        private GroupBox groupBox4;
-        private CheckBox cbLoopPlayer;
-        private CheckBox cbtimeCodeServer;
-        private FontAwesome.Sharp.IconButton btnHelp;
-        private CheckBox cbPlayImages;
-        private CheckBox cbPlayVideos;
-        private CheckBox cbIncludeScripts;
+        private SplitContainer splitUI;
+        private Panel panel1;
+        private FontAwesome.Sharp.IconButton sbtnPaths;
+        private FontAwesome.Sharp.IconButton sbtnInputs;
+        private FontAwesome.Sharp.IconButton sbtnSync;
+        private FontAwesome.Sharp.IconButton sbtnRemember;
+        private FontAwesome.Sharp.IconButton sbtnPlayer;
+        private FontAwesome.Sharp.IconButton sbtnAbout;
     }
 }

@@ -1,11 +1,18 @@
-﻿using RandomVideoPlayer.Functions;
+﻿using FontAwesome.Sharp;
+using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
+using RandomVideoPlayer.UserControls;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace RandomVideoPlayer.View
 {
     public partial class SettingsView : Form
     {
+        private SettingsModel settingsModel;
+
+        private IconButton currentlySelectedButton;
         FormResize fR = new FormResize();
         public SettingsView()
         {
@@ -13,141 +20,132 @@ namespace RandomVideoPlayer.View
 
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
-            this.BackColor = Color.FromArgb(242, 141, 238);//Border color
+            this.BackColor = Color.FromArgb(179, 179, 255);//Border color
+
+            settingsModel = new SettingsModel();
+            
+            InitializeNavigation();
+            InitializeSettings();
+            HighlightButton(sbtnPaths);
+            LoadUserControl(new PathsUserControl(settingsModel));
         }
         private void lblTitle_MouseDown(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
-        }
-        private void SettingsView_Resize(object sender, EventArgs e)
-        {
-            fR.AdjustForm(this);
-        }
-        private void SettingsView_Load(object sender, EventArgs e)
-        {
-            if (PathHandler.DefaultFolder == null)
-            {
-                PathHandler.DefaultFolder = PathHandler.FallbackPath;
-            }
-            tbRemovalPath.Text = PathHandler.RemoveFolder;
-            tbDefaultPath.Text = PathHandler.DefaultFolder;
-            cbRemembersize.Checked = fR.SaveLastSize;
-            tbListfolderPath.Text = PathHandler.FolderList;
-            cbDeleteToggle.Checked = SettingsHandler.DeleteFull;
-            cbIncludeScripts.Checked = SettingsHandler.IncludeScripts;
-            cbLoopPlayer.Checked = SettingsHandler.LoopPlayer;
-            cbtimeCodeServer.Checked = SettingsHandler.TimeCodeServer;
-
-
-            if (SettingsHandler.CreationDate)
-            {
-                rbCreationDate.Checked = true;
-            }
-            else if (!SettingsHandler.CreationDate)
-            {
-                rbModifiedDate.Checked = true;
-            }
-            cbPlayVideos.Checked = SettingsHandler.PlayVideos;
-            cbPlayImages.Checked = SettingsHandler.PlayImages;
-
-            SetupTooltips(); //Initialize Tooltips
-
-        }
-        private void btnHelp_Click(object sender, EventArgs e)
-        {
-            HelpWindow helpW = new HelpWindow();
-            helpW.StartPosition = FormStartPosition.Manual;
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            helpW.Load += delegate (object s2, EventArgs e2)
-            {
-                helpW.Location = new Point(Bounds.Location.X + (Bounds.Width / 2) - (helpW.Width / 2), Bounds.Location.Y + (Bounds.Height / 2) - (helpW.Height / 2));
-            };
-#pragma warning restore CS8622
-            helpW.ShowDialog();
-        }
+        }     
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-        private void btnFileBrowse_Click(object sender, EventArgs e)
-        {
-            fbDialog.InitialDirectory = PathHandler.DefaultFolder;
-
-            DialogResult result = fbDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                tbDefaultPath.Text = fbDialog.SelectedPath;
-            }
-        }
-        private void btnFileBrowseRemove_Click(object sender, EventArgs e)
-        {
-            fbDialog.InitialDirectory = PathHandler.DefaultFolder;
-
-            DialogResult result = fbDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                tbRemovalPath.Text = fbDialog.SelectedPath;
-            }
-        }
-        private void btnFileBrowseList_Click(object sender, EventArgs e)
-        {
-            fbDialog.InitialDirectory = PathHandler.FolderList;
-
-            DialogResult result = fbDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                tbListfolderPath.Text = fbDialog.SelectedPath;
-            }
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
 
-            PathHandler.DefaultFolder = tbDefaultPath.Text;
-            PathHandler.TempRecentFolder = PathHandler.DefaultFolder;
-            PathHandler.RemoveFolder = tbRemovalPath.Text;
-            PathHandler.FolderList = tbListfolderPath.Text;
-            fR.SaveLastSize = cbRemembersize.Checked;
-            SettingsHandler.DeleteFull = cbDeleteToggle.Checked;
-            SettingsHandler.IncludeScripts = cbIncludeScripts.Checked;
-            SettingsHandler.LoopPlayer = cbLoopPlayer.Checked;
-            SettingsHandler.TimeCodeServer = cbtimeCodeServer.Checked;
+            SaveSettings();
 
-            if (rbCreationDate.Checked)
-            {
-                SettingsHandler.CreationDate = true;
-            }
-            else if (rbModifiedDate.Checked)
-            {
-                SettingsHandler.CreationDate = false;
-            }
-            if(cbPlayVideos.Checked != SettingsHandler.PlayVideos || cbPlayImages.Checked != SettingsHandler.PlayImages)
+            this.Close();
+        }
+        private void SettingsView_Resize(object sender, EventArgs e)
+        {
+            fR.AdjustForm(this);
+        }
+        private void InitializeSettings()
+        {
+            settingsModel.IsTimeCodeServerEnabled = SettingsHandler.TimeCodeServer;
+            settingsModel.IsGraphEnabled = SettingsHandler.GraphEnabled;
+
+            settingsModel.DefaultPathText = PathHandler.DefaultFolder ?? (PathHandler.DefaultFolder = PathHandler.FallbackPath);
+            settingsModel.RemovalPathText = PathHandler.RemoveFolder;
+            settingsModel.ListPathText = PathHandler.FolderList;
+            settingsModel.DeleteFull = SettingsHandler.DeleteFull;
+            settingsModel.IncludeScript = SettingsHandler.IncludeScripts;
+
+            settingsModel.MemberWindowSize = fR.SaveLastSize;
+            settingsModel.MemberPlayRecent = SettingsHandler.RecentCheckedSaved;
+            settingsModel.MemberRecentCount = SettingsHandler.RecentCountSaved;
+            settingsModel.MemberVolume = SettingsHandler.VolumeMember;
+
+            settingsModel.LoopPlayer = SettingsHandler.LoopPlayer;
+            settingsModel.ApplyFilterToList = SettingsHandler.ApplyFilterToList;
+            settingsModel.SortCreated = SettingsHandler.CreationDate;
+            settingsModel.SelectedExtensions = new List<string>(ListHandler.SelectedExtensions);
+        }
+        private void InitializeNavigation()
+        {
+            sbtnPaths.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new PathsUserControl(settingsModel)); };
+            sbtnPlayer.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new PlayerUserControl(settingsModel)); };
+            sbtnRemember.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new RememberUserControl(settingsModel)); };
+            sbtnInputs.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InputsUserControl()); };
+            sbtnSync.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SyncUserControl(settingsModel)); };
+            sbtnAbout.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new AboutUserControl(settingsModel)); };
+        }
+
+        private void SaveSettings()
+        {
+            SettingsHandler.TimeCodeServer = settingsModel.IsTimeCodeServerEnabled;
+            SettingsHandler.GraphEnabled = settingsModel.IsGraphEnabled;
+
+            PathHandler.DefaultFolder = settingsModel.DefaultPathText;
+            PathHandler.TempRecentFolder = PathHandler.DefaultFolder;
+            PathHandler.RemoveFolder = settingsModel.RemovalPathText;
+            PathHandler.FolderList = settingsModel.ListPathText;
+            SettingsHandler.DeleteFull = settingsModel.DeleteFull;
+            SettingsHandler.IncludeScripts = settingsModel.IncludeScript;
+
+            fR.SaveLastSize = settingsModel.MemberWindowSize;
+            SettingsHandler.RecentCheckedSaved = settingsModel.MemberPlayRecent;
+            SettingsHandler.RecentCountSaved = settingsModel.MemberRecentCount;
+            SettingsHandler.VolumeMember = settingsModel.MemberVolume;
+
+            SettingsHandler.LoopPlayer = settingsModel.LoopPlayer;
+            SettingsHandler.CreationDate = settingsModel.SortCreated;
+            SettingsHandler.ApplyFilterToList = settingsModel.ApplyFilterToList;
+
+            if (!ListHandler.SelectedExtensions.SequenceEqual(settingsModel.SelectedExtensions))
             {
                 ListHandler.NeedsToPrepare = true;
                 SettingsHandler.SettingChanged = true;
             }
-
-            SettingsHandler.PlayVideos = cbPlayVideos.Checked;
-            SettingsHandler.PlayImages = cbPlayImages.Checked;
-
-            this.Close();
+            ListHandler.SelectedExtensions = settingsModel.SelectedExtensions;
         }
+
+        private void HighlightButton(IconButton button)
+        {
+            if (currentlySelectedButton != null)
+            {
+                currentlySelectedButton.BackColor = Color.GhostWhite;
+                currentlySelectedButton.ForeColor = Color.Black;
+                currentlySelectedButton.IconColor = Color.Black;
+            }
+            button.BackColor = Color.Indigo;
+            button.ForeColor = Color.White;
+            button.IconColor = Color.White;
+            currentlySelectedButton = button;
+        }
+
+        private void LoadUserControl(UserControl userControl)
+        {
+            splitUI.Panel2.Controls.Clear();
+            userControl.Dock = DockStyle.Fill;
+            splitUI.Panel2.Controls.Add(userControl);
+        }
+
         private void SetupTooltips()
         {
-            toolTipInfo.SetToolTip(btnFileBrowse, "Choose folder that opens by default on program start");
-            toolTipInfo.SetToolTip(btnFileBrowseRemove, "Choose folder where files are moved to when 'Delete' is not checked");
-            toolTipInfo.SetToolTip(btnFileBrowseList, "Choose default folder for saving and loading lists");
-            toolTipInfo.SetToolTip(btnClose, "Close without saving");
-            toolTipInfo.SetToolTip(cbRemembersize, "Saves current window size for next startup");
-            toolTipInfo.SetToolTip(cbDeleteToggle, "Choose whether to delete files completely or move them to chosen folder when using the delete button from the player");
-            toolTipInfo.SetToolTip(cbIncludeScripts, "Choose whether RVP should look for associated script files next to the current file and delete those too");
-            toolTipInfo.SetToolTip(rbCreationDate, "Use files creation date when choosing to load only the latest X files");
-            toolTipInfo.SetToolTip(rbModifiedDate, "Use files last date modified when choosing to load only the latest X files");
-            toolTipInfo.SetToolTip(cbLoopPlayer, "Loop played file or play next automatically after file is finished");
-            toolTipInfo.SetToolTip(cbtimeCodeServer, "Activate timecode server to synchronize with MultiFunPlayer by choosing MPC-HC as the target there");
-            toolTipInfo.SetToolTip(cbPlayVideos, "Include video files when loading a folder");
-            toolTipInfo.SetToolTip(cbPlayImages, "Include image files when loading a folder");
+            //toolTipInfo.SetToolTip(btnFileBrowse, "Choose folder that opens by default on program start");
+            //toolTipInfo.SetToolTip(btnFileBrowseRemove, "Choose folder where files are moved to when 'Delete' is not checked");
+            //toolTipInfo.SetToolTip(btnFileBrowseList, "Choose default folder for saving and loading lists");
+            //toolTipInfo.SetToolTip(btnClose, "Close without saving");
+            //toolTipInfo.SetToolTip(cbRemembersize, "Saves current window size for next startup");
+            //toolTipInfo.SetToolTip(cbDeleteToggle, "Choose whether to delete files completely or move them to chosen folder when using the delete button from the player");
+            //toolTipInfo.SetToolTip(cbIncludeScripts, "Choose whether RVP should look for associated script files next to the current file and delete those too");
+            //toolTipInfo.SetToolTip(rbCreationDate, "Use files creation date when choosing to load only the latest X files");
+            //toolTipInfo.SetToolTip(rbModifiedDate, "Use files last date modified when choosing to load only the latest X files");
+            //toolTipInfo.SetToolTip(cbLoopPlayer, "Loop played file or play next automatically after file is finished");
+            //toolTipInfo.SetToolTip(cbtimeCodeServer, "Activate timecode server to synchronize with MultiFunPlayer by choosing MPC-HC as the target there");
+            //toolTipInfo.SetToolTip(cbPlayVideos, "Include video files when loading a folder");
+            //toolTipInfo.SetToolTip(cbPlayImages, "Include image files when loading a folder");
         }
 
         #region WndProc Code for clean style of the Form and regaining usabality
@@ -221,10 +219,6 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
-        #endregion
-
-
-
-
+#endregion
     }
 }

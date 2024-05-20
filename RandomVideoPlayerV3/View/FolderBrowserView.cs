@@ -34,9 +34,24 @@ namespace RandomVideoPlayer.View
 
             HighlightDriveInListBox(tbPathView.Text);
 
-            cbUseRecent.Checked = SettingsHandler.RecentChecked;
+            if(SettingsHandler.TempTriggered)
+            {
+                cbUseRecent.Checked = SettingsHandler.RecentCheckedTemp;
+                tbCount.Text = SettingsHandler.RecentCountSavedTemp.ToString();
+            }
+            else
+            {
+                if(SettingsHandler.RecentCheckedSaved)
+                {
+                    cbUseRecent.Checked = SettingsHandler.RecentChecked;
+                }
+                if (SettingsHandler.RecentCountSaved)
+                {
+                    tbCount.Text = SettingsHandler.RecentCount.ToString();
+                }
+            }
+
             cbIncludeSubfolders.Checked = ListHandler.IncludeSubfolders;
-            tbCount.Text = SettingsHandler.RecentCount.ToString();
 
             if (ListHandler.FavoriteFolderList?.Any() == true) //Load favorited folders
             {
@@ -77,8 +92,19 @@ namespace RandomVideoPlayer.View
                 MessageBox.Show("Recent value has to be a valid number");
             }
 
-            SettingsHandler.RecentCount = recentCount;
-            SettingsHandler.RecentChecked = cbUseRecent.Checked;
+            if(SettingsHandler.RecentCheckedSaved)
+            {
+                SettingsHandler.RecentChecked = cbUseRecent.Checked;
+            }
+            if(SettingsHandler.RecentCountSaved)
+            {
+                SettingsHandler.RecentCount = recentCount;
+            }
+
+            SettingsHandler.RecentCheckedTemp = cbUseRecent.Checked;
+            SettingsHandler.RecentCountSavedTemp = recentCount;
+            SettingsHandler.TempTriggered = true;
+
             ListHandler.IncludeSubfolders = cbIncludeSubfolders.Checked;
 
             this.Close();
@@ -111,8 +137,19 @@ namespace RandomVideoPlayer.View
                 MessageBox.Show("Count has to be a valid number");
             }
 
-            SettingsHandler.RecentCount = recentCount;
-            SettingsHandler.RecentChecked = cbUseRecent.Checked;
+            if (SettingsHandler.RecentCheckedSaved)
+            {
+                SettingsHandler.RecentChecked = cbUseRecent.Checked;
+            }
+            if (SettingsHandler.RecentCountSaved)
+            {
+                SettingsHandler.RecentCount = recentCount;
+            }
+
+            SettingsHandler.RecentCheckedTemp = cbUseRecent.Checked;
+            SettingsHandler.RecentCountSavedTemp = recentCount;
+            SettingsHandler.TempTriggered = true;
+
             ListHandler.IncludeSubfolders = cbIncludeSubfolders.Checked;
 
             this.Close();
@@ -236,7 +273,7 @@ namespace RandomVideoPlayer.View
         {
             lvFileExplore.Items.Clear();
             var dir = new DirectoryInfo(folderPath);
-            var combinedExtensions = ListHandler.VideoExtensions.Concat(ListHandler.ImageExtensions).ToList();
+            var combinedExtensions = ListHandler.Extensions;
 
             foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
             {                

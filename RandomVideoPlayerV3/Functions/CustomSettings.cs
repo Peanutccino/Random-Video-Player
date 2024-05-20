@@ -13,15 +13,21 @@ namespace RandomVideoPlayer.Functions
         public bool includeScripts { get; set; } = true;
         public string listFolder { get; set; }
         public bool recentCheckedSaved { get; set; } = false;
-        public int recentCountSaved { get; set; } = 50;
+        public bool recentChecked { get; set; } = false;
+        public bool recentCountSaved { get; set; } = true;
+        public int recentCount { get; set; } = 50;
+        public bool VolumeMember { get; set; } = false;
+        public int VolumeLast { get; set; } = 50;
         public bool includeSubfolders { get; set; } = true;
         public string tempLastFolder { get; set; }
         public bool sortCreationDate { get; set; } = true;
-        public bool playVideos { get; set; } = true;
-        public bool playImages { get; set; } = false;
         public bool shuffle { get; set; } = true;
         public bool loopPlayer { get; set; } = true;
+        public bool applyFilterToList { get; set; }
         public bool timeCodeServer { get; set; } = false;
+        public bool graphEnabled { get; set; } = true;
+        public StringCollection selectedExtensions { get; set; } = new StringCollection();
+        public StringCollection extensionFilterForList { get; set; } = new StringCollection();
         public StringCollection favoriteCollection { get; set; } = new StringCollection();
         public StringCollection customListConfig { get; set; } = new StringCollection();
 
