@@ -1,6 +1,6 @@
 #### Random Video Player
 
-![Logo](https://imgur.com/9OLjzJM)
+![Logo](https://imgur.com/9OLjzJM.png)
 
 Hello everyone,
 
