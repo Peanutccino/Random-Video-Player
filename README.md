@@ -1,6 +1,6 @@
 #### Random Video Player
 
-![Logo](https://i.imgur.com/Q6WRB0Z.png)
+![Logo](https://imgur.com/9OLjzJM)
 
 Hello everyone,
 
@@ -12,20 +12,11 @@ My goal was to create a good looking, fast and efficient way to play random vide
 * Playing random videos from a location you define with a simple click
 * Create/Save/Load custom lists filled with video files you can define
 * Quick and easy navigation
-* Shortcuts and Mousecontrols for quick and easy control of the player
+* Amazing UI
+* Customizable Hotkeys and Mousecontrols for quick and easy control of the player
 * Synchronize with MultiFunPlayer while playing random videos, now with visualizer
 
-## Current problems with Microsoft Defender
-As it seems, MS Defender does not like something in the code and gives a false positive. So far I could only reproduce this on Win 11; On Win 10 I couldn't.
-I submitted a ticket to Microsoft, but until I can resolve this issue (or not) the easiest workaround would be the following:
-* Download the file, it will fail
-* Start -> Virus & Threat Protection
-* 'Protection History'
-* Expand the header that say 'Thread quarantined'
-* under 'Actions' choose 'restore'
-
-
-## Prerequisites
+## Prerequisites (When compiling yourself)
 
 The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libmpv-2.dll' instead of the outdated mpv-1.dll. (The project is sadly abandoned)
 1. Download 'libmpv-2.dll' from here: https://sourceforge.net/projects/mpv-player-windows/files/libmpv/
@@ -61,29 +52,15 @@ The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libm
 5. You need to play videos from your folder with scripts ofc.
 6. Have Fun!
   
-## Shortcuts and stuff
+## Hotkeys
 There are multiple shortcuts for ease of use:
 * Scroll on the player to move forward/backwards in the video
 * Scroll on the volume bar to increase / decrease volume
 * Double click on the player sets it to an exclusive fullscreen mode (again to revert)
 
-| Shortcut  | Function |
-| ------------- | ------------- |
-| Space  | Play/Pause  |
-| Arrow Left  | Previous Track |
-| Arrow Right | Next Track |
-| RMD | Next Track |
-| MB4 | Previous Track |
-| MB5 | Next Track |
-| Media Play/Pause | Play/Pause |
-| Media Next | Next Track |
-| Media Previous | Previous Track |
-| F11 | Toggle exclusive Fullscreen |
-| F | Favorite current file |
-| S | Toggle shuffle |
-| M | Toggle mute |
-| Delete | Delete current file |
-| ESC | Exit application |
+Most of the hotkeys can be changed in the settings:
+
+![Logo](https://i.imgur.com/9RxCiJS.png)
 
 ## Credits:
 * hudec117 and their awesome Mpv.Net-lib- which I've modified to use the latest 'libmpv-2.dll' https://github.com/hudec117/Mpv.NET-lib-
