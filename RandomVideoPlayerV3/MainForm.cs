@@ -25,7 +25,6 @@ namespace RandomVideoPlayer
 
         private List<string> tempFavorites = new List<string>();
         private bool favoriteMatch = false;
-        private bool internalCheck = false;
 
         private Label timeOverlayLabel = new Label();
         private int durationMS = 0;
@@ -41,7 +40,18 @@ namespace RandomVideoPlayer
         TimeSpan activityThreshold = TimeSpan.FromSeconds(2); //Idleduration it takes to hide the cursor in seconds
         bool cursorHidden = false;
 
-        public MainForm()
+        private List<Task> ongoingTasks = new List<Task>();
+        private List<string> ongoingFileProcesses = new List<string>();
+
+        private string directoryFromStartupFile = "";
+        private string filepathFromStartupFile = "";
+        private string startupPath;
+        private bool startedByFile = false;
+
+        private bool playingSingleFile = false;
+        private string draggedFilePath;
+
+        public MainForm(string filePath)
         {
             InitializeComponent();
             hkSettings = HotkeyManager.LoadHotkeySettings();
@@ -51,11 +61,13 @@ namespace RandomVideoPlayer
                 fR.FormSize = new Size(fR.FormSize.Width - 16, fR.FormSize.Height - 39);
                 this.ClientSize = fR.FormSize;
             }
+            startupPath = Application.StartupPath;
 
             int initVolume = SettingsHandler.VolumeMember ? SettingsHandler.VolumeLastValue : 50;
 
             pbVolume.Value = initVolume;
-            playerMPV = new MpvPlayer(panelPlayerMPV.Handle) { Loop = SettingsHandler.LoopPlayer, Volume = initVolume, KeepOpen = KeepOpen.Yes };
+            string libMpv = startupPath + "\\lib\\libmpv-2.dll";
+            playerMPV = new MpvPlayer(panelPlayerMPV.Handle, libMpv) { Loop = SettingsHandler.LoopPlayer, Volume = initVolume, KeepOpen = KeepOpen.Yes };
             tcServer = new WebServer();
 
             if (SettingsHandler.TimeCodeServer) { tcServer.Start(); }
@@ -79,27 +91,54 @@ namespace RandomVideoPlayer
             {
                 ListHandler.SelectedExtensions = ListHandler.VideoExtensions;
             }
-            if(ListHandler.ExtensionFilterForList.Count<string>() <= 0)
+            if (ListHandler.ExtensionFilterForList.Count<string>() <= 0)
             {
                 ListHandler.ExtensionFilterForList = ListHandler.VideoExtensions;
+            }
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                try
+                {
+                    if (!File.Exists(filePath)) return;
+                    filepathFromStartupFile = filePath;
+                    directoryFromStartupFile = FileManipulation.GetFileDirectory(filePath);
+                    startedByFile = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to open with file {ex}, continue loading default");
+                }
             }
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            initStartUp(); //Load default folder if set and fill playlist
+            if (string.IsNullOrWhiteSpace(directoryFromStartupFile))
+            {
+                initStartUp(""); //Load default folder if set and fill playlist
+            }
+            else
+            {
+                initStartUp(directoryFromStartupFile);
+            }
+            RepositionButtons();
             SetupTooltips();
 
             btnShuffle.IconColor = ListHandler.DoShuffle ? SystemColors.ButtonHighlight : Color.Black;
+            btnRepeat.IconColor = SettingsHandler.LoopPlayer ? SystemColors.ButtonHighlight : Color.Black;
 
             //Load up a default image
-            string img = Path.Combine(Application.StartupPath, @"Resources\RVP_BlackBG.png");
+            string img = Path.Combine(startupPath, @"Resources\RVP_BlackBG.png");
             playerMPV.Load(img, true);
 
             InitializeTimeOverlay();
+            timerProgressUpdate.Enabled = true;
+
+            if (startedByFile) PlayNext();
         }
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            ListHandler.PreparePlayList(SettingsHandler.SourceSelected); //If needed, prepare the Playlist
+            ListHandler.PreparePlayList(SettingsHandler.SourceSelected, startedByFile, filepathFromStartupFile); //If needed, prepare the Playlist
 
             if (ListHandler.PlayList?.Any() == true && SettingsHandler.InitPlay == false) //First Play to get going
             {
@@ -124,23 +163,19 @@ namespace RandomVideoPlayer
         }
         private void btnFileBrowse_Click(object sender, EventArgs e)
         {
-            btnFileBrowse.IconColor = SystemColors.ButtonHighlight;
+            btnFileBrowse.IconColor = Color.PaleGreen;
             FolderBrowserView fbForm = new FolderBrowserView();
-            fbForm.StartPosition = FormStartPosition.Manual;
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            fbForm.Load += delegate (object s2, EventArgs e2)
-            {
-                fbForm.Location = new Point(Bounds.Location.X + (Bounds.Width / 2) - (fbForm.Width / 2), Bounds.Location.Y + (Bounds.Height / 2) - (fbForm.Height / 2));
-            };
-#pragma warning restore CS8622
+            fbForm.StartPosition = FormStartPosition.CenterParent;
+
             DialogResult result = fbForm.ShowDialog();
             btnFileBrowse.IconColor = Color.Black;
             if (result != DialogResult.OK) return;
 
+            startedByFile = false;
             PathHandler.FolderPath = fbForm.selectedPath;
             lblCurrentInfo.Text = PathHandler.FolderPath;
 
-            if (SettingsHandler.RecentChecked)
+            if (SettingsHandler.RecentCheckedTemp)
             {
                 ListHandler.latestFolderList(PathHandler.FolderPath, SettingsHandler.RecentCount);
             }
@@ -150,33 +185,29 @@ namespace RandomVideoPlayer
             }
 
             ListHandler.NeedsToPrepare = true; //Since we changed the content, we need to prepare the Playlist next
-            internalCheck = true;
-            tbSourceSelector.Checked = false;
-            internalCheck = false;
-
+            SettingsHandler.SourceSelected = false;
             PlayNext();
+            btnFileBrowse.IconColor = Color.Black;
+            btnListBrowser.IconColor = Color.Black;
         }
         private void btnListBrowser_Click(object sender, EventArgs e)
         {
             btnListBrowser.IconColor = SystemColors.ButtonHighlight;
             ListBrowserView lbForm = new ListBrowserView();
-            lbForm.StartPosition = FormStartPosition.Manual;
-#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate (possibly because of nullability attributes).
-            lbForm.Load += delegate (object s2, EventArgs e2)
-            {
-                lbForm.Location = new Point(Bounds.Location.X + (Bounds.Width / 2) - (lbForm.Width / 2), Bounds.Location.Y + (Bounds.Height / 2) - (lbForm.Height / 2));
-            };
-#pragma warning restore CS8622
+            lbForm.StartPosition = FormStartPosition.CenterParent;
+
+            btnListBrowser.IconColor = Color.PaleGreen;
             DialogResult result = lbForm.ShowDialog();
-            ListHandler.NeedsToPrepare = true; //Since we changed the content, we need to prepare the Playlist next
+            btnListBrowser.IconColor = Color.Black;
             if (result == DialogResult.OK)
             {
-                internalCheck = true;
-                tbSourceSelector.Checked = true;
-                internalCheck = false;
+                ListHandler.NeedsToPrepare = true; //Since we changed the content, we need to prepare the Playlist next
+                startedByFile = false;
+                SettingsHandler.SourceSelected = true;
                 PlayNext();
+                btnFileBrowse.IconColor = Color.Black;
             }
-            btnListBrowser.IconColor = Color.Black;
+
         }
         private void btnRemove_Click(object sender, EventArgs e)
         {
@@ -187,6 +218,14 @@ namespace RandomVideoPlayer
         {
             DeleteCurrentFromList();
         }
+
+        private void btnListAdd_Click(object sender, EventArgs e)
+        {
+            AddCurrentToList();
+        }
+
+
+
         private void btnSettings_Click(object sender, EventArgs e)
         {
             SettingsView svForm = new SettingsView();
@@ -198,6 +237,8 @@ namespace RandomVideoPlayer
             DialogResult result = svForm.ShowDialog();
             if (result == DialogResult.OK)
             {
+                RepositionButtons();
+
                 if (SettingsHandler.TimeCodeServer)
                 {
                     tcServer.Start();
@@ -207,55 +248,38 @@ namespace RandomVideoPlayer
                     tcServer.Stop();
                 }
                 playerMPV.Loop = SettingsHandler.LoopPlayer; //Update Player behavior
-                initStartUp(); //Used to fix issues at first time startup
+                initStartUp(""); //Used to fix issues at first time startup
                 if (SettingsHandler.SettingChanged)
                     PlayNext();
             }
+            btnMoveTo.IconChar = SettingsHandler.FileCopy ? FontAwesome.Sharp.IconChar.Copy : FontAwesome.Sharp.IconChar.FileExport;
+
+            btnRepeat.IconColor = SettingsHandler.LoopPlayer ? SystemColors.ButtonHighlight : Color.Black;
+            btnShuffle.IconColor = ListHandler.DoShuffle ? SystemColors.ButtonHighlight : Color.Black;
+
             hkSettings = HotkeyManager.LoadHotkeySettings();
             SetupTooltips();
         }
         private void btnAddToFav_Click(object sender, EventArgs e)
         {
-            if (!favoriteMatch)
-            {
-                tempFavorites = FavFunctions.AddToFavorites(currentFile);
-                favoriteMatch = FavFunctions.IsFavoriteMatched(currentFile, tempFavorites, btnAddToFav);
-            }
-            else
-            {
-                tempFavorites = FavFunctions.DeleteFromFavorites(currentFile, tempFavorites);
-                favoriteMatch = FavFunctions.IsFavoriteMatched(currentFile, tempFavorites, btnAddToFav);
-            }
+            MatchFavorites();
+        }
+        private void btnMoveTo_Click(object sender, EventArgs e)
+        {
+            MoveOrCopyCurrentFile();
         }
         private void btnShuffle_Click(object sender, EventArgs e)
         {
             ToggleShuffle();
         }
-
-        private void tbSourceSelector_CheckedChanged(object sender, EventArgs e)
+        private void btnRepeat_Click(object sender, EventArgs e)
         {
-            SettingsHandler.SourceSelected = tbSourceSelector.Checked;
-
-            ListHandler.NeedsToPrepare = true; //Since we changed the content, we need to prepare the Playlist next
-
-            if (tbSourceSelector.Checked)
-            {
-                InfoLabelUseList.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-                InfoLabelUseFolder.Font = new Font("Segoe UI", 9, FontStyle.Regular);
-            }
-            else
-            {
-                InfoLabelUseList.Font = new Font("Segoe UI", 9, FontStyle.Regular);
-                InfoLabelUseFolder.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-            }
-
-            if (!internalCheck)
-            {
-                PlayNext();
-            }
+            ToggleLoop();
         }
-
-
+        private void btnAddToQueue_Click(object sender, EventArgs e)
+        {
+            AddCurrentToQueue();
+        }
         #region ExclusiveFullscreen
         private void panelPlayerMPV_MouseMove(object sender, MouseEventArgs e) //Used to determin Cursor position in exclusive Fullscreen mode to show or hide Panels
         {
@@ -315,7 +339,7 @@ namespace RandomVideoPlayer
             }
             lastPlayCommandTime = DateTime.Now; // Update the last command time
 
-            ListHandler.PreparePlayList(SettingsHandler.SourceSelected); //If needed, prepare the Playlist
+            ListHandler.PreparePlayList(SettingsHandler.SourceSelected, startedByFile, filepathFromStartupFile); //If needed, prepare the Playlist
 
             if (!(ListHandler.PlayList?.Any() ?? false))
             {
@@ -361,7 +385,7 @@ namespace RandomVideoPlayer
             }
             lastPlayCommandTime = DateTime.Now; // Update the last command time
 
-            ListHandler.PreparePlayList(SettingsHandler.SourceSelected); //If needed, prepare the Playlist
+            ListHandler.PreparePlayList(SettingsHandler.SourceSelected, startedByFile, filepathFromStartupFile); //If needed, prepare the Playlist
 
             if (!(ListHandler.PlayList?.Any() ?? false) || (ListHandler.PlayListIndex == 0 && !ListHandler.FirstPlay))
             {
@@ -399,14 +423,21 @@ namespace RandomVideoPlayer
         }
         private void PlayerPlayPauseToggle()
         {
+            playingSingleFile = false;
+
             if (ListHandler.PlayList?.Any() == true && SettingsHandler.InitPlay == false) //First Play to get going
             {
-                btnNext.Enabled = true;
-                btnPrevious.Enabled = true;
-                btnRemove.Enabled = true;
-                btnListDel.Enabled = true;
                 SettingsHandler.InitPlay = true;
             }
+
+            btnNext.Enabled = true;
+            btnPrevious.Enabled = true;
+            btnRemove.Enabled = true;
+            btnListDel.Enabled = true;
+            btnListAdd.Enabled = true;
+            btnMoveTo.Enabled = true;
+            btnAddToFav.Enabled = true;
+            btnAddToQueue.Visible = false;
 
             var playPauseHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "PlayPauseToggle");
 
@@ -429,7 +460,9 @@ namespace RandomVideoPlayer
         }
         private void DeleteCurrent()
         {
-            var currentFile = ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
+            if (ListHandler.FirstPlay && !playingSingleFile) return;
+
+            var currentFile = playingSingleFile ? draggedFilePath : ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
             var fileScripts = SettingsHandler.IncludeScripts ? FileManipulation.GetAssociatedFunscripts(currentFile) : new List<string>();
 
             if (!Directory.Exists(PathHandler.RemoveFolder))
@@ -439,7 +472,7 @@ namespace RandomVideoPlayer
 
             try
             {
-                if (SettingsHandler.DeleteFull)
+                if (!SettingsHandler.DeleteFull)
                 {
                     File.Delete(currentFile);
                     foreach (var script in fileScripts)
@@ -467,16 +500,120 @@ namespace RandomVideoPlayer
 
             ListHandler.DeleteStringFromCustomList(currentFile); //Delete path from Properties Settings
 
-            var updatedList = ListHandler.PlayList.ToList();
-            updatedList.RemoveAt(ListHandler.PlayListIndex);
-            ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
-            ListHandler.PlayListIndex--;
+            if (!playingSingleFile)
+            {
+                var updatedList = ListHandler.PlayList.ToList();
+                updatedList.RemoveAt(ListHandler.PlayListIndex);
+                ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
+                ListHandler.PlayListIndex--;
+            }
+            else
+            {
+                var updatedList = ListHandler.PlayList.ToList();
+
+                if (updatedList.Contains(currentFile))
+                {
+                    updatedList.Remove(currentFile);
+                    ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
+                    ListHandler.PlayListIndex--;
+                }
+            }
+
 
             PlayNext();
         }
 
+
+
+        private async void MoveOrCopyCurrentFile()
+        {
+            if (ListHandler.FirstPlay && !playingSingleFile) return;
+
+            var currentFile = playingSingleFile ? draggedFilePath : ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
+
+            if (string.IsNullOrWhiteSpace(PathHandler.FileMoveFolderPath))
+            {
+                MessageBox.Show("Please choose a folder to Copy/Move files to under Settings => Paths");
+                return;
+            }
+            else
+            {
+                try
+                {
+                    if (!Directory.Exists(PathHandler.FileMoveFolderPath))
+                    {
+                        Directory.CreateDirectory(PathHandler.FileMoveFolderPath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Folder to Copy/Move files to is not valid: {ex}");
+                    return;
+                }
+            }
+
+            try
+            {
+                string FileDestinationPath = Path.Combine(PathHandler.FileMoveFolderPath, FileManipulation.GetFileName(currentFile));
+
+                if (SettingsHandler.FileCopy)
+                {
+                    if (ongoingFileProcesses.Contains(currentFile)) return;
+
+                    Task copyTask = CopyFileAsync(currentFile, FileDestinationPath);
+                    ongoingTasks.Add(copyTask);
+                    ongoingFileProcesses.Add(currentFile);
+                    await copyTask;
+                    ongoingFileProcesses.Remove(currentFile);
+                    ongoingTasks.Remove(copyTask);
+                }
+                else
+                {
+                    if (!SettingsHandler.FileCopy) //When File was moved, delete it from current list
+                    {
+                        ListHandler.DeleteStringFromCustomList(currentFile); //Delete path from Properties Settings
+
+                        var updatedList = ListHandler.PlayList.ToList();
+                        updatedList.RemoveAt(ListHandler.PlayListIndex);
+                        ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
+                        ListHandler.PlayListIndex--;
+
+                        PlayNext();
+                    }
+
+                    await MoveFileAsync(currentFile, FileDestinationPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error processing the file: {ex}");
+                return;
+            }
+
+
+
+        }
+
+        private async Task CopyFileAsync(string sourceFilePath, string destinationFilePath)
+        {
+            await Task.Run(() => File.Copy(sourceFilePath, destinationFilePath, true));
+        }
+
+        private async Task MoveFileAsync(string sourceFilePath, string destinationFilePath)
+        {
+            await Task.Run(() => File.Move(sourceFilePath, destinationFilePath, true));
+        }
+
         private void DeleteCurrentFromList()
         {
+            if (ListHandler.FirstPlay && !playingSingleFile) return;
+
+            if (playingSingleFile)
+            {
+                PlayNext();
+                return;
+            }
+
             var currentFile = ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
 
             ListHandler.DeleteStringFromCustomList(currentFile); //Delete path from Properties Settings
@@ -488,17 +625,37 @@ namespace RandomVideoPlayer
 
             PlayNext();
         }
+        private void AddCurrentToList()
+        {
+            if (ListHandler.FirstPlay && !playingSingleFile) return;
 
+            var currentFile = playingSingleFile ? draggedFilePath : ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
+
+            ListHandler.AddStringToCustomList(currentFile);
+        }
+
+        private void AddCurrentToQueue()
+        {
+            if (playingSingleFile)
+            {
+                var updatedList = ListHandler.PlayList.ToList();
+                updatedList.Add(draggedFilePath);
+                ListHandler.PlayList = updatedList;
+                ListHandler.FolderList = updatedList;
+                ListHandler.PlayListIndex--;
+                PlayNext();
+            }
+        }
         private void panelPlayerMPV_MouseWheel(object sender, MouseEventArgs e) //Move through video by Scrolling
         {
-                if (e.Delta > 0)
-                {
-                    SeekForward();
-                }
-                else if (e.Delta < 0)
-                {
-                    SeekBackward();
-                }
+            if (e.Delta > 0)
+            {
+                SeekForward();
+            }
+            else if (e.Delta < 0)
+            {
+                SeekBackward();
+            }
         }
         private void SeekForward()
         {
@@ -554,12 +711,58 @@ namespace RandomVideoPlayer
             PlayNext();
         }
 
+        private void ToggleLoop()
+        {
+            SettingsHandler.LoopPlayer = !SettingsHandler.LoopPlayer;
+            btnRepeat.IconColor = SettingsHandler.LoopPlayer ? SystemColors.ButtonHighlight : Color.Black;
+            playerMPV.Loop = SettingsHandler.LoopPlayer;
+        }
+        private void RepositionButtons()
+        {
+            List<Button> buttons = new List<Button> { btnRemove, btnListDel, btnListAdd, btnAddToFav, btnMoveTo, btnShuffle, btnRepeat };
+            if (buttons.Count != SettingsHandler.ButtonStates.Length)
+            {
+                SettingsHandler.ButtonStates = Enumerable.Repeat(true, buttons.Count).ToArray();
+            }
+
+            bool[] buttonStates = SettingsHandler.ButtonStates;
+
+            btnRemove.Visible = buttonStates[0];
+            btnListDel.Visible = buttonStates[1];
+            btnListAdd.Visible = buttonStates[2];
+            btnAddToFav.Visible = buttonStates[3];
+            btnMoveTo.Visible = buttonStates[4];
+            btnShuffle.Visible = buttonStates[5];
+            btnRepeat.Visible = buttonStates[6];
+
+            int x = 10; // starting x position
+            int y = 0; // starting y position
+            int margin = 20; // space between buttons
+
+            foreach (Button btn in buttons)
+            {
+                if (btn.Visible)
+                {
+                    btn.Location = new Point(x, y);
+                    x += btn.Width + margin;
+                }
+            }
+        }
         #endregion
 
         #region Initialization
-        private void initStartUp()
+        private void initStartUp(string alternativePath)
         {
-            PathHandler.FolderPath = string.IsNullOrWhiteSpace(PathHandler.DefaultFolder) || !Directory.Exists(PathHandler.DefaultFolder) ? PathHandler.FallbackPath : PathHandler.DefaultFolder;
+            if (string.IsNullOrWhiteSpace(alternativePath))
+            {
+                PathHandler.FolderPath = string.IsNullOrWhiteSpace(PathHandler.DefaultFolder) || !Directory.Exists(PathHandler.DefaultFolder) ? PathHandler.FallbackPath : PathHandler.DefaultFolder;
+            }
+            else
+            {
+                PathHandler.FolderPath = alternativePath;
+            }
+
+
 
             if (ListHandler.FolderList?.Any() == false) //Fill Playlist with all Files from FolderPath in case it wasn't done already
             {
@@ -570,17 +773,17 @@ namespace RandomVideoPlayer
             var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             var defaultListFolder = $@"{path}\RVP_ListFolder";
 
-            if (string.IsNullOrWhiteSpace(PathHandler.FolderList))
+            if (string.IsNullOrWhiteSpace(PathHandler.PathToListFolder))
             {
-                PathHandler.FolderList = defaultListFolder;
+                PathHandler.PathToListFolder = defaultListFolder;
 
-                if (!Directory.Exists(PathHandler.FolderList))
+                if (!Directory.Exists(PathHandler.PathToListFolder))
                 {
-                    Directory.CreateDirectory(PathHandler.FolderList);
+                    Directory.CreateDirectory(PathHandler.PathToListFolder);
                 }
             }
 
-            string favFile = PathHandler.FolderList + @"\Favorites.txt";
+            string favFile = PathHandler.PathToListFolder + @"\Favorites.txt";
             List<string> fromTXT = new List<string>();
 
             if (File.Exists(favFile))
@@ -623,7 +826,7 @@ namespace RandomVideoPlayer
 
             if (!string.IsNullOrWhiteSpace(currentFile))
             {
-                favoriteMatch = FavFunctions.IsFavoriteMatched(currentFile, tempFavorites, btnAddToFav);
+                favoriteMatch = playingSingleFile ? FavFunctions.IsFavoriteMatched(draggedFilePath, tempFavorites, btnAddToFav) : FavFunctions.IsFavoriteMatched(currentFile, tempFavorites, btnAddToFav);
                 tcServer.Filepath = currentFile;
 
                 var currentFileExtension = Path.GetExtension(currentFile).TrimStart('.').ToLower();
@@ -641,7 +844,7 @@ namespace RandomVideoPlayer
             pbPlayerProgress.DeleteActionsPoints();
             if (SettingsHandler.GraphEnabled)
             {
-                var funscriptFilePath = FileManipulation.GetFilePathWithDifferentExtension(currentFile, ".funscript");
+                var funscriptFilePath = playingSingleFile ? FileManipulation.GetFilePathWithDifferentExtension(draggedFilePath, ".funscript") : FileManipulation.GetFilePathWithDifferentExtension(currentFile, ".funscript");
                 if (File.Exists(funscriptFilePath))
                 {
                     pbPlayerProgress.LoadFunScript(funscriptFilePath);
@@ -655,15 +858,19 @@ namespace RandomVideoPlayer
 
         private void MatchFavorites()
         {
+            if (ListHandler.FirstPlay && !playingSingleFile) return;
+
+            string tempFile = playingSingleFile ? draggedFilePath : currentFile;
+
             if (!favoriteMatch)
             {
-                tempFavorites = FavFunctions.AddToFavorites(currentFile);
-                favoriteMatch = FavFunctions.IsFavoriteMatched(currentFile, tempFavorites, btnAddToFav);
+                tempFavorites = FavFunctions.AddToFavoritesList(tempFile);
+                favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, tempFavorites, btnAddToFav);
             }
             else
             {
-                tempFavorites = FavFunctions.DeleteFromFavorites(currentFile, tempFavorites);
-                favoriteMatch = FavFunctions.IsFavoriteMatched(currentFile, tempFavorites, btnAddToFav);
+                tempFavorites = FavFunctions.DeleteFromFavorites(tempFile, tempFavorites);
+                favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, tempFavorites, btnAddToFav);
             }
         }
         #endregion
@@ -716,8 +923,8 @@ namespace RandomVideoPlayer
         private void InitializeTimeOverlay()
         {
             timeOverlayLabel.AutoSize = true;
-            timeOverlayLabel.BackColor = Color.FromArgb(255, 128, 128); // Use a contrasting background
-            timeOverlayLabel.ForeColor = Color.Black; // Ensure text is readable
+            timeOverlayLabel.BackColor = Color.FromArgb(255, 128, 128);
+            timeOverlayLabel.ForeColor = Color.Black;
             this.Controls.Add(timeOverlayLabel);
             timeOverlayLabel.BringToFront();
         }
@@ -839,28 +1046,42 @@ namespace RandomVideoPlayer
             var previousHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "PlayPrevious");
             var nextHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "PlayNext");
             var addToFavHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "Favorite");
+            var moveOrCopyFileHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "MoveCopyFile");
             var shuffleHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "ToggleShuffle");
+            var loopHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "ToggleLoop");
             var muteHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "MutePlayer");
             var deleteHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "DeleteCurrent");
             var deleteCurrentFromListHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "DeleteCurrentFromList");
+            var addToCurrentListHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "AddCurrentToList");
 
             toolTipUI.InitialDelay = 1000;
 
             toolTipUI.SetToolTip(btnPlay, $"{GetKeyCombination(playPauseHotkey)} | Start playing from selected source");
-            
+
             toolTipUI.SetToolTip(btnPrevious, $"{GetKeyCombination(previousHotkey)} | Previous track");
             toolTipUI.SetToolTip(btnNext, $"{GetKeyCombination(nextHotkey)} | Next track");
             toolTipUI.SetToolTip(btnFileBrowse, "Choose folder to play from");
             toolTipUI.SetToolTip(btnListBrowser, "Create your own lists with selected videos");
-            toolTipUI.SetToolTip(btnListDel, $"{GetKeyCombination(deleteCurrentFromListHotkey)} | Remove current played videofile from custom List and Playlist (No deletion)");
+            toolTipUI.SetToolTip(btnListDel, $"{GetKeyCombination(deleteCurrentFromListHotkey)} | Remove currently played videofile from custom List and Playlist (No deletion)");
+            toolTipUI.SetToolTip(btnListAdd, $"{GetKeyCombination(addToCurrentListHotkey)} | Add currently played videofile to custom List and Playlist");
             toolTipUI.SetToolTip(btnSettings, "Open settings menu");
             toolTipUI.SetToolTip(btnAddToFav, $"{GetKeyCombination(addToFavHotkey)} | Add current to favorite list");
             toolTipUI.SetToolTip(btnShuffle, $"{GetKeyCombination(shuffleHotkey)} | Toggle shuffle / Parse order");
+            toolTipUI.SetToolTip(btnRepeat, $"{GetKeyCombination(loopHotkey)} | Toggle loop");
             toolTipUI.SetToolTip(btnMuteToggle, $"{GetKeyCombination(muteHotkey)} | Mute sound");
             toolTipUI.SetToolTip(pbVolume, "Scroll/Click to change volume");
-            toolTipUI.SetToolTip(tbSourceSelector, "Choose whether to play from selected folder or your custom list");
+            toolTipUI.SetToolTip(btnAddToQueue, "Add dropped file to queue");
 
-            if(SettingsHandler.DeleteFull)
+            if (SettingsHandler.FileCopy)
+            {
+                toolTipUI.SetToolTip(btnMoveTo, $"{GetKeyCombination(moveOrCopyFileHotkey)} | Copy file to: {PathHandler.FileMoveFolderPath}");
+            }
+            else
+            {
+                toolTipUI.SetToolTip(btnMoveTo, $"{GetKeyCombination(moveOrCopyFileHotkey)} | Move file to: {PathHandler.FileMoveFolderPath}");
+            }
+
+            if (!SettingsHandler.DeleteFull)
             {
                 toolTipUI.SetToolTip(btnRemove, $"{GetKeyCombination(deleteHotkey)} | Delete currently played videofile completely (Change in settings)");
             }
@@ -910,11 +1131,20 @@ namespace RandomVideoPlayer
                     case "DeleteCurrentFromList":
                         DeleteCurrentFromList();
                         return true;
+                    case "AddCurrentToList":
+                        AddCurrentToList();
+                        return true;
                     case "Favorite":
                         MatchFavorites();
                         return true;
+                    case "MoveCopyFile":
+                        MoveOrCopyCurrentFile();
+                        return true;
                     case "ToggleShuffle":
                         ToggleShuffle();
+                        return true;
+                    case "ToggleLoop":
+                        ToggleLoop();
                         return true;
                     case "MutePlayer":
                         MutePlayer();
@@ -969,6 +1199,70 @@ namespace RandomVideoPlayer
         }
         #endregion
 
+        #region Drag and Drop
+
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files.Length > 0)
+                {
+                    draggedFilePath = files[0];
+
+                    if (!File.Exists(draggedFilePath)) return;
+
+                    if (SettingsHandler.PlayOnDrop)
+                    {
+                        playerMPV.Load(draggedFilePath, true);
+
+                        SettingsHandler.IsPlaying = false;
+
+                        PlayerPlayPauseToggle();
+
+                        ThreadHelper.SetText(this, lblCurrentInfo, draggedFilePath);
+                        ThreadHelper.SetText(this, lblTitleBar, $"Random Video Player - Playing single file : Press next to jump back to queue");
+
+                        btnNext.Enabled = true;
+                        btnPrevious.Enabled = false;
+                        btnRemove.Enabled = true;
+                        btnListDel.Enabled = true;
+                        btnListAdd.Enabled = true;
+                        btnMoveTo.Enabled = true;
+                        btnAddToFav.Enabled = true;
+
+                        btnAddToQueue.Visible = true;
+
+                        playingSingleFile = true;
+                    }
+                    else
+                    {
+                        foreach (string file in files)
+                        {
+                            var updatedList = ListHandler.PlayList.ToList();
+                            updatedList.Add(file);
+                            ListHandler.PlayList = updatedList;
+                            ListHandler.FolderList = updatedList;
+                            ThreadHelper.SetText(this, lblTitleBar, $"Random Video Player - {(ListHandler.PlayListIndex + 1).ToString()} / {ListHandler.PlayList.Count().ToString()}");
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region Logic for standard WindowsForms Controls
         private void MainForm_Resize(object sender, EventArgs e)
         {
@@ -988,6 +1282,20 @@ namespace RandomVideoPlayer
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (ongoingTasks.Count > 0)
+            {
+                e.Cancel = true;
+                if (ongoingTasks.Count == 1)
+                {
+                    MessageBox.Show($"A file moving/copying task is still being executed, please wait until finished before closing");
+                }
+                else
+                {
+                    MessageBox.Show($"{ongoingTasks.Count} file moving/copying tasks are still being executed, please wait until finished before closing");
+                }
+
+            }
+
             tcServer.Stop();
             fR.FormSize = fR.TempSize; //Save last known form size to property
             PathHandler.TempRecentFolder = string.Empty;
@@ -996,6 +1304,7 @@ namespace RandomVideoPlayer
                 SettingsHandler.VolumeLastValue = pbVolume.Value;
 
             UnregisterHotKeys();
+
         }
         private void btnMaximizeForm_Click(object sender, EventArgs e)
         {
@@ -1146,6 +1455,7 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
+
 
 
     }

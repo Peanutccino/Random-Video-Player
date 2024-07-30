@@ -26,10 +26,21 @@ namespace RandomVideoPlayer.Functions
         public bool applyFilterToList { get; set; }
         public bool timeCodeServer { get; set; } = false;
         public bool graphEnabled { get; set; } = true;
+        public string viewStateFileExplore { get; set; } = "Tile";
+        public bool showIconsCustomList { get; set; } = true;
+        public bool showFullPathCustomList { get; set; } = false;
+        public Size tileSizeFileExplore { get; set; } = new Size(150, 40);
+        public Size tileSizeFileBrowser { get; set; } = new Size(120, 34);
         public StringCollection selectedExtensions { get; set; } = new StringCollection();
         public StringCollection extensionFilterForList { get; set; } = new StringCollection();
         public StringCollection favoriteCollection { get; set; } = new StringCollection();
+        public StringCollection favoriteMoveBackupCollection { get; set; } = new StringCollection();
         public StringCollection customListConfig { get; set; } = new StringCollection();
+        public string pathToMoveFolder { get; set; } = "";
+        public bool fileCopy { get; set; } = true;
+        public bool[] buttonStates { get; set; } = Enumerable.Repeat(true, 7).ToArray();
+        public bool playOnDrop { get; set; } = true;
+
 
         private static string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RVP-Config.json");
 

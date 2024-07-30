@@ -40,7 +40,7 @@ namespace RandomVideoPlayer.Model
 			}
 		}
         /// <value>Used to store directory where custom lists are saved from and loaded to</value> 
-        public static string FolderList
+        public static string PathToListFolder
 		{
 			get 
 			{
@@ -69,6 +69,19 @@ namespace RandomVideoPlayer.Model
 				_settingsInstance.Save();
 			}
 		}
-
+        public static string FileMoveFolderPath
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.pathToMoveFolder;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.pathToMoveFolder = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }

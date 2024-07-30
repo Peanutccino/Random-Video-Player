@@ -78,10 +78,10 @@ namespace RandomVideoPlayer.Model
         /// <value>Used to store all media files fomr a user defined list</value> 
         public static IEnumerable<string> CustomList
         {
-            get 
+            get
             {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.customListConfig.Cast<string>(); 
+                return _settingsInstance.customListConfig.Cast<string>();
             }
             set
             {
@@ -124,14 +124,14 @@ namespace RandomVideoPlayer.Model
         }
 
         /// <value>Stores added favorite folders for easier file browser navigation</value> 
-        public static IEnumerable<string> FavoriteFolderList 
+        public static IEnumerable<string> FavoriteFolderList
         {
-            get 
+            get
             {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.favoriteCollection.Cast<string>(); 
+                return _settingsInstance.favoriteCollection.Cast<string>();
             }
-            set 
+            set
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.favoriteCollection.Clear();
@@ -139,27 +139,52 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+        public static IEnumerable<string> FavoriteMoveBackupList
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.favoriteMoveBackupCollection.Cast<string>();
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.favoriteMoveBackupCollection.Clear();
+                _settingsInstance.favoriteMoveBackupCollection.AddRange(value.ToArray());
+                _settingsInstance.Save();
+            }
+        }
         /// <value>Holds a defined number of supported file extensions</value> 
         public static List<string> Extensions
         {
-            get 
+            get
             {
                 return new List<string>(SelectedExtensions);
             }
         }
-        public static List<string> ImageExtensions 
+        public static List<string> CombinedExtensions
         {
-            get { return _imgExtensions; }  
+            get
+            {
+                var _combined = new List<string>();
+                _combined.AddRange(_imgExtensions);
+                _combined.AddRange(_vidExtensions);
+                return _combined;
+            }
+        }
+        public static List<string> ImageExtensions
+        {
+            get { return _imgExtensions; }
         }
         public static List<string> VideoExtensions
         {
             get { return _vidExtensions; }
         }
         /// <value>Shuffles current playlist for random playback</value> 
-        public static void PreparePlayList(bool sourceselected)
+        public static void PreparePlayList(bool sourceselected, bool startedByFile, string startupFilePath)
         {
             if (NeedsToPrepare)
-            {                
+            {
                 if (sourceselected)
                 {
                     if (SettingsHandler.ApplyFilterToList)
@@ -179,8 +204,8 @@ namespace RandomVideoPlayer.Model
 
                 PlayListIndex = 0;
 
-                if(DoShuffle)
-                    shufflePlayList();
+                if (DoShuffle)
+                    shufflePlayList(startedByFile, startupFilePath);
                 _needsToPrepare = false;
                 _firstPlay = true;
             }
@@ -216,7 +241,7 @@ namespace RandomVideoPlayer.Model
 
             try
             {
-                if(_settingsInstance.sortCreationDate) //Set to sort by creation date
+                if (_settingsInstance.sortCreationDate) //Set to sort by creation date
                 {
                     FolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
                         .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
@@ -262,14 +287,35 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-        /// <value>Randomize Playlist</value> 
-        public static void shufflePlayList()
+        public static void AddStringToCustomList(string path)
         {
-            if(PlayList?.Any() == true)
+            var _settingsInstance = CustomSettings.Instance;
+            _settingsInstance.customListConfig.Add(path);
+            _settingsInstance.Save();
+        }
+
+        /// <value>Randomize Playlist</value> 
+        public static void shufflePlayList(bool preserveFirstFile, string startupFilePath)
+        {
+            if (_playList?.Any() == false) return;
+
+            var rng = new Random();
+
+            if (preserveFirstFile)
             {
-                var rng = new Random();
-                PlayList = rng.Shuffle(PlayList);
+                string firstEntry = startupFilePath;
+                List<string> tempPlaylist = _playList.ToList();
+                tempPlaylist.Remove(firstEntry); 
+                List<string> shuffledPlaylist = rng.Shuffle(tempPlaylist).ToList();                
+                shuffledPlaylist.Insert(0, firstEntry);
+                _playList = shuffledPlaylist;
+                
             }
+            else
+            {
+                _playList = rng.Shuffle(_playList);
+            }
+
         }
     }
 }

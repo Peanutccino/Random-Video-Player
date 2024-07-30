@@ -4,9 +4,9 @@ namespace RandomVideoPlayer.Functions
 {
     public class FavFunctions
     {
-        public static List<string> AddToFavorites(string currentFile)
+        public static List<string> AddToFavoritesList(string currentFile)
         {
-            var favFile = PathHandler.FolderList + @"\Favorites.txt";
+            var favFile = PathHandler.PathToListFolder + @"\Favorites.txt";
             var fromTXT = new List<string>();
 
             if (File.Exists(favFile))
@@ -24,7 +24,7 @@ namespace RandomVideoPlayer.Functions
 
         public static List<string> DeleteFromFavorites(string currentFile, List<string> tempFavorites)
         {
-            string favFile = PathHandler.FolderList + @"\Favorites.txt";
+            string favFile = PathHandler.PathToListFolder + @"\Favorites.txt";
 
             tempFavorites.Remove(currentFile);
 
@@ -44,6 +44,43 @@ namespace RandomVideoPlayer.Functions
             {
                 ctrl.IconColor = Color.Black;
                 return false;
+            }
+        }
+
+        public static void AddFavoriteToFolder(string currentFile)
+        {
+            if (!Directory.Exists(PathHandler.FileMoveFolderPath))
+            {
+                MessageBox.Show($"Could not find chosen path to favorites: {PathHandler.FileMoveFolderPath}");
+                return;
+            }
+
+            string fileName = Path.GetFileName(currentFile);
+            string newPath = Path.Combine(PathHandler.FileMoveFolderPath, fileName);
+
+            if (SettingsHandler.FileCopy)
+            {
+                try
+                {
+                    File.Copy(currentFile, newPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error copying the file to selected favorite destination: {ex}");
+                    throw;
+                }
+            }
+            else
+            {
+                try
+                {
+                    File.Move(currentFile, newPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error moving the file to selected favorite destination: {ex}");
+                    throw;
+                }
             }
         }
     }

@@ -23,7 +23,7 @@ namespace RandomVideoPlayer.View
             this.BackColor = Color.FromArgb(179, 179, 255);//Border color
 
             settingsModel = new SettingsModel();
-            
+
             InitializeNavigation();
             InitializeSettings();
             HighlightButton(sbtnPaths);
@@ -33,7 +33,7 @@ namespace RandomVideoPlayer.View
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
-        }     
+        }
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -57,7 +57,7 @@ namespace RandomVideoPlayer.View
 
             settingsModel.DefaultPathText = PathHandler.DefaultFolder ?? (PathHandler.DefaultFolder = PathHandler.FallbackPath);
             settingsModel.RemovalPathText = PathHandler.RemoveFolder;
-            settingsModel.ListPathText = PathHandler.FolderList;
+            settingsModel.ListPathText = PathHandler.PathToListFolder;
             settingsModel.DeleteFull = SettingsHandler.DeleteFull;
             settingsModel.IncludeScript = SettingsHandler.IncludeScripts;
 
@@ -67,9 +67,16 @@ namespace RandomVideoPlayer.View
             settingsModel.MemberVolume = SettingsHandler.VolumeMember;
 
             settingsModel.LoopPlayer = SettingsHandler.LoopPlayer;
+            settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
             settingsModel.ApplyFilterToList = SettingsHandler.ApplyFilterToList;
             settingsModel.SortCreated = SettingsHandler.CreationDate;
+            settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
             settingsModel.SelectedExtensions = new List<string>(ListHandler.SelectedExtensions);
+
+            settingsModel.FileMovePath = PathHandler.FileMoveFolderPath;
+            settingsModel.FileCopy = SettingsHandler.FileCopy;
+
+            settingsModel.ButtonStates = SettingsHandler.ButtonStates;
         }
         private void InitializeNavigation()
         {
@@ -78,6 +85,7 @@ namespace RandomVideoPlayer.View
             sbtnRemember.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new RememberUserControl(settingsModel)); };
             sbtnInputs.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InputsUserControl()); };
             sbtnSync.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SyncUserControl(settingsModel)); };
+            sbtnInterface.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InterfaceUserControl(settingsModel)); };
             sbtnAbout.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new AboutUserControl(settingsModel)); };
         }
 
@@ -89,7 +97,7 @@ namespace RandomVideoPlayer.View
             PathHandler.DefaultFolder = settingsModel.DefaultPathText;
             PathHandler.TempRecentFolder = PathHandler.DefaultFolder;
             PathHandler.RemoveFolder = settingsModel.RemovalPathText;
-            PathHandler.FolderList = settingsModel.ListPathText;
+            PathHandler.PathToListFolder = settingsModel.ListPathText;
             SettingsHandler.DeleteFull = settingsModel.DeleteFull;
             SettingsHandler.IncludeScripts = settingsModel.IncludeScript;
 
@@ -99,7 +107,9 @@ namespace RandomVideoPlayer.View
             SettingsHandler.VolumeMember = settingsModel.MemberVolume;
 
             SettingsHandler.LoopPlayer = settingsModel.LoopPlayer;
+            ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
             SettingsHandler.CreationDate = settingsModel.SortCreated;
+            SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;  
             SettingsHandler.ApplyFilterToList = settingsModel.ApplyFilterToList;
 
             if (!ListHandler.SelectedExtensions.SequenceEqual(settingsModel.SelectedExtensions))
@@ -108,6 +118,10 @@ namespace RandomVideoPlayer.View
                 SettingsHandler.SettingChanged = true;
             }
             ListHandler.SelectedExtensions = settingsModel.SelectedExtensions;
+
+            SetupFileMove();
+
+            SettingsHandler.ButtonStates = settingsModel.ButtonStates;
         }
 
         private void HighlightButton(IconButton button)
@@ -129,6 +143,24 @@ namespace RandomVideoPlayer.View
             splitUI.Panel2.Controls.Clear();
             userControl.Dock = DockStyle.Fill;
             splitUI.Panel2.Controls.Add(userControl);
+        }
+
+        private void SetupFileMove()
+        {
+            if (!Path.Exists(settingsModel.FileMovePath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(settingsModel.FileMovePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"The path to store favorite videos is not valid! Error: {ex} Path: {settingsModel.FileMovePath}");
+                    return;
+                }
+            }
+            PathHandler.FileMoveFolderPath = settingsModel.FileMovePath;
+            SettingsHandler.FileCopy = settingsModel.FileCopy;
         }
 
         private void SetupTooltips()
@@ -219,6 +251,6 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
-#endregion
+        #endregion
     }
 }

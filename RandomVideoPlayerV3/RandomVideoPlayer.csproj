@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>Resources\RVP_IconSimple.ico</ApplicationIcon>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <AssemblyVersion>1.40</AssemblyVersion>
+    <AssemblyVersion>1.42</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

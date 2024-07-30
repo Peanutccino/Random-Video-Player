@@ -78,5 +78,17 @@
 
             return truncatedText;
         }
+
+        public static int CountRowsInFile(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"File not found: {filePath}");
+            }
+
+            int numberOfRows = File.ReadAllLines(filePath).Length;
+
+            return numberOfRows; 
+        }
     }
 }

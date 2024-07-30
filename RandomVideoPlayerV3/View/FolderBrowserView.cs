@@ -10,6 +10,7 @@ namespace RandomVideoPlayer.View
         FormResize fR = new FormResize();
 
         List<string> TempList = new List<string>();
+        private Size _tileSize;
 
         public string selectedPath { get; set; }
 
@@ -18,7 +19,10 @@ namespace RandomVideoPlayer.View
             InitializeComponent();
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);
-            this.BackColor = Color.FromArgb(152, 251, 152);
+            this.BackColor = Color.FromArgb(255, 221, 26);
+
+            _tileSize = SettingsHandler.TileSizeFileBrowser;
+            lvFileExplore.TileSize = _tileSize;
         }
 
         private void FolderBrowserView_Load(object sender, EventArgs e)
@@ -34,14 +38,14 @@ namespace RandomVideoPlayer.View
 
             HighlightDriveInListBox(tbPathView.Text);
 
-            if(SettingsHandler.TempTriggered)
+            if (SettingsHandler.TempTriggered)
             {
                 cbUseRecent.Checked = SettingsHandler.RecentCheckedTemp;
                 tbCount.Text = SettingsHandler.RecentCountSavedTemp.ToString();
             }
             else
             {
-                if(SettingsHandler.RecentCheckedSaved)
+                if (SettingsHandler.RecentCheckedSaved)
                 {
                     cbUseRecent.Checked = SettingsHandler.RecentChecked;
                 }
@@ -53,59 +57,13 @@ namespace RandomVideoPlayer.View
 
             cbIncludeSubfolders.Checked = ListHandler.IncludeSubfolders;
 
-            if (ListHandler.FavoriteFolderList?.Any() == true) //Load favorited folders
-            {
-                foreach (string str in ListHandler.FavoriteFolderList)
-                {
-                    TempList.Add(str);
+            PopulateFavoriteFolders();
 
-                    var dir = new DirectoryInfo(str);
-                    string folderName = FileManipulation.TrimText(dir.Name, 19, "...");
-
-                    lbFavorites.Items.Add(folderName);
-                }
-            }
             SetupTooltips(); //Initialize ToolTips
         }
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (TempList?.Any() == true)
-                ListHandler.FavoriteFolderList = TempList;
-            else 
-                ListHandler.ClearFavoriteFolderList();
-
-            if (!string.IsNullOrWhiteSpace(tbPathView.Text))
-            {
-                PathHandler.TempRecentFolder = tbPathView.Text;
-            }
-
-            int recentCount;
-
-            try
-            {
-                recentCount = Convert.ToInt32(tbCount.Text);
-                if (recentCount <= 0) { recentCount = 0; }
-            }
-            catch (Exception)
-            {
-                recentCount = 0;
-                MessageBox.Show("Recent value has to be a valid number");
-            }
-
-            if(SettingsHandler.RecentCheckedSaved)
-            {
-                SettingsHandler.RecentChecked = cbUseRecent.Checked;
-            }
-            if(SettingsHandler.RecentCountSaved)
-            {
-                SettingsHandler.RecentCount = recentCount;
-            }
-
-            SettingsHandler.RecentCheckedTemp = cbUseRecent.Checked;
-            SettingsHandler.RecentCountSavedTemp = recentCount;
-            SettingsHandler.TempTriggered = true;
-
-            ListHandler.IncludeSubfolders = cbIncludeSubfolders.Checked;
+            SaveSettings();
 
             this.Close();
         }
@@ -114,43 +72,7 @@ namespace RandomVideoPlayer.View
             this.selectedPath = tbPathView.Text;
             this.DialogResult = DialogResult.OK;
 
-            if (TempList?.Any() == true)
-                ListHandler.FavoriteFolderList = TempList;
-            else
-                ListHandler.ClearFavoriteFolderList();
-
-            if (!string.IsNullOrWhiteSpace(tbPathView.Text))
-            {
-                PathHandler.TempRecentFolder = tbPathView.Text;
-            }
-
-            int recentCount;
-
-            try
-            {
-                recentCount = Convert.ToInt32(tbCount.Text);
-                if(recentCount <= 0) { recentCount = 0; }
-            }
-            catch (Exception)
-            {
-                recentCount = 0;
-                MessageBox.Show("Count has to be a valid number");
-            }
-
-            if (SettingsHandler.RecentCheckedSaved)
-            {
-                SettingsHandler.RecentChecked = cbUseRecent.Checked;
-            }
-            if (SettingsHandler.RecentCountSaved)
-            {
-                SettingsHandler.RecentCount = recentCount;
-            }
-
-            SettingsHandler.RecentCheckedTemp = cbUseRecent.Checked;
-            SettingsHandler.RecentCountSavedTemp = recentCount;
-            SettingsHandler.TempTriggered = true;
-
-            ListHandler.IncludeSubfolders = cbIncludeSubfolders.Checked;
+            SaveSettings();
 
             this.Close();
         }
@@ -175,14 +97,7 @@ namespace RandomVideoPlayer.View
 
         private void btnDeleteFav_Click(object sender, EventArgs e)
         {
-            int firstItem = lbFavorites.SelectedIndex;
-            int itemCount = firstItem + lbFavorites.SelectedIndices.Count;
-
-            for (int i = firstItem; i < itemCount; i++)
-            {
-                TempList.RemoveAt(firstItem);
-                lbFavorites.Items.RemoveAt(firstItem);
-            }
+            DeleteFavFolder();
         }
         private void btnBack_Click(object sender, EventArgs e)
         {
@@ -226,10 +141,52 @@ namespace RandomVideoPlayer.View
             if (lbFavorites.SelectedItems.Count > 0 && lbFavorites.SelectedIndex >= 0)
             {
                 string selectedPath = TempList[lbFavorites.SelectedIndex];
-                tbPathView.Text = selectedPath;
-                PopulateSelected(selectedPath);
-                HighlightDriveInListBox(tbPathView.Text);
+
+                if (Directory.Exists(selectedPath))
+                {
+                    tbPathView.Text = selectedPath;
+                    PopulateSelected(selectedPath);
+                    HighlightDriveInListBox(tbPathView.Text);
+                }
+                else
+                {
+                    DeleteFavFolder();
+                }
             }
+        }
+
+        private void btnDecreaseSize_Click(object sender, EventArgs e)
+        {
+            if (_tileSize.Width <= 80) return;
+
+            _tileSize = new Size(_tileSize.Width - 10, _tileSize.Height);
+
+            lvFileExplore.TileSize = _tileSize;
+
+            PopulateSelected(tbPathView.Text);
+            lvFileExplore.Refresh();
+        }
+
+        private void btnResetSize_Click(object sender, EventArgs e)
+        {
+            _tileSize = new Size(120, 34);
+
+            lvFileExplore.TileSize = _tileSize;
+
+            PopulateSelected(tbPathView.Text);
+            lvFileExplore.Refresh();
+        }
+
+        private void btnIncreaseSize_Click(object sender, EventArgs e)
+        {
+            if (_tileSize.Width >= 260) return;
+
+            _tileSize = new Size(_tileSize.Width + 10, _tileSize.Height);
+
+            lvFileExplore.TileSize = _tileSize;
+
+            PopulateSelected(tbPathView.Text);
+            lvFileExplore.Refresh();
         }
         private void tbCount_TextChanged(object sender, EventArgs e)
         {
@@ -255,6 +212,11 @@ namespace RandomVideoPlayer.View
                 toolTipInfo.SetToolTip(lbFavorites, "");
             }
         }
+        private void FolderBrowserView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SettingsHandler.TileSizeFileBrowser = _tileSize;
+        }
+
         #region functions
         private void PopulateDrives() //List all available drives for easier navigation
         {
@@ -269,32 +231,70 @@ namespace RandomVideoPlayer.View
             }
         }
 
+        private void PopulateFavoriteFolders()
+        {
+            if (ListHandler.FavoriteFolderList?.Any() == true) //Load favorited folders
+            {
+                foreach (string str in ListHandler.FavoriteFolderList)
+                {
+                    try
+                    {
+                        if (!Directory.Exists(str))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            TempList.Add(str);
+
+                            var dir = new DirectoryInfo(str);
+                            string folderName = FileManipulation.TrimText(dir.Name, 19, "...");
+
+                            lbFavorites.Items.Add(folderName);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+                }
+            }
+        }
+
         private void PopulateSelected(string folderPath) //Get all files from selected and sub directories
         {
-            lvFileExplore.Items.Clear();
-            var dir = new DirectoryInfo(folderPath);
-            var combinedExtensions = ListHandler.Extensions;
-
-            foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
-            {                
-                var item = new ListViewItem();
-                item.Text = FileManipulation.TrimText(subFolder.Name, 13, "");
-                item.ImageIndex = 0;
-                item.Tag = subFolder.FullName;
-                item.ToolTipText = subFolder.Name;
-                lvFileExplore.Items.Add(item);
-            }
-            foreach (FileInfo file in dir.EnumerateFiles())
+            try
             {
-                var currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
-                if (!combinedExtensions.Contains(currentFileExtension)) continue;
-                var item = new ListViewItem();
-                item.Text = FileManipulation.TrimText(file.Name, 10, "...");
-                item.ImageIndex = ListHandler.VideoExtensions.Contains(currentFileExtension) ? 1 : 2;
-                item.Tag = file.FullName;
-                item.ToolTipText = file.Name;
-                lvFileExplore.Items.Add(item);
+                lvFileExplore.Items.Clear();
+                var dir = new DirectoryInfo(folderPath);
+                var combinedExtensions = ListHandler.CombinedExtensions;
+
+                foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
+                {
+                    var item = new ListViewItem();
+                    item.Text = subFolder.Name;
+                    item.ImageIndex = 0;
+                    item.Tag = subFolder.FullName;
+                    item.ToolTipText = subFolder.Name;
+                    lvFileExplore.Items.Add(item);
+                }
+                foreach (FileInfo file in dir.EnumerateFiles())
+                {
+                    var currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
+                    if (!combinedExtensions.Contains(currentFileExtension)) continue;
+                    var item = new ListViewItem();
+                    item.Text = file.Name;
+                    item.ImageIndex = ListHandler.VideoExtensions.Contains(currentFileExtension) ? 1 : 2;
+                    item.Tag = file.FullName;
+                    item.ToolTipText = file.Name;
+                    lvFileExplore.Items.Add(item);
+                }
             }
+            catch (Exception)
+            {
+                return;
+            }
+
         }
 
         private void HighlightDriveInListBox(string path) //Hightlight drive that is currently in use within listview
@@ -312,8 +312,67 @@ namespace RandomVideoPlayer.View
                 }
             }
         }
+
+        private void DeleteFavFolder()
+        {
+            int firstItem = lbFavorites.SelectedIndex;
+            int itemCount = firstItem + lbFavorites.SelectedIndices.Count;
+
+            for (int i = firstItem; i < itemCount; i++)
+            {
+                TempList.RemoveAt(firstItem);
+                lbFavorites.Items.RemoveAt(firstItem);
+            }
+        }
+
+        private void SaveSettings()
+        {
+            if (TempList?.Any() == true)
+                ListHandler.FavoriteFolderList = TempList;
+            else
+                ListHandler.ClearFavoriteFolderList();
+
+            if (!string.IsNullOrWhiteSpace(tbPathView.Text))
+            {
+                PathHandler.TempRecentFolder = tbPathView.Text;
+            }
+
+            int recentCount;
+
+            try
+            {
+                recentCount = Convert.ToInt32(tbCount.Text);
+                if (recentCount <= 0) { recentCount = 0; }
+            }
+            catch (Exception)
+            {
+                recentCount = 0;
+                MessageBox.Show("Count has to be a valid number");
+            }
+
+            if (SettingsHandler.RecentCheckedSaved)
+            {
+                SettingsHandler.RecentChecked = cbUseRecent.Checked;
+            }
+            if (SettingsHandler.RecentCountSaved)
+            {
+                SettingsHandler.RecentCount = recentCount;
+            }
+
+            SettingsHandler.RecentCheckedTemp = cbUseRecent.Checked;
+            SettingsHandler.RecentCountSavedTemp = recentCount;
+            SettingsHandler.TempTriggered = true;
+
+            ListHandler.IncludeSubfolders = cbIncludeSubfolders.Checked;
+
+            SettingsHandler.TileSizeFileBrowser = _tileSize;
+        }
         private void SetupTooltips()
         {
+            toolTipInfo.SetToolTip(btnDecreaseSize, "Decrease tile size");
+            toolTipInfo.SetToolTip(btnResetSize, "Restore tile size");
+            toolTipInfo.SetToolTip(btnIncreaseSize, "Increase tile size");            
+
             toolTipInfo.SetToolTip(btnBack, "Go back one folder");
             toolTipInfo.SetToolTip(btnFolderSelect, "Use current folder to play from");
             toolTipInfo.SetToolTip(btnAddFav, "Add current folder to your list of favorites");
@@ -413,6 +472,8 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
         #endregion
+
+
 
 
     }

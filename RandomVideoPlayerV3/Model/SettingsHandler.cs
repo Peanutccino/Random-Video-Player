@@ -243,5 +243,121 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool ShowIconsCustomLíst
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.showIconsCustomList;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.showIconsCustomList = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool ShowFullPathCustomList
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.showFullPathCustomList;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.showFullPathCustomList = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static string ViewStateFileExplore
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.viewStateFileExplore;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.viewStateFileExplore = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static Size TileSizeFileExplore
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.tileSizeFileExplore;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.tileSizeFileExplore = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static Size TileSizeFileBrowser
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.tileSizeFileBrowser;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.tileSizeFileBrowser = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool FileCopy
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fileCopy;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fileCopy = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool[] ButtonStates
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.buttonStates;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.buttonStates = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool PlayOnDrop
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.playOnDrop;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.playOnDrop = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }

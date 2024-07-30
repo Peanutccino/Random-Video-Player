@@ -1,6 +1,7 @@
 ﻿using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
 using System.Runtime.InteropServices;
+using System.Text;
 using ListViewItem = System.Windows.Forms.ListViewItem;
 
 namespace RandomVideoPlayer.View
@@ -12,6 +13,11 @@ namespace RandomVideoPlayer.View
         List<string> TempList = new List<string>();
         List<string> TempFavList = new List<string>();
 
+        private Size _tileSize;
+
+        private bool _showIcons;
+        private bool _showFullPath;
+        private string _viewStateFileExplore;
         private List<string> extensionFilter { get; set; }
 
         public ListBrowserView()
@@ -20,6 +26,12 @@ namespace RandomVideoPlayer.View
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
             this.BackColor = Color.FromArgb(248, 111, 100);//Border color
+
+            _showIcons = SettingsHandler.ShowIconsCustomLíst;
+            _showFullPath = SettingsHandler.ShowFullPathCustomList;
+            _viewStateFileExplore = SettingsHandler.ViewStateFileExplore;
+            _tileSize = SettingsHandler.TileSizeFileExplore;
+
 
             extensionFilter = new List<string>(ListHandler.ExtensionFilterForList);
 
@@ -34,11 +46,20 @@ namespace RandomVideoPlayer.View
             if (!string.IsNullOrEmpty(PathHandler.TempRecentFolder)) { tbPathView.Text = PathHandler.TempRecentFolder; } //Keep recently browsed folders active for consistency
             else { tbPathView.Text = PathHandler.DefaultFolder; }
 
+
+            cbShowIcons.Checked = _showIcons;
+            cbFullPath.Checked = _showFullPath;
+
             PopulateSelected(tbPathView.Text);
 
             PopulateDrives();
 
             HighlightDriveInListBox(tbPathView.Text);
+
+            lvCustomList.Columns[0].Width = lvCustomList.Width - 30;
+            lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
+
+            ChangeViewFileExplore(_viewStateFileExplore);
 
             if (ListHandler.CustomList?.Any() == true)
             {
@@ -47,12 +68,12 @@ namespace RandomVideoPlayer.View
                 foreach (string str in ListHandler.CustomList)
                 {
                     strings.Add(str);
-                    lbCustomList.Items.Add(str);
                 }
                 TempList = strings;
+                PopulateCustomList(TempList);
             }
 
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lbCustomList.Items.Count.ToString()}";
+            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
 
             if (ListHandler.FavoriteFolderList?.Any() == true)
             {
@@ -66,17 +87,15 @@ namespace RandomVideoPlayer.View
                     lbFavorites.Items.Add(folderName);
                 }
             }
-
-            btnAddSelected.IconChar = FontAwesome.Sharp.IconChar.SquarePlus;
-            btnAddSelected.IconFont = FontAwesome.Sharp.IconFont.Regular;
-            btnAddAll.IconChar = FontAwesome.Sharp.IconChar.SquarePlus;
-            btnAddAll.IconFont = FontAwesome.Sharp.IconFont.Solid;
-
             SetupTooltips();
-        }       
+        }
         private void ListBrowserView_FormClosing(object sender, FormClosingEventArgs e)
         {
             ListHandler.ExtensionFilterForList = extensionFilter;
+            SettingsHandler.ShowIconsCustomLíst = _showIcons;
+            SettingsHandler.ShowFullPathCustomList = _showFullPath;
+            SettingsHandler.ViewStateFileExplore = _viewStateFileExplore;
+            SettingsHandler.TileSizeFileExplore = _tileSize;
         }
         private void btnBack_Click(object sender, EventArgs e)
         {
@@ -92,7 +111,6 @@ namespace RandomVideoPlayer.View
         {
             var filteredPaths = new List<string>();
             var combinedExtensions = extensionFilter;
-            lbCustomList.Items.Clear();
 
             foreach (ListViewItem item in lvFileExplore.SelectedItems)
             {
@@ -108,38 +126,40 @@ namespace RandomVideoPlayer.View
                 }
             }
             TempList.AddRange(filteredPaths);
-            lbCustomList.Items.AddRange(TempList.ToArray());
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lbCustomList.Items.Count.ToString()}";
+            PopulateCustomList(TempList);
+            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
         private void btnAddAll_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(tbPathView.Text))
             {
-                lbCustomList.Items.Clear();
                 GrabFromDirectory(tbPathView.Text);
-                lbCustomList.Items.AddRange(TempList.ToArray());
+                PopulateCustomList(TempList);
             }
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lbCustomList.Items.Count.ToString()}";
+            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
         private void btnClearSelected_Click(object sender, EventArgs e)
         {
-            int firstItem = lbCustomList.SelectedIndex;
-            int itemCount = firstItem + lbCustomList.SelectedIndices.Count;
-
-            for (int i = firstItem; i < itemCount; i++)
+            if (lvCustomList.SelectedIndices.Count > 0)
             {
-                TempList.RemoveAt(firstItem);
-                lbCustomList.Items.RemoveAt(firstItem);
+                int firstItem = lvCustomList.SelectedIndices[0];
+                int itemCount = firstItem + lvCustomList.SelectedIndices.Count;
+
+                for (int i = firstItem; i < itemCount; i++)
+                {
+                    TempList.RemoveAt(firstItem);
+                }
+                PopulateCustomList(TempList);
             }
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lbCustomList.Items.Count.ToString()}";
+            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
 
         private void btnClearList_Click(object sender, EventArgs e)
         {
-            lbCustomList.Items.Clear();
+            lvCustomList.Items.Clear();
             TempList.Clear();
             ListHandler.ClearCustomList();
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lbCustomList.Items.Count.ToString()}";
+            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -166,37 +186,43 @@ namespace RandomVideoPlayer.View
         }
         private void btnLoadList_Click_1(object sender, EventArgs e)
         {
-            openFileDialog.InitialDirectory = PathHandler.FolderList;
-            openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            openFileDialog.FilterIndex = 1;
+            LoadListView loadListView = new LoadListView();
+            loadListView.StartPosition = FormStartPosition.CenterParent;
+            DialogResult result = loadListView.ShowDialog();
 
-            DialogResult result = openFileDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                lbCustomList.Items.Clear();
                 var strings = new List<string>();
-                var fromTXT = File.ReadLines(openFileDialog.FileName).ToList();
+                var entriesFromTXT = File.ReadLines(loadListView.ListToLoad);
 
-                foreach (string str in fromTXT)
+                foreach (string str in entriesFromTXT)
                 {
                     strings.Add(str);
-                    lbCustomList.Items.Add(str);
                 }
                 TempList = strings;
-            }
+                PopulateCustomList(TempList);
 
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lbCustomList.Items.Count.ToString()}";
+                lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            }
         }
         private void btnSaveList_Click_1(object sender, EventArgs e)
         {
-            saveFileDialog.InitialDirectory = PathHandler.FolderList;
-            saveFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            saveFileDialog.FilterIndex = 1;
+            SaveListView saveListView = new SaveListView();
+            saveListView.StartPosition = FormStartPosition.CenterParent;
+            DialogResult result = saveListView.ShowDialog();
 
-            DialogResult result = saveFileDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                File.WriteAllLines(saveFileDialog.FileName, TempList);
+                try
+                {
+                    var pathToList = PathHandler.PathToListFolder + @"\" + saveListView.ListToSave + ".txt";
+                    File.WriteAllLines(pathToList, TempList);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to save file: {ex}");
+                    throw;
+                }
             }
         }
         private void btnUseList_Click(object sender, EventArgs e)
@@ -232,13 +258,18 @@ namespace RandomVideoPlayer.View
                 .ToList();
 
             TempList = filteredList;
-            lbCustomList.Items.Clear();
+            PopulateCustomList(TempList);
+            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+        }
 
-            foreach (var item in TempList)
+        private void btnAddFromPlaylist_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(tbPathView.Text))
             {
-                lbCustomList.Items.Add(item);
+                TempList.AddRange(ListHandler.PlayList);
+                PopulateCustomList(TempList);
             }
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lbCustomList.Items.Count.ToString()}";
+            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
         private void lvFileExplore_ItemActivate(object sender, EventArgs e)
         {
@@ -295,25 +326,6 @@ namespace RandomVideoPlayer.View
                 lbFavorites.Items.RemoveAt(firstItem);
             }
         }
-        private void lbCustomList_MouseMove(object sender, MouseEventArgs e)
-        {
-            int index = lbCustomList.IndexFromPoint(e.Location);
-
-            if (index >= 0 && index < lbCustomList.Items.Count)
-            {
-                string itemText = lbCustomList.Items[index].ToString();
-
-                // Check if the tooltip text is different than the item text (to avoid flickering)
-                if (toolTipInfo.GetToolTip(lbCustomList) != itemText)
-                {
-                    toolTipInfo.SetToolTip(lbCustomList, itemText);
-                }
-            }
-            else
-            {
-                toolTipInfo.SetToolTip(lbCustomList, "");
-            }
-        }
         private void lbFavorites_MouseMove(object sender, MouseEventArgs e)
         {
             int index = lbFavorites.IndexFromPoint(e.Location);
@@ -353,8 +365,135 @@ namespace RandomVideoPlayer.View
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
+        private void lvCustomList_Resize(object sender, EventArgs e)
+        {
+            lvCustomList.Columns[0].Width = lvCustomList.Width - 40;
+        }
+
+        private void cbShowIcons_CheckedChanged(object sender, EventArgs e)
+        {
+            _showIcons = cbShowIcons.Checked;
+            PopulateCustomList(TempList);
+        }
+
+        private void cbFullPath_CheckedChanged(object sender, EventArgs e)
+        {
+            _showFullPath = cbFullPath.Checked;
+            PopulateCustomList(TempList);
+        }
+
+        private void btnViewList_Click(object sender, EventArgs e)
+        {
+            ChangeViewFileExplore("List");
+        }
+        private void btnViewTile_Click(object sender, EventArgs e)
+        {
+            ChangeViewFileExplore("Tile");
+        }
+        private void btnViewGrid_Click(object sender, EventArgs e)
+        {
+            ChangeViewFileExplore("Grid");
+        }
+
+
+        private void ChangeViewFileExplore(string viewState)
+        {
+            if (viewState == "Grid")
+            {
+                btnViewGrid.IconColor = SystemColors.ButtonHighlight;
+                btnViewTile.IconColor = Color.Black;
+                btnViewList.IconColor = Color.Black;
+                _viewStateFileExplore = "Grid";
+
+                lvFileExplore.View = System.Windows.Forms.View.LargeIcon;
+            }
+            else if (viewState == "Tile")
+            {
+                btnViewGrid.IconColor = Color.Black;
+                btnViewTile.IconColor = SystemColors.ButtonHighlight;
+                btnViewList.IconColor = Color.Black;
+                _viewStateFileExplore = "Tile";
+
+                lvFileExplore.View = System.Windows.Forms.View.Tile;
+                lvFileExplore.TileSize = _tileSize;
+            }
+            else if (viewState == "List")
+            {
+                btnViewGrid.IconColor = Color.Black;
+                btnViewTile.IconColor = Color.Black;
+                btnViewList.IconColor = SystemColors.ButtonHighlight;
+                _viewStateFileExplore = "List";
+
+                lvFileExplore.View = System.Windows.Forms.View.Details;
+            }
+            UpdateSizeButtons();
+            PopulateSelected(tbPathView.Text);
+            lvFileExplore.Refresh();
+        }
+
+        private void lvFileExplore_Resize(object sender, EventArgs e)
+        {
+            lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
+        }
+        private void btnDecreaseSize_Click(object sender, EventArgs e)
+        {
+            if (_tileSize.Width <= 110) return;
+
+            _tileSize = new Size(_tileSize.Width - 10, _tileSize.Height);
+
+            lvFileExplore.TileSize = _tileSize;
+
+            PopulateSelected(tbPathView.Text);
+            lvFileExplore.Refresh();
+        }
+
+        private void btnIncreaseSize_Click(object sender, EventArgs e)
+        {
+            if (_tileSize.Width >= 300) return;
+
+            _tileSize = new Size(_tileSize.Width + 10, _tileSize.Height);
+
+            lvFileExplore.TileSize = _tileSize;
+
+            PopulateSelected(tbPathView.Text);
+            lvFileExplore.Refresh();
+        }
+
+        private void btnResetSize_Click(object sender, EventArgs e)
+        {
+            _tileSize = new Size(150, 40);
+
+            lvFileExplore.TileSize = _tileSize;
+
+            PopulateSelected(tbPathView.Text);
+            lvFileExplore.Refresh();
+        }
+
+        private void UpdateSizeButtons()
+        {
+            if (_viewStateFileExplore == "Tile")
+            {
+                btnDecreaseSize.Enabled = true;
+                btnResetSize.Enabled = true;
+                btnIncreaseSize.Enabled = true;
+            }
+            else
+            {
+                btnDecreaseSize.Enabled = false;
+                btnResetSize.Enabled = false;
+                btnIncreaseSize.Enabled = false;
+            }
+        }
         private void SetupTooltips()
         {
+            toolTipInfo.SetToolTip(btnDecreaseSize, "Decrease tile size");
+            toolTipInfo.SetToolTip(btnResetSize, "Restore tile size");
+            toolTipInfo.SetToolTip(btnIncreaseSize, "Increase tile size");
+
+            toolTipInfo.SetToolTip(btnViewList, "Change view to list");
+            toolTipInfo.SetToolTip(btnViewTile, "Change view to tile");
+            toolTipInfo.SetToolTip(btnViewGrid, "Change view to grid");
+
             toolTipInfo.SetToolTip(btnAddSelected, "Add all files and files from subfolders within selected items on the left");
             toolTipInfo.SetToolTip(btnAddAll, "Add all files and files from subfolders from current folder");
             toolTipInfo.SetToolTip(btnClearSelected, "Delete selected entries from list");
@@ -381,7 +520,7 @@ namespace RandomVideoPlayer.View
             foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
             {
                 ListViewItem item = new ListViewItem();
-                item.Text = FileManipulation.TrimText(subFolder.Name, 33, "");
+                item.Text = subFolder.Name;
                 item.ImageIndex = 0;
                 item.SubItems.Add("Folder");
                 item.Tag = subFolder.FullName;
@@ -398,16 +537,36 @@ namespace RandomVideoPlayer.View
                 {
                     item.ImageIndex = imageIndex;
                 }
-                else
-                {
-                    item.ImageIndex = 0; 
-                }
                 item.SubItems.Add(file.Extension.ToLower());
                 item.Tag = file.FullName;
                 item.ToolTipText = file.Name;
                 lvFileExplore.Items.Add(item);
             }
+
         }
+        private void PopulateCustomList(List<string> strings)
+        {
+            lvCustomList.Items.Clear();
+            lvCustomList.SmallImageList = _showIcons ? imageListLarge : new ImageList();
+
+            foreach (string entry in strings)
+            {
+                FileInfo file = new FileInfo(entry);
+                string currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
+                ListViewItem item = new ListViewItem();
+                item.Text = _showFullPath ? file.FullName : file.Name;
+                if (_showIcons && extensionToImageIndex.TryGetValue(currentFileExtension, out int imageIndex))
+                {
+                    item.ImageIndex = imageIndex;
+                }
+                item.ToolTipText = file.FullName;
+                lvCustomList.Items.Add(item);
+            }
+
+            lvCustomList.SmallImageList = _showIcons ? imageListLarge : null;
+            lvCustomList.Refresh();
+        }
+
         //Get all files from current and sub directories
 
         private void PopulateDrives() //List all available drives for easier navigation
@@ -448,7 +607,7 @@ namespace RandomVideoPlayer.View
         }
         private void InitializeFilterBoxes()
         {
-            foreach (Control control in panelExtensionFilter.Controls)
+            foreach (Control control in panelFilterExt.Controls)
             {
                 if (control is CheckBox checkBox)
                 {
@@ -597,8 +756,5 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
         #endregion
-
-
-
     }
 }

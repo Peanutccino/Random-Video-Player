@@ -64,9 +64,15 @@
             cbJPEG = new CheckBox();
             cbJPG = new CheckBox();
             cbFilterApply = new CheckBox();
+            cbShufflePlayer = new CheckBox();
+            panel2 = new Panel();
+            label7 = new Label();
+            rbDropPlay = new RadioButton();
+            rbDropQueue = new RadioButton();
             panel1.SuspendLayout();
             panelVideoExtensions.SuspendLayout();
             panelImageExtensions.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -132,18 +138,16 @@
             label3.Location = new Point(0, 118);
             label3.Name = "label3";
             label3.Padding = new Padding(6, 0, 0, 0);
-            label3.Size = new Size(507, 32);
+            label3.Size = new Size(507, 65);
             label3.TabIndex = 3;
-            label3.Text = "Loop playing media. Will automatically play next file in list, when disabled:";
+            label3.Text = "Loop playing media. Will automatically play next file in list, when disabled. Shuffle randomizes the playlist.";
             // 
             // cbLoopPlayer
             // 
-            cbLoopPlayer.AutoSize = true;
-            cbLoopPlayer.Dock = DockStyle.Top;
-            cbLoopPlayer.Location = new Point(0, 150);
+            cbLoopPlayer.Location = new Point(3, 152);
             cbLoopPlayer.Name = "cbLoopPlayer";
-            cbLoopPlayer.Padding = new Padding(9, 0, 0, 16);
-            cbLoopPlayer.Size = new Size(507, 35);
+            cbLoopPlayer.Padding = new Padding(6, 0, 0, 0);
+            cbLoopPlayer.Size = new Size(120, 25);
             cbLoopPlayer.TabIndex = 4;
             cbLoopPlayer.Text = "Loop player";
             cbLoopPlayer.UseVisualStyleBackColor = true;
@@ -152,7 +156,7 @@
             // 
             label4.Dock = DockStyle.Top;
             label4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label4.Location = new Point(0, 185);
+            label4.Location = new Point(0, 183);
             label4.Name = "label4";
             label4.Padding = new Padding(6, 0, 0, 0);
             label4.Size = new Size(507, 32);
@@ -163,7 +167,7 @@
             // 
             label5.Dock = DockStyle.Top;
             label5.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label5.Location = new Point(0, 217);
+            label5.Location = new Point(0, 215);
             label5.Name = "label5";
             label5.Padding = new Padding(6, 0, 0, 0);
             label5.Size = new Size(507, 23);
@@ -185,7 +189,7 @@
             panelVideoExtensions.Controls.Add(cbFLV);
             panelVideoExtensions.Controls.Add(cbAVI);
             panelVideoExtensions.Dock = DockStyle.Top;
-            panelVideoExtensions.Location = new Point(0, 240);
+            panelVideoExtensions.Location = new Point(0, 238);
             panelVideoExtensions.Name = "panelVideoExtensions";
             panelVideoExtensions.Size = new Size(507, 85);
             panelVideoExtensions.TabIndex = 7;
@@ -338,7 +342,7 @@
             // 
             label6.Dock = DockStyle.Top;
             label6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label6.Location = new Point(0, 325);
+            label6.Location = new Point(0, 323);
             label6.Name = "label6";
             label6.Padding = new Padding(6, 0, 0, 0);
             label6.Size = new Size(507, 23);
@@ -359,7 +363,7 @@
             panelImageExtensions.Controls.Add(cbJPEG);
             panelImageExtensions.Controls.Add(cbJPG);
             panelImageExtensions.Dock = DockStyle.Top;
-            panelImageExtensions.Location = new Point(0, 348);
+            panelImageExtensions.Location = new Point(0, 346);
             panelImageExtensions.Name = "panelImageExtensions";
             panelImageExtensions.Size = new Size(507, 85);
             panelImageExtensions.TabIndex = 10;
@@ -501,7 +505,7 @@
             // 
             cbFilterApply.AutoSize = true;
             cbFilterApply.Dock = DockStyle.Top;
-            cbFilterApply.Location = new Point(0, 433);
+            cbFilterApply.Location = new Point(0, 431);
             cbFilterApply.Name = "cbFilterApply";
             cbFilterApply.Padding = new Padding(9, 8, 0, 6);
             cbFilterApply.Size = new Size(507, 33);
@@ -509,30 +513,88 @@
             cbFilterApply.Text = "Also apply filter to custom list playback";
             cbFilterApply.UseVisualStyleBackColor = true;
             // 
+            // cbShufflePlayer
+            // 
+            cbShufflePlayer.Location = new Point(162, 149);
+            cbShufflePlayer.Name = "cbShufflePlayer";
+            cbShufflePlayer.Size = new Size(120, 31);
+            cbShufflePlayer.TabIndex = 12;
+            cbShufflePlayer.Text = "Shuffle Playlist";
+            cbShufflePlayer.UseVisualStyleBackColor = true;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(rbDropQueue);
+            panel2.Controls.Add(rbDropPlay);
+            panel2.Controls.Add(label7);
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(0, 464);
+            panel2.Name = "panel2";
+            panel2.Padding = new Padding(6, 0, 0, 0);
+            panel2.Size = new Size(507, 64);
+            panel2.TabIndex = 13;
+            // 
+            // label7
+            // 
+            label7.Dock = DockStyle.Top;
+            label7.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Location = new Point(6, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(501, 15);
+            label7.TabIndex = 0;
+            label7.Text = "Change behaviour when videofile is dragged and dropped on player:";
+            // 
+            // rbDropPlay
+            // 
+            rbDropPlay.AutoSize = true;
+            rbDropPlay.Location = new Point(3, 32);
+            rbDropPlay.Name = "rbDropPlay";
+            rbDropPlay.Padding = new Padding(6, 0, 0, 0);
+            rbDropPlay.Size = new Size(98, 19);
+            rbDropPlay.TabIndex = 1;
+            rbDropPlay.TabStop = true;
+            rbDropPlay.Text = "Play on drop";
+            rbDropPlay.UseVisualStyleBackColor = true;
+            // 
+            // rbDropQueue
+            // 
+            rbDropQueue.AutoSize = true;
+            rbDropQueue.Location = new Point(162, 32);
+            rbDropQueue.Name = "rbDropQueue";
+            rbDropQueue.Size = new Size(97, 19);
+            rbDropQueue.TabIndex = 2;
+            rbDropQueue.TabStop = true;
+            rbDropQueue.Text = "Add to queue";
+            rbDropQueue.UseVisualStyleBackColor = true;
+            // 
             // PlayerUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.GhostWhite;
+            Controls.Add(panel2);
+            Controls.Add(cbShufflePlayer);
+            Controls.Add(cbLoopPlayer);
             Controls.Add(cbFilterApply);
             Controls.Add(panelImageExtensions);
             Controls.Add(label6);
             Controls.Add(panelVideoExtensions);
             Controls.Add(label5);
             Controls.Add(label4);
-            Controls.Add(cbLoopPlayer);
             Controls.Add(label3);
             Controls.Add(panel1);
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "PlayerUserControl";
-            Size = new Size(507, 500);
+            Size = new Size(507, 531);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panelVideoExtensions.ResumeLayout(false);
             panelVideoExtensions.PerformLayout();
             panelImageExtensions.ResumeLayout(false);
             panelImageExtensions.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -575,5 +637,10 @@
         private FontAwesome.Sharp.IconButton btnDeselectImageExt;
         private FontAwesome.Sharp.IconButton btnSelectImageExt;
         private CheckBox cbFilterApply;
+        private CheckBox cbShufflePlayer;
+        private Panel panel2;
+        private RadioButton rbDropQueue;
+        private RadioButton rbDropPlay;
+        private Label label7;
     }
 }

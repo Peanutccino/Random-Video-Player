@@ -38,6 +38,7 @@
             splitUI = new SplitContainer();
             panel1 = new Panel();
             sbtnAbout = new FontAwesome.Sharp.IconButton();
+            sbtnInterface = new FontAwesome.Sharp.IconButton();
             sbtnInputs = new FontAwesome.Sharp.IconButton();
             sbtnSync = new FontAwesome.Sharp.IconButton();
             sbtnRemember = new FontAwesome.Sharp.IconButton();
@@ -132,6 +133,7 @@
             // 
             panel1.BackColor = Color.GhostWhite;
             panel1.Controls.Add(sbtnAbout);
+            panel1.Controls.Add(sbtnInterface);
             panel1.Controls.Add(sbtnInputs);
             panel1.Controls.Add(sbtnSync);
             panel1.Controls.Add(btnSave);
@@ -155,13 +157,32 @@
             sbtnAbout.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnAbout.IconSize = 30;
             sbtnAbout.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnAbout.Location = new Point(0, 200);
+            sbtnAbout.Location = new Point(0, 240);
             sbtnAbout.Name = "sbtnAbout";
             sbtnAbout.Size = new Size(172, 40);
             sbtnAbout.TabIndex = 5;
             sbtnAbout.Text = "About";
             sbtnAbout.TextAlign = ContentAlignment.TopLeft;
             sbtnAbout.UseVisualStyleBackColor = true;
+            // 
+            // sbtnInterface
+            // 
+            sbtnInterface.Dock = DockStyle.Top;
+            sbtnInterface.FlatAppearance.BorderSize = 0;
+            sbtnInterface.FlatStyle = FlatStyle.Flat;
+            sbtnInterface.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnInterface.IconChar = FontAwesome.Sharp.IconChar.Uikit;
+            sbtnInterface.IconColor = Color.Black;
+            sbtnInterface.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnInterface.IconSize = 30;
+            sbtnInterface.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnInterface.Location = new Point(0, 200);
+            sbtnInterface.Name = "sbtnInterface";
+            sbtnInterface.Size = new Size(172, 40);
+            sbtnInterface.TabIndex = 7;
+            sbtnInterface.Text = "Interface";
+            sbtnInterface.TextAlign = ContentAlignment.TopLeft;
+            sbtnInterface.UseVisualStyleBackColor = true;
             // 
             // sbtnInputs
             // 
@@ -294,5 +315,6 @@
         private FontAwesome.Sharp.IconButton sbtnRemember;
         private FontAwesome.Sharp.IconButton sbtnPlayer;
         private FontAwesome.Sharp.IconButton sbtnAbout;
+        private FontAwesome.Sharp.IconButton sbtnInterface;
     }
 }

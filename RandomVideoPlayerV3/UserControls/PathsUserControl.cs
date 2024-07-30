@@ -40,7 +40,7 @@ namespace RandomVideoPlayer.UserControls
 
         private void sbtnListPath_Click(object sender, EventArgs e)
         {
-            fbDialog.InitialDirectory = PathHandler.FolderList;
+            fbDialog.InitialDirectory = PathHandler.PathToListFolder;
 
             DialogResult result = fbDialog.ShowDialog();
             if (result == DialogResult.OK)
@@ -57,6 +57,8 @@ namespace RandomVideoPlayer.UserControls
             tbListPath.Text = settings.ListPathText;
             cbDeleteToggle.Checked = settings.DeleteFull;
             cbIncludeScripts.Checked = settings.IncludeScript;
+            tbFileMovePath.Text = settings.FileMovePath;
+            cbFileMoveCopyToggle.Checked = settings.FileCopy;
         }
         private void BindControls()
         {
@@ -69,6 +71,23 @@ namespace RandomVideoPlayer.UserControls
             {
                 settings.IncludeScript = cbIncludeScripts.Checked;
             };
+
+            cbFileMoveCopyToggle.CheckedChanged += (s, e) =>
+            {
+                settings.FileCopy = cbFileMoveCopyToggle.Checked;
+            };
+        }
+
+        private void sbtnFileMovePath_Click(object sender, EventArgs e)
+        {
+            fbDialog.InitialDirectory = PathHandler.DefaultFolder;
+
+            DialogResult result = fbDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                tbFileMovePath.Text = fbDialog.SelectedPath;
+                settings.FileMovePath = tbFileMovePath.Text;
+            }
         }
     }
 }

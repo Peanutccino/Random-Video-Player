@@ -44,9 +44,15 @@
             sbtnListPath = new FontAwesome.Sharp.IconButton();
             tbListPath = new TextBox();
             fbDialog = new FolderBrowserDialog();
+            panel4 = new Panel();
+            label5 = new Label();
+            cbFileMoveCopyToggle = new CheckBox();
+            sbtnFileMovePath = new FontAwesome.Sharp.IconButton();
+            tbFileMovePath = new TextBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
+            panel4.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -105,14 +111,14 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 78);
             panel1.Name = "panel1";
-            panel1.Size = new Size(462, 68);
+            panel1.Size = new Size(462, 53);
             panel1.TabIndex = 7;
             // 
             // label3
             // 
             label3.Dock = DockStyle.Top;
             label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.Location = new Point(0, 146);
+            label3.Location = new Point(0, 131);
             label3.Name = "label3";
             label3.Padding = new Padding(6, 0, 0, 0);
             label3.Size = new Size(462, 41);
@@ -126,9 +132,9 @@
             panel2.Controls.Add(sbtnRemovalPath);
             panel2.Controls.Add(tbRemovalPath);
             panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(0, 187);
+            panel2.Location = new Point(0, 172);
             panel2.Name = "panel2";
-            panel2.Size = new Size(462, 120);
+            panel2.Size = new Size(462, 99);
             panel2.TabIndex = 9;
             // 
             // cbIncludeScripts
@@ -183,7 +189,7 @@
             // 
             label4.Dock = DockStyle.Top;
             label4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label4.Location = new Point(0, 307);
+            label4.Location = new Point(0, 271);
             label4.Name = "label4";
             label4.Padding = new Padding(6, 0, 0, 0);
             label4.Size = new Size(462, 28);
@@ -195,9 +201,9 @@
             panel3.Controls.Add(sbtnListPath);
             panel3.Controls.Add(tbListPath);
             panel3.Dock = DockStyle.Top;
-            panel3.Location = new Point(0, 335);
+            panel3.Location = new Point(0, 299);
             panel3.Name = "panel3";
-            panel3.Size = new Size(462, 45);
+            panel3.Size = new Size(462, 55);
             panel3.TabIndex = 11;
             // 
             // sbtnListPath
@@ -226,11 +232,72 @@
             tbListPath.Size = new Size(410, 23);
             tbListPath.TabIndex = 0;
             // 
+            // panel4
+            // 
+            panel4.Controls.Add(label5);
+            panel4.Controls.Add(cbFileMoveCopyToggle);
+            panel4.Controls.Add(sbtnFileMovePath);
+            panel4.Controls.Add(tbFileMovePath);
+            panel4.Dock = DockStyle.Top;
+            panel4.Location = new Point(0, 354);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(462, 116);
+            panel4.TabIndex = 10;
+            // 
+            // label5
+            // 
+            label5.Dock = DockStyle.Top;
+            label5.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label5.Location = new Point(0, 0);
+            label5.Name = "label5";
+            label5.Padding = new Padding(6, 0, 0, 0);
+            label5.Size = new Size(462, 37);
+            label5.TabIndex = 9;
+            label5.Text = "Define folder where files will be either moved or copied to when using the according button in the player";
+            // 
+            // cbFileMoveCopyToggle
+            // 
+            cbFileMoveCopyToggle.AutoSize = true;
+            cbFileMoveCopyToggle.Location = new Point(3, 69);
+            cbFileMoveCopyToggle.Name = "cbFileMoveCopyToggle";
+            cbFileMoveCopyToggle.Padding = new Padding(9, 0, 0, 0);
+            cbFileMoveCopyToggle.Size = new Size(359, 19);
+            cbFileMoveCopyToggle.TabIndex = 7;
+            cbFileMoveCopyToggle.Text = "Check to copy the file, uncheck to move it to chosen location";
+            cbFileMoveCopyToggle.UseVisualStyleBackColor = true;
+            // 
+            // sbtnFileMovePath
+            // 
+            sbtnFileMovePath.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            sbtnFileMovePath.FlatAppearance.BorderSize = 0;
+            sbtnFileMovePath.FlatStyle = FlatStyle.Flat;
+            sbtnFileMovePath.IconChar = FontAwesome.Sharp.IconChar.FolderOpen;
+            sbtnFileMovePath.IconColor = Color.Black;
+            sbtnFileMovePath.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnFileMovePath.IconSize = 24;
+            sbtnFileMovePath.Location = new Point(425, 40);
+            sbtnFileMovePath.Name = "sbtnFileMovePath";
+            sbtnFileMovePath.Size = new Size(34, 23);
+            sbtnFileMovePath.TabIndex = 6;
+            sbtnFileMovePath.UseVisualStyleBackColor = true;
+            sbtnFileMovePath.Click += sbtnFileMovePath_Click;
+            // 
+            // tbFileMovePath
+            // 
+            tbFileMovePath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbFileMovePath.Location = new Point(9, 40);
+            tbFileMovePath.Margin = new Padding(9, 3, 3, 3);
+            tbFileMovePath.Name = "tbFileMovePath";
+            tbFileMovePath.ReadOnly = true;
+            tbFileMovePath.Size = new Size(410, 23);
+            tbFileMovePath.TabIndex = 0;
+            // 
             // PathsUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.GhostWhite;
+            Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(label4);
             Controls.Add(panel2);
@@ -239,13 +306,15 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "PathsUserControl";
-            Size = new Size(462, 423);
+            Size = new Size(462, 501);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -267,5 +336,10 @@
         private FolderBrowserDialog fbDialog;
         private CheckBox cbDeleteToggle;
         private CheckBox cbIncludeScripts;
+        private Panel panel4;
+        private CheckBox cbFileMoveCopyToggle;
+        private FontAwesome.Sharp.IconButton sbtnFileMovePath;
+        private TextBox tbFileMovePath;
+        private Label label5;
     }
 }

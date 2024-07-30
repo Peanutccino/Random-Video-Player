@@ -26,10 +26,23 @@ namespace RandomVideoPlayer.Model
 
         #region Player
         public bool LoopPlayer { get; set; }
+        public bool ShufflePlaylist { get; set; }
         public bool SortCreated { get; set; }
+
+        public bool PlayOnDrop { get; set; }
         public bool ApplyFilterToList{ get; set; }
 
         public List<string> SelectedExtensions { get; set; }
+        #endregion
+
+        #region FileMove
+        public string FileMovePath { get; set; }
+        public bool FileCopy { get; set; }
+
+        #endregion
+
+        #region Interface
+        public bool[] ButtonStates { get; set; }
         #endregion
     }
 }
