@@ -26,7 +26,8 @@ namespace RandomVideoPlayer.Functions
         public bool applyFilterToList { get; set; }
         public bool timeCodeServer { get; set; } = false;
         public bool graphEnabled { get; set; } = true;
-        public string viewStateFileExplore { get; set; } = "Tile";
+        public string viewStateListFileExplore { get; set; } = "Tile";
+        public string viewStateFolderFileExplore { get; set; } = "Tile";
         public bool showIconsCustomList { get; set; } = true;
         public bool showFullPathCustomList { get; set; } = false;
         public Size tileSizeFileExplore { get; set; } = new Size(150, 40);
@@ -40,6 +41,8 @@ namespace RandomVideoPlayer.Functions
         public bool fileCopy { get; set; } = true;
         public bool[] buttonStates { get; set; } = Enumerable.Repeat(true, 7).ToArray();
         public bool playOnDrop { get; set; } = true;
+        public bool alwaysAddFilesToQueue { get; set; } = true;
+        public bool leftMousePause { get; set; } = false;
 
 
         private static string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RVP-Config.json");

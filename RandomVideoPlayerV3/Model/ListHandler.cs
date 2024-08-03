@@ -216,9 +216,9 @@ namespace RandomVideoPlayer.Model
             return fileName.Substring(fileName.LastIndexOf('.') + 1);
         }
         /// <value>Grab all media files from set directory</value> 
-        public static void fillFolderList(string folderpath)
+        public static void fillFolderList(string folderpath, bool includeSubfolders)
         {
-            SearchOption searchOption = IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            SearchOption searchOption = includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
             try
             {

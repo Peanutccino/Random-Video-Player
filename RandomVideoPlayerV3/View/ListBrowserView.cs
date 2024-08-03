@@ -17,7 +17,7 @@ namespace RandomVideoPlayer.View
 
         private bool _showIcons;
         private bool _showFullPath;
-        private string _viewStateFileExplore;
+        private string _viewStateListFileExplore;
         private List<string> extensionFilter { get; set; }
 
         public ListBrowserView()
@@ -29,7 +29,7 @@ namespace RandomVideoPlayer.View
 
             _showIcons = SettingsHandler.ShowIconsCustomLíst;
             _showFullPath = SettingsHandler.ShowFullPathCustomList;
-            _viewStateFileExplore = SettingsHandler.ViewStateFileExplore;
+            _viewStateListFileExplore = SettingsHandler.ViewStateListFileExplore;
             _tileSize = SettingsHandler.TileSizeFileExplore;
 
 
@@ -59,7 +59,7 @@ namespace RandomVideoPlayer.View
             lvCustomList.Columns[0].Width = lvCustomList.Width - 30;
             lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
 
-            ChangeViewFileExplore(_viewStateFileExplore);
+            ChangeViewFileExplore(_viewStateListFileExplore);
 
             if (ListHandler.CustomList?.Any() == true)
             {
@@ -94,7 +94,7 @@ namespace RandomVideoPlayer.View
             ListHandler.ExtensionFilterForList = extensionFilter;
             SettingsHandler.ShowIconsCustomLíst = _showIcons;
             SettingsHandler.ShowFullPathCustomList = _showFullPath;
-            SettingsHandler.ViewStateFileExplore = _viewStateFileExplore;
+            SettingsHandler.ViewStateListFileExplore = _viewStateListFileExplore;
             SettingsHandler.TileSizeFileExplore = _tileSize;
         }
         private void btnBack_Click(object sender, EventArgs e)
@@ -400,19 +400,19 @@ namespace RandomVideoPlayer.View
         {
             if (viewState == "Grid")
             {
-                btnViewGrid.IconColor = SystemColors.ButtonHighlight;
+                btnViewGrid.IconColor = Color.Crimson;
                 btnViewTile.IconColor = Color.Black;
                 btnViewList.IconColor = Color.Black;
-                _viewStateFileExplore = "Grid";
+                _viewStateListFileExplore = "Grid";
 
                 lvFileExplore.View = System.Windows.Forms.View.LargeIcon;
             }
             else if (viewState == "Tile")
             {
                 btnViewGrid.IconColor = Color.Black;
-                btnViewTile.IconColor = SystemColors.ButtonHighlight;
+                btnViewTile.IconColor = Color.Crimson;
                 btnViewList.IconColor = Color.Black;
-                _viewStateFileExplore = "Tile";
+                _viewStateListFileExplore = "Tile";
 
                 lvFileExplore.View = System.Windows.Forms.View.Tile;
                 lvFileExplore.TileSize = _tileSize;
@@ -421,8 +421,8 @@ namespace RandomVideoPlayer.View
             {
                 btnViewGrid.IconColor = Color.Black;
                 btnViewTile.IconColor = Color.Black;
-                btnViewList.IconColor = SystemColors.ButtonHighlight;
-                _viewStateFileExplore = "List";
+                btnViewList.IconColor = Color.Crimson;
+                _viewStateListFileExplore = "List";
 
                 lvFileExplore.View = System.Windows.Forms.View.Details;
             }
@@ -449,7 +449,7 @@ namespace RandomVideoPlayer.View
 
         private void btnIncreaseSize_Click(object sender, EventArgs e)
         {
-            if (_tileSize.Width >= 300) return;
+            if (_tileSize.Width >= 560) return;
 
             _tileSize = new Size(_tileSize.Width + 10, _tileSize.Height);
 
@@ -471,7 +471,7 @@ namespace RandomVideoPlayer.View
 
         private void UpdateSizeButtons()
         {
-            if (_viewStateFileExplore == "Tile")
+            if (_viewStateListFileExplore == "Tile")
             {
                 btnDecreaseSize.Enabled = true;
                 btnResetSize.Enabled = true;

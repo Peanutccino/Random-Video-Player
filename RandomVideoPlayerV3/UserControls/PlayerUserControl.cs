@@ -27,15 +27,6 @@ namespace RandomVideoPlayer.UserControls
                 rbDateModified.Checked = true;
             }
 
-            if (settings.PlayOnDrop)
-            {
-                rbDropPlay.Checked = true;
-            }
-            else
-            {
-                rbDropQueue.Checked = true;
-            }
-
             cbLoopPlayer.Checked = settings.LoopPlayer;
             cbShufflePlayer.Checked = settings.ShufflePlaylist;
 
@@ -56,6 +47,8 @@ namespace RandomVideoPlayer.UserControls
             }
 
             cbFilterApply.Checked = settings.ApplyFilterToList;
+
+            cbLeftMousePause.Checked = settings.LeftMousePause;
         }
 
 
@@ -76,22 +69,16 @@ namespace RandomVideoPlayer.UserControls
                 settings.SortCreated = rbDateCreated.Checked;
             };
 
-            rbDropPlay.CheckedChanged += (s, e) =>
-            {
-                settings.PlayOnDrop = rbDropPlay.Checked;
-            };
-
             cbFilterApply.CheckedChanged += (s, e) =>
             {
                 settings.ApplyFilterToList = cbFilterApply.Checked;
             };
-        }
 
-        private void RbDropPlay_CheckedChanged(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
+            cbLeftMousePause.CheckedChanged += (s, e) =>
+            {
+                settings.LeftMousePause = cbLeftMousePause.Checked;
+            };
         }
-
         private void InitializeCheckboxEvents()
         {
             cbAVI.CheckedChanged += CheckBox_CheckedChanged;

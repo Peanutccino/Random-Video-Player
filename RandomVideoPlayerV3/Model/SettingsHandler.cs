@@ -273,20 +273,36 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-        public static string ViewStateFileExplore
+        public static string ViewStateListFileExplore
         {
             get
             {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.viewStateFileExplore;
+                return _settingsInstance.viewStateListFileExplore;
             }
             set
             {
                 var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.viewStateFileExplore = value;
+                _settingsInstance.viewStateListFileExplore = value;
                 _settingsInstance.Save();
             }
         }
+
+        public static string ViewStateFolderFileExplore
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.viewStateFolderFileExplore;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.viewStateFolderFileExplore = value;
+                _settingsInstance.Save();
+            }
+        }
+
         public static Size TileSizeFileExplore
         {
             get
@@ -356,6 +372,35 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.playOnDrop = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool AlwaysAddFilesToQueue
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.alwaysAddFilesToQueue;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.alwaysAddFilesToQueue = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool LeftMousePause
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.leftMousePause;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.leftMousePause = value;
                 _settingsInstance.Save();
             }
         }

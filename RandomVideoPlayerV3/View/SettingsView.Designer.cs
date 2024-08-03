@@ -44,6 +44,7 @@
             sbtnRemember = new FontAwesome.Sharp.IconButton();
             sbtnPlayer = new FontAwesome.Sharp.IconButton();
             sbtnPaths = new FontAwesome.Sharp.IconButton();
+            sbtnDragDrop = new FontAwesome.Sharp.IconButton();
             panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitUI).BeginInit();
             splitUI.Panel1.SuspendLayout();
@@ -133,6 +134,7 @@
             // 
             panel1.BackColor = Color.GhostWhite;
             panel1.Controls.Add(sbtnAbout);
+            panel1.Controls.Add(sbtnDragDrop);
             panel1.Controls.Add(sbtnInterface);
             panel1.Controls.Add(sbtnInputs);
             panel1.Controls.Add(sbtnSync);
@@ -157,7 +159,7 @@
             sbtnAbout.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnAbout.IconSize = 30;
             sbtnAbout.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnAbout.Location = new Point(0, 240);
+            sbtnAbout.Location = new Point(0, 280);
             sbtnAbout.Name = "sbtnAbout";
             sbtnAbout.Size = new Size(172, 40);
             sbtnAbout.TabIndex = 5;
@@ -279,6 +281,25 @@
             sbtnPaths.TextAlign = ContentAlignment.TopLeft;
             sbtnPaths.UseVisualStyleBackColor = true;
             // 
+            // sbtnDragDrop
+            // 
+            sbtnDragDrop.Dock = DockStyle.Top;
+            sbtnDragDrop.FlatAppearance.BorderSize = 0;
+            sbtnDragDrop.FlatStyle = FlatStyle.Flat;
+            sbtnDragDrop.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnDragDrop.IconChar = FontAwesome.Sharp.IconChar.Meteor;
+            sbtnDragDrop.IconColor = Color.Black;
+            sbtnDragDrop.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnDragDrop.IconSize = 30;
+            sbtnDragDrop.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnDragDrop.Location = new Point(0, 240);
+            sbtnDragDrop.Name = "sbtnDragDrop";
+            sbtnDragDrop.Size = new Size(172, 40);
+            sbtnDragDrop.TabIndex = 8;
+            sbtnDragDrop.Text = "Drag && Drop";
+            sbtnDragDrop.TextAlign = ContentAlignment.TopLeft;
+            sbtnDragDrop.UseVisualStyleBackColor = true;
+            // 
             // SettingsView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -316,5 +337,6 @@
         private FontAwesome.Sharp.IconButton sbtnPlayer;
         private FontAwesome.Sharp.IconButton sbtnAbout;
         private FontAwesome.Sharp.IconButton sbtnInterface;
+        private FontAwesome.Sharp.IconButton sbtnDragDrop;
     }
 }

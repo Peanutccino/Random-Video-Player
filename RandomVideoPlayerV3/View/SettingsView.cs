@@ -70,8 +70,11 @@ namespace RandomVideoPlayer.View
             settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
             settingsModel.ApplyFilterToList = SettingsHandler.ApplyFilterToList;
             settingsModel.SortCreated = SettingsHandler.CreationDate;
-            settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
             settingsModel.SelectedExtensions = new List<string>(ListHandler.SelectedExtensions);
+            settingsModel.LeftMousePause = SettingsHandler.LeftMousePause;
+
+            settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
+            settingsModel.AlwaysAddFilesToQueue = SettingsHandler.AlwaysAddFilesToQueue;
 
             settingsModel.FileMovePath = PathHandler.FileMoveFolderPath;
             settingsModel.FileCopy = SettingsHandler.FileCopy;
@@ -86,6 +89,7 @@ namespace RandomVideoPlayer.View
             sbtnInputs.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InputsUserControl()); };
             sbtnSync.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SyncUserControl(settingsModel)); };
             sbtnInterface.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InterfaceUserControl(settingsModel)); };
+            sbtnDragDrop.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new DragDropUserControl(settingsModel)); };
             sbtnAbout.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new AboutUserControl(settingsModel)); };
         }
 
@@ -109,8 +113,11 @@ namespace RandomVideoPlayer.View
             SettingsHandler.LoopPlayer = settingsModel.LoopPlayer;
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
             SettingsHandler.CreationDate = settingsModel.SortCreated;
-            SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;  
             SettingsHandler.ApplyFilterToList = settingsModel.ApplyFilterToList;
+            SettingsHandler.LeftMousePause = settingsModel.LeftMousePause;
+
+            SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;
+            SettingsHandler.AlwaysAddFilesToQueue = settingsModel.AlwaysAddFilesToQueue;
 
             if (!ListHandler.SelectedExtensions.SequenceEqual(settingsModel.SelectedExtensions))
             {
@@ -147,6 +154,7 @@ namespace RandomVideoPlayer.View
 
         private void SetupFileMove()
         {
+            if (string.IsNullOrWhiteSpace(settingsModel.FileMovePath)) return;
             if (!Path.Exists(settingsModel.FileMovePath))
             {
                 try

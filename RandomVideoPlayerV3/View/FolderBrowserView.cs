@@ -12,6 +12,7 @@ namespace RandomVideoPlayer.View
         List<string> TempList = new List<string>();
         private Size _tileSize;
 
+        private string _viewStateFolderFileExplore;
         public string selectedPath { get; set; }
 
         public FolderBrowserView()
@@ -22,7 +23,7 @@ namespace RandomVideoPlayer.View
             this.BackColor = Color.FromArgb(255, 221, 26);
 
             _tileSize = SettingsHandler.TileSizeFileBrowser;
-            lvFileExplore.TileSize = _tileSize;
+            _viewStateFolderFileExplore = SettingsHandler.ViewStateFolderFileExplore;
         }
 
         private void FolderBrowserView_Load(object sender, EventArgs e)
@@ -37,6 +38,10 @@ namespace RandomVideoPlayer.View
             PopulateDrives();
 
             HighlightDriveInListBox(tbPathView.Text);
+
+            lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
+
+            ChangeViewFileExplore(_viewStateFolderFileExplore);
 
             if (SettingsHandler.TempTriggered)
             {
@@ -61,6 +66,14 @@ namespace RandomVideoPlayer.View
 
             SetupTooltips(); //Initialize ToolTips
         }
+
+        private void FolderBrowserView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SettingsHandler.TileSizeFileBrowser = _tileSize;
+            SettingsHandler.ViewStateFolderFileExplore = _viewStateFolderFileExplore;
+        }
+
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             SaveSettings();
@@ -127,6 +140,12 @@ namespace RandomVideoPlayer.View
                 return;
             }
         }
+
+        private void lvFileExplore_Resize(object sender, EventArgs e)
+        {
+            lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
+        }
+
         private void lbDriveFolders_DoubleClick(object sender, EventArgs e)
         {
             if (lbDriveFolders.SelectedItems.Count > 0 && lbDriveFolders.SelectedIndex >= 0)
@@ -179,7 +198,7 @@ namespace RandomVideoPlayer.View
 
         private void btnIncreaseSize_Click(object sender, EventArgs e)
         {
-            if (_tileSize.Width >= 260) return;
+            if (_tileSize.Width >= 560) return;
 
             _tileSize = new Size(_tileSize.Width + 10, _tileSize.Height);
 
@@ -188,6 +207,23 @@ namespace RandomVideoPlayer.View
             PopulateSelected(tbPathView.Text);
             lvFileExplore.Refresh();
         }
+
+        private void btnViewList_Click(object sender, EventArgs e)
+        {
+            ChangeViewFileExplore("List");
+        }
+
+        private void btnViewTile_Click(object sender, EventArgs e)
+        {
+            ChangeViewFileExplore("Tile");
+        }
+
+        private void btnViewGrid_Click(object sender, EventArgs e)
+        {
+            ChangeViewFileExplore("Grid");
+        }
+
+
         private void tbCount_TextChanged(object sender, EventArgs e)
         {
             toolTipInfo.SetToolTip(cbUseRecent, $"Check to load only the latest {tbCount.Text} files chosen on the input to the right");
@@ -211,10 +247,6 @@ namespace RandomVideoPlayer.View
             {
                 toolTipInfo.SetToolTip(lbFavorites, "");
             }
-        }
-        private void FolderBrowserView_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SettingsHandler.TileSizeFileBrowser = _tileSize;
         }
 
         #region functions
@@ -367,11 +399,67 @@ namespace RandomVideoPlayer.View
 
             SettingsHandler.TileSizeFileBrowser = _tileSize;
         }
+        private void ChangeViewFileExplore(string viewState)
+        {
+            if (viewState == "Grid")
+            {
+                btnViewGrid.IconColor = Color.Gold;
+                btnViewTile.IconColor = Color.Black;
+                btnViewList.IconColor = Color.Black;
+                _viewStateFolderFileExplore = "Grid";
+
+                lvFileExplore.View = System.Windows.Forms.View.LargeIcon;
+            }
+            else if (viewState == "Tile")
+            {
+                btnViewGrid.IconColor = Color.Black;
+                btnViewTile.IconColor = Color.Gold;
+                btnViewList.IconColor = Color.Black;
+                _viewStateFolderFileExplore = "Tile";
+
+                lvFileExplore.View = System.Windows.Forms.View.Tile;
+                lvFileExplore.TileSize = _tileSize;
+            }
+            else if (viewState == "List")
+            {
+                btnViewGrid.IconColor = Color.Black;
+                btnViewTile.IconColor = Color.Black;
+                btnViewList.IconColor = Color.Gold;
+                _viewStateFolderFileExplore = "List";
+
+                lvFileExplore.View = System.Windows.Forms.View.Details;
+            }
+
+            UpdateSizeButtons();
+            PopulateSelected(tbPathView.Text);
+            lvFileExplore.Refresh();
+        }
+
+        private void UpdateSizeButtons()
+        {
+            if (_viewStateFolderFileExplore == "Tile")
+            {
+                btnDecreaseSize.Enabled = true;
+                btnResetSize.Enabled = true;
+                btnIncreaseSize.Enabled = true;
+            }
+            else
+            {
+                btnDecreaseSize.Enabled = false;
+                btnResetSize.Enabled = false;
+                btnIncreaseSize.Enabled = false;
+            }
+        }
+
         private void SetupTooltips()
         {
             toolTipInfo.SetToolTip(btnDecreaseSize, "Decrease tile size");
             toolTipInfo.SetToolTip(btnResetSize, "Restore tile size");
-            toolTipInfo.SetToolTip(btnIncreaseSize, "Increase tile size");            
+            toolTipInfo.SetToolTip(btnIncreaseSize, "Increase tile size");
+
+            toolTipInfo.SetToolTip(btnViewList, "Change view to list");
+            toolTipInfo.SetToolTip(btnViewTile, "Change view to tile");
+            toolTipInfo.SetToolTip(btnViewGrid, "Change view to grid");
 
             toolTipInfo.SetToolTip(btnBack, "Go back one folder");
             toolTipInfo.SetToolTip(btnFolderSelect, "Use current folder to play from");
@@ -472,6 +560,8 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
         #endregion
+
+
 
 
 

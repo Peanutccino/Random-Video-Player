@@ -36,9 +36,13 @@
             panel1 = new Panel();
             panel2 = new Panel();
             lvFileExplore = new ListView();
+            columnHeader1 = new ColumnHeader();
             imageListMedium = new ImageList(components);
             panel3 = new Panel();
             customPanel1 = new Controls.CustomPanel();
+            btnViewGrid = new FontAwesome.Sharp.IconButton();
+            btnViewTile = new FontAwesome.Sharp.IconButton();
+            btnViewList = new FontAwesome.Sharp.IconButton();
             cbUseRecent = new Controls.RoundedCheckBox();
             cbIncludeSubfolders = new Controls.RoundedCheckBox();
             btnIncreaseSize = new FontAwesome.Sharp.IconButton();
@@ -71,7 +75,7 @@
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(904, 20);
+            panelTop.Size = new Size(984, 20);
             panelTop.TabIndex = 0;
             // 
             // btnClose
@@ -84,7 +88,7 @@
             btnClose.IconColor = Color.Black;
             btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 15;
-            btnClose.Location = new Point(874, 0);
+            btnClose.Location = new Point(954, 0);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(30, 20);
             btnClose.TabIndex = 1;
@@ -97,7 +101,7 @@
             lblTitleBar.BackColor = Color.FromArgb(255, 221, 26);
             lblTitleBar.Location = new Point(40, 0);
             lblTitleBar.Name = "lblTitleBar";
-            lblTitleBar.Size = new Size(828, 20);
+            lblTitleBar.Size = new Size(908, 20);
             lblTitleBar.TabIndex = 0;
             lblTitleBar.Text = "RVP - Folder Browser";
             lblTitleBar.TextAlign = ContentAlignment.MiddleCenter;
@@ -116,7 +120,7 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 20);
             panel1.Name = "panel1";
-            panel1.Size = new Size(904, 541);
+            panel1.Size = new Size(984, 541);
             panel1.TabIndex = 1;
             // 
             // panel2
@@ -126,24 +130,31 @@
             panel2.Controls.Add(panel3);
             panel2.Location = new Point(126, 36);
             panel2.Name = "panel2";
-            panel2.Size = new Size(775, 505);
+            panel2.Size = new Size(855, 505);
             panel2.TabIndex = 17;
             // 
             // lvFileExplore
             // 
             lvFileExplore.BackColor = Color.LightGoldenrodYellow;
             lvFileExplore.BorderStyle = BorderStyle.None;
+            lvFileExplore.Columns.AddRange(new ColumnHeader[] { columnHeader1 });
             lvFileExplore.Dock = DockStyle.Fill;
+            lvFileExplore.HeaderStyle = ColumnHeaderStyle.None;
             lvFileExplore.LargeImageList = imageListMedium;
             lvFileExplore.Location = new Point(0, 36);
             lvFileExplore.Name = "lvFileExplore";
             lvFileExplore.ShowItemToolTips = true;
-            lvFileExplore.Size = new Size(775, 469);
+            lvFileExplore.Size = new Size(855, 469);
             lvFileExplore.SmallImageList = imageListMedium;
             lvFileExplore.TabIndex = 2;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.View = System.Windows.Forms.View.Tile;
             lvFileExplore.ItemActivate += lvFileExplore_ItemActivate;
+            lvFileExplore.Resize += lvFileExplore_Resize;
+            // 
+            // columnHeader1
+            // 
+            columnHeader1.Width = 250;
             // 
             // imageListMedium
             // 
@@ -161,7 +172,7 @@
             panel3.Dock = DockStyle.Top;
             panel3.Location = new Point(0, 0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(775, 36);
+            panel3.Size = new Size(855, 36);
             panel3.TabIndex = 3;
             // 
             // customPanel1
@@ -170,6 +181,9 @@
             customPanel1.BackColor = Color.LightGoldenrodYellow;
             customPanel1.BottomRightOffset = 0;
             customPanel1.BottomRightXOffset = 0;
+            customPanel1.Controls.Add(btnViewGrid);
+            customPanel1.Controls.Add(btnViewTile);
+            customPanel1.Controls.Add(btnViewList);
             customPanel1.Controls.Add(cbUseRecent);
             customPanel1.Controls.Add(cbIncludeSubfolders);
             customPanel1.Controls.Add(btnIncreaseSize);
@@ -180,11 +194,62 @@
             customPanel1.Controls.Add(tbCount);
             customPanel1.Location = new Point(0, 0);
             customPanel1.Name = "customPanel1";
-            customPanel1.Size = new Size(620, 36);
+            customPanel1.Size = new Size(700, 36);
             customPanel1.TabIndex = 14;
             customPanel1.TopLeftXOffset = 20;
             customPanel1.TopRightOffset = 0;
             customPanel1.TopRightXOffset = 20;
+            // 
+            // btnViewGrid
+            // 
+            btnViewGrid.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnViewGrid.FlatAppearance.BorderSize = 0;
+            btnViewGrid.FlatStyle = FlatStyle.Flat;
+            btnViewGrid.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnViewGrid.IconChar = FontAwesome.Sharp.IconChar.TableCellsLarge;
+            btnViewGrid.IconColor = Color.Black;
+            btnViewGrid.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnViewGrid.IconSize = 30;
+            btnViewGrid.Location = new Point(318, 3);
+            btnViewGrid.Name = "btnViewGrid";
+            btnViewGrid.Size = new Size(30, 30);
+            btnViewGrid.TabIndex = 21;
+            btnViewGrid.UseVisualStyleBackColor = true;
+            btnViewGrid.Click += btnViewGrid_Click;
+            // 
+            // btnViewTile
+            // 
+            btnViewTile.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnViewTile.FlatAppearance.BorderSize = 0;
+            btnViewTile.FlatStyle = FlatStyle.Flat;
+            btnViewTile.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnViewTile.IconChar = FontAwesome.Sharp.IconChar.TableCells;
+            btnViewTile.IconColor = Color.Black;
+            btnViewTile.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnViewTile.IconSize = 30;
+            btnViewTile.Location = new Point(282, 3);
+            btnViewTile.Name = "btnViewTile";
+            btnViewTile.Size = new Size(30, 30);
+            btnViewTile.TabIndex = 20;
+            btnViewTile.UseVisualStyleBackColor = true;
+            btnViewTile.Click += btnViewTile_Click;
+            // 
+            // btnViewList
+            // 
+            btnViewList.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnViewList.FlatAppearance.BorderSize = 0;
+            btnViewList.FlatStyle = FlatStyle.Flat;
+            btnViewList.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnViewList.IconChar = FontAwesome.Sharp.IconChar.TableList;
+            btnViewList.IconColor = Color.Black;
+            btnViewList.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnViewList.IconSize = 30;
+            btnViewList.Location = new Point(246, 3);
+            btnViewList.Name = "btnViewList";
+            btnViewList.Size = new Size(30, 30);
+            btnViewList.TabIndex = 19;
+            btnViewList.UseVisualStyleBackColor = true;
+            btnViewList.Click += btnViewList_Click;
             // 
             // cbUseRecent
             // 
@@ -195,7 +260,7 @@
             cbUseRecent.FlatAppearance.BorderSize = 0;
             cbUseRecent.FlatStyle = FlatStyle.Flat;
             cbUseRecent.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbUseRecent.Location = new Point(410, 5);
+            cbUseRecent.Location = new Point(490, 5);
             cbUseRecent.Name = "cbUseRecent";
             cbUseRecent.Size = new Size(140, 25);
             cbUseRecent.TabIndex = 18;
@@ -212,7 +277,7 @@
             cbIncludeSubfolders.FlatAppearance.BorderSize = 0;
             cbIncludeSubfolders.FlatStyle = FlatStyle.Flat;
             cbIncludeSubfolders.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbIncludeSubfolders.Location = new Point(274, 6);
+            cbIncludeSubfolders.Location = new Point(354, 6);
             cbIncludeSubfolders.Name = "cbIncludeSubfolders";
             cbIncludeSubfolders.Size = new Size(130, 25);
             cbIncludeSubfolders.TabIndex = 17;
@@ -260,7 +325,7 @@
             btnDeleteFav.IconColor = Color.Black;
             btnDeleteFav.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnDeleteFav.IconSize = 26;
-            btnDeleteFav.Location = new Point(162, 3);
+            btnDeleteFav.Location = new Point(154, 3);
             btnDeleteFav.Name = "btnDeleteFav";
             btnDeleteFav.Size = new Size(30, 30);
             btnDeleteFav.TabIndex = 12;
@@ -292,7 +357,7 @@
             btnAddFav.IconColor = Color.Black;
             btnAddFav.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnAddFav.IconSize = 26;
-            btnAddFav.Location = new Point(202, 3);
+            btnAddFav.Location = new Point(190, 3);
             btnAddFav.Name = "btnAddFav";
             btnAddFav.Size = new Size(30, 30);
             btnAddFav.TabIndex = 11;
@@ -303,7 +368,7 @@
             // 
             tbCount.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             tbCount.BackColor = Color.LightYellow;
-            tbCount.Location = new Point(556, 7);
+            tbCount.Location = new Point(636, 7);
             tbCount.Name = "tbCount";
             tbCount.Size = new Size(32, 23);
             tbCount.TabIndex = 5;
@@ -323,7 +388,7 @@
             btnFolderSelect.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnFolderSelect.IconSize = 24;
             btnFolderSelect.ImageAlign = ContentAlignment.MiddleRight;
-            btnFolderSelect.Location = new Point(594, 0);
+            btnFolderSelect.Location = new Point(674, 0);
             btnFolderSelect.Name = "btnFolderSelect";
             btnFolderSelect.Size = new Size(181, 36);
             btnFolderSelect.TabIndex = 7;
@@ -402,7 +467,7 @@
             tbPathView.Location = new Point(40, 6);
             tbPathView.Name = "tbPathView";
             tbPathView.ReadOnly = true;
-            tbPathView.Size = new Size(861, 23);
+            tbPathView.Size = new Size(941, 23);
             tbPathView.TabIndex = 1;
             // 
             // imageList
@@ -418,10 +483,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(904, 561);
+            ClientSize = new Size(984, 561);
             Controls.Add(panel1);
             Controls.Add(panelTop);
-            MinimumSize = new Size(920, 600);
+            MinimumSize = new Size(1000, 600);
             Name = "FolderBrowserView";
             Text = "FolderBrowserView";
             FormClosing += FolderBrowserView_FormClosing;
@@ -465,5 +530,9 @@
         private Label label1;
         private Panel panel2;
         private Panel panel3;
+        private FontAwesome.Sharp.IconButton btnViewList;
+        private FontAwesome.Sharp.IconButton btnViewGrid;
+        private FontAwesome.Sharp.IconButton btnViewTile;
+        private ColumnHeader columnHeader1;
     }
 }
