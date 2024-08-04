@@ -99,14 +99,17 @@ namespace RandomVideoPlayer.View
         }
         private void btnBack_Click(object sender, EventArgs e)
         {
-            var currentDirectory = new DirectoryInfo(tbPathView.Text);
-            var parentDirectory = currentDirectory.Parent;
-            if (parentDirectory != null)
+            GoBack();
+        }
+
+        private void lvFileExplore_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.XButton1)
             {
-                tbPathView.Text = parentDirectory.FullName;
-                PopulateSelected(parentDirectory.FullName);
+                GoBack();
             }
         }
+
         private void btnAddSelected_Click(object sender, EventArgs e)
         {
             var filteredPaths = new List<string>();
@@ -264,19 +267,18 @@ namespace RandomVideoPlayer.View
 
         private void btnAddFromPlaylist_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(tbPathView.Text))
-            {
-                TempList.AddRange(ListHandler.PlayList);
-                PopulateCustomList(TempList);
-            }
+            TempList.AddRange(ListHandler.PlayList);
+            PopulateCustomList(TempList);
+
             lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
         private void lvFileExplore_ItemActivate(object sender, EventArgs e)
         {
-            var item = lvFileExplore.SelectedItems[0];
-            var itemPath = item.Tag.ToString();
             try
             {
+                var item = lvFileExplore.SelectedItems[0];
+                var itemPath = item.Tag.ToString();
+
                 if (Directory.Exists(itemPath))
                 {
                     tbPathView.Text = itemPath;
@@ -285,7 +287,7 @@ namespace RandomVideoPlayer.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Can't access folder: {0}\n\nError:\n{1}", itemPath, ex));
+                //MessageBox.Show(string.Format("Error accessing folder: {0}\n\nError:\n{1}", itemPath, ex), "LB lvFE_ItemActivate");
                 return;
             }
         }
@@ -502,9 +504,10 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(btnDelDuplicates, "Scan list for duplicate entries and remove those");
             toolTipInfo.SetToolTip(btnLoadList, "Load a saved list file");
             toolTipInfo.SetToolTip(btnSaveList, "Save current list to file");
+            toolTipInfo.SetToolTip(btnAddFromPlaylist, "Add all entries from current Playlist queue to list");
             toolTipInfo.SetToolTip(btnUseList, "Start playback with current list");
 
-            toolTipInfo.SetToolTip(btnBack, "Go back one folder");
+            toolTipInfo.SetToolTip(btnBack, "MB4 | Go back one folder");
             toolTipInfo.SetToolTip(btnAddFav, "Add current folder to your list of favorites");
             toolTipInfo.SetToolTip(btnDeleteFav, "Delete selected folder from your list of favorites");
         }
@@ -604,6 +607,16 @@ namespace RandomVideoPlayer.View
                     .Where(s => combinedExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
                     .ToArray());
 
+        }
+        private void GoBack()
+        {
+            var currentDirectory = new DirectoryInfo(tbPathView.Text);
+            var parentDirectory = currentDirectory.Parent;
+            if (parentDirectory != null)
+            {
+                tbPathView.Text = parentDirectory.FullName;
+                PopulateSelected(parentDirectory.FullName);
+            }
         }
         private void InitializeFilterBoxes()
         {
@@ -756,5 +769,7 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
         #endregion
+
+
     }
 }

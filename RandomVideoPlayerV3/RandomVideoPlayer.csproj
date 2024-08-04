@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>Resources\RVP_IconSimple.ico</ApplicationIcon>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <AssemblyVersion>1.43</AssemblyVersion>
+    <AssemblyVersion>1.44</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -24,7 +24,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\SplitIconFolderHighlight.png" />
+    <None Remove="Resources\SplitIconListHighlight.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\RVP_IconSimple.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SplitIconFolderHighlight.png" />
+    <EmbeddedResource Include="Resources\SplitIconListHighlight.png" />
   </ItemGroup>
 
   <ItemGroup>

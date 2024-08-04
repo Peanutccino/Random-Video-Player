@@ -404,5 +404,20 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static List<int> ButtonOrder
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.buttonOrder;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.buttonOrder = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }

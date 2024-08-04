@@ -114,20 +114,22 @@ namespace RandomVideoPlayer.View
         }
         private void btnBack_Click(object sender, EventArgs e)
         {
-            var currentDirectory = new DirectoryInfo(tbPathView.Text);
-            var parentDirectory = currentDirectory.Parent;
-            if (parentDirectory != null)
+            GoBack();
+        }
+        private void lvFileExplore_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.XButton1)
             {
-                tbPathView.Text = parentDirectory.FullName;
-                PopulateSelected(parentDirectory.FullName);
+                GoBack();
             }
         }
         private void lvFileExplore_ItemActivate(object sender, EventArgs e)
         {
-            var item = lvFileExplore.SelectedItems[0];
-            string itemPath = item.Tag.ToString();
             try
             {
+                var item = lvFileExplore.SelectedItems[0];
+                var itemPath = item.Tag.ToString();
+
                 if (Directory.Exists(itemPath))
                 {
                     tbPathView.Text = itemPath;
@@ -136,7 +138,7 @@ namespace RandomVideoPlayer.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Can't access folder: {0}\n\nError:\n{1}", itemPath, ex));
+                //MessageBox.Show(string.Format("Error accessing folder: {0}\n\nError:\n{1}", itemPath, ex), "FB lvFE_ItemActivate");
                 return;
             }
         }
@@ -357,6 +359,17 @@ namespace RandomVideoPlayer.View
             }
         }
 
+        private void GoBack()
+        {
+            var currentDirectory = new DirectoryInfo(tbPathView.Text);
+            var parentDirectory = currentDirectory.Parent;
+            if (parentDirectory != null)
+            {
+                tbPathView.Text = parentDirectory.FullName;
+                PopulateSelected(parentDirectory.FullName);
+            }
+        }
+
         private void SaveSettings()
         {
             if (TempList?.Any() == true)
@@ -461,7 +474,7 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(btnViewTile, "Change view to tile");
             toolTipInfo.SetToolTip(btnViewGrid, "Change view to grid");
 
-            toolTipInfo.SetToolTip(btnBack, "Go back one folder");
+            toolTipInfo.SetToolTip(btnBack, "MB4 | Go back one folder");
             toolTipInfo.SetToolTip(btnFolderSelect, "Use current folder to play from");
             toolTipInfo.SetToolTip(btnAddFav, "Add current folder to your list of favorites");
             toolTipInfo.SetToolTip(btnDeleteFav, "Delete selected folder from your list of favorites");
@@ -560,11 +573,6 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
         #endregion
-
-
-
-
-
 
     }
 }

@@ -46,6 +46,7 @@ namespace RandomVideoPlayer.Model
 
         #region Interface
         public bool[] ButtonStates { get; set; }
+        public List<int> ButtonOrder { get; set; }
         #endregion
     }
 }

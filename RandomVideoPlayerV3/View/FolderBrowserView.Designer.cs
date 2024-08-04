@@ -150,6 +150,7 @@
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.View = System.Windows.Forms.View.Tile;
             lvFileExplore.ItemActivate += lvFileExplore_ItemActivate;
+            lvFileExplore.MouseDown += lvFileExplore_MouseDown;
             lvFileExplore.Resize += lvFileExplore_Resize;
             // 
             // columnHeader1

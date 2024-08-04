@@ -28,7 +28,7 @@ namespace RandomVideoPlayer.Functions
         public bool graphEnabled { get; set; } = true;
         public string viewStateListFileExplore { get; set; } = "Tile";
         public string viewStateFolderFileExplore { get; set; } = "Tile";
-        public bool showIconsCustomList { get; set; } = true;
+        public bool showIconsCustomList { get; set; } = false;
         public bool showFullPathCustomList { get; set; } = false;
         public Size tileSizeFileExplore { get; set; } = new Size(150, 40);
         public Size tileSizeFileBrowser { get; set; } = new Size(120, 34);
@@ -39,7 +39,9 @@ namespace RandomVideoPlayer.Functions
         public StringCollection customListConfig { get; set; } = new StringCollection();
         public string pathToMoveFolder { get; set; } = "";
         public bool fileCopy { get; set; } = true;
-        public bool[] buttonStates { get; set; } = Enumerable.Repeat(true, 7).ToArray();
+        public bool[] buttonStates { get; set; } = Enumerable.Repeat(true, 8).ToArray();
+        public List<int> buttonOrder { get; set; }
+        
         public bool playOnDrop { get; set; } = true;
         public bool alwaysAddFilesToQueue { get; set; } = true;
         public bool leftMousePause { get; set; } = false;
@@ -50,7 +52,10 @@ namespace RandomVideoPlayer.Functions
         private static CustomSettings _instance;
         private static readonly object _lock = new object();
 
-        private CustomSettings() { }
+        private CustomSettings() 
+        {
+            buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
+        }
 
         public static CustomSettings Instance
         {
@@ -76,7 +81,14 @@ namespace RandomVideoPlayer.Functions
             if (File.Exists(settingsFilePath))
             {
                 string json = File.ReadAllText(settingsFilePath);
-                return JsonConvert.DeserializeObject<CustomSettings>(json);
+                var setttings = JsonConvert.DeserializeObject<CustomSettings>(json);
+
+                if(setttings.buttonOrder == null)
+                {
+                    setttings.buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 }; 
+                }
+
+                return setttings;
             }
             return new CustomSettings(); // Return default settings if file does not exist
         }

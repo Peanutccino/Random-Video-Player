@@ -249,6 +249,7 @@
             lvFileExplore.TabIndex = 0;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.ItemActivate += lvFileExplore_ItemActivate;
+            lvFileExplore.MouseDown += lvFileExplore_MouseDown;
             lvFileExplore.Resize += lvFileExplore_Resize;
             // 
             // columnHeader2
@@ -629,9 +630,9 @@
             panelFilterExt.Controls.Add(cbMOV);
             panelFilterExt.Controls.Add(cbAVI);
             panelFilterExt.Controls.Add(label3);
-            panelFilterExt.Location = new Point(-6, 301);
+            panelFilterExt.Location = new Point(-6, 309);
             panelFilterExt.Name = "panelFilterExt";
-            panelFilterExt.Size = new Size(115, 365);
+            panelFilterExt.Size = new Size(115, 357);
             panelFilterExt.TabIndex = 21;
             panelFilterExt.TopLeftXOffset = 0;
             panelFilterExt.TopRightOffset = 0;

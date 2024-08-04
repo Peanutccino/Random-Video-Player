@@ -80,6 +80,7 @@ namespace RandomVideoPlayer.View
             settingsModel.FileCopy = SettingsHandler.FileCopy;
 
             settingsModel.ButtonStates = SettingsHandler.ButtonStates;
+            settingsModel.ButtonOrder = SettingsHandler.ButtonOrder;
         }
         private void InitializeNavigation()
         {
@@ -129,6 +130,7 @@ namespace RandomVideoPlayer.View
             SetupFileMove();
 
             SettingsHandler.ButtonStates = settingsModel.ButtonStates;
+            SettingsHandler.ButtonOrder = settingsModel.ButtonOrder;
         }
 
         private void HighlightButton(IconButton button)

@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows.Documents;
 using Mpv.NET.Player;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
@@ -54,7 +56,9 @@ namespace RandomVideoPlayer
 
         private Stopwatch stopwatch;
         private System.Windows.Forms.Timer checkwatch;
-        private int doubleClickDelay = 140; //Delay to wait for potential double click otherwise execute single click
+        private int doubleClickDelay = 180; //Delay to wait for potential double click otherwise execute single click
+
+
         public MainForm(string filePath)
         {
             InitializeComponent();
@@ -120,6 +124,9 @@ namespace RandomVideoPlayer
 
             checkwatch.Interval = doubleClickDelay;
             checkwatch.Tick += Checkwatch_Tick;
+
+            UpdateSourceSelectorIcon();
+            lblTitleBar.Text = $"Random Video Player - v{Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -273,6 +280,14 @@ namespace RandomVideoPlayer
             StartFromCurrentFile();
         }
 
+        private void btnSourceSelector_Click(object sender, EventArgs e)
+        {
+            ListHandler.NeedsToPrepare = true;
+            SettingsHandler.SourceSelected = !SettingsHandler.SourceSelected;
+
+            PlayNext();
+        }
+
         #region ExclusiveFullscreen
         private void panelPlayerMPV_MouseMove(object sender, MouseEventArgs e) //Used to determin Cursor position in exclusive Fullscreen mode to show or hide Panels
         {
@@ -293,7 +308,16 @@ namespace RandomVideoPlayer
                 ReleaseCapture();
                 SendMessage(this.Handle, 0x112, 0xf012, 0);
                 long elapsedTime = stopwatch.ElapsedMilliseconds;
-                if (elapsedTime < 120 && SettingsHandler.LeftMousePause) //Check whether it was a click
+                if (elapsedTime < 110 && SettingsHandler.LeftMousePause) //Check whether it was a click
+                {
+                    checkwatch.Start();
+                }
+            }
+            else if (e.Button == MouseButtons.Left && this.WindowState == FormWindowState.Maximized)
+            {
+                stopwatch.Restart();
+                long elapsedTime = stopwatch.ElapsedMilliseconds;
+                if (elapsedTime < 60 && SettingsHandler.LeftMousePause) //Check whether it was a click
                 {
                     checkwatch.Start();
                 }
@@ -354,8 +378,12 @@ namespace RandomVideoPlayer
 
             if (!(ListHandler.PlayList?.Any() ?? false))
             {
-                ThreadHelper.SetText(this, lblTitleBar, "Random Video Player - 0 / 0 (Nothing found to play)");
                 MessageBox.Show("No Files to play");
+
+                if (!playingSingleFile)
+                {
+                    ThreadHelper.SetText(this, lblTitleBar, "Random Video Player - 0 / 0 (Nothing found to play)");
+                }
                 return;
             }
             else
@@ -447,22 +475,34 @@ namespace RandomVideoPlayer
 
             if (ListHandler.PlayList?.Any() == true && SettingsHandler.InitPlay == false) //First Play to get going
             {
-                SettingsHandler.InitPlay = true;
+                SettingsHandler.InitPlay = true;                
                 if (playingSingleFile == false)
                 {
-                    PlayNext();
+                    PlayNext();                    
                     return;
                 }
             }
             else if (!(ListHandler.PlayList?.Any() ?? false) && playingSingleFile == false)
             {
-                MessageBox.Show("Check your folder paths!", "Nothing to play", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                ListHandler.NeedsToPrepare = true;
+                ListHandler.fillFolderList(PathHandler.FolderPath, ListHandler.IncludeSubfolders);
+                ListHandler.PreparePlayList(SettingsHandler.SourceSelected, startedByFile, filepathFromStartupFile);
+                if (!(ListHandler.PlayList?.Any() ?? false))
+                {
+                    MessageBox.Show("Check your folder paths!", "Nothing to play", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                else
+                {
+                    PlayNext();
+                    return;
+                }
             }
 
-            //playingSingleFile = false;
 
-            if(playingSingleFile == false)
+
+
+            if (playingSingleFile == false)
             {
                 btnNext.Enabled = true;
                 btnPrevious.Enabled = true;
@@ -493,6 +533,8 @@ namespace RandomVideoPlayer
                 ThreadHelper.SetToolTipSafe(btnPlay, toolTipUI, $"{GetKeyCombination(playPauseHotkey)} | Pause playback");
                 tcServer.State = 2;
             }
+
+            UpdateSourceSelectorIcon();
 
             startedByFile = false;
         }
@@ -567,13 +609,26 @@ namespace RandomVideoPlayer
             UpdateButtonStates();
             playerMPV.Loop = SettingsHandler.LoopPlayer;
         }
+        #endregion
+
+        #region CustomButton
         private void RepositionButtons()
         {
-            List<Button> buttons = new List<Button> { btnRemove, btnListDel, btnListAdd, btnAddToFav, btnMoveTo, btnShuffle, btnRepeat };
+            List<Button> buttons = new List<Button> { btnRemove, btnListDel, btnListAdd, btnAddToFav, btnMoveTo, btnShuffle, btnRepeat, btnSourceSelector };
             if (buttons.Count != SettingsHandler.ButtonStates.Length)
             {
                 SettingsHandler.ButtonStates = Enumerable.Repeat(true, buttons.Count).ToArray();
             }
+            if(SettingsHandler.ButtonOrder.Count != SettingsHandler.ButtonStates.Length)
+            {
+                List<int> tempListForRestore = new List<int>();
+                for (int i = 0; i < SettingsHandler.ButtonStates.Length; i++)
+                {
+                    tempListForRestore.Add(i);
+                }
+                SettingsHandler.ButtonOrder = tempListForRestore;
+            }
+            List<int> buttonOrder = SettingsHandler.ButtonOrder; //Default order
 
             bool[] buttonStates = SettingsHandler.ButtonStates;
 
@@ -584,19 +639,28 @@ namespace RandomVideoPlayer
             btnMoveTo.Visible = buttonStates[4];
             btnShuffle.Visible = buttonStates[5];
             btnRepeat.Visible = buttonStates[6];
+            btnSourceSelector.Visible = buttonStates[7];
 
             int x = 10; // starting x position
             int y = 0; // starting y position
             int margin = 20; // space between buttons
 
-            foreach (Button btn in buttons)
+            int minimumFormSize = 930;
+
+            foreach (int index in buttonOrder)
             {
+                Button btn = buttons[index];
                 if (btn.Visible)
                 {
                     btn.Location = new Point(x, y);
-                    x += btn.Width + margin;
+                    x += btn.Width + margin;                    
+                }
+                else
+                {
+                    minimumFormSize = minimumFormSize - btn.Width - margin;
                 }
             }
+            this.MinimumSize = new Size(minimumFormSize, 420);
         }
 
         private void UpdateButtonStates()
@@ -605,6 +669,29 @@ namespace RandomVideoPlayer
 
             btnRepeat.IconColor = SettingsHandler.LoopPlayer ? Color.PaleGreen : Color.Black;
             btnShuffle.IconColor = ListHandler.DoShuffle ? Color.PaleGreen : Color.Black;
+        }
+
+        private void UpdateSourceSelectorIcon()
+        {
+            // Method 1: If the image is an embedded resource
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var resourceName = SettingsHandler.SourceSelected ? "RandomVideoPlayer.Resources.SplitIconListHighlight.png" : "RandomVideoPlayer.Resources.SplitIconFolderHighlight.png";
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream != null)
+                {
+                    var image = Image.FromStream(stream);
+                    btnSourceSelector.Image = image;
+                    btnSourceSelector.ImageAlign = ContentAlignment.MiddleCenter; // Adjust alignment as needed
+                    btnSourceSelector.TextImageRelation = TextImageRelation.ImageAboveText; // Adjust as needed
+                }
+                else
+                {
+                    MessageBox.Show("Was null duh");
+                }
+            }
         }
         #endregion
 
@@ -798,7 +885,8 @@ namespace RandomVideoPlayer
                 lblCurrentInfo.Text = PathHandler.FolderPath; //Show current Folder
                 if (string.IsNullOrWhiteSpace(alternativePath))
                 {
-                    ListHandler.fillFolderList(PathHandler.FolderPath, ListHandler.IncludeSubfolders);
+                    //ListHandler.fillFolderList(PathHandler.FolderPath, ListHandler.IncludeSubfolders);
+                    //Handled by PlayerPlayPauseToggle to reduce loadup time
                 }
                 else
                 {
@@ -943,7 +1031,7 @@ namespace RandomVideoPlayer
 
             // Set the label's location directly above the progress bar, horizontally centered on the cursor
             var labelX = controlRelativePosition.X - (timeOverlayLabel.Width / 2) + pbPlayerProgress.Location.X;
-            var labelY = this.Height - 95;
+            var labelY = this.Height - 94;
 
             // Prevent the label from going beyond the left or right bounds of the progress bar
             labelX = Math.Max(labelX, panelBottom.Location.X);
@@ -959,7 +1047,9 @@ namespace RandomVideoPlayer
         private void InitializeTimeOverlay()
         {
             timeOverlayLabel.AutoSize = true;
-            timeOverlayLabel.BackColor = Color.FromArgb(255, 128, 128);
+            timeOverlayLabel.BackColor = Color.FromArgb(255, 182, 193);
+            timeOverlayLabel.Padding = new Padding(0,0,0,1);
+            timeOverlayLabel.Font = new Font("Arial", 8, FontStyle.Bold);
             timeOverlayLabel.ForeColor = Color.Black;
             this.Controls.Add(timeOverlayLabel);
             timeOverlayLabel.BringToFront();
@@ -1107,6 +1197,7 @@ namespace RandomVideoPlayer
             toolTipUI.SetToolTip(btnMuteToggle, $"{GetKeyCombination(muteHotkey)} | Mute sound");
             toolTipUI.SetToolTip(pbVolume, "Scroll/Click to change volume");
             toolTipUI.SetToolTip(btnAddToQueue, "Add dropped file to queue");
+            toolTipUI.SetToolTip(btnSourceSelector, "Switch between Folder and List Queue");
 
             toolTipUI.SetToolTip(btnAddToQueue, "Add the dropped file to the end of the current queue");
             toolTipUI.SetToolTip(btnStartFromFile, "Start playing from the files directory");
@@ -1294,6 +1385,7 @@ namespace RandomVideoPlayer
                     {
                         playerMPV.Load(draggedFilePath, true);
 
+                        SettingsHandler.InitPlay = true;
                         SettingsHandler.IsPlaying = false;
 
                         playingSingleFile = true;
@@ -1564,6 +1656,7 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
+
 
     }
 }

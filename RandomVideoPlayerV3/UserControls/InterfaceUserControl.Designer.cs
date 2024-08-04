@@ -31,6 +31,8 @@
             label1 = new Label();
             label5 = new Label();
             panel1 = new Panel();
+            cbSourceSelector = new Controls.RoundedCheckBox();
+            flowPanel = new FlowLayoutPanel();
             cbListAddButton = new Controls.RoundedCheckBox();
             cbMoveToButton = new Controls.RoundedCheckBox();
             cbLoopButton = new Controls.RoundedCheckBox();
@@ -39,7 +41,9 @@
             cbListRemoveButton = new Controls.RoundedCheckBox();
             cbDeleteButton = new Controls.RoundedCheckBox();
             panelButtonPreview = new Panel();
+            btnRestore = new FontAwesome.Sharp.IconButton();
             panel1.SuspendLayout();
+            panelButtonPreview.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -67,6 +71,9 @@
             // 
             // panel1
             // 
+            panel1.AllowDrop = true;
+            panel1.Controls.Add(cbSourceSelector);
+            panel1.Controls.Add(flowPanel);
             panel1.Controls.Add(cbListAddButton);
             panel1.Controls.Add(cbMoveToButton);
             panel1.Controls.Add(cbLoopButton);
@@ -77,8 +84,32 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 117);
             panel1.Name = "panel1";
-            panel1.Size = new Size(440, 242);
+            panel1.Size = new Size(440, 290);
             panel1.TabIndex = 4;
+            // 
+            // cbSourceSelector
+            // 
+            cbSourceSelector.Appearance = Appearance.Button;
+            cbSourceSelector.BackColor = Color.Transparent;
+            cbSourceSelector.CheckedBackColor = Color.PaleGreen;
+            cbSourceSelector.FlatAppearance.BorderSize = 0;
+            cbSourceSelector.FlatStyle = FlatStyle.Flat;
+            cbSourceSelector.Location = new Point(12, 219);
+            cbSourceSelector.Margin = new Padding(12, 3, 3, 3);
+            cbSourceSelector.Name = "cbSourceSelector";
+            cbSourceSelector.Size = new Size(168, 25);
+            cbSourceSelector.TabIndex = 9;
+            cbSourceSelector.Text = "Source Selector";
+            cbSourceSelector.UncheckedBackColor = Color.LightGray;
+            cbSourceSelector.UseVisualStyleBackColor = false;
+            // 
+            // flowPanel
+            // 
+            flowPanel.FlowDirection = FlowDirection.TopDown;
+            flowPanel.Location = new Point(186, 0);
+            flowPanel.Name = "flowPanel";
+            flowPanel.Size = new Size(117, 244);
+            flowPanel.TabIndex = 8;
             // 
             // cbListAddButton
             // 
@@ -194,11 +225,29 @@
             // 
             // panelButtonPreview
             // 
-            panelButtonPreview.Dock = DockStyle.Top;
-            panelButtonPreview.Location = new Point(0, 359);
+            panelButtonPreview.Controls.Add(btnRestore);
+            panelButtonPreview.Dock = DockStyle.Fill;
+            panelButtonPreview.Location = new Point(0, 407);
             panelButtonPreview.Name = "panelButtonPreview";
-            panelButtonPreview.Size = new Size(440, 57);
+            panelButtonPreview.Size = new Size(440, 43);
             panelButtonPreview.TabIndex = 5;
+            // 
+            // btnRestore
+            // 
+            btnRestore.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnRestore.BackColor = Color.FromArgb(230, 230, 255);
+            btnRestore.FlatAppearance.BorderSize = 0;
+            btnRestore.FlatStyle = FlatStyle.Flat;
+            btnRestore.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnRestore.IconColor = Color.Black;
+            btnRestore.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnRestore.Location = new Point(3, 13);
+            btnRestore.Name = "btnRestore";
+            btnRestore.Size = new Size(146, 27);
+            btnRestore.TabIndex = 5;
+            btnRestore.Text = "Restore Defaults";
+            btnRestore.UseVisualStyleBackColor = false;
+            btnRestore.Click += btnRestore_Click;
             // 
             // InterfaceUserControl
             // 
@@ -209,8 +258,9 @@
             Controls.Add(label5);
             Controls.Add(label1);
             Name = "InterfaceUserControl";
-            Size = new Size(440, 434);
+            Size = new Size(440, 450);
             panel1.ResumeLayout(false);
+            panelButtonPreview.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -227,5 +277,8 @@
         private Panel panelButtonPreview;
         private Controls.RoundedCheckBox cbMoveToButton;
         private Controls.RoundedCheckBox cbListAddButton;
+        private FlowLayoutPanel flowPanel;
+        private Controls.RoundedCheckBox cbSourceSelector;
+        private FontAwesome.Sharp.IconButton btnRestore;
     }
 }

@@ -38,13 +38,13 @@
             splitUI = new SplitContainer();
             panel1 = new Panel();
             sbtnAbout = new FontAwesome.Sharp.IconButton();
+            sbtnDragDrop = new FontAwesome.Sharp.IconButton();
             sbtnInterface = new FontAwesome.Sharp.IconButton();
             sbtnInputs = new FontAwesome.Sharp.IconButton();
             sbtnSync = new FontAwesome.Sharp.IconButton();
             sbtnRemember = new FontAwesome.Sharp.IconButton();
             sbtnPlayer = new FontAwesome.Sharp.IconButton();
             sbtnPaths = new FontAwesome.Sharp.IconButton();
-            sbtnDragDrop = new FontAwesome.Sharp.IconButton();
             panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitUI).BeginInit();
             splitUI.Panel1.SuspendLayout();
@@ -125,6 +125,7 @@
             // 
             // splitUI.Panel2
             // 
+            splitUI.Panel2.AllowDrop = true;
             splitUI.Panel2.BackColor = Color.GhostWhite;
             splitUI.Size = new Size(654, 576);
             splitUI.SplitterDistance = 172;
@@ -166,6 +167,25 @@
             sbtnAbout.Text = "About";
             sbtnAbout.TextAlign = ContentAlignment.TopLeft;
             sbtnAbout.UseVisualStyleBackColor = true;
+            // 
+            // sbtnDragDrop
+            // 
+            sbtnDragDrop.Dock = DockStyle.Top;
+            sbtnDragDrop.FlatAppearance.BorderSize = 0;
+            sbtnDragDrop.FlatStyle = FlatStyle.Flat;
+            sbtnDragDrop.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
+            sbtnDragDrop.IconChar = FontAwesome.Sharp.IconChar.Meteor;
+            sbtnDragDrop.IconColor = Color.Black;
+            sbtnDragDrop.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnDragDrop.IconSize = 30;
+            sbtnDragDrop.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnDragDrop.Location = new Point(0, 240);
+            sbtnDragDrop.Name = "sbtnDragDrop";
+            sbtnDragDrop.Size = new Size(172, 40);
+            sbtnDragDrop.TabIndex = 8;
+            sbtnDragDrop.Text = "Drag && Drop";
+            sbtnDragDrop.TextAlign = ContentAlignment.TopLeft;
+            sbtnDragDrop.UseVisualStyleBackColor = true;
             // 
             // sbtnInterface
             // 
@@ -281,27 +301,9 @@
             sbtnPaths.TextAlign = ContentAlignment.TopLeft;
             sbtnPaths.UseVisualStyleBackColor = true;
             // 
-            // sbtnDragDrop
-            // 
-            sbtnDragDrop.Dock = DockStyle.Top;
-            sbtnDragDrop.FlatAppearance.BorderSize = 0;
-            sbtnDragDrop.FlatStyle = FlatStyle.Flat;
-            sbtnDragDrop.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point);
-            sbtnDragDrop.IconChar = FontAwesome.Sharp.IconChar.Meteor;
-            sbtnDragDrop.IconColor = Color.Black;
-            sbtnDragDrop.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            sbtnDragDrop.IconSize = 30;
-            sbtnDragDrop.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnDragDrop.Location = new Point(0, 240);
-            sbtnDragDrop.Name = "sbtnDragDrop";
-            sbtnDragDrop.Size = new Size(172, 40);
-            sbtnDragDrop.TabIndex = 8;
-            sbtnDragDrop.Text = "Drag && Drop";
-            sbtnDragDrop.TextAlign = ContentAlignment.TopLeft;
-            sbtnDragDrop.UseVisualStyleBackColor = true;
-            // 
             // SettingsView
             // 
+            AllowDrop = true;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.GhostWhite;
