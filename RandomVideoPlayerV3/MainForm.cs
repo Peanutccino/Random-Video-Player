@@ -74,7 +74,7 @@ namespace RandomVideoPlayer
             int initVolume = SettingsHandler.VolumeMember ? SettingsHandler.VolumeLastValue : 50;
 
             pbVolume.Value = initVolume;
-            string libMpv = startupPath + "\\lib\\libmpv-2.dll";
+            string libMpv = startupPath + "lib\\libmpv-2.dll";
             playerMPV = new MpvPlayer(panelPlayerMPV.Handle, libMpv) { Loop = SettingsHandler.LoopPlayer, Volume = initVolume, KeepOpen = KeepOpen.Yes };
             tcServer = new WebServer();
 
@@ -251,6 +251,10 @@ namespace RandomVideoPlayer
             }
 
             UpdateButtonStates();
+            if (fR.WindowExclusiveFullscreen)
+            {
+                fR.UpdateFullscreenSize(this, panelTop, panelBottom, panelPlayerMPV);
+            }
 
             hkSettings = HotkeyManager.LoadHotkeySettings();
             SetupTooltips();
@@ -354,6 +358,7 @@ namespace RandomVideoPlayer
             else
             {
                 activityTimer.Enabled = false;
+                Cursor.Show(); 
                 this.Size = backupSize;
             }
         }

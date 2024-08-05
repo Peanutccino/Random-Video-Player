@@ -1,4 +1,7 @@
-﻿namespace RandomVideoPlayer.Functions
+﻿using RandomVideoPlayer.Model;
+using System.Drawing.Printing;
+
+namespace RandomVideoPlayer.Functions
 {
     public class FormResize
     {
@@ -100,14 +103,30 @@
 
             _windowExclusiveFullscreen = false;
         }
-
+        public void UpdateFullscreenSize(Form f, Panel top, Panel bottom, Panel player)
+        {
+            PlayerIsFullscreenSize(f, top, bottom, player);
+        }
         private void PlayerIsFullscreenSize(Form f, Panel top, Panel bottom, Panel player) //Logic to set up panels for exclusive Fullscreen mode
         {
+            int buttonWidth = 30;
+            int margin = 20;
+            int newFormSize = 930;
+            int minimumFormSize = 800;
+
+            foreach(bool state in SettingsHandler.ButtonStates)
+            {
+                if (!state)
+                {
+                    newFormSize = newFormSize - buttonWidth - margin;
+                }
+            }
+
             player.Location = new Point(0, 0); 
             player.Size = new Size(f.Width, f.Height);
 
             bottom.Dock = DockStyle.None;
-            bottom.Width = 800;
+            bottom.Width = newFormSize <= minimumFormSize ? minimumFormSize : newFormSize;
             bottom.Location = new Point((f.Width / 2) - (bottom.Width / 2), f.Height - bottom.Height);
             bottom.Visible = false;
 
