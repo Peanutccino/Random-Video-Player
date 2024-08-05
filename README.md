@@ -1,4 +1,4 @@
-#### Random Video Player - RVP
+## Random Video Player - RVP
 
 ![Logo](https://i.imgur.com/L1EOUnJ.png)
 
@@ -29,7 +29,9 @@ The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libm
 4. Extract 'libmpv-2.dll' from the archive and move it to your 'lib' folder or drag it into visual studio directly.
 5. In your Solution Explorer, click on 'libmpv-2.dll' and select 'Properties'. Change the value for "Copy to Output Directory" to "Copy Always".
 
-1. Download Mpv.NET-lib- from https://github.com/hudec117/Mpv.NET-lib- or simply use mine from a release package and include it and skip those steps
+1. Download Mpv.NET-lib- from https://github.com/hudec117/Mpv.NET-lib- 
+> [!NOTE]
+> or simply use my 'Mpv.NET.dll' from a release package, include it and skip those steps
 2. Extract it and open 'Mpv.NET.csproj' in visual studio
    * In Mpv.NET\Player\MpvPlayer.cs; find 'possibleLibMpvPaths' and rename 'mpv-1.dll' to 'libmpv-2.dll'
    * It should look like this: "libmpv-2.dll", @"lib\libmpv-2.dll"
