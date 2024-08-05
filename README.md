@@ -1,6 +1,6 @@
 #### Random Video Player - RVP
 
-![Logo](https://imgur.com/L1EOUnJ)
+![Logo](https://i.imgur.com/L1EOUnJ.png)
 
 Hello everyone,
 
