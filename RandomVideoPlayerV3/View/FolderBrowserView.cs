@@ -287,8 +287,9 @@ namespace RandomVideoPlayer.View
                             lbFavorites.Items.Add(folderName);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Error.Log(ex, "Unable to gather favorite folders in FB");
                         continue;
                     }
                 }
@@ -324,8 +325,9 @@ namespace RandomVideoPlayer.View
                     lvFileExplore.Items.Add(item);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Error.Log(ex, "Error populating lvFileExplore in FB");
                 return;
             }
 

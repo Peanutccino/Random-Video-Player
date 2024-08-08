@@ -1,3 +1,5 @@
+using RandomVideoPlayer.Functions;
+
 namespace RandomVideoPlayer
 {
     internal static class Program
@@ -19,7 +21,7 @@ namespace RandomVideoPlayer
             }
             catch (Exception ex)
             {
-                File.AppendAllText("debug.log", $"Exception: {ex.Message}{Environment.NewLine}");
+                Error.Log(ex, "Failed to start application");
                 MessageBox.Show($"Exception: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

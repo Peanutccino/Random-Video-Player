@@ -84,7 +84,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 117);
             panel1.Name = "panel1";
-            panel1.Size = new Size(440, 290);
+            panel1.Size = new Size(440, 337);
             panel1.TabIndex = 4;
             // 
             // cbSourceSelector
@@ -94,10 +94,10 @@
             cbSourceSelector.CheckedBackColor = Color.PaleGreen;
             cbSourceSelector.FlatAppearance.BorderSize = 0;
             cbSourceSelector.FlatStyle = FlatStyle.Flat;
-            cbSourceSelector.Location = new Point(12, 219);
+            cbSourceSelector.Location = new Point(12, 241);
             cbSourceSelector.Margin = new Padding(12, 3, 3, 3);
             cbSourceSelector.Name = "cbSourceSelector";
-            cbSourceSelector.Size = new Size(168, 25);
+            cbSourceSelector.Size = new Size(168, 28);
             cbSourceSelector.TabIndex = 9;
             cbSourceSelector.Text = "Source Selector";
             cbSourceSelector.UncheckedBackColor = Color.LightGray;
@@ -108,7 +108,7 @@
             flowPanel.FlowDirection = FlowDirection.TopDown;
             flowPanel.Location = new Point(186, 0);
             flowPanel.Name = "flowPanel";
-            flowPanel.Size = new Size(117, 244);
+            flowPanel.Size = new Size(117, 278);
             flowPanel.TabIndex = 8;
             // 
             // cbListAddButton
@@ -118,10 +118,10 @@
             cbListAddButton.CheckedBackColor = Color.PaleGreen;
             cbListAddButton.FlatAppearance.BorderSize = 0;
             cbListAddButton.FlatStyle = FlatStyle.Flat;
-            cbListAddButton.Location = new Point(12, 64);
+            cbListAddButton.Location = new Point(12, 71);
             cbListAddButton.Margin = new Padding(12, 3, 3, 3);
             cbListAddButton.Name = "cbListAddButton";
-            cbListAddButton.Size = new Size(168, 25);
+            cbListAddButton.Size = new Size(168, 28);
             cbListAddButton.TabIndex = 6;
             cbListAddButton.Text = "Add to list";
             cbListAddButton.UncheckedBackColor = Color.LightGray;
@@ -134,10 +134,10 @@
             cbMoveToButton.CheckedBackColor = Color.PaleGreen;
             cbMoveToButton.FlatAppearance.BorderSize = 0;
             cbMoveToButton.FlatStyle = FlatStyle.Flat;
-            cbMoveToButton.Location = new Point(12, 126);
+            cbMoveToButton.Location = new Point(12, 139);
             cbMoveToButton.Margin = new Padding(12, 3, 3, 3);
             cbMoveToButton.Name = "cbMoveToButton";
-            cbMoveToButton.Size = new Size(168, 25);
+            cbMoveToButton.Size = new Size(168, 28);
             cbMoveToButton.TabIndex = 5;
             cbMoveToButton.Text = "Move/Copy to folder";
             cbMoveToButton.UncheckedBackColor = Color.LightGray;
@@ -150,10 +150,10 @@
             cbLoopButton.CheckedBackColor = Color.PaleGreen;
             cbLoopButton.FlatAppearance.BorderSize = 0;
             cbLoopButton.FlatStyle = FlatStyle.Flat;
-            cbLoopButton.Location = new Point(12, 188);
+            cbLoopButton.Location = new Point(12, 207);
             cbLoopButton.Margin = new Padding(12, 3, 3, 3);
             cbLoopButton.Name = "cbLoopButton";
-            cbLoopButton.Size = new Size(168, 25);
+            cbLoopButton.Size = new Size(168, 28);
             cbLoopButton.TabIndex = 4;
             cbLoopButton.Text = "Toggle loop";
             cbLoopButton.UncheckedBackColor = Color.LightGray;
@@ -166,10 +166,10 @@
             cbShuffleButton.CheckedBackColor = Color.PaleGreen;
             cbShuffleButton.FlatAppearance.BorderSize = 0;
             cbShuffleButton.FlatStyle = FlatStyle.Flat;
-            cbShuffleButton.Location = new Point(12, 157);
+            cbShuffleButton.Location = new Point(12, 173);
             cbShuffleButton.Margin = new Padding(12, 3, 3, 3);
             cbShuffleButton.Name = "cbShuffleButton";
-            cbShuffleButton.Size = new Size(168, 25);
+            cbShuffleButton.Size = new Size(168, 28);
             cbShuffleButton.TabIndex = 3;
             cbShuffleButton.Text = "Toggle shuffle";
             cbShuffleButton.UncheckedBackColor = Color.LightGray;
@@ -182,10 +182,10 @@
             cbAddToFavButton.CheckedBackColor = Color.PaleGreen;
             cbAddToFavButton.FlatAppearance.BorderSize = 0;
             cbAddToFavButton.FlatStyle = FlatStyle.Flat;
-            cbAddToFavButton.Location = new Point(12, 95);
+            cbAddToFavButton.Location = new Point(12, 105);
             cbAddToFavButton.Margin = new Padding(12, 3, 3, 3);
             cbAddToFavButton.Name = "cbAddToFavButton";
-            cbAddToFavButton.Size = new Size(168, 25);
+            cbAddToFavButton.Size = new Size(168, 28);
             cbAddToFavButton.TabIndex = 2;
             cbAddToFavButton.Text = "Add to favorites";
             cbAddToFavButton.UncheckedBackColor = Color.LightGray;
@@ -198,10 +198,10 @@
             cbListRemoveButton.CheckedBackColor = Color.PaleGreen;
             cbListRemoveButton.FlatAppearance.BorderSize = 0;
             cbListRemoveButton.FlatStyle = FlatStyle.Flat;
-            cbListRemoveButton.Location = new Point(12, 33);
+            cbListRemoveButton.Location = new Point(12, 37);
             cbListRemoveButton.Margin = new Padding(12, 3, 3, 3);
             cbListRemoveButton.Name = "cbListRemoveButton";
-            cbListRemoveButton.Size = new Size(168, 25);
+            cbListRemoveButton.Size = new Size(168, 28);
             cbListRemoveButton.TabIndex = 1;
             cbListRemoveButton.Text = "Remove from list";
             cbListRemoveButton.UncheckedBackColor = Color.LightGray;
@@ -217,7 +217,7 @@
             cbDeleteButton.Location = new Point(12, 3);
             cbDeleteButton.Margin = new Padding(12, 3, 3, 3);
             cbDeleteButton.Name = "cbDeleteButton";
-            cbDeleteButton.Size = new Size(168, 24);
+            cbDeleteButton.Size = new Size(168, 28);
             cbDeleteButton.TabIndex = 0;
             cbDeleteButton.Text = "Delete current file";
             cbDeleteButton.UncheckedBackColor = Color.LightGray;
@@ -227,9 +227,9 @@
             // 
             panelButtonPreview.Controls.Add(btnRestore);
             panelButtonPreview.Dock = DockStyle.Fill;
-            panelButtonPreview.Location = new Point(0, 407);
+            panelButtonPreview.Location = new Point(0, 454);
             panelButtonPreview.Name = "panelButtonPreview";
-            panelButtonPreview.Size = new Size(440, 43);
+            panelButtonPreview.Size = new Size(440, 36);
             panelButtonPreview.TabIndex = 5;
             // 
             // btnRestore
@@ -241,7 +241,7 @@
             btnRestore.IconChar = FontAwesome.Sharp.IconChar.None;
             btnRestore.IconColor = Color.Black;
             btnRestore.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnRestore.Location = new Point(3, 13);
+            btnRestore.Location = new Point(3, 6);
             btnRestore.Name = "btnRestore";
             btnRestore.Size = new Size(146, 27);
             btnRestore.TabIndex = 5;
@@ -258,7 +258,7 @@
             Controls.Add(label5);
             Controls.Add(label1);
             Name = "InterfaceUserControl";
-            Size = new Size(440, 450);
+            Size = new Size(440, 490);
             panel1.ResumeLayout(false);
             panelButtonPreview.ResumeLayout(false);
             ResumeLayout(false);

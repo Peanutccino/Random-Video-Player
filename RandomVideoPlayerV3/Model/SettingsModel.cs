@@ -22,6 +22,9 @@ namespace RandomVideoPlayer.Model
         public bool MemberPlayRecent { get; set; }
         public bool MemberRecentCount { get; set; }
         public bool MemberVolume { get; set; }
+
+        public bool StartupAlwaysAsk { get; set; }
+        public bool StartupAllDirectories { get; set; }
         #endregion
 
         #region Player
@@ -42,6 +45,7 @@ namespace RandomVideoPlayer.Model
         #region DragDrop
         public bool PlayOnDrop { get; set; }
         public bool AlwaysAddFilesToQueue { get; set; }
+        public bool IncludeSubdirectoriesDnD { get; set; }
         #endregion
 
         #region Interface

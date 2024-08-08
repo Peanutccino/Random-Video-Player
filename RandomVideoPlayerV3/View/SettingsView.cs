@@ -65,6 +65,8 @@ namespace RandomVideoPlayer.View
             settingsModel.MemberPlayRecent = SettingsHandler.RecentCheckedSaved;
             settingsModel.MemberRecentCount = SettingsHandler.RecentCountSaved;
             settingsModel.MemberVolume = SettingsHandler.VolumeMember;
+            settingsModel.StartupAlwaysAsk = SettingsHandler.StartupAlwaysAsk;
+            settingsModel.StartupAllDirectories = SettingsHandler.StartupAllDirectories;
 
             settingsModel.LoopPlayer = SettingsHandler.LoopPlayer;
             settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
@@ -75,6 +77,7 @@ namespace RandomVideoPlayer.View
 
             settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
             settingsModel.AlwaysAddFilesToQueue = SettingsHandler.AlwaysAddFilesToQueue;
+            settingsModel.IncludeSubdirectoriesDnD = SettingsHandler.IncludeSubdirectoriesDnD;
 
             settingsModel.FileMovePath = PathHandler.FileMoveFolderPath;
             settingsModel.FileCopy = SettingsHandler.FileCopy;
@@ -110,6 +113,8 @@ namespace RandomVideoPlayer.View
             SettingsHandler.RecentCheckedSaved = settingsModel.MemberPlayRecent;
             SettingsHandler.RecentCountSaved = settingsModel.MemberRecentCount;
             SettingsHandler.VolumeMember = settingsModel.MemberVolume;
+            SettingsHandler.StartupAlwaysAsk = settingsModel.StartupAlwaysAsk;
+            SettingsHandler.StartupAllDirectories = settingsModel.StartupAllDirectories;
 
             SettingsHandler.LoopPlayer = settingsModel.LoopPlayer;
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
@@ -119,6 +124,7 @@ namespace RandomVideoPlayer.View
 
             SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;
             SettingsHandler.AlwaysAddFilesToQueue = settingsModel.AlwaysAddFilesToQueue;
+            SettingsHandler.IncludeSubdirectoriesDnD = settingsModel.IncludeSubdirectoriesDnD;
 
             if (!ListHandler.SelectedExtensions.SequenceEqual(settingsModel.SelectedExtensions))
             {
@@ -172,24 +178,6 @@ namespace RandomVideoPlayer.View
             PathHandler.FileMoveFolderPath = settingsModel.FileMovePath;
             SettingsHandler.FileCopy = settingsModel.FileCopy;
         }
-
-        private void SetupTooltips()
-        {
-            //toolTipInfo.SetToolTip(btnFileBrowse, "Choose folder that opens by default on program start");
-            //toolTipInfo.SetToolTip(btnFileBrowseRemove, "Choose folder where files are moved to when 'Delete' is not checked");
-            //toolTipInfo.SetToolTip(btnFileBrowseList, "Choose default folder for saving and loading lists");
-            //toolTipInfo.SetToolTip(btnClose, "Close without saving");
-            //toolTipInfo.SetToolTip(cbRemembersize, "Saves current window size for next startup");
-            //toolTipInfo.SetToolTip(cbDeleteToggle, "Choose whether to delete files completely or move them to chosen folder when using the delete button from the player");
-            //toolTipInfo.SetToolTip(cbIncludeScripts, "Choose whether RVP should look for associated script files next to the current file and delete those too");
-            //toolTipInfo.SetToolTip(rbCreationDate, "Use files creation date when choosing to load only the latest X files");
-            //toolTipInfo.SetToolTip(rbModifiedDate, "Use files last date modified when choosing to load only the latest X files");
-            //toolTipInfo.SetToolTip(cbLoopPlayer, "Loop played file or play next automatically after file is finished");
-            //toolTipInfo.SetToolTip(cbtimeCodeServer, "Activate timecode server to synchronize with MultiFunPlayer by choosing MPC-HC as the target there");
-            //toolTipInfo.SetToolTip(cbPlayVideos, "Include video files when loading a folder");
-            //toolTipInfo.SetToolTip(cbPlayImages, "Include image files when loading a folder");
-        }
-
         #region WndProc Code for clean style of the Form and regaining usabality
         //Resizable Windows Form Spaghetti
         protected override void WndProc(ref Message m)

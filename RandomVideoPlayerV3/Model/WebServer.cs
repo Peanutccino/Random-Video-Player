@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text;
+using RandomVideoPlayer.Functions;
 
 namespace RandomVideoPlayer.Model
 {
@@ -8,6 +9,8 @@ namespace RandomVideoPlayer.Model
         private HttpListener listener;
         private Thread serverThread;
         private bool isRunning = false;
+        private object lockObject = new object();
+
         private const string prefix = "http://127.0.0.1:13579/";
         public string Filepath { get; set; } = "";//0
         public byte State { get; set; } = 2; //1  - State: 1 == Pause State: 2 == Play
@@ -35,12 +38,28 @@ namespace RandomVideoPlayer.Model
             listener.Prefixes.Add(prefix);
         }
 
+        public bool IsRunning
+        {
+            get
+            {
+                lock (lockObject)
+                {
+                    return isRunning;
+                }
+            }
+        }
+
+        public event Action<string> OnLog;
+
         public void Start()
         {
             if (!isRunning)
             {
                 serverThread = new Thread(new ThreadStart(Run));
-                isRunning = true;
+                lock (lockObject)
+                {
+                    isRunning = true;
+                }
                 serverThread.Start();
             }
         }
@@ -49,7 +68,10 @@ namespace RandomVideoPlayer.Model
         {
             if (isRunning)
             {
-                isRunning = false;
+                lock (lockObject)
+                {
+                    isRunning = false;
+                }
                 listener.Stop();
                 serverThread.Join(); // Wait for the server thread to exit
             }
@@ -58,14 +80,14 @@ namespace RandomVideoPlayer.Model
         private void Run()
         {
             listener.Start();
-            Console.WriteLine("Listening...");
+            //Log("Server started, listening...");
 
             while (isRunning)
             {
                 try
                 {
                     HttpListenerContext context = listener.GetContext();
-
+                    //Log($"Connection from {context.Request.RemoteEndPoint}");
                     ProcessRequest(context);
                 }
                 catch (HttpListenerException) // Catch the exception when listener.Stop() is called
@@ -73,6 +95,7 @@ namespace RandomVideoPlayer.Model
 
                 }
             }
+            //Log("Server stopped.");
         }
 
         private async void ProcessRequest(HttpListenerContext context)
@@ -92,12 +115,19 @@ namespace RandomVideoPlayer.Model
             }
             catch (Exception ex)
             {
+                //Log($"Error processing request: {ex.Message}");
+                Error.Log(ex, "Error creating timecode server");
                 MessageBox.Show(string.Format("Error creating timecode server:\n\n{0}", ex));
             }
             finally
             {
                 context.Response.Close();
             }
+        }
+
+        private void Log(string message) //For debugging purposes
+        {
+            OnLog?.Invoke($"{DateTime.Now}: {message}");
         }
     }
 }

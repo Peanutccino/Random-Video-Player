@@ -9,6 +9,7 @@ namespace RandomVideoPlayer.Model
         private static bool _firstPlay = true;
 
         private static IEnumerable<string> _folderList = Enumerable.Empty<string>();
+        private static IEnumerable<string> _tempfolderList = Enumerable.Empty<string>();
         private static IEnumerable<string> _playList = Enumerable.Empty<string>();
 
         private static List<string> _vidExtensions = new List<string> { "avi", "flv", "m4v", "mkv", "mov", "mp4", "webm", "wmv", "f4v", "avchd" };
@@ -75,6 +76,13 @@ namespace RandomVideoPlayer.Model
             get { return _folderList; }
             set { _folderList = value; }
         }
+        /// <value>Used to store all found media files from a user defined folder</value> 
+        public static IEnumerable<string> TempFolderList
+        {
+            get { return _tempfolderList; }
+            set { _tempfolderList = value; }
+        }
+
         /// <value>Used to store all media files fomr a user defined list</value> 
         public static IEnumerable<string> CustomList
         {
@@ -222,13 +230,17 @@ namespace RandomVideoPlayer.Model
 
             try
             {
-                FolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
+                _tempfolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
                         .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
                         .ToArray();
+                if(_tempfolderList?.Any() ?? false)
+                {
+                    _folderList = _tempfolderList;
+                }
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception ex)
             {
-                //MessageBox.Show("Access to folder denied. Try running the application as administrator");
+                Error.Log(ex, "Couldn't access folder - fillFolderList");
             }
         }
         /// <value>Grab only the latest (count) media files from defined directory</value> 
@@ -243,7 +255,7 @@ namespace RandomVideoPlayer.Model
             {
                 if (_settingsInstance.sortCreationDate) //Set to sort by creation date
                 {
-                    FolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
+                    _tempfolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
                         .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
                         .OrderByDescending(s => File.GetCreationTime(s)) // Order by last modified date in descending order
                         .Take(count) // Take only the top 100
@@ -251,16 +263,20 @@ namespace RandomVideoPlayer.Model
                 }
                 else //Set to sort by date of last modified
                 {
-                    FolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
+                    _tempfolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
                         .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
                         .OrderByDescending(s => File.GetLastWriteTime(s)) // Order by last modified date in descending order
                         .Take(count) // Take only the top 100
                         .ToArray();
                 }
+                if (_tempfolderList?.Any() ?? false)
+                {
+                    _folderList = _tempfolderList;
+                }
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception ex)
             {
-                //MessageBox.Show("Access to folder denied. Try running the application as administrator");
+                Error.Log(ex, "Couldn't access folder - latestFolderList");
             }
         }
         /// <value>Delete current user defined list</value> 

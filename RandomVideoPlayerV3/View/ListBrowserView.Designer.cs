@@ -249,6 +249,7 @@
             lvFileExplore.TabIndex = 0;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.ItemActivate += lvFileExplore_ItemActivate;
+            lvFileExplore.ItemDrag += lvFileExplore_ItemDrag;
             lvFileExplore.MouseDown += lvFileExplore_MouseDown;
             lvFileExplore.Resize += lvFileExplore_Resize;
             // 
@@ -434,7 +435,7 @@
             btnAddFromPlaylist.ImageAlign = ContentAlignment.MiddleRight;
             btnAddFromPlaylist.Location = new Point(4, 273);
             btnAddFromPlaylist.Name = "btnAddFromPlaylist";
-            btnAddFromPlaylist.Size = new Size(98, 30);
+            btnAddFromPlaylist.Size = new Size(117, 30);
             btnAddFromPlaylist.TabIndex = 23;
             btnAddFromPlaylist.Text = "Add Queue";
             btnAddFromPlaylist.TextAlign = ContentAlignment.MiddleLeft;
@@ -495,7 +496,7 @@
             cbFullPath.FlatAppearance.BorderSize = 0;
             cbFullPath.FlatStyle = FlatStyle.Flat;
             cbFullPath.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbFullPath.Location = new Point(157, 4);
+            cbFullPath.Location = new Point(151, 4);
             cbFullPath.Name = "cbFullPath";
             cbFullPath.Size = new Size(120, 26);
             cbFullPath.TabIndex = 27;
@@ -508,12 +509,12 @@
             // 
             customPanel2.BackColor = Color.MistyRose;
             customPanel2.BottomRightOffset = 0;
-            customPanel2.BottomRightXOffset = 20;
+            customPanel2.BottomRightXOffset = 0;
             customPanel2.Controls.Add(label4);
             customPanel2.Dock = DockStyle.Left;
             customPanel2.Location = new Point(0, 0);
             customPanel2.Name = "customPanel2";
-            customPanel2.Size = new Size(129, 36);
+            customPanel2.Size = new Size(126, 36);
             customPanel2.TabIndex = 26;
             customPanel2.TopLeftXOffset = 0;
             customPanel2.TopRightOffset = 0;
@@ -521,11 +522,12 @@
             // 
             // label4
             // 
+            label4.Dock = DockStyle.Fill;
             label4.Font = new Font("Segoe UI Semibold", 14F, FontStyle.Bold, GraphicsUnit.Point);
-            label4.Location = new Point(3, 0);
+            label4.Location = new Point(0, 0);
             label4.Margin = new Padding(3);
             label4.Name = "label4";
-            label4.Size = new Size(99, 36);
+            label4.Size = new Size(126, 36);
             label4.TabIndex = 40;
             label4.Text = "Functions";
             label4.TextAlign = ContentAlignment.MiddleCenter;
@@ -560,7 +562,7 @@
             customPanel1.Controls.Add(btnAddSelected);
             customPanel1.Location = new Point(0, 36);
             customPanel1.Name = "customPanel1";
-            customPanel1.Size = new Size(109, 70);
+            customPanel1.Size = new Size(126, 70);
             customPanel1.TabIndex = 20;
             customPanel1.TopLeftXOffset = 0;
             customPanel1.TopRightOffset = 0;
@@ -578,7 +580,7 @@
             btnAddAll.ImageAlign = ContentAlignment.MiddleRight;
             btnAddAll.Location = new Point(4, 5);
             btnAddAll.Name = "btnAddAll";
-            btnAddAll.Size = new Size(98, 30);
+            btnAddAll.Size = new Size(117, 30);
             btnAddAll.TabIndex = 16;
             btnAddAll.Text = "Add all";
             btnAddAll.TextAlign = ContentAlignment.MiddleLeft;
@@ -597,9 +599,9 @@
             btnAddSelected.ImageAlign = ContentAlignment.MiddleRight;
             btnAddSelected.Location = new Point(4, 38);
             btnAddSelected.Name = "btnAddSelected";
-            btnAddSelected.Size = new Size(98, 30);
+            btnAddSelected.Size = new Size(117, 30);
             btnAddSelected.TabIndex = 15;
-            btnAddSelected.Text = "Add sel.";
+            btnAddSelected.Text = "Add selected";
             btnAddSelected.TextAlign = ContentAlignment.MiddleLeft;
             btnAddSelected.UseVisualStyleBackColor = true;
             btnAddSelected.Click += btnAddSelected_Click;
@@ -632,7 +634,7 @@
             panelFilterExt.Controls.Add(label3);
             panelFilterExt.Location = new Point(-6, 309);
             panelFilterExt.Name = "panelFilterExt";
-            panelFilterExt.Size = new Size(115, 357);
+            panelFilterExt.Size = new Size(132, 357);
             panelFilterExt.TabIndex = 21;
             panelFilterExt.TopLeftXOffset = 0;
             panelFilterExt.TopRightOffset = 0;
@@ -646,7 +648,7 @@
             cbAVIF.FlatAppearance.BorderSize = 0;
             cbAVIF.FlatStyle = FlatStyle.Flat;
             cbAVIF.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbAVIF.Location = new Point(6, 329);
+            cbAVIF.Location = new Point(14, 329);
             cbAVIF.Name = "cbAVIF";
             cbAVIF.Size = new Size(48, 25);
             cbAVIF.TabIndex = 39;
@@ -663,7 +665,7 @@
             cbWEBP.FlatAppearance.BorderSize = 0;
             cbWEBP.FlatStyle = FlatStyle.Flat;
             cbWEBP.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbWEBP.Location = new Point(60, 298);
+            cbWEBP.Location = new Point(68, 298);
             cbWEBP.Name = "cbWEBP";
             cbWEBP.Size = new Size(48, 25);
             cbWEBP.TabIndex = 38;
@@ -680,7 +682,7 @@
             cbTIFF.FlatAppearance.BorderSize = 0;
             cbTIFF.FlatStyle = FlatStyle.Flat;
             cbTIFF.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbTIFF.Location = new Point(6, 298);
+            cbTIFF.Location = new Point(14, 298);
             cbTIFF.Name = "cbTIFF";
             cbTIFF.Size = new Size(48, 25);
             cbTIFF.TabIndex = 37;
@@ -697,7 +699,7 @@
             cbTIF.FlatAppearance.BorderSize = 0;
             cbTIF.FlatStyle = FlatStyle.Flat;
             cbTIF.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbTIF.Location = new Point(60, 267);
+            cbTIF.Location = new Point(68, 267);
             cbTIF.Name = "cbTIF";
             cbTIF.Size = new Size(48, 25);
             cbTIF.TabIndex = 36;
@@ -714,7 +716,7 @@
             cbBMP.FlatAppearance.BorderSize = 0;
             cbBMP.FlatStyle = FlatStyle.Flat;
             cbBMP.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbBMP.Location = new Point(6, 267);
+            cbBMP.Location = new Point(14, 267);
             cbBMP.Name = "cbBMP";
             cbBMP.Size = new Size(48, 25);
             cbBMP.TabIndex = 35;
@@ -731,7 +733,7 @@
             cbGIF.FlatAppearance.BorderSize = 0;
             cbGIF.FlatStyle = FlatStyle.Flat;
             cbGIF.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbGIF.Location = new Point(60, 236);
+            cbGIF.Location = new Point(68, 236);
             cbGIF.Name = "cbGIF";
             cbGIF.Size = new Size(48, 25);
             cbGIF.TabIndex = 34;
@@ -748,7 +750,7 @@
             cbPNG.FlatAppearance.BorderSize = 0;
             cbPNG.FlatStyle = FlatStyle.Flat;
             cbPNG.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbPNG.Location = new Point(6, 236);
+            cbPNG.Location = new Point(14, 236);
             cbPNG.Name = "cbPNG";
             cbPNG.Size = new Size(48, 25);
             cbPNG.TabIndex = 33;
@@ -765,7 +767,7 @@
             cbJPEG.FlatAppearance.BorderSize = 0;
             cbJPEG.FlatStyle = FlatStyle.Flat;
             cbJPEG.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbJPEG.Location = new Point(60, 205);
+            cbJPEG.Location = new Point(68, 205);
             cbJPEG.Name = "cbJPEG";
             cbJPEG.Size = new Size(48, 25);
             cbJPEG.TabIndex = 32;
@@ -782,7 +784,7 @@
             cbJPG.FlatAppearance.BorderSize = 0;
             cbJPG.FlatStyle = FlatStyle.Flat;
             cbJPG.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbJPG.Location = new Point(6, 205);
+            cbJPG.Location = new Point(14, 205);
             cbJPG.Name = "cbJPG";
             cbJPG.Size = new Size(48, 25);
             cbJPG.TabIndex = 31;
@@ -799,7 +801,7 @@
             cbAVCHD.FlatAppearance.BorderSize = 0;
             cbAVCHD.FlatStyle = FlatStyle.Flat;
             cbAVCHD.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbAVCHD.Location = new Point(60, 160);
+            cbAVCHD.Location = new Point(68, 160);
             cbAVCHD.Name = "cbAVCHD";
             cbAVCHD.Size = new Size(48, 25);
             cbAVCHD.TabIndex = 30;
@@ -816,7 +818,7 @@
             cbWEBM.FlatAppearance.BorderSize = 0;
             cbWEBM.FlatStyle = FlatStyle.Flat;
             cbWEBM.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbWEBM.Location = new Point(6, 160);
+            cbWEBM.Location = new Point(14, 160);
             cbWEBM.Name = "cbWEBM";
             cbWEBM.Size = new Size(48, 25);
             cbWEBM.TabIndex = 29;
@@ -833,7 +835,7 @@
             cbMP4.FlatAppearance.BorderSize = 0;
             cbMP4.FlatStyle = FlatStyle.Flat;
             cbMP4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbMP4.Location = new Point(60, 129);
+            cbMP4.Location = new Point(68, 129);
             cbMP4.Name = "cbMP4";
             cbMP4.Size = new Size(48, 25);
             cbMP4.TabIndex = 28;
@@ -850,7 +852,7 @@
             cbF4V.FlatAppearance.BorderSize = 0;
             cbF4V.FlatStyle = FlatStyle.Flat;
             cbF4V.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbF4V.Location = new Point(6, 129);
+            cbF4V.Location = new Point(14, 129);
             cbF4V.Name = "cbF4V";
             cbF4V.Size = new Size(48, 25);
             cbF4V.TabIndex = 27;
@@ -867,7 +869,7 @@
             cbFLV.FlatAppearance.BorderSize = 0;
             cbFLV.FlatStyle = FlatStyle.Flat;
             cbFLV.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbFLV.Location = new Point(60, 98);
+            cbFLV.Location = new Point(68, 98);
             cbFLV.Name = "cbFLV";
             cbFLV.Size = new Size(48, 25);
             cbFLV.TabIndex = 26;
@@ -884,7 +886,7 @@
             cbWMV.FlatAppearance.BorderSize = 0;
             cbWMV.FlatStyle = FlatStyle.Flat;
             cbWMV.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbWMV.Location = new Point(6, 98);
+            cbWMV.Location = new Point(14, 98);
             cbWMV.Name = "cbWMV";
             cbWMV.Size = new Size(48, 25);
             cbWMV.TabIndex = 25;
@@ -901,7 +903,7 @@
             cbM4V.FlatAppearance.BorderSize = 0;
             cbM4V.FlatStyle = FlatStyle.Flat;
             cbM4V.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbM4V.Location = new Point(60, 67);
+            cbM4V.Location = new Point(68, 67);
             cbM4V.Name = "cbM4V";
             cbM4V.Size = new Size(48, 25);
             cbM4V.TabIndex = 24;
@@ -918,7 +920,7 @@
             cbMKV.FlatAppearance.BorderSize = 0;
             cbMKV.FlatStyle = FlatStyle.Flat;
             cbMKV.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbMKV.Location = new Point(6, 67);
+            cbMKV.Location = new Point(14, 67);
             cbMKV.Name = "cbMKV";
             cbMKV.Size = new Size(48, 25);
             cbMKV.TabIndex = 23;
@@ -935,7 +937,7 @@
             cbMOV.FlatAppearance.BorderSize = 0;
             cbMOV.FlatStyle = FlatStyle.Flat;
             cbMOV.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbMOV.Location = new Point(60, 36);
+            cbMOV.Location = new Point(68, 36);
             cbMOV.Name = "cbMOV";
             cbMOV.Size = new Size(48, 25);
             cbMOV.TabIndex = 22;
@@ -952,7 +954,7 @@
             cbAVI.FlatAppearance.BorderSize = 0;
             cbAVI.FlatStyle = FlatStyle.Flat;
             cbAVI.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbAVI.Location = new Point(6, 36);
+            cbAVI.Location = new Point(14, 36);
             cbAVI.Name = "cbAVI";
             cbAVI.Size = new Size(48, 25);
             cbAVI.TabIndex = 21;
@@ -963,30 +965,35 @@
             // 
             // label3
             // 
+            label3.Dock = DockStyle.Top;
             label3.Font = new Font("Segoe UI Semibold", 14F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.Location = new Point(9, 6);
+            label3.Location = new Point(0, 0);
             label3.Margin = new Padding(3);
             label3.Name = "label3";
-            label3.Size = new Size(99, 24);
+            label3.Size = new Size(132, 30);
             label3.TabIndex = 0;
             label3.Text = "Filter";
             label3.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lvCustomList
             // 
+            lvCustomList.AllowDrop = true;
             lvCustomList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lvCustomList.BackColor = Color.MintCream;
             lvCustomList.BorderStyle = BorderStyle.None;
             lvCustomList.Columns.AddRange(new ColumnHeader[] { columnHeader1 });
             lvCustomList.FullRowSelect = true;
             lvCustomList.HeaderStyle = ColumnHeaderStyle.None;
-            lvCustomList.Location = new Point(108, 39);
+            lvCustomList.Location = new Point(127, 39);
             lvCustomList.Name = "lvCustomList";
             lvCustomList.ShowItemToolTips = true;
-            lvCustomList.Size = new Size(487, 627);
+            lvCustomList.Size = new Size(468, 627);
             lvCustomList.TabIndex = 19;
             lvCustomList.UseCompatibleStateImageBehavior = false;
             lvCustomList.View = System.Windows.Forms.View.Details;
+            lvCustomList.DragDrop += lvCustomList_DragDrop;
+            lvCustomList.DragEnter += lvCustomList_DragEnter;
+            lvCustomList.DragLeave += lvCustomList_DragLeave;
             lvCustomList.Resize += lvCustomList_Resize;
             // 
             // columnHeader1
@@ -1006,7 +1013,7 @@
             btnSaveList.ImageAlign = ContentAlignment.MiddleRight;
             btnSaveList.Location = new Point(4, 240);
             btnSaveList.Name = "btnSaveList";
-            btnSaveList.Size = new Size(98, 30);
+            btnSaveList.Size = new Size(117, 30);
             btnSaveList.TabIndex = 14;
             btnSaveList.Text = "Save List";
             btnSaveList.TextAlign = ContentAlignment.MiddleLeft;
@@ -1025,7 +1032,7 @@
             btnClearList.ImageAlign = ContentAlignment.MiddleRight;
             btnClearList.Location = new Point(4, 108);
             btnClearList.Name = "btnClearList";
-            btnClearList.Size = new Size(98, 30);
+            btnClearList.Size = new Size(117, 30);
             btnClearList.TabIndex = 18;
             btnClearList.Text = "Clear all";
             btnClearList.TextAlign = ContentAlignment.MiddleLeft;
@@ -1044,9 +1051,9 @@
             btnDelDuplicates.ImageAlign = ContentAlignment.MiddleRight;
             btnDelDuplicates.Location = new Point(4, 174);
             btnDelDuplicates.Name = "btnDelDuplicates";
-            btnDelDuplicates.Size = new Size(98, 30);
+            btnDelDuplicates.Size = new Size(117, 30);
             btnDelDuplicates.TabIndex = 15;
-            btnDelDuplicates.Text = "Del dups.";
+            btnDelDuplicates.Text = "Clear dups.";
             btnDelDuplicates.TextAlign = ContentAlignment.MiddleLeft;
             btnDelDuplicates.UseVisualStyleBackColor = true;
             btnDelDuplicates.Click += btnDelDuplicates_Click;
@@ -1063,9 +1070,9 @@
             btnClearSelected.ImageAlign = ContentAlignment.MiddleRight;
             btnClearSelected.Location = new Point(4, 141);
             btnClearSelected.Name = "btnClearSelected";
-            btnClearSelected.Size = new Size(98, 30);
+            btnClearSelected.Size = new Size(117, 30);
             btnClearSelected.TabIndex = 17;
-            btnClearSelected.Text = "Clear sel.";
+            btnClearSelected.Text = "Clear selected";
             btnClearSelected.TextAlign = ContentAlignment.MiddleLeft;
             btnClearSelected.UseVisualStyleBackColor = true;
             btnClearSelected.Click += btnClearSelected_Click;
@@ -1082,7 +1089,7 @@
             btnLoadList.ImageAlign = ContentAlignment.MiddleRight;
             btnLoadList.Location = new Point(4, 207);
             btnLoadList.Name = "btnLoadList";
-            btnLoadList.Size = new Size(98, 30);
+            btnLoadList.Size = new Size(117, 30);
             btnLoadList.TabIndex = 13;
             btnLoadList.Text = "Load List";
             btnLoadList.TextAlign = ContentAlignment.MiddleLeft;

@@ -197,7 +197,7 @@
             customPanel1.Name = "customPanel1";
             customPanel1.Size = new Size(700, 36);
             customPanel1.TabIndex = 14;
-            customPanel1.TopLeftXOffset = 20;
+            customPanel1.TopLeftXOffset = 0;
             customPanel1.TopRightOffset = 0;
             customPanel1.TopRightXOffset = 20;
             // 

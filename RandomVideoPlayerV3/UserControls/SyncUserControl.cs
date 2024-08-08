@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using RandomVideoPlayer.Model;
+﻿using RandomVideoPlayer.Model;
 
 
 namespace RandomVideoPlayer.UserControls
@@ -11,14 +10,15 @@ namespace RandomVideoPlayer.UserControls
         {
             InitializeComponent();
             this.settings = settings;
+
             BindControls();
             LoadSettings();
         }
 
         private void LoadSettings()
         {
-                cbTimeCodeServer.Checked = settings.IsTimeCodeServerEnabled;
-                cbScriptGraph.Checked = settings.IsGraphEnabled;          
+            cbTimeCodeServer.Checked = settings.IsTimeCodeServerEnabled;
+            cbScriptGraph.Checked = settings.IsGraphEnabled;
         }
 
         private void BindControls()

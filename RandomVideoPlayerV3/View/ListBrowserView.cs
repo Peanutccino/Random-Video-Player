@@ -1,7 +1,9 @@
-﻿using RandomVideoPlayer.Functions;
+﻿using Microsoft.VisualBasic;
+using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Documents;
 using ListViewItem = System.Windows.Forms.ListViewItem;
 
 namespace RandomVideoPlayer.View
@@ -75,18 +77,8 @@ namespace RandomVideoPlayer.View
 
             lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
 
-            if (ListHandler.FavoriteFolderList?.Any() == true)
-            {
-                foreach (string str in ListHandler.FavoriteFolderList)
-                {
-                    TempFavList.Add(str);
+            PopulateFavoriteFolders();
 
-                    var dir = new DirectoryInfo(str);
-                    string folderName = FileManipulation.TrimText(dir.Name, 19, "...");
-
-                    lbFavorites.Items.Add(folderName);
-                }
-            }
             SetupTooltips();
         }
         private void ListBrowserView_FormClosing(object sender, FormClosingEventArgs e)
@@ -223,7 +215,8 @@ namespace RandomVideoPlayer.View
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Failed to save file: {ex}");
+                    Error.Log(ex, "Failed to save list");
+                    MessageBox.Show($"Failed to save list: {ex}");
                     throw;
                 }
             }
@@ -287,7 +280,7 @@ namespace RandomVideoPlayer.View
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(string.Format("Error accessing folder: {0}\n\nError:\n{1}", itemPath, ex), "LB lvFE_ItemActivate");
+                Error.Log(ex, "Error accessing selected folder - LB lvFE_ItemActivate");
                 return;
             }
         }
@@ -512,40 +505,152 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(btnDeleteFav, "Delete selected folder from your list of favorites");
         }
 
+        #region Drag and Drop
+        private void lvFileExplore_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            List<ListViewItem> selectedItems = new List<ListViewItem>();
+            foreach (ListViewItem item in lvFileExplore.SelectedItems)
+            {
+                selectedItems.Add(item);
+            }
+
+            if (selectedItems.Count > 0)
+            {
+                lvFileExplore.DoDragDrop(selectedItems, DragDropEffects.Move);
+            }
+        }
+
+        private void lvCustomList_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(List<ListViewItem>)) || e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                lvCustomList.BackColor = Color.Honeydew;                
+                e.Effect = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void lvCustomList_DragDrop(object sender, DragEventArgs e)
+        {
+            //If dropped from lvFileExplore
+            if (e.Data.GetDataPresent(typeof(List<ListViewItem>)))
+            {
+                try
+                {
+                    var filteredPaths = new List<string>();
+                    var combinedExtensions = extensionFilter;
+
+                    List<ListViewItem> items = (List<ListViewItem>)e.Data.GetData(typeof(List<ListViewItem>));
+
+                    foreach (ListViewItem item in items)
+                    {
+                        var filePath = item.Tag.ToString();
+                        var fileType = item.SubItems[1].Text;
+                        if (combinedExtensions.Contains(fileType.TrimStart('.')))
+                        {
+                            filteredPaths.Add(filePath);
+                        }
+                        if (fileType == "Folder")
+                        {
+                            GrabFromDirectory(filePath);
+                        }
+                    }
+                    TempList.AddRange(filteredPaths);
+                    PopulateCustomList(TempList);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to load dropped files: \n\n {ex}");
+                    Error.Log(ex, "Failed to load dropped files from lvFileExplore");
+                }
+
+            }
+            //If dropped from outside
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                try
+                {
+                    string[] rawFilePaths = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                    var combinedExtensions = extensionFilter;
+                    var filteredPaths = new List<string>();
+
+                    foreach (string filePath in rawFilePaths)
+                    {
+                        if (Directory.Exists(filePath))
+                        {
+                            GrabFromDirectory(filePath);
+                        }
+                        else if (File.Exists(filePath))
+                        {
+                            string currentFileExtension = Path.GetExtension(filePath).TrimStart('.').ToLower();
+                            if (!combinedExtensions.Contains(currentFileExtension)) continue;
+
+                            filteredPaths.Add(filePath);
+                        }
+                    }
+                    TempList.AddRange(filteredPaths);
+                    PopulateCustomList(TempList);
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, "Failed to load dropped files from winExplorer");
+                    MessageBox.Show($"Failed to load dropped files: \n\n {ex}");
+                }
+            }
+            lvCustomList.BackColor = Color.MintCream;
+        }
+
+        private void lvCustomList_DragLeave(object sender, EventArgs e)
+        {
+            lvCustomList.BackColor = Color.MintCream;
+        }
+        #endregion
+
         #region Functions to grab directories and files from given path and fill listview
         //Fill the listView with Directories and Files
         private void PopulateSelected(string folderPath)
         {
-            lvFileExplore.Items.Clear();
-            DirectoryInfo dir = new DirectoryInfo(folderPath);
-            var combinedExtensions = extensionFilter;
+            try
+            {
+                lvFileExplore.Items.Clear();
+                DirectoryInfo dir = new DirectoryInfo(folderPath);
+                var combinedExtensions = extensionFilter;
 
-            foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
-            {
-                ListViewItem item = new ListViewItem();
-                item.Text = subFolder.Name;
-                item.ImageIndex = 0;
-                item.SubItems.Add("Folder");
-                item.Tag = subFolder.FullName;
-                item.ToolTipText = subFolder.Name;
-                lvFileExplore.Items.Add(item);
-            }
-            foreach (FileInfo file in dir.EnumerateFiles())
-            {
-                string currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
-                if (!combinedExtensions.Contains(currentFileExtension)) continue;
-                ListViewItem item = new ListViewItem();
-                item.Text = file.Name;
-                if (extensionToImageIndex.TryGetValue(currentFileExtension, out int imageIndex))
+                foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
                 {
-                    item.ImageIndex = imageIndex;
+                    ListViewItem item = new ListViewItem();
+                    item.Text = subFolder.Name;
+                    item.ImageIndex = 0;
+                    item.SubItems.Add("Folder");
+                    item.Tag = subFolder.FullName;
+                    item.ToolTipText = subFolder.Name;
+                    lvFileExplore.Items.Add(item);
                 }
-                item.SubItems.Add(file.Extension.ToLower());
-                item.Tag = file.FullName;
-                item.ToolTipText = file.Name;
-                lvFileExplore.Items.Add(item);
+                foreach (FileInfo file in dir.EnumerateFiles())
+                {
+                    string currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
+                    if (!combinedExtensions.Contains(currentFileExtension)) continue;
+                    ListViewItem item = new ListViewItem();
+                    item.Text = file.Name;
+                    if (extensionToImageIndex.TryGetValue(currentFileExtension, out int imageIndex))
+                    {
+                        item.ImageIndex = imageIndex;
+                    }
+                    item.SubItems.Add(file.Extension.ToLower());
+                    item.Tag = file.FullName;
+                    item.ToolTipText = file.Name;
+                    lvFileExplore.Items.Add(item);
+                }
             }
-
+            catch (Exception ex)
+            {
+                Error.Log(ex, "Error populating lvFileExplore in LB");
+                throw;
+            }
         }
         private void PopulateCustomList(List<string> strings)
         {
@@ -569,8 +674,23 @@ namespace RandomVideoPlayer.View
             lvCustomList.SmallImageList = _showIcons ? imageListLarge : null;
             lvCustomList.Refresh();
         }
-
-        //Get all files from current and sub directories
+        private void GrabFromDirectory(string folderPath)
+        {
+            var combinedExtensions = extensionFilter;
+            try
+            {
+                //Get all Files from current Directory and return all Files filtered by Extensions
+                TempList.AddRange(Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
+                        .Where(s => combinedExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
+                        .ToArray());
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex, "Unable to gather directory information in LB");
+                MessageBox.Show($"Unable to gather directory information: {ex}");
+                return;
+            }
+        }
 
         private void PopulateDrives() //List all available drives for easier navigation
         {
@@ -581,6 +701,36 @@ namespace RandomVideoPlayer.View
                 if (drive.IsReady)
                 {
                     lbDriveFolders.Items.Add(drive.Name + " " + drive.VolumeLabel);
+                }
+            }
+        }
+        private void PopulateFavoriteFolders()
+        {
+            if (ListHandler.FavoriteFolderList?.Any() == true) //Load favorited folders
+            {
+                foreach (string str in ListHandler.FavoriteFolderList)
+                {
+                    try
+                    {
+                        if (!Directory.Exists(str))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            TempFavList.Add(str);
+
+                            var dir = new DirectoryInfo(str);
+                            string folderName = FileManipulation.TrimText(dir.Name, 19, "...");
+
+                            lbFavorites.Items.Add(folderName);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Error.Log(ex, "Unable to gather favorite folders in LB");
+                        continue;
+                    }
                 }
             }
         }
@@ -599,15 +749,7 @@ namespace RandomVideoPlayer.View
                 }
             }
         }
-        private void GrabFromDirectory(string folderPath)
-        {
-            var combinedExtensions = extensionFilter;
-            //Get all Files from current Directory and return all Files filtered by Extensions
-            TempList.AddRange(Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
-                    .Where(s => combinedExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
-                    .ToArray());
 
-        }
         private void GoBack()
         {
             var currentDirectory = new DirectoryInfo(tbPathView.Text);

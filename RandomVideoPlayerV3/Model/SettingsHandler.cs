@@ -152,6 +152,35 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+        public static bool StartupAlwaysAsk
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.startupAlwaysAsk;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.startupAlwaysAsk = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool StartupAllDirectories
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.startupAllDirectories;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.startupAllDirectories = value;
+                _settingsInstance.Save();
+            }
+        }
+
         /// <value>Delete videofile completely (true) or move it to set folder(false).</value> 
         public static bool DeleteFull
         {
@@ -387,6 +416,20 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.alwaysAddFilesToQueue = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool IncludeSubdirectoriesDnD
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.includeSubdirectoriesDnD;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.includeSubdirectoriesDnD = value;
                 _settingsInstance.Save();
             }
         }

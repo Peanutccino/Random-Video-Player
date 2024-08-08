@@ -20,6 +20,17 @@ namespace RandomVideoPlayer.UserControls
             cbPlayRecent.Checked = settings.MemberPlayRecent;
             cbRecentCount.Checked = settings.MemberRecentCount;
             cbVolume.Checked = settings.MemberVolume;
+
+            cbAlwaysAsk.Checked = settings.StartupAlwaysAsk;
+
+            if (settings.StartupAllDirectories)
+            {
+                rbAllDirectories.Checked = true;
+            }
+            else
+            {
+                rbSingleDirectory.Checked = true;
+            }
         }
 
         private void BindControls()
@@ -42,6 +53,16 @@ namespace RandomVideoPlayer.UserControls
             cbVolume.CheckedChanged += (s, e) =>
             {
                 settings.MemberVolume = cbVolume.Checked;
+            };
+
+            cbAlwaysAsk.CheckedChanged += (s, e) =>
+            {
+                settings.StartupAlwaysAsk = cbAlwaysAsk.Checked;
+            };
+
+            rbAllDirectories.CheckedChanged += (s, e) =>
+            {
+                settings.StartupAllDirectories = rbAllDirectories.Checked;
             };
         }
     }
