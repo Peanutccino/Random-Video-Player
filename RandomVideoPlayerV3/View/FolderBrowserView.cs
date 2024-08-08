@@ -27,19 +27,22 @@ namespace RandomVideoPlayer.View
         }
 
         private void FolderBrowserView_Load(object sender, EventArgs e)
-        {            
-            //Keep recently browsed folders active for consistency
-            if (!string.IsNullOrWhiteSpace(PathHandler.TempRecentFolder)) 
-            { 
-                tbPathView.Text = PathHandler.TempRecentFolder; 
-            } 
-            else if(string.IsNullOrWhiteSpace(PathHandler.DefaultFolder))
-            {                
-                tbPathView.Text = @"C:\"; 
+        {
+            string tempPath = PathHandler.TempRecentFolder;
+            string defaultPath = PathHandler.DefaultFolder;
+            string fallbackPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            if (!string.IsNullOrWhiteSpace(tempPath) && Directory.Exists(tempPath))
+            {
+                tbPathView.Text = tempPath;
+            }
+            else if (!string.IsNullOrWhiteSpace(defaultPath) && Directory.Exists(defaultPath))
+            {
+                tbPathView.Text = defaultPath;
             }
             else
             {
-                tbPathView.Text = PathHandler.DefaultFolder;
+                tbPathView.Text = fallbackPath;
             }
 
             PopulateSelected(tbPathView.Text);

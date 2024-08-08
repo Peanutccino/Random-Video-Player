@@ -331,7 +331,7 @@ namespace RandomVideoPlayer
                 ReleaseCapture();
                 SendMessage(this.Handle, 0x112, 0xf012, 0);
                 long elapsedTime = stopwatch.ElapsedMilliseconds;
-                if (elapsedTime < 110 && SettingsHandler.LeftMousePause) //Check whether it was a click
+                if (elapsedTime < 105 && SettingsHandler.LeftMousePause) //Check whether it was a click
                 {
                     checkwatch.Start();
                 }
@@ -447,6 +447,8 @@ namespace RandomVideoPlayer
 
             SettingsHandler.IsPlaying = false;
 
+            ChangePlaybackSpeed(Speed.Reset);
+
             PlayerPlayPauseToggle(); //Resumes player if it's paused           
         }
         private void PlayPrevious()
@@ -500,6 +502,8 @@ namespace RandomVideoPlayer
             playerMPV.Load(videoFile, true);
 
             SettingsHandler.IsPlaying = false;
+
+            ChangePlaybackSpeed(Speed.Reset);
 
             PlayerPlayPauseToggle();
         }
@@ -655,10 +659,15 @@ namespace RandomVideoPlayer
             {
                 if (!(ListHandler.FolderList?.Any() ?? false))
                 {
+                    if(string.IsNullOrWhiteSpace(PathHandler.FolderPath))
+                    {
+                        MessageBox.Show("No folder to play from was set therefore I can't do that!");
+                        return;
+                    }
                     ListHandler.fillFolderList(PathHandler.FolderPath, ListHandler.IncludeSubfolders);
                     if (!(ListHandler.FolderList?.Any() ?? false))
                     {
-                        MessageBox.Show("No Files to play, make sure you choose a correct folderpath");
+                        MessageBox.Show("No Files to play, make sure you choose a correct folderpath!");
                         return;
                     }
                 }
@@ -679,6 +688,48 @@ namespace RandomVideoPlayer
             ListHandler.NeedsToPrepare = true;
 
             PlayNext();
+        }
+
+        private void ChangePlaybackSpeed(Speed action)
+        {
+            if (action == Speed.Reset)
+            {
+                ThreadHelper.SetText(this, lblSpeed, "");
+                playerMPV.Speed = 1.0;
+                return;
+            }
+
+            double[] playbackSpeeds = { 0.125, 0.25, 0.5, 0.75, 1.0, 1.2, 1.5, 2.0, 4.0 };
+            string[] playbackSpeedStrings = { "0.125", "0.25", "0.5", "0.75", "1.0", "1.2", "1.5", "2.0", "4.0" }; //Because I couldn't figure another way to display the values as is
+
+            double currentSpeed = playerMPV.Speed;
+
+            int currentIndex = Array.IndexOf(playbackSpeeds, currentSpeed);
+
+            if (currentIndex == -1)
+            {
+                currentIndex = Array.IndexOf(playbackSpeeds, 1.0);
+            }
+
+            if (action == Speed.Increase)
+            {
+                currentIndex = Math.Min(currentIndex + 1, playbackSpeeds.Length - 1);
+            }
+            else if (action == Speed.Decrease)
+            {
+                currentIndex = Math.Max(currentIndex - 1, 0);
+            }
+
+            playerMPV.Speed = playbackSpeeds[currentIndex];
+
+            ThreadHelper.SetText(this, lblSpeed, $"x{playbackSpeedStrings[currentIndex]} -");       
+        }
+
+        public enum Speed
+        {
+            Increase,
+            Decrease,
+            Reset
         }
         #endregion
 
@@ -1414,6 +1465,15 @@ namespace RandomVideoPlayer
                     case "SeekBackward":
                         SeekBackward();
                         return true;
+                    case "SpeedIncrease":
+                        ChangePlaybackSpeed(Speed.Increase);
+                        return true;
+                    case "SpeedDecrease":
+                        ChangePlaybackSpeed(Speed.Decrease);
+                        return true;
+                    case "SpeedReset":
+                        ChangePlaybackSpeed(Speed.Reset);
+                        return true;
                     case "ZoomIn":
                         ZoomVideo(CommandSettings.ZoomStep);
                         return true;
@@ -1544,6 +1604,8 @@ namespace RandomVideoPlayer
                             return;
 
                     }
+
+                    ChangePlaybackSpeed(Speed.Reset);
 
                     bool manageMultipleFiles;
 

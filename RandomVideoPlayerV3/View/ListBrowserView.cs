@@ -43,18 +43,21 @@ namespace RandomVideoPlayer.View
 
         private void ListBrowserView_Load(object sender, EventArgs e)
         {
-            //Keep recently browsed folders active for consistency
-            if (!string.IsNullOrWhiteSpace(PathHandler.TempRecentFolder))
+            string tempPath = PathHandler.TempRecentFolder;
+            string defaultPath = PathHandler.DefaultFolder;
+            string fallbackPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            if (!string.IsNullOrWhiteSpace(tempPath) && Directory.Exists(tempPath))
             {
-                tbPathView.Text = PathHandler.TempRecentFolder;
+                tbPathView.Text = tempPath;
             }
-            else if (string.IsNullOrWhiteSpace(PathHandler.DefaultFolder))
+            else if (!string.IsNullOrWhiteSpace(defaultPath) && Directory.Exists(defaultPath))
             {
-                tbPathView.Text = @"C:\";
+                tbPathView.Text = defaultPath;
             }
             else
             {
-                tbPathView.Text = PathHandler.DefaultFolder;
+                tbPathView.Text = fallbackPath;
             }
 
 

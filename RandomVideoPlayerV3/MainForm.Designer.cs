@@ -31,6 +31,10 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             panelBottom = new Panel();
+            panel1 = new Panel();
+            lblCurrentInfo = new Label();
+            lblSpeed = new Label();
+            lblDurationInfo = new Label();
             btnStartFromFile = new FontAwesome.Sharp.IconButton();
             btnAddToQueue = new FontAwesome.Sharp.IconButton();
             panelControls = new Panel();
@@ -43,8 +47,6 @@
             btnAddToFav = new FontAwesome.Sharp.IconButton();
             btnListDel = new Button();
             btnFileBrowse = new FontAwesome.Sharp.IconButton();
-            lblCurrentInfo = new Label();
-            lblDurationInfo = new Label();
             btnMuteToggle = new FontAwesome.Sharp.IconButton();
             pbVolume = new FlatProgressBar();
             btnSettings = new FontAwesome.Sharp.IconButton();
@@ -65,6 +67,7 @@
             timeVolumeCheck = new System.Windows.Forms.Timer(components);
             toolTipUI = new ToolTip(components);
             panelBottom.SuspendLayout();
+            panel1.SuspendLayout();
             panelControls.SuspendLayout();
             panelTop.SuspendLayout();
             SuspendLayout();
@@ -72,12 +75,11 @@
             // panelBottom
             // 
             panelBottom.BackColor = Color.FromArgb(253, 83, 146);
+            panelBottom.Controls.Add(panel1);
             panelBottom.Controls.Add(btnStartFromFile);
             panelBottom.Controls.Add(btnAddToQueue);
             panelBottom.Controls.Add(panelControls);
             panelBottom.Controls.Add(btnFileBrowse);
-            panelBottom.Controls.Add(lblCurrentInfo);
-            panelBottom.Controls.Add(lblDurationInfo);
             panelBottom.Controls.Add(btnMuteToggle);
             panelBottom.Controls.Add(pbVolume);
             panelBottom.Controls.Add(btnSettings);
@@ -91,6 +93,51 @@
             panelBottom.Name = "panelBottom";
             panelBottom.Size = new Size(914, 75);
             panelBottom.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(lblCurrentInfo);
+            panel1.Controls.Add(lblSpeed);
+            panel1.Controls.Add(lblDurationInfo);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 58);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(914, 17);
+            panel1.TabIndex = 24;
+            // 
+            // lblCurrentInfo
+            // 
+            lblCurrentInfo.AutoEllipsis = true;
+            lblCurrentInfo.Dock = DockStyle.Fill;
+            lblCurrentInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblCurrentInfo.Location = new Point(0, 0);
+            lblCurrentInfo.Name = "lblCurrentInfo";
+            lblCurrentInfo.Size = new Size(800, 17);
+            lblCurrentInfo.TabIndex = 14;
+            lblCurrentInfo.Text = "Current Folder";
+            lblCurrentInfo.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblSpeed
+            // 
+            lblSpeed.AutoSize = true;
+            lblSpeed.Dock = DockStyle.Right;
+            lblSpeed.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblSpeed.Location = new Point(800, 0);
+            lblSpeed.Name = "lblSpeed";
+            lblSpeed.Size = new Size(0, 15);
+            lblSpeed.TabIndex = 15;
+            // 
+            // lblDurationInfo
+            // 
+            lblDurationInfo.AutoSize = true;
+            lblDurationInfo.Dock = DockStyle.Right;
+            lblDurationInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblDurationInfo.Location = new Point(800, 0);
+            lblDurationInfo.Name = "lblDurationInfo";
+            lblDurationInfo.Size = new Size(114, 15);
+            lblDurationInfo.TabIndex = 13;
+            lblDurationInfo.Text = "00:00:00 / 00:00:00";
+            lblDurationInfo.TextAlign = ContentAlignment.MiddleRight;
             // 
             // btnStartFromFile
             // 
@@ -283,29 +330,6 @@
             btnFileBrowse.TabIndex = 16;
             btnFileBrowse.UseVisualStyleBackColor = true;
             btnFileBrowse.Click += btnFileBrowse_Click;
-            // 
-            // lblCurrentInfo
-            // 
-            lblCurrentInfo.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lblCurrentInfo.AutoEllipsis = true;
-            lblCurrentInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblCurrentInfo.Location = new Point(3, 55);
-            lblCurrentInfo.Name = "lblCurrentInfo";
-            lblCurrentInfo.Size = new Size(791, 15);
-            lblCurrentInfo.TabIndex = 14;
-            lblCurrentInfo.Text = "Current Folder";
-            lblCurrentInfo.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblDurationInfo
-            // 
-            lblDurationInfo.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            lblDurationInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblDurationInfo.Location = new Point(800, 55);
-            lblDurationInfo.Name = "lblDurationInfo";
-            lblDurationInfo.Size = new Size(114, 15);
-            lblDurationInfo.TabIndex = 13;
-            lblDurationInfo.Text = "00:00:00 / 00:00:00";
-            lblDurationInfo.TextAlign = ContentAlignment.MiddleRight;
             // 
             // btnMuteToggle
             // 
@@ -571,6 +595,8 @@
             DragEnter += MainForm_DragEnter;
             Resize += MainForm_Resize;
             panelBottom.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             panelControls.ResumeLayout(false);
             panelTop.ResumeLayout(false);
             ResumeLayout(false);
@@ -612,5 +638,7 @@
         private FontAwesome.Sharp.IconButton btnAddToQueue;
         private FontAwesome.Sharp.IconButton btnStartFromFile;
         private Button btnSourceSelector;
+        private Panel panel1;
+        private Label lblSpeed;
     }
 }

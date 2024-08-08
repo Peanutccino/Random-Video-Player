@@ -84,6 +84,7 @@
             tbDefaultPath.Location = new Point(9, 4);
             tbDefaultPath.Margin = new Padding(9, 3, 3, 3);
             tbDefaultPath.Name = "tbDefaultPath";
+            tbDefaultPath.PlaceholderText = "No path set";
             tbDefaultPath.ReadOnly = true;
             tbDefaultPath.Size = new Size(410, 23);
             tbDefaultPath.TabIndex = 2;
@@ -178,9 +179,10 @@
             // tbRemovalPath
             // 
             tbRemovalPath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tbRemovalPath.Location = new Point(9, 4);
+            tbRemovalPath.Location = new Point(9, 5);
             tbRemovalPath.Margin = new Padding(9, 3, 3, 3);
             tbRemovalPath.Name = "tbRemovalPath";
+            tbRemovalPath.PlaceholderText = "No path set";
             tbRemovalPath.ReadOnly = true;
             tbRemovalPath.Size = new Size(410, 23);
             tbRemovalPath.TabIndex = 0;
@@ -228,6 +230,7 @@
             tbListPath.Location = new Point(9, 3);
             tbListPath.Margin = new Padding(9, 3, 3, 3);
             tbListPath.Name = "tbListPath";
+            tbListPath.PlaceholderText = "No path set";
             tbListPath.ReadOnly = true;
             tbListPath.Size = new Size(410, 23);
             tbListPath.TabIndex = 0;
@@ -288,6 +291,7 @@
             tbFileMovePath.Location = new Point(9, 40);
             tbFileMovePath.Margin = new Padding(9, 3, 3, 3);
             tbFileMovePath.Name = "tbFileMovePath";
+            tbFileMovePath.PlaceholderText = "No path set";
             tbFileMovePath.ReadOnly = true;
             tbFileMovePath.Size = new Size(410, 23);
             tbFileMovePath.TabIndex = 0;
