@@ -55,7 +55,7 @@ namespace RandomVideoPlayer.View
             settingsModel.IsTimeCodeServerEnabled = SettingsHandler.TimeCodeServer;
             settingsModel.IsGraphEnabled = SettingsHandler.GraphEnabled;
 
-            settingsModel.DefaultPathText = PathHandler.DefaultFolder ?? (PathHandler.DefaultFolder = PathHandler.FallbackPath);
+            settingsModel.DefaultPathText = PathHandler.DefaultFolder;
             settingsModel.RemovalPathText = PathHandler.RemoveFolder;
             settingsModel.ListPathText = PathHandler.PathToListFolder;
             settingsModel.DeleteFull = SettingsHandler.DeleteFull;

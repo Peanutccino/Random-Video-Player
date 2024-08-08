@@ -4,8 +4,7 @@ namespace RandomVideoPlayer.Model
 {
     public class PathHandler
     {
-		private static string _fallbackPath = @"C:\"; //Default path if everything else fails
-        public static string FolderPath { get; set; }
+        public static string FolderPath { get; set; } = "";
 
         /// <value>Stores user defined default directory to start from</value> 
         public static string DefaultFolder
@@ -22,8 +21,6 @@ namespace RandomVideoPlayer.Model
 				_settingsInstance.Save();
 			}
 		}
-        /// <value>Directory that is always available in case everything else fails</value> 
-        public static string FallbackPath { get { return _fallbackPath; } }
         /// <value>User defined folder where files are moved to when deleted with option "delete full" disabled</value> 
         public static string RemoveFolder
 		{

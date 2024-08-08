@@ -513,7 +513,7 @@ namespace RandomVideoPlayer
             else if (!(ListHandler.PlayList?.Any() ?? false) && playingSingleFile == false)
             {
                 ListHandler.NeedsToPrepare = true;
-                if (!startedByFile) ListHandler.fillFolderList(PathHandler.FolderPath, ListHandler.IncludeSubfolders);
+                if (!startedByFile && !string.IsNullOrWhiteSpace(PathHandler.FolderPath)) ListHandler.fillFolderList(PathHandler.FolderPath, ListHandler.IncludeSubfolders);
                 ListHandler.PreparePlayList(SettingsHandler.SourceSelected, startedByFile, filepathFromStartupFile);
                 if (!(ListHandler.PlayList?.Any() ?? false))
                 {
@@ -962,17 +962,17 @@ namespace RandomVideoPlayer
         #region Initialization
         private void initStartUp(string alternativePath)
         {
-            if (string.IsNullOrWhiteSpace(alternativePath))
-            {
-                PathHandler.FolderPath = string.IsNullOrWhiteSpace(PathHandler.DefaultFolder) || !Directory.Exists(PathHandler.DefaultFolder) ? PathHandler.FallbackPath : PathHandler.DefaultFolder;
-            }
-            else
+            if (!string.IsNullOrWhiteSpace(alternativePath))
             {
                 PathHandler.FolderPath = alternativePath;
             }
+            else
+            {
+                PathHandler.FolderPath = string.IsNullOrWhiteSpace(PathHandler.DefaultFolder) || !Directory.Exists(PathHandler.DefaultFolder) ? "" : PathHandler.DefaultFolder;                
+            }
             
             if(!SettingsHandler.IsPlaying)
-                lblCurrentInfo.Text = PathHandler.FolderPath; //Show current Folder
+                lblCurrentInfo.Text = string.IsNullOrWhiteSpace(PathHandler.FolderPath) ? "No folder selected!" : PathHandler.FolderPath; //Show current Folder
 
             if (ListHandler.FolderList?.Any() == false && !string.IsNullOrWhiteSpace(alternativePath))
             {

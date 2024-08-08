@@ -49,6 +49,17 @@ namespace RandomVideoPlayer.UserControls
                 settings.ListPathText = tbListPath.Text;
             }
         }
+        private void sbtnFileMovePath_Click(object sender, EventArgs e)
+        {
+            fbDialog.InitialDirectory = PathHandler.DefaultFolder;
+
+            DialogResult result = fbDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                tbFileMovePath.Text = fbDialog.SelectedPath;
+                settings.FileMovePath = tbFileMovePath.Text;
+            }
+        }
 
         private void LoadSettings()
         {
@@ -78,16 +89,6 @@ namespace RandomVideoPlayer.UserControls
             };
         }
 
-        private void sbtnFileMovePath_Click(object sender, EventArgs e)
-        {
-            fbDialog.InitialDirectory = PathHandler.DefaultFolder;
 
-            DialogResult result = fbDialog.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                tbFileMovePath.Text = fbDialog.SelectedPath;
-                settings.FileMovePath = tbFileMovePath.Text;
-            }
-        }
     }
 }

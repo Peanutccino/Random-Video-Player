@@ -43,10 +43,19 @@ namespace RandomVideoPlayer.View
 
         private void ListBrowserView_Load(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(PathHandler.DefaultFolder)) { PathHandler.DefaultFolder = PathHandler.FallbackPath; } //If Folder is not set yet, default to Fallback
-
-            if (!string.IsNullOrEmpty(PathHandler.TempRecentFolder)) { tbPathView.Text = PathHandler.TempRecentFolder; } //Keep recently browsed folders active for consistency
-            else { tbPathView.Text = PathHandler.DefaultFolder; }
+            //Keep recently browsed folders active for consistency
+            if (!string.IsNullOrWhiteSpace(PathHandler.TempRecentFolder))
+            {
+                tbPathView.Text = PathHandler.TempRecentFolder;
+            }
+            else if (string.IsNullOrWhiteSpace(PathHandler.DefaultFolder))
+            {
+                tbPathView.Text = @"C:\";
+            }
+            else
+            {
+                tbPathView.Text = PathHandler.DefaultFolder;
+            }
 
 
             cbShowIcons.Checked = _showIcons;
