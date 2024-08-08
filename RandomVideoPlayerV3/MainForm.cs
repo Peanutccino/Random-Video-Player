@@ -1726,7 +1726,7 @@ namespace RandomVideoPlayer
         }
         #endregion
 
-        #region Zoom and Pan
+        #region Videomanipulation
 
         private void ZoomVideo(double zoomStep)
         {
