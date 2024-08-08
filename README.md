@@ -1,18 +1,22 @@
-#### Random Video Player
+## Random Video Player - RVP
 
-![Logo](https://imgur.com/9OLjzJM.png)
+![Logo](https://i.imgur.com/L1EOUnJ.png)
 
 Hello everyone,
 
-I've worked on this player for quiet some time and added functionality continuosly. I'm a rookie developer so the structure might be terrible and not all checks are there. I'm looking to improve the code further, but as of right now under constant use on different machines, it workes pretty damn well.
+RVP is a clean media player based on the powerful MPV. As the title suggests, it's built to play random videos first and foremost, in an easy-to-use and intuitive way.
 
-My goal was to create a good looking, fast and efficient way to play random videos out of any directory or even custom made lists I want. I've tried all the big stuff like VLC, MPC etc. but they all make it surprisingly difficult to execute this task.
+My goal was to create a good-looking, fast, and efficient way to play random videos from any directory or even custom-made lists. I've tried all the big players like VLC, MPC, etc., but they all make it surprisingly difficult to execute this task.
+
+RVP doesn't stop there, though, as it's got quite the feature set:
 
 ## Features:
-* Playing random videos from a location you define with a simple click
-* Create/Save/Load custom lists filled with video files you can define
+* Start playing random videos from any location you define or simply your whole collection
+* Create/Edit/Save/Load custom lists with the videos you choose
+* Open your videos with RVP to start playing right away
+* Drag&Drop videos directly on RVP to play from their directory
 * Quick and easy navigation
-* Amazing UI
+* Amazing and customizable UI
 * Customizable Hotkeys and Mousecontrols for quick and easy control of the player
 * Synchronize with MultiFunPlayer while playing random videos, now with visualizer
 
@@ -25,7 +29,9 @@ The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libm
 4. Extract 'libmpv-2.dll' from the archive and move it to your 'lib' folder or drag it into visual studio directly.
 5. In your Solution Explorer, click on 'libmpv-2.dll' and select 'Properties'. Change the value for "Copy to Output Directory" to "Copy Always".
 
-1. Download Mpv.NET-lib- from https://github.com/hudec117/Mpv.NET-lib-
+1. Download Mpv.NET-lib- from https://github.com/hudec117/Mpv.NET-lib- 
+> [!NOTE]
+> or simply use my 'Mpv.NET.dll' from a release package, include it and skip those steps
 2. Extract it and open 'Mpv.NET.csproj' in visual studio
    * In Mpv.NET\Player\MpvPlayer.cs; find 'possibleLibMpvPaths' and rename 'mpv-1.dll' to 'libmpv-2.dll'
    * It should look like this: "libmpv-2.dll", @"lib\libmpv-2.dll"
@@ -43,6 +49,7 @@ The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libm
    * Open Player with your default folder, either press play or
    * Open the FileBrowser / ListBrowser to choose which folder to play from / create a list to play from
    * Switch the toggle for 'Folder/List' depending on what you want to play
+4. You can also open videos with RVP right away, simply choose 'open with' and search for RandomVideoPlayer.exe (where you saved it)
 
 ## Synchronize with MultiFunPlayer(MFP)
 1. Download MFP if you don't already have it https://github.com/Yoooi0/MultiFunPlayer
@@ -61,6 +68,10 @@ There are multiple shortcuts for ease of use:
 Most of the hotkeys can be changed in the settings:
 
 ![Logo](https://i.imgur.com/9RxCiJS.png)
+
+
+## Outro:
+I've worked on this player for quiet some time and added functionality continuosly. I'm a rookie developer so the structure might be terrible and not all checks are there. Anyways I'm constantly trying to improve it and add functionality based on user feedback and my own ideas. So far, RVP works pretty good!
 
 ## Credits:
 * hudec117 and their awesome Mpv.Net-lib- which I've modified to use the latest 'libmpv-2.dll' https://github.com/hudec117/Mpv.NET-lib-
