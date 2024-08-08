@@ -243,36 +243,11 @@ namespace RandomVideoPlayer
         }
         private void btnListDel_Click(object sender, EventArgs e)
         {
-            try
-            {
-                playerMPV.ZoomVideo(-0.1);
-
-                //playerMPV.API.Command("add", "video-zoom", "-0.1");
-
-            }
-            catch (Exception ex)
-            {
-                Error.Log(ex, "Zoom out");
-            }
-
-
-            //DeleteCurrentFromList();
+            DeleteCurrentFromList();
         }
         private void btnListAdd_Click(object sender, EventArgs e)
         {
-            try
-            {
-                //playerMPV.API.Command("add", "video-zoom", "0.1");
-                playerMPV.ZoomVideo(0.1);
-                //playerMPV.API.Command("set", "video-zoom", "0");
-                //playerMPV.API.Command("add", "video-pan-x", "0.1");
-            }
-            catch (Exception ex)
-            {
-                Error.Log(ex, "Zoom in");
-            }
-
-            //AddCurrentToList();
+            AddCurrentToList();
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
