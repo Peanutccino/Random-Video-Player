@@ -8,7 +8,7 @@ namespace RandomVideoPlayer.Functions
         public string defaultFolder { get; set; }
         public Size FormSize { get; set; } = new Size(0, 0);
         public bool lastSize { get; set; } = false;
-        public string removeFolder { get; set; } = @"C:\";
+        public string removeFolder { get; set; } = "";
         public bool deleteFull { get; set; } = true;
         public bool includeScripts { get; set; } = true;
         public string listFolder { get; set; }

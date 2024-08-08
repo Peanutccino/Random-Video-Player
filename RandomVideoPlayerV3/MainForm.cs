@@ -253,11 +253,7 @@ namespace RandomVideoPlayer
         private void btnSettings_Click(object sender, EventArgs e)
         {
             SettingsView svForm = new SettingsView();
-            svForm.StartPosition = FormStartPosition.Manual;
-            svForm.Load += delegate (object s2, EventArgs e2)
-            {
-                svForm.Location = new Point(this.Bounds.Location.X + (this.Bounds.Width / 2) - svForm.Width / 2, this.Bounds.Location.Y + (this.Bounds.Height / 2) - svForm.Height / 2);
-            };
+            svForm.StartPosition = FormStartPosition.CenterParent;
             DialogResult result = svForm.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -778,10 +774,29 @@ namespace RandomVideoPlayer
             var currentFile = playingSingleFile ? draggedFilePath : ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
             var fileScripts = SettingsHandler.IncludeScripts ? FileManipulation.GetAssociatedFunscripts(currentFile) : new List<string>();
 
-            if (!Directory.Exists(PathHandler.RemoveFolder))
+            if (string.IsNullOrWhiteSpace(PathHandler.RemoveFolder))
             {
-                Directory.CreateDirectory(PathHandler.RemoveFolder);
+                MessageBox.Show("Please choose a folder to delete files to under Settings => Paths");
+                return;
             }
+            else
+            {
+                try
+                {
+                    if (!Directory.Exists(PathHandler.RemoveFolder))
+                    {
+                        Directory.CreateDirectory(PathHandler.RemoveFolder);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, "Couldn't get or create folder to delete files to");
+                    MessageBox.Show($"Folder to move deleted files to is not valid: {ex}");
+                    return;
+                }
+            }
+
+
 
             try
             {
@@ -955,8 +970,9 @@ namespace RandomVideoPlayer
             {
                 PathHandler.FolderPath = alternativePath;
             }
-
-            lblCurrentInfo.Text = PathHandler.FolderPath; //Show current Folder
+            
+            if(!SettingsHandler.IsPlaying)
+                lblCurrentInfo.Text = PathHandler.FolderPath; //Show current Folder
 
             if (ListHandler.FolderList?.Any() == false && !string.IsNullOrWhiteSpace(alternativePath))
             {
@@ -997,7 +1013,7 @@ namespace RandomVideoPlayer
                 }
                 catch (Exception ex)
                 {
-
+                    Error.Log(ex, "Failed to create list folder");
                 }
             }
 
@@ -1322,8 +1338,7 @@ namespace RandomVideoPlayer
             }
             else
             {
-                var trashPath = PathHandler.RemoveFolder;
-                toolTipUI.SetToolTip(btnRemove, $"{GetKeyCombination(deleteHotkey)}  | Move currently played videofile to '{trashPath}'");
+                toolTipUI.SetToolTip(btnRemove, $"{GetKeyCombination(deleteHotkey)}  | Move currently played videofile to: {PathHandler.RemoveFolder}");
             }
         }
 
