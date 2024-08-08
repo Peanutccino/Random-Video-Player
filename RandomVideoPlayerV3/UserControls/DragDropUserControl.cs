@@ -1,13 +1,5 @@
 ﻿using RandomVideoPlayer.Model;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace RandomVideoPlayer.UserControls
 {
@@ -34,6 +26,8 @@ namespace RandomVideoPlayer.UserControls
             }
 
             cbAlwaysAddFilesToQueue.Checked = settings.AlwaysAddFilesToQueue;
+
+            cbIncludeSubdirectories.Checked = settings.IncludeSubdirectoriesDnD;
         }
 
         private void BindControls()
@@ -46,6 +40,11 @@ namespace RandomVideoPlayer.UserControls
             cbAlwaysAddFilesToQueue.CheckedChanged += (s, e) =>
             {
                 settings.AlwaysAddFilesToQueue = cbAlwaysAddFilesToQueue.Checked;
+            };
+
+            cbIncludeSubdirectories.CheckedChanged += (s, e) =>
+            {
+                settings.IncludeSubdirectoriesDnD = cbIncludeSubdirectories.Checked;
             };
         }
     }

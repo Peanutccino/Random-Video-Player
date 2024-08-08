@@ -69,7 +69,8 @@ namespace RandomVideoPlayer.UserControls
                 button.FlatStyle = FlatStyle.Flat;
                 button.FlatAppearance.BorderSize = 0;
                 button.Width = 24;
-                button.Height = 24;
+                button.Height = 28;
+                button.Margin = new Padding(3);
 
                 button.Tag = i;
 
@@ -86,7 +87,8 @@ namespace RandomVideoPlayer.UserControls
                 button.FlatStyle = FlatStyle.Flat;
                 button.FlatAppearance.BorderSize = 0;
                 button.Width = 24;
-                button.Height = 24;
+                button.Height = 28;
+                button.Margin = new Padding(3);
 
                 button.Tag = i;
 
@@ -135,7 +137,7 @@ namespace RandomVideoPlayer.UserControls
         {
             int x = 12; //Startting x position
             int y = 1; //Startting Y position
-            int margin = 5; //Spacing
+            int margin = 6; //Spacing
 
             foreach (int index in settings.ButtonOrder)
             {
