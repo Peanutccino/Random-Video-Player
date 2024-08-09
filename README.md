@@ -29,18 +29,10 @@ The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libm
 4. Extract 'libmpv-2.dll' from the archive and move it to your 'lib' folder or drag it into visual studio directly.
 5. In your Solution Explorer, click on 'libmpv-2.dll' and select 'Properties'. Change the value for "Copy to Output Directory" to "Copy Always".
 
-1. Download Mpv.NET-lib- from https://github.com/hudec117/Mpv.NET-lib- 
-> [!NOTE]
-> or simply use my 'Mpv.NET.dll' from a release package, include it and skip those steps
-2. Extract it and open 'Mpv.NET.csproj' in visual studio
-   * In Mpv.NET\Player\MpvPlayer.cs; find 'possibleLibMpvPaths' and rename 'mpv-1.dll' to 'libmpv-2.dll'
-   * It should look like this: "libmpv-2.dll", @"lib\libmpv-2.dll"
-   * Under Mpv.NET\API\MpvFunctions.cs; find 'LoadFunction<MpvDetachDestroy>("mpv_detach_destroy");'
-   * Rename string to "mpv_destroy"
-3. Compile 'Mpv.NET.dll' (You can add it to the RVP project folder)
-4. In visual studio with the Random Video Player open, go to project, add dependency, browse for the 'Mpv.NET.dll' and add it
-5. Check the the .dll and press ok
-6. It should now be added to dependencies within your solution explorer under assemblys. From there you can choose to create a local copy.
+1. Download a Mpv.NET.dll from one of my latest releases 
+2. In visual studio with Random Video Player project open, go to project, add dependency, browse for the 'Mpv.NET.dll' and add it
+3. Activate the .dll and press ok
+4. It should now be added to dependencies within your solution explorer under assemblys. From there you can choose to create a local copy.
 
 ## First run
 1. On it's first run, every setting will be at default and the application will create a config file next to it's executable called 'RVP-Config.json' where settings will be stored from now on.
@@ -50,6 +42,7 @@ The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libm
    * Open the FileBrowser / ListBrowser to choose which folder to play from / create a list to play from
    * Switch the toggle for 'Folder/List' depending on what you want to play
 4. You can also open videos with RVP right away, simply choose 'open with' and search for RandomVideoPlayer.exe (where you saved it)
+5. Or simply drag files onto it
 
 ## Synchronize with MultiFunPlayer(MFP)
 1. Download MFP if you don't already have it https://github.com/Yoooi0/MultiFunPlayer
