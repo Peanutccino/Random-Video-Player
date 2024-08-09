@@ -659,7 +659,7 @@ namespace RandomVideoPlayer
             {
                 if (!(ListHandler.FolderList?.Any() ?? false))
                 {
-                    if(string.IsNullOrWhiteSpace(PathHandler.FolderPath))
+                    if (string.IsNullOrWhiteSpace(PathHandler.FolderPath))
                     {
                         MessageBox.Show("No folder to play from was set therefore I can't do that!");
                         return;
@@ -722,7 +722,7 @@ namespace RandomVideoPlayer
 
             playerMPV.Speed = playbackSpeeds[currentIndex];
 
-            ThreadHelper.SetText(this, lblSpeed, $"x{playbackSpeedStrings[currentIndex]} -");       
+            ThreadHelper.SetText(this, lblSpeed, $"x{playbackSpeedStrings[currentIndex]} -");
         }
 
         public enum Speed
@@ -818,67 +818,95 @@ namespace RandomVideoPlayer
         #endregion
 
         #region FileManipulation
-        private void DeleteCurrent()
+        private async void DeleteCurrent()
         {
             if (ListHandler.FirstPlay && !playingSingleFile) return;
-
-            var currentFile = playingSingleFile ? draggedFilePath : ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
-            var fileScripts = SettingsHandler.IncludeScripts ? FileManipulation.GetAssociatedFunscripts(currentFile) : new List<string>();
 
             if (string.IsNullOrWhiteSpace(PathHandler.RemoveFolder))
             {
                 MessageBox.Show("Please choose a folder to delete files to under Settings => Paths");
                 return;
             }
-            else
+            if ((playingSingleFile && string.IsNullOrWhiteSpace(draggedFilePath)) || (!playingSingleFile && !(ListHandler.PlayList?.Any() ?? false)))
             {
-                try
-                {
-                    if (!Directory.Exists(PathHandler.RemoveFolder))
-                    {
-                        Directory.CreateDirectory(PathHandler.RemoveFolder);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex, "Couldn't get or create folder to delete files to");
-                    MessageBox.Show($"Folder to move deleted files to is not valid: {ex}");
-                    return;
-                }
+                MessageBox.Show("No files available that could be copied/moved");
+                return;
             }
-
-
 
             try
             {
-                if (!SettingsHandler.DeleteFull) //Actually reversed due checkbox naming
+                if (!Directory.Exists(PathHandler.RemoveFolder))
                 {
-                    File.Delete(currentFile);
+                    Directory.CreateDirectory(PathHandler.RemoveFolder);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex, "Couldn't get or create folder to delete files to");
+                MessageBox.Show($"Folder to move deleted files to is not valid:\n\"{PathHandler.RemoveFolder}\"");
+                return;
+            }
+
+
+            var fileForDeletion = playingSingleFile ? draggedFilePath : ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
+            var fileScripts = SettingsHandler.IncludeScripts ? FileManipulation.GetAssociatedFunscripts(fileForDeletion) : new List<string>();
+
+
+            if (!SettingsHandler.DeleteFull) //Actually reversed due checkbox naming
+            {
+                try
+                {
+                    File.Delete(fileForDeletion);
                     foreach (var script in fileScripts)
                     {
                         File.Delete(script);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    string removalPath = Path.Combine(PathHandler.RemoveFolder, FileManipulation.GetFileName(currentFile));
+                    Error.Log(ex, $"Error deleting file");
+                    MessageBox.Show($"Error deleting file:\n\"{fileForDeletion}\"");
+                    return;
+                }
 
-                    File.Move(currentFile, removalPath);
+            }
+            else
+            {
+                string removalPath = Path.Combine(PathHandler.RemoveFolder, FileManipulation.GetFileName(fileForDeletion));
+
+                Task deleteTask = null;
+                try
+                {
+                    deleteTask = MoveFileAsync(fileForDeletion, removalPath);
+                    ongoingTasks.Add(deleteTask);
+                    ongoingFileProcesses.Add(fileForDeletion);
+
+                    await deleteTask;
+
                     foreach (var script in fileScripts)
                     {
                         removalPath = Path.Combine(PathHandler.RemoveFolder, FileManipulation.GetFileName(script));
                         File.Move(script, removalPath);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Error.Log(ex, $"Error deleting file with action moving instead of deleting: {SettingsHandler.DeleteFull}");
-                MessageBox.Show($"Error processing the file: {ex}");
-                return;
+                catch (Exception ex)
+                {
+                    Error.Log(ex, $"Error deleting file with action moving instead of deleting");
+                    MessageBox.Show($"Error moving the file for deletion:\n\"{fileForDeletion}\"");
+                    return;
+                }
+                finally
+                {
+                    if( deleteTask != null)
+                    {
+                        ongoingFileProcesses.Remove(fileForDeletion);
+                        ongoingTasks.Remove(deleteTask);
+                    }
+                }
             }
 
-            ListHandler.DeleteStringFromCustomList(currentFile); //Delete path from Properties Settings
+
+            ListHandler.DeleteStringFromCustomList(fileForDeletion); //Delete path from Properties Settings
 
             if (!playingSingleFile)
             {
@@ -887,18 +915,6 @@ namespace RandomVideoPlayer
                 ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
                 ListHandler.PlayListIndex--;
             }
-            else
-            {
-                var updatedList = ListHandler.PlayList.ToList();
-
-                if (updatedList.Contains(currentFile))
-                {
-                    updatedList.Remove(currentFile);
-                    ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
-                    ListHandler.PlayListIndex--;
-                }
-            }
-
 
             PlayNext();
         }
@@ -906,67 +922,100 @@ namespace RandomVideoPlayer
         {
             if (ListHandler.FirstPlay && !playingSingleFile) return;
 
-            var currentFile = playingSingleFile ? draggedFilePath : ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
-
             if (string.IsNullOrWhiteSpace(PathHandler.FileMoveFolderPath))
             {
                 MessageBox.Show("Please choose a folder to Copy/Move files to under Settings => Paths");
                 return;
             }
-            else
+
+            if ((playingSingleFile && string.IsNullOrWhiteSpace(draggedFilePath)) || (!playingSingleFile && !(ListHandler.PlayList?.Any() ?? false)))
             {
-                try
-                {
-                    if (!Directory.Exists(PathHandler.FileMoveFolderPath))
-                    {
-                        Directory.CreateDirectory(PathHandler.FileMoveFolderPath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex, "Couldn't get or create folder to copy/move files to");
-                    MessageBox.Show($"Folder to Copy/Move files to is not valid: {ex}");
-                    return;
-                }
+                MessageBox.Show("No files available that could be copied/moved");
+                return;
             }
 
             try
             {
-                string FileDestinationPath = Path.Combine(PathHandler.FileMoveFolderPath, FileManipulation.GetFileName(currentFile));
-
-                if (SettingsHandler.FileCopy)
+                if (!Directory.Exists(PathHandler.FileMoveFolderPath))
                 {
-                    if (ongoingFileProcesses.Contains(currentFile)) return;
-
-                    Task copyTask = CopyFileAsync(currentFile, FileDestinationPath);
-                    ongoingTasks.Add(copyTask);
-                    ongoingFileProcesses.Add(currentFile);
-                    await copyTask;
-                    ongoingFileProcesses.Remove(currentFile);
-                    ongoingTasks.Remove(copyTask);
-                }
-                else
-                {
-                    if (!SettingsHandler.FileCopy) //When File was moved, delete it from current list
-                    {
-                        ListHandler.DeleteStringFromCustomList(currentFile); //Delete path from Properties Settings
-
-                        var updatedList = ListHandler.PlayList.ToList();
-                        updatedList.RemoveAt(ListHandler.PlayListIndex);
-                        ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
-                        ListHandler.PlayListIndex--;
-
-                        PlayNext();
-                    }
-
-                    await MoveFileAsync(currentFile, FileDestinationPath);
+                    Directory.CreateDirectory(PathHandler.FileMoveFolderPath);
                 }
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Couldn't copy/move file to destination");
-                MessageBox.Show($"Error processing the file: {ex}");
+                Error.Log(ex, "Couldn't get or create folder to copy/move files to");
+                MessageBox.Show($"Folder to Copy/Move files to is not valid: {PathHandler.FileMoveFolderPath}");
                 return;
+            }
+
+
+            var fileForAction = playingSingleFile ? draggedFilePath : ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
+
+            if (ongoingFileProcesses.Contains(fileForAction)) return;
+
+
+            string fileDestinationPath = Path.Combine(PathHandler.FileMoveFolderPath, FileManipulation.GetFileName(fileForAction));
+
+            if (SettingsHandler.FileCopy)
+            {
+                Task copyTask = null;
+                try 
+                {
+                    copyTask = CopyFileAsync(fileForAction, fileDestinationPath);
+                    ongoingTasks.Add(copyTask);
+                    ongoingFileProcesses.Add(fileForAction);
+                    await copyTask; 
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, "Couldn't copy file to destination");
+                    MessageBox.Show($"Couldn't copy file\n\"{fileForAction}\"\nto destination:\n\"{fileDestinationPath}\"");
+                }
+                finally
+                {
+                    if(copyTask != null)
+                    {
+                        ongoingFileProcesses.Remove(fileForAction);
+                        ongoingTasks.Remove(copyTask);
+                    }
+                }
+            }
+            else
+            {
+                Task moveTask = null;
+                try 
+                {
+                    moveTask = MoveFileAsync(fileForAction, fileDestinationPath);
+
+                    ongoingTasks.Add(moveTask);
+                    ongoingFileProcesses.Add(fileForAction);
+                    await moveTask; 
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, "Couldn't move file to destination");
+                    MessageBox.Show($"Couldn't move file\n\"{fileForAction}\"\nto destination:\n\"{fileDestinationPath}\"");
+                    return;
+                }
+                finally
+                {
+                    if(moveTask != null)
+                    {
+                        ongoingFileProcesses.Remove(fileForAction);
+                        ongoingTasks.Remove(moveTask);
+                    }
+                }
+                ListHandler.DeleteStringFromCustomList(fileForAction); //Delete path from Properties Settings
+
+                if (!playingSingleFile)
+                {
+                    var updatedList = ListHandler.PlayList.ToList();
+                    updatedList.RemoveAt(ListHandler.PlayListIndex);
+                    ListHandler.PlayList = updatedList;  //Delete Path from current List and update it
+                    ListHandler.PlayListIndex--;
+                }
+
+                PlayNext();
             }
         }
         private async Task CopyFileAsync(string sourceFilePath, string destinationFilePath)
@@ -1019,10 +1068,10 @@ namespace RandomVideoPlayer
             }
             else
             {
-                PathHandler.FolderPath = string.IsNullOrWhiteSpace(PathHandler.DefaultFolder) || !Directory.Exists(PathHandler.DefaultFolder) ? "" : PathHandler.DefaultFolder;                
+                PathHandler.FolderPath = string.IsNullOrWhiteSpace(PathHandler.DefaultFolder) || !Directory.Exists(PathHandler.DefaultFolder) ? "" : PathHandler.DefaultFolder;
             }
-            
-            if(!SettingsHandler.IsPlaying)
+
+            if (!SettingsHandler.IsPlaying)
                 lblCurrentInfo.Text = string.IsNullOrWhiteSpace(PathHandler.FolderPath) ? "No folder selected!" : PathHandler.FolderPath; //Show current Folder
 
             if (ListHandler.FolderList?.Any() == false && !string.IsNullOrWhiteSpace(alternativePath))
