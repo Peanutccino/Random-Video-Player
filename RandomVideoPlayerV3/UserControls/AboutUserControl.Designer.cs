@@ -39,6 +39,8 @@
             label4 = new Label();
             btnGitHub = new FontAwesome.Sharp.IconButton();
             panel2 = new Panel();
+            btnCancel = new FontAwesome.Sharp.IconButton();
+            rtbConsole = new RichTextBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
@@ -147,6 +149,7 @@
             // 
             // btnGitHub
             // 
+            btnGitHub.Anchor = AnchorStyles.Top;
             btnGitHub.BackColor = Color.Lavender;
             btnGitHub.FlatAppearance.BorderSize = 0;
             btnGitHub.FlatStyle = FlatStyle.Flat;
@@ -156,9 +159,9 @@
             btnGitHub.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnGitHub.IconSize = 42;
             btnGitHub.ImageAlign = ContentAlignment.MiddleLeft;
-            btnGitHub.Location = new Point(155, 45);
+            btnGitHub.Location = new Point(151, 28);
             btnGitHub.Name = "btnGitHub";
-            btnGitHub.Size = new Size(173, 55);
+            btnGitHub.Size = new Size(180, 55);
             btnGitHub.TabIndex = 4;
             btnGitHub.Text = "GitHub";
             btnGitHub.TextAlign = ContentAlignment.TopRight;
@@ -167,12 +170,51 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(btnCancel);
+            panel2.Controls.Add(rtbConsole);
             panel2.Controls.Add(btnGitHub);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 246);
             panel2.Name = "panel2";
-            panel2.Size = new Size(482, 149);
+            panel2.Size = new Size(482, 314);
             panel2.TabIndex = 4;
+            // 
+            // btnCancel
+            // 
+            btnCancel.Anchor = AnchorStyles.Top;
+            btnCancel.BackColor = Color.LightPink;
+            btnCancel.FlatAppearance.BorderSize = 0;
+            btnCancel.FlatStyle = FlatStyle.Flat;
+            btnCancel.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCancel.IconChar = FontAwesome.Sharp.IconChar.Multiply;
+            btnCancel.IconColor = Color.Black;
+            btnCancel.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnCancel.IconSize = 28;
+            btnCancel.ImageAlign = ContentAlignment.TopLeft;
+            btnCancel.Location = new Point(189, 89);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(104, 35);
+            btnCancel.TabIndex = 7;
+            btnCancel.Text = "Cancel";
+            btnCancel.TextAlign = ContentAlignment.TopRight;
+            btnCancel.UseVisualStyleBackColor = false;
+            btnCancel.Visible = false;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // rtbConsole
+            // 
+            rtbConsole.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            rtbConsole.BackColor = Color.GhostWhite;
+            rtbConsole.BorderStyle = BorderStyle.None;
+            rtbConsole.HideSelection = false;
+            rtbConsole.Location = new Point(3, 130);
+            rtbConsole.Name = "rtbConsole";
+            rtbConsole.ReadOnly = true;
+            rtbConsole.ScrollBars = RichTextBoxScrollBars.Vertical;
+            rtbConsole.Size = new Size(476, 181);
+            rtbConsole.TabIndex = 6;
+            rtbConsole.Text = "";
+            rtbConsole.Visible = false;
             // 
             // AboutUserControl
             // 
@@ -185,7 +227,8 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "AboutUserControl";
-            Size = new Size(482, 395);
+            Size = new Size(482, 560);
+            Leave += AboutUserControl_Leave;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             ResumeLayout(false);
@@ -204,5 +247,7 @@
         private Label label4;
         private FontAwesome.Sharp.IconButton btnGitHub;
         private Panel panel2;
+        private RichTextBox rtbConsole;
+        private FontAwesome.Sharp.IconButton btnCancel;
     }
 }
