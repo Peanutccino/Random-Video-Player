@@ -1,11 +1,6 @@
 using System.Diagnostics;
-using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Shell;
-using Mpv.NET.API;
 using Mpv.NET.Player;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
@@ -37,7 +32,7 @@ namespace RandomVideoPlayer
 
         private Label timeOverlayLabel = new Label();
         private int durationMS = 0;
-        private string currentFile;
+        private string currentFile { get; set; }
 
         //Safety time to prevent event spamming
         private DateTime lastPlayCommandTime = DateTime.MinValue;
@@ -58,7 +53,7 @@ namespace RandomVideoPlayer
         private bool startedByFile = false;
 
         private bool playingSingleFile = false;
-        private string draggedFilePath;
+        private string draggedFilePath { get; set; }
 
         private Stopwatch stopwatch;
         private System.Windows.Forms.Timer checkwatch;
@@ -1172,7 +1167,11 @@ namespace RandomVideoPlayer
             if (!string.IsNullOrWhiteSpace(currentFile))
             {
                 favoriteMatch = playingSingleFile ? FavFunctions.IsFavoriteMatched(draggedFilePath, tempFavorites, btnAddToFav) : FavFunctions.IsFavoriteMatched(currentFile, tempFavorites, btnAddToFav);
+                tcServer.File = Path.GetFileName(currentFile);
+                tcServer.FilePathArg = Uri.EscapeDataString(currentFile).Replace("%3A", ":").Replace("%5C", "%5c");
                 tcServer.Filepath = currentFile;
+                tcServer.FileDir = Path.GetDirectoryName(currentFile);
+
 
                 var currentFileExtension = Path.GetExtension(currentFile).TrimStart('.').ToLower();
                 if (ListHandler.ImageExtensions.Contains(currentFileExtension))
@@ -1650,9 +1649,11 @@ namespace RandomVideoPlayer
                         if (Directory.Exists(draggedFilePath))
                             pathIsDirectory = true;
                         else
+                            draggedFilePath = string.Empty;
                             return;
-
                     }
+
+                    currentFile = draggedFilePath;
 
                     ChangePlaybackSpeed(Speed.Reset);
 
