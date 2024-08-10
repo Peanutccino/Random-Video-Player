@@ -39,6 +39,7 @@
             label4 = new Label();
             btnGitHub = new FontAwesome.Sharp.IconButton();
             panel2 = new Panel();
+            cbUpdateAlwaysCheck = new CheckBox();
             btnCancel = new FontAwesome.Sharp.IconButton();
             rtbConsole = new RichTextBox();
             panel1.SuspendLayout();
@@ -63,7 +64,7 @@
             label2.ForeColor = Color.DarkMagenta;
             label2.Location = new Point(0, 55);
             label2.Name = "label2";
-            label2.Size = new Size(482, 54);
+            label2.Size = new Size(482, 50);
             label2.TabIndex = 1;
             label2.Text = "Random Video Player";
             label2.TextAlign = ContentAlignment.MiddleCenter;
@@ -71,9 +72,9 @@
             // label3
             // 
             label3.Dock = DockStyle.Top;
-            label3.Location = new Point(0, 109);
+            label3.Location = new Point(0, 105);
             label3.Name = "label3";
-            label3.Size = new Size(482, 84);
+            label3.Size = new Size(482, 32);
             label3.TabIndex = 2;
             label3.Text = "by Peanutccino";
             label3.TextAlign = ContentAlignment.TopCenter;
@@ -86,9 +87,9 @@
             panel1.Controls.Add(label5);
             panel1.Controls.Add(label4);
             panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 193);
+            panel1.Location = new Point(0, 137);
             panel1.Name = "panel1";
-            panel1.Size = new Size(482, 53);
+            panel1.Size = new Size(482, 47);
             panel1.TabIndex = 3;
             // 
             // btnSync
@@ -100,8 +101,8 @@
             btnSync.IconColor = Color.Indigo;
             btnSync.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSync.IconSize = 34;
-            btnSync.Location = new Point(420, 8);
-            btnSync.Margin = new Padding(3, 8, 3, 8);
+            btnSync.Location = new Point(420, 5);
+            btnSync.Margin = new Padding(3, 5, 3, 5);
             btnSync.Name = "btnSync";
             btnSync.Size = new Size(34, 37);
             btnSync.TabIndex = 4;
@@ -171,14 +172,26 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(cbUpdateAlwaysCheck);
             panel2.Controls.Add(btnCancel);
             panel2.Controls.Add(rtbConsole);
             panel2.Controls.Add(btnGitHub);
             panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(0, 246);
+            panel2.Location = new Point(0, 184);
             panel2.Name = "panel2";
-            panel2.Size = new Size(482, 314);
+            panel2.Size = new Size(482, 376);
             panel2.TabIndex = 4;
+            // 
+            // cbUpdateAlwaysCheck
+            // 
+            cbUpdateAlwaysCheck.AutoSize = true;
+            cbUpdateAlwaysCheck.Location = new Point(3, 3);
+            cbUpdateAlwaysCheck.Name = "cbUpdateAlwaysCheck";
+            cbUpdateAlwaysCheck.Padding = new Padding(6, 0, 0, 0);
+            cbUpdateAlwaysCheck.Size = new Size(160, 19);
+            cbUpdateAlwaysCheck.TabIndex = 8;
+            cbUpdateAlwaysCheck.Text = "Always check on startup";
+            cbUpdateAlwaysCheck.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
@@ -192,7 +205,7 @@
             btnCancel.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnCancel.IconSize = 24;
             btnCancel.ImageAlign = ContentAlignment.TopLeft;
-            btnCancel.Location = new Point(189, 89);
+            btnCancel.Location = new Point(189, 88);
             btnCancel.Name = "btnCancel";
             btnCancel.Padding = new Padding(6, 0, 8, 0);
             btnCancel.Size = new Size(104, 24);
@@ -210,11 +223,11 @@
             rtbConsole.BorderStyle = BorderStyle.None;
             rtbConsole.Font = new Font("Courier New", 9F, FontStyle.Regular, GraphicsUnit.Point);
             rtbConsole.HideSelection = false;
-            rtbConsole.Location = new Point(3, 130);
+            rtbConsole.Location = new Point(3, 118);
             rtbConsole.Name = "rtbConsole";
             rtbConsole.ReadOnly = true;
-            rtbConsole.ScrollBars = RichTextBoxScrollBars.Vertical;
-            rtbConsole.Size = new Size(476, 181);
+            rtbConsole.ScrollBars = RichTextBoxScrollBars.None;
+            rtbConsole.Size = new Size(476, 255);
             rtbConsole.TabIndex = 6;
             rtbConsole.Text = "";
             rtbConsole.Visible = false;
@@ -234,6 +247,7 @@
             Leave += AboutUserControl_Leave;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -252,5 +266,6 @@
         private Panel panel2;
         private RichTextBox rtbConsole;
         private FontAwesome.Sharp.IconButton btnCancel;
+        private CheckBox cbUpdateAlwaysCheck;
     }
 }

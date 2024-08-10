@@ -462,5 +462,20 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool AlwaysCheckUpdate
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.alwaysCheckUpdate;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.alwaysCheckUpdate = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }

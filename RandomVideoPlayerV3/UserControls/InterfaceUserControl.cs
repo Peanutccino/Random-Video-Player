@@ -135,7 +135,7 @@ namespace RandomVideoPlayer.UserControls
         }
         private void RepositionButtons()
         {
-            int x = 12; //Startting x position
+            int x = 65; //Startting x position
             int y = 1; //Startting Y position
             int margin = 6; //Spacing
 

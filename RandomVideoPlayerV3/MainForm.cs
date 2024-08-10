@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Mpv.NET.Player;
@@ -13,6 +14,8 @@ namespace RandomVideoPlayer
 {
     public partial class MainForm : Form
     {
+        private static readonly string VersionUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version.txt";
+
         private MpvPlayer playerMPV;
 
 
@@ -58,6 +61,8 @@ namespace RandomVideoPlayer
         private Stopwatch stopwatch;
         private System.Windows.Forms.Timer checkwatch;
         private int doubleClickDelay = 180; //Delay to wait for potential double click otherwise execute single click
+
+        private bool foundUpdate = false;
 
         public MainForm(string filePath)
         {
@@ -128,10 +133,12 @@ namespace RandomVideoPlayer
             checkwatch.Tick += Checkwatch_Tick;
 
             UpdateSourceSelectorIcon();
-            lblTitleBar.Text = $"Random Video Player - v{Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
+
+            CheckForUpdates();
+
             if (string.IsNullOrWhiteSpace(directoryFromStartupFile))
             {
                 initStartUp(""); //Load default folder if set and fill playlist
@@ -1834,6 +1841,44 @@ namespace RandomVideoPlayer
                 Error.Log(ex, "Unable to gather directory information in LB");
                 MessageBox.Show($"Unable to gather directory information: {ex}");
                 return Enumerable.Empty<string>();
+            }
+        }
+        #endregion
+
+        #region Update
+        private async void CheckForUpdates()
+        {
+            var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            string[] versionParts = currentVersion.ToString().Split('.');
+            string truncatedVersion = string.Join(".", versionParts[0], versionParts[1]);
+
+            try
+            {
+                if (SettingsHandler.AlwaysCheckUpdate)
+                {
+                    var latestVersion = await GetLatestVersionFromGitHub();
+
+                    if (latestVersion > currentVersion)
+                    {
+                        ThreadHelper.SetText(this, lblTitleBar, $"Random Video Player - v{truncatedVersion} - Update available!");
+                        return;
+                    }
+                }
+                ThreadHelper.SetText(this, lblTitleBar, $"Random Video Player - v{truncatedVersion}");
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex, "Error checking for updates");
+                ThreadHelper.SetText(this, lblTitleBar, $"Random Video Player - v{truncatedVersion}");
+            }      
+            
+        }
+        private async Task<Version> GetLatestVersionFromGitHub()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var versionString = await client.GetStringAsync(VersionUrl);
+                return new Version(versionString.Trim());
             }
         }
         #endregion

@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using RandomVideoPlayer.Functions;
+﻿using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
-using System;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Net;
@@ -25,10 +23,11 @@ namespace RandomVideoPlayer.UserControls
 
         private bool updateAvailable = false;
         private bool needToRestart = false;
+        private bool gotCancelled = false;
         private string latestVersionSaved;
 
-        private bool restartNow = false;
         private TaskCompletionSource<bool> restartApplication;
+
         public AboutUserControl(SettingsModel settings)
         {
             InitializeComponent();
@@ -39,11 +38,28 @@ namespace RandomVideoPlayer.UserControls
             blinkTimer.Elapsed += OnTimedEvent;
 
             rtbConsole.Font = new Font(FontFamily.GenericMonospace, 9);
+
+            BindControls();
+            LoadSettings();
+        }
+
+        private void BindControls()
+        {
+            cbUpdateAlwaysCheck.CheckedChanged += (s, e) =>
+            {
+                settings.AlwaysCheckUpdate = cbUpdateAlwaysCheck.Checked;
+            };
+        }
+
+        private void LoadSettings()
+        {
+            cbUpdateAlwaysCheck.Checked = settings.AlwaysCheckUpdate;
         }
 
         private void btnSync_Click(object sender, EventArgs e)
         {
             rtbConsole.Visible = true;
+            if (gotCancelled) rtbConsole.Clear();
             CheckForUpdates();
         }
 
@@ -77,6 +93,7 @@ namespace RandomVideoPlayer.UserControls
         {
             try
             {
+                if (gotCancelled) rtbConsole.Clear();
                 btnGitHub.Enabled = false;
                 UpdateProgress("Looking for update files...");
 
@@ -98,13 +115,10 @@ namespace RandomVideoPlayer.UserControls
                 }
                 catch (Exception ex)
                 {
-                    UpdateProgress($"An error occurred during the update: {ex.Message}");
                     Error.Log(ex,"Error during download/extraction");
                     btnGitHub.Enabled = true;
                     return;
                 }
-
-
 
                 //Batch content
                 string batchScript = $@"
@@ -177,29 +191,24 @@ del ""%~f0"" & exit
                 else if (result == false)
                 {
                     UpdateProgress("Update cancelled");
-                    UpdateProgress("Cleaning downloaded files...");
+
                     try
                     {
+                        UpdateProgress("Cleaning downloaded files...");
                         if (Directory.Exists(extractPath))
                         {
-                            foreach (var file in Directory.GetFiles(extractPath))
-                            {
-                                File.Delete(file);
-                            }                            
+                            Directory.Delete(extractPath, true);                          
                         }
-                        UpdateProgress("Done.");
                         UpdateProgress("Deleting downloaded package...");
                         if (File.Exists(tempZipPath))
                         {
                             File.Delete(tempZipPath);
                         }
-                        UpdateProgress("Done.");
                         UpdateProgress("Deleting updater...");
                         if (File.Exists(batchFilePath))
                         {
                             File.Delete(batchFilePath);
                         }
-                        UpdateProgress("Done.");
                     }
                     catch (Exception ex)
                     {
@@ -219,6 +228,7 @@ del ""%~f0"" & exit
                         btnCancel.Visible = false;
                         btnGitHub.Enabled = true;
                         UpdateProgress("Done without updating!");
+                        gotCancelled = true;
                     }
                 }
             }
@@ -291,49 +301,6 @@ del ""%~f0"" & exit
                 UpdateProgress($"Error checking for updates: {ex.Message}");
             }
         }
-        private void UpdateProgress(string message, bool timeStamp = true)
-        {
-            if (InvokeRequired)
-            {
-                this.Invoke(new Action<string, bool>(UpdateProgress), new object[] { message, timeStamp });
-                return;
-            }
-
-            DateTime now = DateTime.Now;
-            string timeString = $"[{now.ToString("HH:mm:ss")}] ";
-
-            if(timeStamp)
-            {
-                rtbConsole.AppendText(timeString + message + Environment.NewLine);
-            }
-            else
-            {
-                rtbConsole.AppendText(message + Environment.NewLine);
-            }
-        }
-
-        private void UpdateProgressLastLine(string message)
-        {
-            if (InvokeRequired)
-            {
-                this.Invoke(new Action<string>(UpdateProgressLastLine), new object[] { message });
-                return;
-            }
-
-            DateTime now = DateTime.Now;
-            string timeString = $"[{now.ToString("HH:mm:ss")}] ";
-            string formattedMessage = timeString + message;
-
-            if (rtbConsole.Lines.Length > 0)
-            {
-                // Remove the last line
-                var lines = rtbConsole.Lines;
-                lines[lines.Length - 1] = formattedMessage;
-                rtbConsole.Lines = lines;
-            }
-
-        }
-
         public void DownloadUpdate(string url, string destinationPath)
         {
             using (WebClient client = new WebClient())
@@ -347,13 +314,14 @@ del ""%~f0"" & exit
                     long downloadedBytes = 0;
                     int progressBarLength = 20;
 
-
                     using (Stream responseStream = response.GetResponseStream())
                     using (FileStream fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None))
                     {
                         byte[] buffer = new byte[4096];
                         int bytesRead;
+
                         UpdateProgress("Downloading...");
+
                         while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
                             fileStream.Write(buffer, 0, bytesRead);
@@ -371,7 +339,6 @@ del ""%~f0"" & exit
                         }
                     }
                     UpdateProgress("", false);
-                    UpdateProgress("Download complete.");
                 }
                 catch (Exception ex)
                 {
@@ -399,7 +366,89 @@ del ""%~f0"" & exit
         }
         public void ExtractUpdate(string zipPath, string extractPath)
         {
-            ZipFile.ExtractToDirectory(zipPath, extractPath, true);
+            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            {
+                int totalFiles = archive.Entries.Count;
+
+                int progressBarLength = 20;
+                int extractedFiles = 0;
+
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    string destinationPath = Path.Combine(extractPath, entry.FullName);
+
+                    if (entry.FullName.EndsWith("/"))
+                    {
+                        Directory.CreateDirectory(destinationPath);
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
+
+                        entry.ExtractToFile(destinationPath, true);
+                    }
+
+                    extractedFiles++;
+                    int value = extractedFiles;
+
+                    int progressPercentage = (int)((double)extractedFiles / totalFiles * 100);                    
+                    int progressBlocks = progressPercentage / (100 / progressBarLength);
+                    string progressBar = new string('▋', progressBlocks).PadRight(progressBarLength, '-');
+                    string progressMessage = $"[{progressBar}] {progressPercentage}%";
+
+                    UpdateProgressLastLine($"{progressMessage}");
+
+                    Application.DoEvents();
+                }
+                UpdateProgress("", false);
+            }
+
+            //ZipFile.ExtractToDirectory(zipPath, extractPath, true);
+        }
+
+        private void UpdateProgress(string message, bool timeStamp = true)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string, bool>(UpdateProgress), new object[] { message, timeStamp });
+                return;
+            }
+
+            DateTime now = DateTime.Now;
+            string timeString = $"[{now.ToString("HH:mm:ss")}] ";
+
+            if (timeStamp)
+            {
+                rtbConsole.AppendText(timeString + message + Environment.NewLine);
+            }
+            else
+            {
+                rtbConsole.AppendText(message + Environment.NewLine);
+            }
+        }
+
+        private void UpdateProgressLastLine(string message)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(UpdateProgressLastLine), new object[] { message });
+                return;
+            }
+
+            DateTime now = DateTime.Now;
+            string timeString = $"[{now.ToString("HH:mm:ss")}] ";
+            string formattedMessage = timeString + message;
+
+            var lines = rtbConsole.Lines;
+
+            if (lines.Length > 0)
+            {
+                // Remove the last line
+                
+                lines[lines.Length - 1] = formattedMessage;
+                rtbConsole.Lines = lines;
+                
+            }
         }
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {

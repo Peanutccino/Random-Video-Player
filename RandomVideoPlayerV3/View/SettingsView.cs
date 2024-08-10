@@ -84,6 +84,8 @@ namespace RandomVideoPlayer.View
 
             settingsModel.ButtonStates = SettingsHandler.ButtonStates;
             settingsModel.ButtonOrder = SettingsHandler.ButtonOrder;
+
+            settingsModel.AlwaysCheckUpdate = SettingsHandler.AlwaysCheckUpdate;
         }
         private void InitializeNavigation()
         {
@@ -137,6 +139,8 @@ namespace RandomVideoPlayer.View
 
             SettingsHandler.ButtonStates = settingsModel.ButtonStates;
             SettingsHandler.ButtonOrder = settingsModel.ButtonOrder;
+
+            SettingsHandler.AlwaysCheckUpdate = settingsModel.AlwaysCheckUpdate;
         }
 
         private void HighlightButton(IconButton button)

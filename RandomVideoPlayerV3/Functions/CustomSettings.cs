@@ -52,6 +52,8 @@ namespace RandomVideoPlayer.Functions
 
         public bool leftMousePause { get; set; } = false;
 
+        public bool alwaysCheckUpdate { get; set; } = false;
+
 
         private static string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RVP-Config.json");
 

@@ -52,5 +52,9 @@ namespace RandomVideoPlayer.Model
         public bool[] ButtonStates { get; set; }
         public List<int> ButtonOrder { get; set; }
         #endregion
+
+        #region About
+        public bool AlwaysCheckUpdate { get; set; }
+        #endregion
     }
 }
