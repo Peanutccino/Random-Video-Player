@@ -140,7 +140,6 @@
             lvFixedHotkeys.TabIndex = 5;
             lvFixedHotkeys.UseCompatibleStateImageBehavior = false;
             lvFixedHotkeys.View = System.Windows.Forms.View.Details;
-            lvFixedHotkeys.SelectedIndexChanged += lvFixedHotkeys_SelectedIndexChanged;
             // 
             // columnHeader3
             // 

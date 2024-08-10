@@ -145,10 +145,5 @@ namespace RandomVideoPlayer.UserControls
             {"Double Click player", "Exclusive Fullscreen" },
             {"Escape", "Exit application" }
         };
-
-        private void lvFixedHotkeys_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

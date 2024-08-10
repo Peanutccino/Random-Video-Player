@@ -37,6 +37,8 @@ namespace RandomVideoPlayer.UserControls
             lblCurrentVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             blinkTimer = new System.Timers.Timer(20);
             blinkTimer.Elapsed += OnTimedEvent;
+
+            rtbConsole.Font = new Font(FontFamily.GenericMonospace, 9);
         }
 
         private void btnSync_Click(object sender, EventArgs e)
@@ -62,11 +64,14 @@ namespace RandomVideoPlayer.UserControls
         }
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            restartApplication.TrySetResult(false);
+            if(restartApplication != null)
+                restartApplication.TrySetResult(false);
         }
         private void AboutUserControl_Leave(object sender, EventArgs e)
         {
-            restartApplication.TrySetResult(false);
+            if(restartApplication != null)
+                restartApplication.TrySetResult(false);
+            blinkTimer.Dispose();
         }
         private async void UpdateApplication()
         {
@@ -83,11 +88,23 @@ namespace RandomVideoPlayer.UserControls
                 string tempZipPath = Path.Combine(Path.GetTempPath(), $"RVP-v{latestVersion}_UpdateOnly.zip");
                 string extractPath = Path.Combine(Path.GetTempPath(), "update");
 
-                DownloadUpdate(zipUrl, tempZipPath);
-                UpdateProgress("Download complete, extracting files...");
+                try
+                {
+                    DownloadUpdate(zipUrl, tempZipPath);
+                    UpdateProgress("Extracting files...");
 
-                ExtractUpdate(tempZipPath, extractPath);
-                UpdateProgress("Extraction complete, waiting for user input...");
+                    ExtractUpdate(tempZipPath, extractPath);
+                    UpdateProgress("Extraction complete, waiting for user input...");
+                }
+                catch (Exception ex)
+                {
+                    UpdateProgress($"An error occurred during the update: {ex.Message}");
+                    Error.Log(ex,"Error during download/extraction");
+                    btnGitHub.Enabled = true;
+                    return;
+                }
+
+
 
                 //Batch content
                 string batchScript = $@"
@@ -124,8 +141,7 @@ del ""%~f0"" & exit
                 btnGitHub.Text = "Restart";
                 btnGitHub.IconChar = FontAwesome.Sharp.IconChar.ArrowRotateRight;
 
-                UpdateProgress("");
-                UpdateProgress("Press \"Restart\" to install");
+                UpdateProgress("Press 'Restart' to install or abort with 'Cancel'");
 
                 restartApplication = new TaskCompletionSource<bool>();
                 bool? result = await restartApplication.Task;
@@ -184,7 +200,6 @@ del ""%~f0"" & exit
                             File.Delete(batchFilePath);
                         }
                         UpdateProgress("Done.");
-                        UpdateProgress("Completed!");
                     }
                     catch (Exception ex)
                     {
@@ -209,7 +224,9 @@ del ""%~f0"" & exit
             }
             catch (Exception ex)
             {
-                UpdateProgress($"An error occurred during the update: {ex.Message}");
+                UpdateProgress($"An error occurred and I couldn't finish the update: {ex.Message}");
+                Error.Log(ex, "Error during update");
+                btnGitHub.Enabled = true;
             }
         }
 
@@ -235,7 +252,7 @@ del ""%~f0"" & exit
 
                         if (latestVersion > currentVersion)
                         {
-                            UpdateProgress("Update available!");
+                            UpdateProgress("Found a new version: " + latestVersion.ToString());
                             lblLatestVersion.Text = latestVersion.ToString() + " - Update available!";
 
                             blinkTimer.AutoReset = true;
@@ -251,6 +268,7 @@ del ""%~f0"" & exit
                             string truncatedVersion = string.Join(".", versionParts[0], versionParts[1]);
 
                             latestVersionSaved = truncatedVersion;
+                            UpdateProgress("Press 'Update' to download!");
                         }
                         else
                         {
@@ -273,6 +291,116 @@ del ""%~f0"" & exit
                 UpdateProgress($"Error checking for updates: {ex.Message}");
             }
         }
+        private void UpdateProgress(string message, bool timeStamp = true)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string, bool>(UpdateProgress), new object[] { message, timeStamp });
+                return;
+            }
+
+            DateTime now = DateTime.Now;
+            string timeString = $"[{now.ToString("HH:mm:ss")}] ";
+
+            if(timeStamp)
+            {
+                rtbConsole.AppendText(timeString + message + Environment.NewLine);
+            }
+            else
+            {
+                rtbConsole.AppendText(message + Environment.NewLine);
+            }
+        }
+
+        private void UpdateProgressLastLine(string message)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(UpdateProgressLastLine), new object[] { message });
+                return;
+            }
+
+            DateTime now = DateTime.Now;
+            string timeString = $"[{now.ToString("HH:mm:ss")}] ";
+            string formattedMessage = timeString + message;
+
+            if (rtbConsole.Lines.Length > 0)
+            {
+                // Remove the last line
+                var lines = rtbConsole.Lines;
+                lines[lines.Length - 1] = formattedMessage;
+                rtbConsole.Lines = lines;
+            }
+
+        }
+
+        public void DownloadUpdate(string url, string destinationPath)
+        {
+            using (WebClient client = new WebClient())
+            {
+                try
+                {
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                    long totalBytes = response.ContentLength;
+                    long downloadedBytes = 0;
+                    int progressBarLength = 20;
+
+
+                    using (Stream responseStream = response.GetResponseStream())
+                    using (FileStream fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
+                        UpdateProgress("Downloading...");
+                        while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            fileStream.Write(buffer, 0, bytesRead);
+                            downloadedBytes += bytesRead;
+
+                            int progressPercentage = (int)((double)downloadedBytes / totalBytes * 100);
+                            int progressBlocks = (int)((double)downloadedBytes / totalBytes * progressBarLength);
+
+                            string progressBar = new string('▋', progressBlocks).PadRight(progressBarLength, '-');
+                            string progressMessage = $"[{progressBar}] {progressPercentage}%";
+
+                            UpdateProgressLastLine($"{progressMessage}");
+
+                            Application.DoEvents();
+                        }
+                    }
+                    UpdateProgress("", false);
+                    UpdateProgress("Download complete.");
+                }
+                catch (Exception ex)
+                {
+                    UpdateProgress($"Error starting download: {ex.Message}");
+                    Error.Log(ex, "Error when starting download");
+
+                    if(File.Exists(destinationPath))
+                    {
+                        UpdateProgress("Found incomplete download...");
+                        try
+                        {
+                            File.Delete(destinationPath);
+                            UpdateProgress("Deleted incompleted download.");
+                        }
+                        catch (Exception deleteEx)
+                        {
+                            UpdateProgress($"Failed to delete incomplete file: {deleteEx.Message}");
+                            Error.Log(deleteEx, "Failed to deleted downloaded file.");
+                        }
+                    }
+
+                    throw;
+                }
+            }
+        }
+        public void ExtractUpdate(string zipPath, string extractPath)
+        {
+            ZipFile.ExtractToDirectory(zipPath, extractPath, true);
+        }
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             if (increasing)
@@ -293,58 +421,6 @@ del ""%~f0"" & exit
             }
 
             btnGitHub.BackColor = Color.FromArgb(value, value, 255);
-        }
-
-        private void UpdateProgress(string message)
-        {
-            if (InvokeRequired)
-            {
-                this.Invoke(new Action<string>(UpdateProgress), new object[] { message });
-                return;
-            }
-
-            DateTime now = DateTime.Now;
-            string timeString = now.ToString("HH:mm:ss");
-
-            rtbConsole.AppendText("[" + timeString + "] " + message + Environment.NewLine);
-        }
-
-        public void DownloadUpdate(string url, string destinationPath)
-        {
-            using (WebClient client = new WebClient())
-            {
-                client.DownloadProgressChanged += (s, e) =>
-                {
-                    UpdateProgress($"Downloading... {e.ProgressPercentage}% completed");
-                };
-
-                client.DownloadFileCompleted += (s, e) =>
-                {
-                    if (e.Error != null)
-                    {
-                        UpdateProgress($"Error downloading file: {e.Error.Message}");
-                    }
-                };
-
-                client.DownloadFileAsync(new Uri(url), destinationPath);
-
-                while (client.IsBusy)
-                {
-                    Application.DoEvents();
-                }
-            }
-        }
-        public void ExtractUpdate(string zipPath, string extractPath)
-        {
-            ZipFile.ExtractToDirectory(zipPath, extractPath, true);
-        }
-
-        private void TrySetResult(TaskCompletionSource<bool?> tcs, bool? result)
-        {
-            if (tcs != null && !tcs.Task.IsCompleted)
-            {
-                tcs.SetResult(result);
-            }
         }
     }
 }

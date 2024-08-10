@@ -36,7 +36,7 @@
             // 
             // btnYes
             // 
-            btnYes.BackColor = Color.AliceBlue;
+            btnYes.BackColor = SystemColors.GradientInactiveCaption;
             btnYes.FlatAppearance.BorderSize = 0;
             btnYes.FlatStyle = FlatStyle.Flat;
             btnYes.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
@@ -47,7 +47,7 @@
             btnYes.ImageAlign = ContentAlignment.MiddleRight;
             btnYes.Location = new Point(12, 89);
             btnYes.Name = "btnYes";
-            btnYes.Size = new Size(145, 60);
+            btnYes.Size = new Size(145, 40);
             btnYes.TabIndex = 0;
             btnYes.Text = "Yes";
             btnYes.UseVisualStyleBackColor = false;
@@ -55,7 +55,7 @@
             // 
             // btnNo
             // 
-            btnNo.BackColor = Color.AliceBlue;
+            btnNo.BackColor = SystemColors.GradientInactiveCaption;
             btnNo.FlatAppearance.BorderSize = 0;
             btnNo.FlatStyle = FlatStyle.Flat;
             btnNo.Font = new Font("Arial", 12F, FontStyle.Bold, GraphicsUnit.Point);
@@ -64,7 +64,7 @@
             btnNo.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnNo.Location = new Point(207, 89);
             btnNo.Name = "btnNo";
-            btnNo.Size = new Size(145, 60);
+            btnNo.Size = new Size(145, 40);
             btnNo.TabIndex = 1;
             btnNo.Text = "No";
             btnNo.UseVisualStyleBackColor = false;
@@ -72,10 +72,11 @@
             // 
             // cbOption
             // 
-            cbOption.AutoSize = true;
-            cbOption.Location = new Point(12, 64);
+            cbOption.Dock = DockStyle.Top;
+            cbOption.Location = new Point(0, 58);
             cbOption.Name = "cbOption";
-            cbOption.Size = new Size(214, 19);
+            cbOption.Padding = new Padding(20, 0, 0, 0);
+            cbOption.Size = new Size(364, 22);
             cbOption.TabIndex = 2;
             cbOption.Text = "Always ask (Can change in settings)";
             cbOption.UseVisualStyleBackColor = true;
@@ -83,11 +84,11 @@
             // lblInfoText
             // 
             lblInfoText.Dock = DockStyle.Top;
-            lblInfoText.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            lblInfoText.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             lblInfoText.Location = new Point(0, 0);
             lblInfoText.Name = "lblInfoText";
-            lblInfoText.Padding = new Padding(15, 6, 10, 0);
-            lblInfoText.Size = new Size(364, 61);
+            lblInfoText.Padding = new Padding(15, 12, 10, 0);
+            lblInfoText.Size = new Size(364, 58);
             lblInfoText.TabIndex = 3;
             lblInfoText.Text = "You're about to play from the file's current directory, should I also include all subdirectories?";
             // 
@@ -96,17 +97,16 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.AliceBlue;
-            ClientSize = new Size(364, 161);
-            Controls.Add(lblInfoText);
+            ClientSize = new Size(364, 135);
             Controls.Add(cbOption);
             Controls.Add(btnNo);
             Controls.Add(btnYes);
+            Controls.Add(lblInfoText);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "CustomMessageBoxView";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "CustomMessageBox";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion

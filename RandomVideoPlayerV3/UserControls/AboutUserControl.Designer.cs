@@ -97,12 +97,13 @@
             btnSync.FlatAppearance.BorderSize = 0;
             btnSync.FlatStyle = FlatStyle.Flat;
             btnSync.IconChar = FontAwesome.Sharp.IconChar.Sync;
-            btnSync.IconColor = Color.Black;
+            btnSync.IconColor = Color.Indigo;
             btnSync.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnSync.IconSize = 25;
-            btnSync.Location = new Point(451, 20);
+            btnSync.IconSize = 34;
+            btnSync.Location = new Point(420, 8);
+            btnSync.Margin = new Padding(3, 8, 3, 8);
             btnSync.Name = "btnSync";
-            btnSync.Size = new Size(28, 23);
+            btnSync.Size = new Size(34, 37);
             btnSync.TabIndex = 4;
             btnSync.UseVisualStyleBackColor = true;
             btnSync.Click += btnSync_Click;
@@ -113,7 +114,7 @@
             lblLatestVersion.AutoEllipsis = true;
             lblLatestVersion.Location = new Point(112, 24);
             lblLatestVersion.Name = "lblLatestVersion";
-            lblLatestVersion.Size = new Size(333, 15);
+            lblLatestVersion.Size = new Size(302, 15);
             lblLatestVersion.TabIndex = 3;
             lblLatestVersion.Text = "-";
             // 
@@ -123,7 +124,7 @@
             lblCurrentVersion.AutoEllipsis = true;
             lblCurrentVersion.Location = new Point(112, 3);
             lblCurrentVersion.Name = "lblCurrentVersion";
-            lblCurrentVersion.Size = new Size(367, 15);
+            lblCurrentVersion.Size = new Size(302, 15);
             lblCurrentVersion.TabIndex = 2;
             lblCurrentVersion.Text = "1.34";
             // 
@@ -185,18 +186,19 @@
             btnCancel.BackColor = Color.LightPink;
             btnCancel.FlatAppearance.BorderSize = 0;
             btnCancel.FlatStyle = FlatStyle.Flat;
-            btnCancel.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
-            btnCancel.IconChar = FontAwesome.Sharp.IconChar.Multiply;
+            btnCancel.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCancel.IconChar = FontAwesome.Sharp.IconChar.None;
             btnCancel.IconColor = Color.Black;
             btnCancel.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnCancel.IconSize = 28;
+            btnCancel.IconSize = 24;
             btnCancel.ImageAlign = ContentAlignment.TopLeft;
             btnCancel.Location = new Point(189, 89);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(104, 35);
+            btnCancel.Padding = new Padding(6, 0, 8, 0);
+            btnCancel.Size = new Size(104, 24);
             btnCancel.TabIndex = 7;
             btnCancel.Text = "Cancel";
-            btnCancel.TextAlign = ContentAlignment.TopRight;
+            btnCancel.TextAlign = ContentAlignment.BottomCenter;
             btnCancel.UseVisualStyleBackColor = false;
             btnCancel.Visible = false;
             btnCancel.Click += btnCancel_Click;
@@ -206,6 +208,7 @@
             rtbConsole.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             rtbConsole.BackColor = Color.GhostWhite;
             rtbConsole.BorderStyle = BorderStyle.None;
+            rtbConsole.Font = new Font("Courier New", 9F, FontStyle.Regular, GraphicsUnit.Point);
             rtbConsole.HideSelection = false;
             rtbConsole.Location = new Point(3, 130);
             rtbConsole.Name = "rtbConsole";
