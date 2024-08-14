@@ -804,17 +804,20 @@ namespace RandomVideoPlayer
 
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
-                if (stream != null)
+                try
                 {
-                    var image = Image.FromStream(stream);
-                    btnSourceSelector.Image = image;
-                    btnSourceSelector.ImageAlign = ContentAlignment.MiddleCenter; // Adjust alignment as needed
-                    btnSourceSelector.TextImageRelation = TextImageRelation.ImageAboveText; // Adjust as needed
+                    if (stream != null)
+                    {
+                        var image = Image.FromStream(stream);
+                        btnSourceSelector.Image = image;
+                        btnSourceSelector.ImageAlign = ContentAlignment.MiddleCenter; // Adjust alignment as needed
+                        btnSourceSelector.TextImageRelation = TextImageRelation.ImageAboveText; // Adjust as needed
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Was null duh");
-                }
+                    Error.Log(ex, "Failed to load SplitIcon");
+                }               
             }
         }
         #endregion

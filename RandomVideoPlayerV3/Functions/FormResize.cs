@@ -152,7 +152,9 @@ namespace RandomVideoPlayer.Functions
                 // Entering fullscreen mode
                 f.FormBorderStyle = FormBorderStyle.None;
                 f.WindowState = FormWindowState.Maximized;
-                f.Bounds = Screen.PrimaryScreen.Bounds;
+                var currentScreen = Screen.FromControl(f);
+                var bounds = currentScreen.Bounds;
+                f.Bounds = bounds;                
                 PlayerIsFullscreenSize(f, top, bottom, player);
             }
         }
