@@ -111,13 +111,13 @@
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 127);
             panel2.Name = "panel2";
-            panel2.Size = new Size(482, 100);
+            panel2.Size = new Size(482, 110);
             panel2.TabIndex = 3;
             // 
             // cbAlwaysAddFilesToQueue
             // 
             cbAlwaysAddFilesToQueue.AutoSize = true;
-            cbAlwaysAddFilesToQueue.Location = new Point(3, 63);
+            cbAlwaysAddFilesToQueue.Location = new Point(3, 68);
             cbAlwaysAddFilesToQueue.Name = "cbAlwaysAddFilesToQueue";
             cbAlwaysAddFilesToQueue.Padding = new Padding(6, 0, 0, 0);
             cbAlwaysAddFilesToQueue.Size = new Size(303, 19);
@@ -129,9 +129,10 @@
             // 
             label4.Dock = DockStyle.Top;
             label4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label4.Location = new Point(0, 23);
+            label4.Location = new Point(0, 21);
             label4.Name = "label4";
-            label4.Size = new Size(482, 37);
+            label4.Padding = new Padding(6, 0, 0, 0);
+            label4.Size = new Size(482, 44);
             label4.TabIndex = 1;
             label4.Text = "This only affects \"Play on drop\" which would normally play the first file when multiple files are dropped on the player.";
             // 
@@ -141,7 +142,8 @@
             label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
             label3.Location = new Point(0, 0);
             label3.Name = "label3";
-            label3.Size = new Size(482, 23);
+            label3.Padding = new Padding(6, 0, 0, 0);
+            label3.Size = new Size(482, 21);
             label3.TabIndex = 0;
             label3.Text = "Check to always add files to queue if multiple files dropped onto the player.";
             // 
@@ -150,7 +152,7 @@
             panel3.Controls.Add(cbIncludeSubdirectories);
             panel3.Controls.Add(label6);
             panel3.Dock = DockStyle.Top;
-            panel3.Location = new Point(0, 227);
+            panel3.Location = new Point(0, 237);
             panel3.Name = "panel3";
             panel3.Size = new Size(482, 62);
             panel3.TabIndex = 4;
@@ -158,7 +160,7 @@
             // cbIncludeSubdirectories
             // 
             cbIncludeSubdirectories.AutoSize = true;
-            cbIncludeSubdirectories.Location = new Point(3, 26);
+            cbIncludeSubdirectories.Location = new Point(3, 29);
             cbIncludeSubdirectories.Name = "cbIncludeSubdirectories";
             cbIncludeSubdirectories.Padding = new Padding(6, 0, 0, 0);
             cbIncludeSubdirectories.Size = new Size(148, 19);
@@ -172,7 +174,8 @@
             label6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
             label6.Location = new Point(0, 0);
             label6.Name = "label6";
-            label6.Size = new Size(482, 23);
+            label6.Padding = new Padding(6, 0, 0, 0);
+            label6.Size = new Size(482, 26);
             label6.TabIndex = 0;
             label6.Text = "Choose to include found subdirectories when dropping folders:";
             // 

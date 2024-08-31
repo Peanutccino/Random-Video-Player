@@ -26,7 +26,11 @@ namespace RandomVideoPlayer.Functions
         public string tempLastFolder { get; set; }
         public bool sortCreationDate { get; set; } = true;
         public bool shuffle { get; set; } = true;
-        public bool loopPlayer { get; set; } = true;
+        public AutoPlayMethod autoPlayMethod { get; set; } = AutoPlayMethod.LoopVideo;
+        public int autoPlayTimerValueStartPoint { get; set; } = 8;
+        public int autoPlayTimerValueEndPoint { get; set; } = 12;
+        public bool autoPlayTimerRangeEnabled { get; set; } = false;
+
         public bool applyFilterToList { get; set; }
         public bool timeCodeServer { get; set; } = false;
         public bool graphEnabled { get; set; } = false;
@@ -37,6 +41,14 @@ namespace RandomVideoPlayer.Functions
         public Size tileSizeFileExplore { get; set; } = new Size(150, 40);
         public Size tileSizeFileBrowser { get; set; } = new Size(120, 34);
         public StringCollection selectedExtensions { get; set; } = new StringCollection();
+        public bool filterImageEnabled { get; set; } = false;
+        public bool filterVideoEnabled { get; set; } = true;
+        public bool filterScriptEnabled { get; set; } = false;
+
+        public bool lbFilterImageEnabled { get; set; } = false;
+        public bool lbFilterVideoEnabled { get; set; } = true;
+        public bool lbFilterScriptEnabled { get; set; } = false;
+
         public StringCollection extensionFilterForList { get; set; } = new StringCollection();
         public StringCollection favoriteCollection { get; set; } = new StringCollection();
         public StringCollection favoriteMoveBackupCollection { get; set; } = new StringCollection();
@@ -46,6 +58,13 @@ namespace RandomVideoPlayer.Functions
         public bool[] buttonStates { get; set; } = Enumerable.Repeat(true, 8).ToArray();
         public List<int> buttonOrder { get; set; }
         
+        public bool burnsEffectEnabled { get; set; } = false;
+        public double panAmount { get; set; } = 0.2;
+        public double zoomAmount { get; set; } = 0.5;
+
+        public int zoomEasingFunction { get; set; } = (int)EasingMethods.Linear;
+        public int panEasingFunction { get; set; } = (int)EasingMethods.Linear;
+
         public bool playOnDrop { get; set; } = true;
         public bool alwaysAddFilesToQueue { get; set; } = true;
         public bool includeSubdirectoriesDnD { get; set; } = true;
@@ -53,7 +72,11 @@ namespace RandomVideoPlayer.Functions
         public bool leftMousePause { get; set; } = false;
 
         public bool alwaysCheckUpdate { get; set; } = false;
-
+        public bool subtitlesEnabled { get; set; } = false;
+        public int subtitleFontSize { get; set; } = 55;
+        public int subtitleBorderSize { get; set; } = 3;
+        public string subtitleFontName { get; set; } = "Sans-Serif";
+        public string subtitleFontColor { get; set; } = "#FFFFFF";
 
         private static string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RVP-Config.json");
 

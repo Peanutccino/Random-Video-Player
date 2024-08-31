@@ -68,12 +68,31 @@ namespace RandomVideoPlayer.View
             settingsModel.StartupAlwaysAsk = SettingsHandler.StartupAlwaysAsk;
             settingsModel.StartupAllDirectories = SettingsHandler.StartupAllDirectories;
 
-            settingsModel.LoopPlayer = SettingsHandler.LoopPlayer;
-            settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
-            settingsModel.ApplyFilterToList = SettingsHandler.ApplyFilterToList;
-            settingsModel.SortCreated = SettingsHandler.CreationDate;
             settingsModel.SelectedExtensions = new List<string>(ListHandler.SelectedExtensions);
+            settingsModel.FilterVideoEnabled = ListHandler.FilterVideoEnabled;
+            settingsModel.FilterImageEnabled = ListHandler.FilterImageEnabled;
+            settingsModel.FilterScriptEnabled = ListHandler.FilterScriptEnabled;
+            settingsModel.ApplyFilterToList = SettingsHandler.ApplyFilterToList;
+
+            settingsModel.AutoPlayMethod = SettingsHandler.AutoPlayMethod;
+            settingsModel.AutoPlayTimerValueStartPoint = SettingsHandler.AutoPlayTimerValueStartPoint(false);
+            settingsModel.AutoPlayTimerValueEndPoint = SettingsHandler.AutoPlayTimerValueEndPoint;
+            settingsModel.AutoPlayTimerRangeEnabled = SettingsHandler.AutoPlayTimerRangeEnabled;
+            settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
+            settingsModel.SortCreated = SettingsHandler.CreationDate;
+
+            settingsModel.EnableSubtitles = SettingsHandler.SubtitlesEnabled;
+            settingsModel.SubtitleSize = SettingsHandler.SubtitleFontSize;
+            settingsModel.SubtitleBorderSize = SettingsHandler.SubtitleBorderSize;
+            settingsModel.SubtitleFontType = SettingsHandler.SubtitleFontType;
+            settingsModel.SubtitleFontColor = SettingsHandler.SubtitleFontColor;
+
             settingsModel.LeftMousePause = SettingsHandler.LeftMousePause;
+            settingsModel.BurnsEffectEnabled = SettingsHandler.BurnsEffectEnabled;
+            settingsModel.PanAmount = SettingsHandler.PanAmount;
+            settingsModel.ZoomAmount = SettingsHandler.ZoomAmount;
+            settingsModel.ZoomEasingFunction = SettingsHandler.ZoomEasingFunction;
+            settingsModel.PanEasingFunction = SettingsHandler.PanEasingFunction;
 
             settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
             settingsModel.AlwaysAddFilesToQueue = SettingsHandler.AlwaysAddFilesToQueue;
@@ -91,8 +110,10 @@ namespace RandomVideoPlayer.View
         {
             sbtnPaths.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new PathsUserControl(settingsModel)); };
             sbtnPlayer.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new PlayerUserControl(settingsModel)); };
+            sbtnFilterExtensions.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new FileExtensionsUserControl(settingsModel)); };
             sbtnRemember.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new RememberUserControl(settingsModel)); };
             sbtnInputs.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InputsUserControl()); };
+            sbtnSubtitles.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SubtitlesUserControl(settingsModel)); };
             sbtnSync.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SyncUserControl(settingsModel)); };
             sbtnInterface.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InterfaceUserControl(settingsModel)); };
             sbtnDragDrop.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new DragDropUserControl(settingsModel)); };
@@ -118,15 +139,35 @@ namespace RandomVideoPlayer.View
             SettingsHandler.StartupAlwaysAsk = settingsModel.StartupAlwaysAsk;
             SettingsHandler.StartupAllDirectories = settingsModel.StartupAllDirectories;
 
-            SettingsHandler.LoopPlayer = settingsModel.LoopPlayer;
+            SettingsHandler.AutoPlayMethod = settingsModel.AutoPlayMethod;
+            SettingsHandler.SetAutoPlayTimerValueStartPoint(settingsModel.AutoPlayTimerValueStartPoint);
+            SettingsHandler.AutoPlayTimerValueEndPoint = settingsModel.AutoPlayTimerValueEndPoint;
+            SettingsHandler.AutoPlayTimerRangeEnabled = settingsModel.AutoPlayTimerRangeEnabled;
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
             SettingsHandler.CreationDate = settingsModel.SortCreated;
-            SettingsHandler.ApplyFilterToList = settingsModel.ApplyFilterToList;
+
+            SettingsHandler.SubtitlesEnabled = settingsModel.EnableSubtitles;
+            SettingsHandler.SubtitleFontSize = settingsModel.SubtitleSize;
+            SettingsHandler.SubtitleBorderSize = settingsModel.SubtitleBorderSize;
+            SettingsHandler.SubtitleFontType = settingsModel.SubtitleFontType;
+            SettingsHandler.SubtitleFontColor = settingsModel.SubtitleFontColor;
+
             SettingsHandler.LeftMousePause = settingsModel.LeftMousePause;
+            SettingsHandler.BurnsEffectEnabled = settingsModel.BurnsEffectEnabled;
+            SettingsHandler.PanAmount = settingsModel.PanAmount;
+            SettingsHandler.ZoomAmount = settingsModel.ZoomAmount;
+            SettingsHandler.ZoomEasingFunction = settingsModel.ZoomEasingFunction;
+            SettingsHandler.PanEasingFunction = settingsModel.PanEasingFunction;
 
             SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;
             SettingsHandler.AlwaysAddFilesToQueue = settingsModel.AlwaysAddFilesToQueue;
             SettingsHandler.IncludeSubdirectoriesDnD = settingsModel.IncludeSubdirectoriesDnD;
+
+
+            ListHandler.FilterVideoEnabled = settingsModel.FilterVideoEnabled;
+            ListHandler.FilterImageEnabled = settingsModel.FilterImageEnabled;
+            ListHandler.FilterScriptEnabled = settingsModel.FilterScriptEnabled;
+            SettingsHandler.ApplyFilterToList = settingsModel.ApplyFilterToList;
 
             if (!ListHandler.SelectedExtensions.SequenceEqual(settingsModel.SelectedExtensions))
             {
@@ -134,6 +175,7 @@ namespace RandomVideoPlayer.View
                 SettingsHandler.SettingChanged = true;
             }
             ListHandler.SelectedExtensions = settingsModel.SelectedExtensions;
+
 
             SetupFileMove();
 

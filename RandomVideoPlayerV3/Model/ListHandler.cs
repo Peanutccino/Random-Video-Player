@@ -99,7 +99,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static IEnumerable<string> SelectedExtensions
         {
             get
@@ -115,6 +114,52 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool FilterImageEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.filterImageEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.filterImageEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool FilterVideoEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.filterVideoEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.filterVideoEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool FilterScriptEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.filterScriptEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.filterScriptEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
         public static IEnumerable<string> ExtensionFilterForList
         {
             get
@@ -127,6 +172,51 @@ namespace RandomVideoPlayer.Model
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.extensionFilterForList.Clear();
                 _settingsInstance.extensionFilterForList.AddRange(value.ToArray());
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool LbFilterImageEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.lbFilterImageEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.lbFilterImageEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool LbFilterVideoEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.lbFilterVideoEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.lbFilterVideoEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool LbFilterScriptEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.lbFilterScriptEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.lbFilterScriptEnabled = value;
                 _settingsInstance.Save();
             }
         }
@@ -166,8 +256,51 @@ namespace RandomVideoPlayer.Model
         public static List<string> Extensions
         {
             get
-            {
-                return new List<string>(SelectedExtensions);
+            {               
+                if(FilterScriptEnabled)
+                {
+                    return VideoExtensions;
+                }
+
+                List<string> selectedExtensionsFiltered = new List<string>();
+
+                if (FilterVideoEnabled)
+                {
+                    bool foundVideo = false;
+
+                    foreach (var extension in SelectedExtensions)
+                    {
+                        if (VideoExtensions.Contains(extension))
+                        {
+                            selectedExtensionsFiltered.Add(extension);
+                            foundVideo = true;
+                        }
+                    }
+
+                    if (foundVideo == false) 
+                    { 
+                        selectedExtensionsFiltered.AddRange(VideoExtensions);
+                    }
+                }
+                if(FilterImageEnabled)
+                {
+                    bool foundImage = false;
+
+                    foreach (var extension in SelectedExtensions)
+                    {
+                        if (ImageExtensions.Contains(extension))
+                        {
+                            selectedExtensionsFiltered.Add(extension);
+                            foundImage = true;
+                        }
+                    }
+
+                    if(foundImage == false)
+                    {
+                        selectedExtensionsFiltered.AddRange(ImageExtensions);
+                    }
+                }
+                return selectedExtensionsFiltered;
             }
         }
         public static List<string> CombinedExtensions
@@ -226,14 +359,11 @@ namespace RandomVideoPlayer.Model
         /// <value>Grab all media files from set directory</value> 
         public static void fillFolderList(string folderpath, bool includeSubfolders)
         {
-            SearchOption searchOption = includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
             try
             {
-                _tempfolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
-                        .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
-                        .ToArray();
-                if(_tempfolderList?.Any() ?? false)
+                _tempfolderList = GetFiles(folderpath, includeSubfolders);
+
+                if (_tempfolderList?.Any() ?? false)
                 {
                     _folderList = _tempfolderList;
                 }
@@ -244,30 +374,29 @@ namespace RandomVideoPlayer.Model
             }
         }
         /// <value>Grab only the latest (count) media files from defined directory</value> 
-        public static void latestFolderList(string folderpath, int count)
+        public static void latestFolderList(string folderpath, int count, bool includeSubfolders)
         {
             if (count <= 0) count = 10;
 
-            var _settingsInstance = CustomSettings.Instance;
-            SearchOption searchOption = IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
             try
             {
-                if (_settingsInstance.sortCreationDate) //Set to sort by creation date
+                var allFiles = GetFiles(folderpath, includeSubfolders);
+
+                if (SettingsHandler.CreationDate) //Set to sort by creation date
                 {
-                    _tempfolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
-                        .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
-                        .OrderByDescending(s => File.GetCreationTime(s)) // Order by last modified date in descending order
-                        .Take(count) // Take only the top 100
-                        .ToArray();
+                    _tempfolderList = allFiles
+                          .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
+                          .OrderByDescending(s => File.GetCreationTime(s))
+                          .Take(count)
+                          .ToArray();
                 }
                 else //Set to sort by date of last modified
                 {
-                    _tempfolderList = Directory.EnumerateFiles(folderpath, "*.*", searchOption)
-                        .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
-                        .OrderByDescending(s => File.GetLastWriteTime(s)) // Order by last modified date in descending order
-                        .Take(count) // Take only the top 100
-                        .ToArray();
+                    _tempfolderList = allFiles
+                          .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
+                          .OrderByDescending(s => File.GetLastWriteTime(s))
+                          .Take(count)
+                          .ToArray();
                 }
                 if (_tempfolderList?.Any() ?? false)
                 {
@@ -278,6 +407,62 @@ namespace RandomVideoPlayer.Model
             {
                 Error.Log(ex, "Couldn't access folder - latestFolderList");
             }
+        }
+        private static IEnumerable<string> GetFiles(string folderpath, bool includeSubfolders)
+        {
+            List<string> files = new List<string>();
+
+            try
+            {
+                if (FilterScriptEnabled)
+                {
+                    var funscriptFiles = Directory.EnumerateFiles(folderpath, "*.funscript");
+                    foreach (var funscriptFile in funscriptFiles)
+                    {
+                        var baseFileName = Path.GetFileNameWithoutExtension(funscriptFile);
+
+                        foreach (var extension in Extensions)
+                        {
+                            var videoFilePath = Path.Combine(Path.GetDirectoryName(funscriptFile), baseFileName + "." + extension);
+                            if (File.Exists(videoFilePath))
+                            {
+                                files.Add(videoFilePath);
+                            }
+                        }
+                    }
+
+                    if (includeSubfolders)
+                    {
+                        foreach (var directory in Directory.EnumerateDirectories(folderpath))
+                        {
+                            files.AddRange(GetFiles(directory, includeSubfolders));
+                        }
+                    }
+                }
+                else
+                {
+                    files.AddRange(Directory.EnumerateFiles(folderpath)
+                        .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant())));
+
+                    if (includeSubfolders)
+                    {
+                        foreach (var directory in Directory.EnumerateDirectories(folderpath))
+                        {
+                            files.AddRange(GetFiles(directory, includeSubfolders));
+                        }
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Error.Log(ex, $"Access denied to folder: {folderpath}");
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex, $"Error accessing folder: {folderpath}");
+            }
+
+            return files;
         }
         /// <value>Delete current user defined list</value> 
         public static void ClearCustomList()
@@ -321,11 +506,11 @@ namespace RandomVideoPlayer.Model
             {
                 string firstEntry = startupFilePath;
                 List<string> tempPlaylist = _playList.ToList();
-                tempPlaylist.Remove(firstEntry); 
-                List<string> shuffledPlaylist = rng.Shuffle(tempPlaylist).ToList();                
+                tempPlaylist.Remove(firstEntry);
+                List<string> shuffledPlaylist = rng.Shuffle(tempPlaylist).ToList();
                 shuffledPlaylist.Insert(0, firstEntry);
                 _playList = shuffledPlaylist;
-                
+
             }
             else
             {

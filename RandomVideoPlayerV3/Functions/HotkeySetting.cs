@@ -32,7 +32,7 @@ namespace RandomVideoPlayer.Functions
                     new HotkeySetting { Action = "Favorite", Key = Keys.F, Modifiers = Keys.None },
                     new HotkeySetting { Action = "MoveCopyFile", Key = Keys.C, Modifiers = Keys.None },
                     new HotkeySetting { Action = "ToggleShuffle", Key = Keys.S, Modifiers = Keys.None },
-                    new HotkeySetting { Action = "ToggleLoop", Key = Keys.L, Modifiers = Keys.None },
+                    new HotkeySetting { Action = "SwitchPlaybackBehavior", Key = Keys.L, Modifiers = Keys.None },
                     new HotkeySetting { Action = "MutePlayer", Key = Keys.M, Modifiers = Keys.None },
                     new HotkeySetting { Action = "VolumeIncrease", Key = Keys.Up, Modifiers = Keys.None },
                     new HotkeySetting { Action = "VolumeDecrease", Key = Keys.Down, Modifiers = Keys.None },

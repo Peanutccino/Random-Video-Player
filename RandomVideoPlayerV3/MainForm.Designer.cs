@@ -56,6 +56,8 @@
             btnPlay = new FontAwesome.Sharp.IconButton();
             pbPlayerProgress = new FlatProgressBar();
             panelTop = new Panel();
+            btnAudioTrackMenu = new Button();
+            btnSubtitleMenu = new Button();
             lblTitleBar = new Label();
             btnMinimizeForm = new FontAwesome.Sharp.IconButton();
             btnMaximizeForm = new FontAwesome.Sharp.IconButton();
@@ -108,6 +110,7 @@
             // lblCurrentInfo
             // 
             lblCurrentInfo.AutoEllipsis = true;
+            lblCurrentInfo.Cursor = Cursors.Hand;
             lblCurrentInfo.Dock = DockStyle.Fill;
             lblCurrentInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
             lblCurrentInfo.Location = new Point(0, 0);
@@ -116,6 +119,7 @@
             lblCurrentInfo.TabIndex = 14;
             lblCurrentInfo.Text = "Current Folder";
             lblCurrentInfo.TextAlign = ContentAlignment.MiddleLeft;
+            lblCurrentInfo.Click += lblCurrentInfo_Click;
             // 
             // lblSpeed
             // 
@@ -480,6 +484,8 @@
             // panelTop
             // 
             panelTop.BackColor = Color.FromArgb(253, 83, 146);
+            panelTop.Controls.Add(btnAudioTrackMenu);
+            panelTop.Controls.Add(btnSubtitleMenu);
             panelTop.Controls.Add(lblTitleBar);
             panelTop.Controls.Add(btnMinimizeForm);
             panelTop.Controls.Add(btnMaximizeForm);
@@ -489,6 +495,36 @@
             panelTop.Name = "panelTop";
             panelTop.Size = new Size(914, 20);
             panelTop.TabIndex = 1;
+            // 
+            // btnAudioTrackMenu
+            // 
+            btnAudioTrackMenu.Dock = DockStyle.Left;
+            btnAudioTrackMenu.FlatAppearance.BorderSize = 0;
+            btnAudioTrackMenu.FlatStyle = FlatStyle.Flat;
+            btnAudioTrackMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold, GraphicsUnit.Point);
+            btnAudioTrackMenu.ForeColor = Color.Indigo;
+            btnAudioTrackMenu.Location = new Point(40, 0);
+            btnAudioTrackMenu.Name = "btnAudioTrackMenu";
+            btnAudioTrackMenu.Size = new Size(40, 20);
+            btnAudioTrackMenu.TabIndex = 5;
+            btnAudioTrackMenu.Text = "AUD";
+            btnAudioTrackMenu.UseVisualStyleBackColor = true;
+            btnAudioTrackMenu.Click += btnAudioTrackMenu_Click;
+            // 
+            // btnSubtitleMenu
+            // 
+            btnSubtitleMenu.Dock = DockStyle.Left;
+            btnSubtitleMenu.FlatAppearance.BorderSize = 0;
+            btnSubtitleMenu.FlatStyle = FlatStyle.Flat;
+            btnSubtitleMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold, GraphicsUnit.Point);
+            btnSubtitleMenu.ForeColor = Color.Indigo;
+            btnSubtitleMenu.Location = new Point(0, 0);
+            btnSubtitleMenu.Name = "btnSubtitleMenu";
+            btnSubtitleMenu.Size = new Size(40, 20);
+            btnSubtitleMenu.TabIndex = 4;
+            btnSubtitleMenu.Text = "SUB";
+            btnSubtitleMenu.UseVisualStyleBackColor = true;
+            btnSubtitleMenu.Click += btnSubtitleMenu_Click;
             // 
             // lblTitleBar
             // 
@@ -640,5 +676,7 @@
         private Button btnSourceSelector;
         private Panel panel1;
         private Label lblSpeed;
+        private Button btnSubtitleMenu;
+        private Button btnAudioTrackMenu;
     }
 }

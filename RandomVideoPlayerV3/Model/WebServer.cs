@@ -13,6 +13,10 @@ namespace RandomVideoPlayer.Model
 
         private const string prefix = "http://127.0.0.1:13579/";
 
+        public delegate void CommandReceivedEventHandler(object sender, string commandData);
+
+        public event CommandReceivedEventHandler CommandReceived;
+
         public string File { get; set; } = "";          // = 0
         public string FilePathArg { get; set; } = "";   // = 1
         public string Filepath { get; set; } = "";      // = 2
@@ -121,6 +125,21 @@ namespace RandomVideoPlayer.Model
 
                     await context.Response.OutputStream.WriteAsync(data, 0, data.Length);
                 }
+                else if (request.RawUrl.Equals("/command.html", StringComparison.OrdinalIgnoreCase))
+                {
+                    using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
+                    {
+                        string commandData = await reader.ReadToEndAsync();
+                        //Log($"Received command: {commandData}");
+                        ProcessCommand(commandData);
+                    }
+
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    byte[] response = Encoding.UTF8.GetBytes("Command received");
+                    context.Response.ContentType = "text/plain";
+                    context.Response.ContentLength64 = response.LongLength;
+                    await context.Response.OutputStream.WriteAsync(response, 0, response.Length);
+                }
             }
             catch (Exception ex)
             {
@@ -133,7 +152,11 @@ namespace RandomVideoPlayer.Model
                 context.Response.Close();
             }
         }
-
+        private void ProcessCommand(string commandData)
+        {
+            CommandReceived?.Invoke(this, commandData);
+            Log($"Processing command: {commandData}");
+        }
         private void Log(string message) //For debugging purposes
         {
             OnLog?.Invoke($"{DateTime.Now}: {message}");

@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualBasic;
+using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
+using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Documents;
@@ -22,6 +24,12 @@ namespace RandomVideoPlayer.View
         private string _viewStateListFileExplore;
         private List<string> extensionFilter { get; set; }
 
+        private System.Windows.Forms.Timer timer;
+        private bool isExpanding;
+        private FlowLayoutPanel panelToExpand;
+        private FlowLayoutPanel panelToCollapse;
+        private const int animationStep = 10;
+        private const int expandedHeight = 180;
         public ListBrowserView()
         {
             InitializeComponent();
@@ -37,8 +45,12 @@ namespace RandomVideoPlayer.View
 
             extensionFilter = new List<string>(ListHandler.ExtensionFilterForList);
 
-            InitializeFilterBoxes();
-            InitializeCheckboxEvents();
+            CreateCheckBoxesForExtensions();
+
+            // Initialize timer
+            timer = new System.Windows.Forms.Timer();
+            timer.Interval = 5;
+            timer.Tick += Timer_Tick;
         }
 
         private void ListBrowserView_Load(object sender, EventArgs e)
@@ -63,6 +75,9 @@ namespace RandomVideoPlayer.View
 
             cbShowIcons.Checked = _showIcons;
             cbFullPath.Checked = _showFullPath;
+            cbEnableImageFilter.Checked = ListHandler.LbFilterImageEnabled;
+            cbEnableVideoFilter.Checked = ListHandler.LbFilterVideoEnabled;
+            cbEnableScriptFilter.Checked = ListHandler.LbFilterScriptEnabled;
 
             PopulateSelected(tbPathView.Text);
 
@@ -117,15 +132,26 @@ namespace RandomVideoPlayer.View
         private void btnAddSelected_Click(object sender, EventArgs e)
         {
             var filteredPaths = new List<string>();
-            var combinedExtensions = extensionFilter;
+            var combinedExtensions = filteredExtensions;
 
             foreach (ListViewItem item in lvFileExplore.SelectedItems)
             {
                 var filePath = item.Tag.ToString();
                 var fileType = item.SubItems[1].Text;
-                if (combinedExtensions.Contains(fileType.TrimStart('.')))
+                if (ListHandler.LbFilterScriptEnabled)
                 {
-                    filteredPaths.Add(filePath);
+                    var funscriptFilePath = FileManipulation.GetFilePathWithDifferentExtension(filePath, ".funscript");
+                    if (File.Exists(funscriptFilePath) && ListHandler.VideoExtensions.Contains(fileType.TrimStart('.')))
+                    {
+                        filteredPaths.Add(funscriptFilePath);
+                    }
+                }
+                else
+                {
+                    if (combinedExtensions.Contains(fileType.TrimStart('.')))
+                    {
+                        filteredPaths.Add(filePath);
+                    }
                 }
                 if (fileType == "Folder")
                 {
@@ -475,6 +501,30 @@ namespace RandomVideoPlayer.View
             PopulateSelected(tbPathView.Text);
             lvFileExplore.Refresh();
         }
+        private void cbEnableVideoFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            ListHandler.LbFilterVideoEnabled = cbEnableVideoFilter.Checked;
+            PopulateSelected(tbPathView.Text);
+        }
+
+        private void cbEnableImageFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            ListHandler.LbFilterImageEnabled = cbEnableImageFilter.Checked;
+            PopulateSelected(tbPathView.Text);
+        }
+
+        private void cbEnableScriptFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            ListHandler.LbFilterScriptEnabled = cbEnableScriptFilter.Checked;
+        }
+        private void btnVideoExtensions_Click(object sender, EventArgs e)
+        {
+            TogglePanel(flowPanelVideoCheckboxes, flowPanelImageCheckboxes);
+        }
+        private void btnImageExtensions_Click(object sender, EventArgs e)
+        {
+            TogglePanel(flowPanelImageCheckboxes, flowPanelVideoCheckboxes);
+        }
 
         private void UpdateSizeButtons()
         {
@@ -491,6 +541,61 @@ namespace RandomVideoPlayer.View
                 btnIncreaseSize.Enabled = false;
             }
         }
+
+        private void TogglePanel(FlowLayoutPanel panelToExpand, FlowLayoutPanel panelToCollapse)
+        {
+            if (timer.Enabled)
+                return;
+
+            this.panelToExpand = panelToExpand;
+            this.panelToCollapse = panelToCollapse;
+
+            isExpanding = !panelToExpand.Visible;
+
+            if (isExpanding)
+            {
+                panelToExpand.Visible = true;
+            }
+
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            int expandHeight = panelToExpand.Height;
+            int collapseHeight = panelToCollapse.Height;
+
+            if (isExpanding)
+            {
+                expandHeight += animationStep;
+                collapseHeight -= animationStep;
+
+                if (expandHeight >= expandedHeight || collapseHeight <= 0)
+                {
+                    expandHeight = expandedHeight;
+                    collapseHeight = 0;
+                    timer.Stop();
+                    panelToCollapse.Visible = false;
+                }
+            }
+            else
+            {
+                expandHeight -= animationStep;
+                collapseHeight += animationStep;
+
+                if (expandHeight <= 0 || collapseHeight >= expandedHeight)
+                {
+                    expandHeight = 0;
+                    collapseHeight = expandedHeight;
+                    timer.Stop();
+                    panelToExpand.Visible = false;
+                }
+            }
+
+            panelToExpand.Height = expandHeight;
+            panelToCollapse.Height = collapseHeight;
+        }
+
         private void SetupTooltips()
         {
             toolTipInfo.SetToolTip(btnDecreaseSize, "Decrease tile size");
@@ -515,6 +620,12 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(btnBack, "MB4 | Go back one folder");
             toolTipInfo.SetToolTip(btnAddFav, "Add current folder to your list of favorites");
             toolTipInfo.SetToolTip(btnDeleteFav, "Delete selected folder from your list of favorites");
+
+            toolTipInfo.SetToolTip(cbShowIcons, "Show icons in list");
+            toolTipInfo.SetToolTip(cbFullPath, "Show full path in list");
+            toolTipInfo.SetToolTip(cbEnableImageFilter, "Use selected image extensions");
+            toolTipInfo.SetToolTip(cbEnableVideoFilter, "Use selected video extensions");
+            toolTipInfo.SetToolTip(cbEnableScriptFilter, "Use script filter to only add files with an available funscript");
         }
 
         #region Drag and Drop
@@ -536,7 +647,7 @@ namespace RandomVideoPlayer.View
         {
             if (e.Data.GetDataPresent(typeof(List<ListViewItem>)) || e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                lvCustomList.BackColor = Color.Honeydew;                
+                lvCustomList.BackColor = Color.Honeydew;
                 e.Effect = DragDropEffects.Move;
             }
             else
@@ -630,7 +741,7 @@ namespace RandomVideoPlayer.View
             {
                 lvFileExplore.Items.Clear();
                 DirectoryInfo dir = new DirectoryInfo(folderPath);
-                var combinedExtensions = extensionFilter;
+                var combinedExtensions = filteredExtensions;
 
                 foreach (DirectoryInfo subFolder in dir.EnumerateDirectories())
                 {
@@ -688,19 +799,84 @@ namespace RandomVideoPlayer.View
         }
         private void GrabFromDirectory(string folderPath)
         {
-            var combinedExtensions = extensionFilter;
+            List<string> files = new List<string>();
+
             try
             {
-                //Get all Files from current Directory and return all Files filtered by Extensions
-                TempList.AddRange(Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
-                        .Where(s => combinedExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
-                        .ToArray());
+                if (ListHandler.LbFilterScriptEnabled)
+                {
+                    var funscriptFiles = Directory.EnumerateFiles(folderPath, "*.funscript");
+                    foreach (var funscriptFile in funscriptFiles)
+                    {
+                        var baseFileName = Path.GetFileNameWithoutExtension(funscriptFile);
+
+                        foreach (var extension in ListHandler.VideoExtensions)
+                        {
+                            var videoFilePath = Path.Combine(Path.GetDirectoryName(funscriptFile), baseFileName + "." + extension);
+                            if (File.Exists(videoFilePath))
+                            {
+                                files.Add(videoFilePath);
+                            }
+                        }
+                    }
+
+                    foreach (var directory in Directory.EnumerateDirectories(folderPath))
+                    {
+                        GrabFromDirectory(directory);
+                    }
+
+                }
+                else
+                {
+                    files.AddRange(Directory.EnumerateFiles(folderPath)
+                        .Where(s => filteredExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant())));
+
+                    foreach (var directory in Directory.EnumerateDirectories(folderPath))
+                    {
+                        GrabFromDirectory(directory);
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                //Error.Log(ex, "Access denied to folder in LB");
             }
             catch (Exception ex)
             {
                 Error.Log(ex, "Unable to gather directory information in LB");
-                MessageBox.Show($"Unable to gather directory information: {ex}");
-                return;
+            }
+
+            TempList.AddRange(files);
+        }
+
+        private List<string> filteredExtensions
+        {
+            get
+            {
+                var newFilter = new List<string>();
+
+                if (ListHandler.LbFilterImageEnabled)
+                {
+                    foreach (var extension in extensionFilter)
+                    {
+                        if (ListHandler.ImageExtensions.Contains(extension))
+                        {
+                            newFilter.Add(extension);
+                        }
+                    }
+                }
+                if (ListHandler.LbFilterVideoEnabled)
+                {
+                    foreach (var extension in extensionFilter)
+                    {
+                        if (ListHandler.VideoExtensions.Contains(extension))
+                        {
+                            newFilter.Add(extension);
+                        }
+                    }
+                }
+
+                return newFilter;
             }
         }
 
@@ -748,10 +924,8 @@ namespace RandomVideoPlayer.View
         }
         private void HighlightDriveInListBox(string path) //Hightlight drive that is currently in use within listview
         {
-            // Extract the drive letter and format (e.g., "G:/")
             string drive = path.Substring(0, 3);
 
-            // Find and select the corresponding item in the listBox
             foreach (var item in lbDriveFolders.Items)
             {
                 if (item.ToString().StartsWith(drive, StringComparison.OrdinalIgnoreCase))
@@ -772,42 +946,42 @@ namespace RandomVideoPlayer.View
                 PopulateSelected(parentDirectory.FullName);
             }
         }
-        private void InitializeFilterBoxes()
+
+
+        private void CreateCheckBoxesForExtensions()
         {
-            foreach (Control control in panelFilterExt.Controls)
+            foreach (var extension in ListHandler.VideoExtensions)
             {
-                if (control is CheckBox checkBox)
-                {
-                    checkBox.Checked = extensionFilter.Contains(checkBox.Text);
-                }
+                RoundedCheckBox checkBox = new RoundedCheckBox();
+                checkBox.Text = extension;
+                checkBox.AutoSize = false;
+                checkBox.Margin = new Padding(8, 3, 3, 3);
+                checkBox.Size = new Size(44, 26);
+                checkBox.UncheckedBackColor = Color.MistyRose;
+                checkBox.CheckedBackColor = Color.LightCoral;
+                checkBox.Checked = extensionFilter.Contains(extension);
+                checkBox.CheckedChanged += CheckBox_CheckedChanged;
+                flowPanelVideoCheckboxes.Controls.Add(checkBox);
+            }
+
+            foreach (var extension in ListHandler.ImageExtensions)
+            {
+                RoundedCheckBox checkBox = new RoundedCheckBox();
+                checkBox.Text = extension;
+                checkBox.AutoSize = false;
+                checkBox.Margin = new Padding(8, 3, 3, 3);
+                checkBox.Size = new Size(44, 26);
+                checkBox.UncheckedBackColor = Color.MistyRose;
+                checkBox.CheckedBackColor = Color.LightCoral;
+                checkBox.Checked = extensionFilter.Contains(extension);
+                checkBox.CheckedChanged += CheckBox_CheckedChanged;
+                flowPanelImageCheckboxes.Controls.Add(checkBox);
             }
         }
-        private void InitializeCheckboxEvents()
-        {
-            cbAVI.CheckedChanged += CheckBox_CheckedChanged;
-            cbAVCHD.CheckedChanged += CheckBox_CheckedChanged;
-            cbF4V.CheckedChanged += CheckBox_CheckedChanged;
-            cbFLV.CheckedChanged += CheckBox_CheckedChanged;
-            cbM4V.CheckedChanged += CheckBox_CheckedChanged;
-            cbMKV.CheckedChanged += CheckBox_CheckedChanged;
-            cbMOV.CheckedChanged += CheckBox_CheckedChanged;
-            cbMP4.CheckedChanged += CheckBox_CheckedChanged;
-            cbWEBM.CheckedChanged += CheckBox_CheckedChanged;
-            cbWMV.CheckedChanged += CheckBox_CheckedChanged;
 
-            cbJPG.CheckedChanged += CheckBox_CheckedChanged;
-            cbJPEG.CheckedChanged += CheckBox_CheckedChanged;
-            cbPNG.CheckedChanged += CheckBox_CheckedChanged;
-            cbGIF.CheckedChanged += CheckBox_CheckedChanged;
-            cbTIF.CheckedChanged += CheckBox_CheckedChanged;
-            cbTIFF.CheckedChanged += CheckBox_CheckedChanged;
-            cbBMP.CheckedChanged += CheckBox_CheckedChanged;
-            cbWEBP.CheckedChanged += CheckBox_CheckedChanged;
-            cbAVIF.CheckedChanged += CheckBox_CheckedChanged;
-        }
         private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (sender is CheckBox checkBox)
+            if (sender is RoundedCheckBox checkBox)
             {
                 if (checkBox.Checked)
                 {
@@ -922,7 +1096,9 @@ namespace RandomVideoPlayer.View
         private extern static void ReleaseCapture();
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+
         #endregion
+
 
 
     }

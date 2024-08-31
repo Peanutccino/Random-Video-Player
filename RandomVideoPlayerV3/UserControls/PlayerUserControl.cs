@@ -1,4 +1,6 @@
-﻿using RandomVideoPlayer.Model;
+﻿using RandomVideoPlayer.Controls;
+using RandomVideoPlayer.Functions;
+using RandomVideoPlayer.Model;
 using System.Windows.Forms;
 
 
@@ -13,7 +15,6 @@ namespace RandomVideoPlayer.UserControls
             this.settings = settings;
             LoadSettings();
             BindControls();
-            InitializeCheckboxEvents();
         }
 
         private void LoadSettings()
@@ -26,39 +27,45 @@ namespace RandomVideoPlayer.UserControls
             {
                 rbDateModified.Checked = true;
             }
-
-            cbLoopPlayer.Checked = settings.LoopPlayer;
             cbShufflePlayer.Checked = settings.ShufflePlaylist;
 
-            foreach (Control control in panelVideoExtensions.Controls)
-            {
-                if (control is CheckBox checkBox)
-                {
-                    checkBox.Checked = settings.SelectedExtensions.Contains(checkBox.Text);
-                }
-            }
-
-            foreach (Control control in panelImageExtensions.Controls)
-            {
-                if (control is CheckBox checkBox)
-                {
-                    checkBox.Checked = settings.SelectedExtensions.Contains(checkBox.Text);
-                }
-            }
-
-            cbFilterApply.Checked = settings.ApplyFilterToList;
-
             cbLeftMousePause.Checked = settings.LeftMousePause;
+
+            switch (settings.AutoPlayMethod)
+            {
+                case AutoPlayMethod.LoopVideo:
+                    rbRepeatVideo.Checked = true;
+                    break;
+                case AutoPlayMethod.AutoNext:
+                    rbAutoNext.Checked = true;
+                    break;
+                case AutoPlayMethod.AutoTimer:
+                    rbAutoTimer.Checked = true;
+                    break;
+            }
+
+            cbKenBurnsEffect.Checked = settings.BurnsEffectEnabled;
+
+            inputTimerValueStartPoint.Value = settings.AutoPlayTimerValueStartPoint;
+            inputTimerValueEndPoint.Value = settings.AutoPlayTimerValueEndPoint;
+            cbEnableTimeRange.Checked = settings.AutoPlayTimerRangeEnabled;
+
+
+            inputPanAmountValue.Value = (int)(settings.PanAmount * 10);
+            inputZoomAmountValue.Value = (int)(settings.ZoomAmount * 10);
+
+            comboZoomEffects.DataSource = Enum.GetValues(typeof(EasingMethods));
+            comboZoomEffects.SelectedIndex = settings.ZoomEasingFunction;
+
+            comboPanEffects.DataSource = Enum.GetValues(typeof(EasingMethods));
+            comboPanEffects.SelectedIndex = settings.PanEasingFunction;
+
+            UpdateRangeIndicator();
         }
 
 
         private void BindControls()
         {
-            cbLoopPlayer.CheckedChanged += (s, e) =>
-            {
-                settings.LoopPlayer = cbLoopPlayer.Checked;
-            };
-
             cbShufflePlayer.CheckedChanged += (s, e) =>
             {
                 settings.ShufflePlaylist = cbShufflePlayer.Checked;
@@ -68,104 +75,130 @@ namespace RandomVideoPlayer.UserControls
             {
                 settings.SortCreated = rbDateCreated.Checked;
             };
-
-            cbFilterApply.CheckedChanged += (s, e) =>
-            {
-                settings.ApplyFilterToList = cbFilterApply.Checked;
-            };
-
             cbLeftMousePause.CheckedChanged += (s, e) =>
             {
                 settings.LeftMousePause = cbLeftMousePause.Checked;
             };
-        }
-        private void InitializeCheckboxEvents()
-        {
-            cbAVI.CheckedChanged += CheckBox_CheckedChanged;
-            cbAVCHD.CheckedChanged += CheckBox_CheckedChanged;
-            cbF4V.CheckedChanged += CheckBox_CheckedChanged;
-            cbFLV.CheckedChanged += CheckBox_CheckedChanged;
-            cbM4V.CheckedChanged += CheckBox_CheckedChanged;
-            cbMKV.CheckedChanged += CheckBox_CheckedChanged;
-            cbMOV.CheckedChanged += CheckBox_CheckedChanged;
-            cbMP4.CheckedChanged += CheckBox_CheckedChanged;
-            cbWEBM.CheckedChanged += CheckBox_CheckedChanged;
-            cbWMV.CheckedChanged += CheckBox_CheckedChanged;
 
-            cbJPG.CheckedChanged += CheckBox_CheckedChanged;
-            cbJPEG.CheckedChanged += CheckBox_CheckedChanged;
-            cbPNG.CheckedChanged += CheckBox_CheckedChanged;
-            cbGIF.CheckedChanged += CheckBox_CheckedChanged;
-            cbTIF.CheckedChanged += CheckBox_CheckedChanged;
-            cbTIFF.CheckedChanged += CheckBox_CheckedChanged;
-            cbBMP.CheckedChanged += CheckBox_CheckedChanged;
-            cbWEBP.CheckedChanged += CheckBox_CheckedChanged;
-            cbAVIF.CheckedChanged += CheckBox_CheckedChanged;
-        }
+            rbRepeatVideo.CheckedChanged += new EventHandler(RadioButton_CheckedChanged);
+            rbAutoNext.CheckedChanged += new EventHandler(RadioButton_CheckedChanged);
+            rbAutoTimer.CheckedChanged += new EventHandler(RadioButton_CheckedChanged);
 
-        private void CheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (sender is CheckBox checkBox)
+            inputTimerValueStartPoint.ValueChanged += (s, e) =>
             {
-                if (checkBox.Checked)
+                settings.AutoPlayTimerValueStartPoint = (int)inputTimerValueStartPoint.Value;
+                TimeRangeValidation(s);
+            };
+
+            inputTimerValueEndPoint.ValueChanged += (s, e) =>
+            {
+                settings.AutoPlayTimerValueEndPoint = (int)inputTimerValueEndPoint.Value;
+                TimeRangeValidation(s);
+            };
+
+            cbEnableTimeRange.CheckedChanged += (s, e) =>
+            {
+                settings.AutoPlayTimerRangeEnabled = cbEnableTimeRange.Checked;
+                UpdateRangeIndicator();
+            };
+
+            cbKenBurnsEffect.CheckedChanged += (s, e) =>
+            {
+                settings.BurnsEffectEnabled = cbKenBurnsEffect.Checked;
+            };
+
+            inputPanAmountValue.ValueChanged += (s, e) =>
+            {
+                settings.PanAmount = ((double)inputPanAmountValue.Value / 10);
+            };
+
+            inputZoomAmountValue.ValueChanged += (s, e) =>
+            {
+                settings.ZoomAmount = ((double)inputZoomAmountValue.Value / 10);
+            };
+
+            comboZoomEffects.SelectedIndexChanged += (s, e) =>
+            {
+                settings.ZoomEasingFunction = comboZoomEffects.SelectedIndex;
+            };
+
+            comboPanEffects.SelectedIndexChanged += (s, e) =>
+            {
+                settings.PanEasingFunction = comboPanEffects.SelectedIndex;
+            };
+        }
+
+        private void RadioButton_CheckedChanged(object? sender, EventArgs e)
+        {
+            RadioButton radioButton = sender as RadioButton;
+
+            if (radioButton != null && radioButton.Checked)
+            {
+                switch (radioButton.Name)
                 {
-                    if (!settings.SelectedExtensions.Contains(checkBox.Text))
-                    {
-                        settings.SelectedExtensions.Add(checkBox.Text);
-                    }
-                }
-                else
-                {
-                    if (settings.SelectedExtensions.Contains(checkBox.Text))
-                    {
-                        settings.SelectedExtensions.Remove(checkBox.Text);
-                    }
+                    case "rbRepeatVideo":
+                        settings.AutoPlayMethod = AutoPlayMethod.LoopVideo;
+                        break;
+                    case "rbAutoNext":
+                        settings.AutoPlayMethod = AutoPlayMethod.AutoNext;
+                        break;
+                    case "rbAutoTimer":
+                        settings.AutoPlayMethod = AutoPlayMethod.AutoTimer;
+                        break;
                 }
             }
         }
 
-        private void btnSelectVideoExt_Click(object sender, EventArgs e)
+        private void btnRestoreDefaults_Click(object sender, EventArgs e)
         {
-            foreach (Control control in panelVideoExtensions.Controls)
+            settings.ZoomAmount = 0.5;
+            settings.PanAmount = 0.2;
+
+            inputZoomAmountValue.Value = 5;
+            inputPanAmountValue.Value = 2;
+
+            comboZoomEffects.SelectedIndex = 0;
+            comboPanEffects.SelectedIndex = 0;
+        }
+
+        private void UpdateRangeIndicator()
+        {
+            if (cbEnableTimeRange.Checked)
             {
-                if (control is CheckBox checkBox)
-                {
-                    checkBox.Checked = true;
-                }
+                lblBetweenTime.Text = "to";
+                lblAfterTime.Visible = true;
+                inputTimerValueEndPoint.Visible = true;
+            }
+            else
+            {
+                lblBetweenTime.Text = "seconds";
+                lblAfterTime.Visible = false;
+                inputTimerValueEndPoint.Visible = false;
             }
         }
 
-        private void btnDeselectVideoExt_Click(object sender, EventArgs e)
+        private void TimeRangeValidation(object sender)
         {
-            foreach (Control control in panelVideoExtensions.Controls)
-            {
-                if (control is CheckBox checkBox)
-                {
-                    checkBox.Checked = false;
-                }
-            }
-        }
+            int minValue = (int)inputTimerValueStartPoint.Value;
+            int maxValue = (int)inputTimerValueEndPoint.Value;
 
-        private void btnSelectImageExt_Click(object sender, EventArgs e)
-        {
-            foreach (Control control in panelImageExtensions.Controls)
-            {
-                if (control is CheckBox checkBox)
-                {
-                    checkBox.Checked = true;
-                }
-            }
-        }
+            CustomNumericUpDown inputBox = sender as CustomNumericUpDown;
 
-        private void btnDeselectImageExt_Click(object sender, EventArgs e)
-        {
-            foreach (Control control in panelImageExtensions.Controls)
+            if(inputBox != null && inputBox == inputTimerValueStartPoint)
             {
-                if (control is CheckBox checkBox)
+                if (minValue >= maxValue)
                 {
-                    checkBox.Checked = false;
+                    inputTimerValueEndPoint.Value = minValue + 1;
                 }
             }
+            else if (inputBox != null && inputBox == inputTimerValueEndPoint)
+            {
+                if (maxValue <= minValue)
+                {
+                    inputTimerValueStartPoint.Value = maxValue - 1;
+                }
+            }
+
         }
     }
 }

@@ -144,25 +144,6 @@ namespace RandomVideoPlayer.Model
             }
         }
 
-        public bool PanHorizontalLimitReached
-        {
-            get
-            {
-                if (_panCounterX >= _maxPanCounterX) return true;
-                else if (_panCounterX <= -_maxPanCounterX) return true;
-                else return false;
-            }
-        }
-        public bool PanVerticalLimitReached
-        {
-            get
-            {
-                if (_panCounterY >= _maxPanCounterY) return true;
-                else if (_panCounterY <= -_maxPanCounterY) return true;
-                else return false;
-            }
-        }
-
         public bool IncrementScaleCounterHorizontal(int increment)
         {
             int newZoomCounter = _scaleCounterX + increment;

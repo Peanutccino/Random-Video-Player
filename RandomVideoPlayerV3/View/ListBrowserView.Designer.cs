@@ -34,6 +34,8 @@
             lblTitle = new Label();
             btnClose = new FontAwesome.Sharp.IconButton();
             panelBody = new Panel();
+            btnAddFav = new FontAwesome.Sharp.IconButton();
+            btnDeleteFav = new FontAwesome.Sharp.IconButton();
             label2 = new Label();
             label1 = new Label();
             lbFavorites = new ListBox();
@@ -42,8 +44,9 @@
             columnHeader2 = new ColumnHeader();
             imageListLarge = new ImageList(components);
             panel2 = new Panel();
-            btnDeleteFav = new FontAwesome.Sharp.IconButton();
-            btnAddFav = new FontAwesome.Sharp.IconButton();
+            cbEnableScriptFilter = new Controls.RoundedImageCheckBox();
+            cbEnableVideoFilter = new Controls.RoundedImageCheckBox();
+            cbEnableImageFilter = new Controls.RoundedImageCheckBox();
             btnViewList = new FontAwesome.Sharp.IconButton();
             btnViewTile = new FontAwesome.Sharp.IconButton();
             btnIncreaseSize = new FontAwesome.Sharp.IconButton();
@@ -62,26 +65,10 @@
             btnAddAll = new FontAwesome.Sharp.IconButton();
             btnAddSelected = new FontAwesome.Sharp.IconButton();
             panelFilterExt = new Controls.CustomPanel();
-            cbAVIF = new Controls.RoundedCheckBox();
-            cbWEBP = new Controls.RoundedCheckBox();
-            cbTIFF = new Controls.RoundedCheckBox();
-            cbTIF = new Controls.RoundedCheckBox();
-            cbBMP = new Controls.RoundedCheckBox();
-            cbGIF = new Controls.RoundedCheckBox();
-            cbPNG = new Controls.RoundedCheckBox();
-            cbJPEG = new Controls.RoundedCheckBox();
-            cbJPG = new Controls.RoundedCheckBox();
-            cbAVCHD = new Controls.RoundedCheckBox();
-            cbWEBM = new Controls.RoundedCheckBox();
-            cbMP4 = new Controls.RoundedCheckBox();
-            cbF4V = new Controls.RoundedCheckBox();
-            cbFLV = new Controls.RoundedCheckBox();
-            cbWMV = new Controls.RoundedCheckBox();
-            cbM4V = new Controls.RoundedCheckBox();
-            cbMKV = new Controls.RoundedCheckBox();
-            cbMOV = new Controls.RoundedCheckBox();
-            cbAVI = new Controls.RoundedCheckBox();
-            label3 = new Label();
+            flowPanelImageCheckboxes = new FlowLayoutPanel();
+            btnImageExtensions = new FontAwesome.Sharp.IconButton();
+            flowPanelVideoCheckboxes = new FlowLayoutPanel();
+            btnVideoExtensions = new FontAwesome.Sharp.IconButton();
             lvCustomList = new ListView();
             columnHeader1 = new ColumnHeader();
             btnSaveList = new FontAwesome.Sharp.IconButton();
@@ -155,6 +142,8 @@
             // panelBody
             // 
             panelBody.BackColor = Color.MistyRose;
+            panelBody.Controls.Add(btnAddFav);
+            panelBody.Controls.Add(btnDeleteFav);
             panelBody.Controls.Add(label2);
             panelBody.Controls.Add(label1);
             panelBody.Controls.Add(lbFavorites);
@@ -167,6 +156,38 @@
             panelBody.Name = "panelBody";
             panelBody.Size = new Size(1199, 701);
             panelBody.TabIndex = 1;
+            // 
+            // btnAddFav
+            // 
+            btnAddFav.FlatAppearance.BorderSize = 0;
+            btnAddFav.FlatStyle = FlatStyle.Flat;
+            btnAddFav.IconChar = FontAwesome.Sharp.IconChar.FolderPlus;
+            btnAddFav.IconColor = Color.Black;
+            btnAddFav.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnAddFav.IconSize = 26;
+            btnAddFav.Location = new Point(78, 320);
+            btnAddFav.Margin = new Padding(3, 3, 15, 3);
+            btnAddFav.Name = "btnAddFav";
+            btnAddFav.Size = new Size(30, 30);
+            btnAddFav.TabIndex = 21;
+            btnAddFav.UseVisualStyleBackColor = true;
+            btnAddFav.Click += btnAddFav_Click;
+            // 
+            // btnDeleteFav
+            // 
+            btnDeleteFav.FlatAppearance.BorderSize = 0;
+            btnDeleteFav.FlatStyle = FlatStyle.Flat;
+            btnDeleteFav.IconChar = FontAwesome.Sharp.IconChar.FolderMinus;
+            btnDeleteFav.IconColor = Color.Black;
+            btnDeleteFav.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnDeleteFav.IconSize = 26;
+            btnDeleteFav.Location = new Point(15, 320);
+            btnDeleteFav.Margin = new Padding(15, 3, 3, 3);
+            btnDeleteFav.Name = "btnDeleteFav";
+            btnDeleteFav.Size = new Size(30, 30);
+            btnDeleteFav.TabIndex = 22;
+            btnDeleteFav.UseVisualStyleBackColor = true;
+            btnDeleteFav.Click += btnDeleteFav_Click;
             // 
             // label2
             // 
@@ -198,9 +219,9 @@
             lbFavorites.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
             lbFavorites.FormattingEnabled = true;
             lbFavorites.ItemHeight = 15;
-            lbFavorites.Location = new Point(-1, 320);
+            lbFavorites.Location = new Point(-1, 350);
             lbFavorites.Name = "lbFavorites";
-            lbFavorites.Size = new Size(126, 375);
+            lbFavorites.Size = new Size(126, 345);
             lbFavorites.TabIndex = 20;
             lbFavorites.DoubleClick += lbFavorites_DoubleClick;
             lbFavorites.MouseMove += lbFavorites_MouseMove;
@@ -230,7 +251,7 @@
             splitContainerBody.Panel2.Controls.Add(btnClearSelected);
             splitContainerBody.Panel2.Controls.Add(btnLoadList);
             splitContainerBody.Size = new Size(1070, 666);
-            splitContainerBody.SplitterDistance = 468;
+            splitContainerBody.SplitterDistance = 470;
             splitContainerBody.TabIndex = 6;
             // 
             // lvFileExplore
@@ -244,7 +265,7 @@
             lvFileExplore.Location = new Point(0, 36);
             lvFileExplore.Name = "lvFileExplore";
             lvFileExplore.ShowItemToolTips = true;
-            lvFileExplore.Size = new Size(468, 630);
+            lvFileExplore.Size = new Size(470, 630);
             lvFileExplore.SmallImageList = imageListLarge;
             lvFileExplore.TabIndex = 0;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
@@ -286,8 +307,9 @@
             // 
             // panel2
             // 
-            panel2.Controls.Add(btnDeleteFav);
-            panel2.Controls.Add(btnAddFav);
+            panel2.Controls.Add(cbEnableScriptFilter);
+            panel2.Controls.Add(cbEnableVideoFilter);
+            panel2.Controls.Add(cbEnableImageFilter);
             panel2.Controls.Add(btnViewList);
             panel2.Controls.Add(btnViewTile);
             panel2.Controls.Add(btnIncreaseSize);
@@ -297,38 +319,62 @@
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(468, 36);
+            panel2.Size = new Size(470, 36);
             panel2.TabIndex = 1;
             // 
-            // btnDeleteFav
+            // cbEnableScriptFilter
             // 
-            btnDeleteFav.FlatAppearance.BorderSize = 0;
-            btnDeleteFav.FlatStyle = FlatStyle.Flat;
-            btnDeleteFav.IconChar = FontAwesome.Sharp.IconChar.FolderMinus;
-            btnDeleteFav.IconColor = Color.Black;
-            btnDeleteFav.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnDeleteFav.IconSize = 26;
-            btnDeleteFav.Location = new Point(172, 3);
-            btnDeleteFav.Name = "btnDeleteFav";
-            btnDeleteFav.Size = new Size(30, 30);
-            btnDeleteFav.TabIndex = 22;
-            btnDeleteFav.UseVisualStyleBackColor = true;
-            btnDeleteFav.Click += btnDeleteFav_Click;
+            cbEnableScriptFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cbEnableScriptFilter.Appearance = Appearance.Button;
+            cbEnableScriptFilter.BackColor = Color.Transparent;
+            cbEnableScriptFilter.CheckedBackColor = Color.DeepSkyBlue;
+            cbEnableScriptFilter.FlatAppearance.BorderSize = 0;
+            cbEnableScriptFilter.FlatStyle = FlatStyle.Flat;
+            cbEnableScriptFilter.Image = (Image)resources.GetObject("cbEnableScriptFilter.Image");
+            cbEnableScriptFilter.Location = new Point(437, 3);
+            cbEnableScriptFilter.Name = "cbEnableScriptFilter";
+            cbEnableScriptFilter.Size = new Size(30, 30);
+            cbEnableScriptFilter.TabIndex = 28;
+            cbEnableScriptFilter.Text = "roundedImageCheckBox1";
+            cbEnableScriptFilter.UncheckedBackColor = Color.MistyRose;
+            cbEnableScriptFilter.UseVisualStyleBackColor = false;
+            cbEnableScriptFilter.CheckedChanged += cbEnableScriptFilter_CheckedChanged;
             // 
-            // btnAddFav
+            // cbEnableVideoFilter
             // 
-            btnAddFav.FlatAppearance.BorderSize = 0;
-            btnAddFav.FlatStyle = FlatStyle.Flat;
-            btnAddFav.IconChar = FontAwesome.Sharp.IconChar.FolderPlus;
-            btnAddFav.IconColor = Color.Black;
-            btnAddFav.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnAddFav.IconSize = 26;
-            btnAddFav.Location = new Point(218, 3);
-            btnAddFav.Name = "btnAddFav";
-            btnAddFav.Size = new Size(30, 30);
-            btnAddFav.TabIndex = 21;
-            btnAddFav.UseVisualStyleBackColor = true;
-            btnAddFav.Click += btnAddFav_Click;
+            cbEnableVideoFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cbEnableVideoFilter.Appearance = Appearance.Button;
+            cbEnableVideoFilter.BackColor = Color.Transparent;
+            cbEnableVideoFilter.CheckedBackColor = Color.PaleGreen;
+            cbEnableVideoFilter.FlatAppearance.BorderSize = 0;
+            cbEnableVideoFilter.FlatStyle = FlatStyle.Flat;
+            cbEnableVideoFilter.Image = (Image)resources.GetObject("cbEnableVideoFilter.Image");
+            cbEnableVideoFilter.Location = new Point(365, 3);
+            cbEnableVideoFilter.Name = "cbEnableVideoFilter";
+            cbEnableVideoFilter.Size = new Size(30, 30);
+            cbEnableVideoFilter.TabIndex = 27;
+            cbEnableVideoFilter.Text = "roundedImageCheckBox3";
+            cbEnableVideoFilter.UncheckedBackColor = Color.MistyRose;
+            cbEnableVideoFilter.UseVisualStyleBackColor = false;
+            cbEnableVideoFilter.CheckedChanged += cbEnableVideoFilter_CheckedChanged;
+            // 
+            // cbEnableImageFilter
+            // 
+            cbEnableImageFilter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cbEnableImageFilter.Appearance = Appearance.Button;
+            cbEnableImageFilter.BackColor = Color.Transparent;
+            cbEnableImageFilter.CheckedBackColor = Color.LightCoral;
+            cbEnableImageFilter.FlatAppearance.BorderSize = 0;
+            cbEnableImageFilter.FlatStyle = FlatStyle.Flat;
+            cbEnableImageFilter.Image = (Image)resources.GetObject("cbEnableImageFilter.Image");
+            cbEnableImageFilter.Location = new Point(401, 3);
+            cbEnableImageFilter.Name = "cbEnableImageFilter";
+            cbEnableImageFilter.Size = new Size(30, 30);
+            cbEnableImageFilter.TabIndex = 26;
+            cbEnableImageFilter.Text = "roundedImageCheckBox2";
+            cbEnableImageFilter.UncheckedBackColor = Color.MistyRose;
+            cbEnableImageFilter.UseVisualStyleBackColor = false;
+            cbEnableImageFilter.CheckedChanged += cbEnableImageFilter_CheckedChanged;
             // 
             // btnViewList
             // 
@@ -339,7 +385,7 @@
             btnViewList.IconColor = Color.Black;
             btnViewList.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnViewList.IconSize = 30;
-            btnViewList.Location = new Point(363, 3);
+            btnViewList.Location = new Point(200, 3);
             btnViewList.Name = "btnViewList";
             btnViewList.Size = new Size(30, 30);
             btnViewList.TabIndex = 0;
@@ -355,7 +401,7 @@
             btnViewTile.IconColor = Color.Black;
             btnViewTile.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnViewTile.IconSize = 30;
-            btnViewTile.Location = new Point(399, 3);
+            btnViewTile.Location = new Point(236, 3);
             btnViewTile.Name = "btnViewTile";
             btnViewTile.Size = new Size(30, 30);
             btnViewTile.TabIndex = 2;
@@ -380,17 +426,18 @@
             // btnViewGrid
             // 
             btnViewGrid.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnViewGrid.BackColor = Color.MistyRose;
             btnViewGrid.FlatAppearance.BorderSize = 0;
             btnViewGrid.FlatStyle = FlatStyle.Flat;
             btnViewGrid.IconChar = FontAwesome.Sharp.IconChar.TableCellsLarge;
             btnViewGrid.IconColor = Color.Black;
             btnViewGrid.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnViewGrid.IconSize = 30;
-            btnViewGrid.Location = new Point(435, 3);
+            btnViewGrid.Location = new Point(272, 3);
             btnViewGrid.Name = "btnViewGrid";
             btnViewGrid.Size = new Size(30, 30);
             btnViewGrid.TabIndex = 1;
-            btnViewGrid.UseVisualStyleBackColor = true;
+            btnViewGrid.UseVisualStyleBackColor = false;
             btnViewGrid.Click += btnViewGrid_Click;
             // 
             // btnResetSize
@@ -450,7 +497,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(598, 36);
+            panel1.Size = new Size(596, 36);
             panel1.TabIndex = 22;
             // 
             // panelCustomListToolbar
@@ -464,7 +511,7 @@
             panelCustomListToolbar.Controls.Add(customPanel2);
             panelCustomListToolbar.Location = new Point(0, 0);
             panelCustomListToolbar.Name = "panelCustomListToolbar";
-            panelCustomListToolbar.Size = new Size(493, 36);
+            panelCustomListToolbar.Size = new Size(491, 36);
             panelCustomListToolbar.TabIndex = 0;
             panelCustomListToolbar.TopLeftXOffset = 0;
             panelCustomListToolbar.TopRightOffset = 0;
@@ -479,7 +526,7 @@
             cbShowIcons.FlatAppearance.BorderSize = 0;
             cbShowIcons.FlatStyle = FlatStyle.Flat;
             cbShowIcons.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbShowIcons.Location = new Point(326, 4);
+            cbShowIcons.Location = new Point(324, 4);
             cbShowIcons.Name = "cbShowIcons";
             cbShowIcons.Size = new Size(120, 26);
             cbShowIcons.TabIndex = 28;
@@ -545,7 +592,7 @@
             btnUseList.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnUseList.IconSize = 24;
             btnUseList.ImageAlign = ContentAlignment.MiddleRight;
-            btnUseList.Location = new Point(452, 0);
+            btnUseList.Location = new Point(450, 0);
             btnUseList.Name = "btnUseList";
             btnUseList.Size = new Size(146, 36);
             btnUseList.TabIndex = 23;
@@ -612,26 +659,10 @@
             panelFilterExt.BackColor = Color.MistyRose;
             panelFilterExt.BottomRightOffset = 0;
             panelFilterExt.BottomRightXOffset = 0;
-            panelFilterExt.Controls.Add(cbAVIF);
-            panelFilterExt.Controls.Add(cbWEBP);
-            panelFilterExt.Controls.Add(cbTIFF);
-            panelFilterExt.Controls.Add(cbTIF);
-            panelFilterExt.Controls.Add(cbBMP);
-            panelFilterExt.Controls.Add(cbGIF);
-            panelFilterExt.Controls.Add(cbPNG);
-            panelFilterExt.Controls.Add(cbJPEG);
-            panelFilterExt.Controls.Add(cbJPG);
-            panelFilterExt.Controls.Add(cbAVCHD);
-            panelFilterExt.Controls.Add(cbWEBM);
-            panelFilterExt.Controls.Add(cbMP4);
-            panelFilterExt.Controls.Add(cbF4V);
-            panelFilterExt.Controls.Add(cbFLV);
-            panelFilterExt.Controls.Add(cbWMV);
-            panelFilterExt.Controls.Add(cbM4V);
-            panelFilterExt.Controls.Add(cbMKV);
-            panelFilterExt.Controls.Add(cbMOV);
-            panelFilterExt.Controls.Add(cbAVI);
-            panelFilterExt.Controls.Add(label3);
+            panelFilterExt.Controls.Add(flowPanelImageCheckboxes);
+            panelFilterExt.Controls.Add(btnImageExtensions);
+            panelFilterExt.Controls.Add(flowPanelVideoCheckboxes);
+            panelFilterExt.Controls.Add(btnVideoExtensions);
             panelFilterExt.Location = new Point(-6, 309);
             panelFilterExt.Name = "panelFilterExt";
             panelFilterExt.Size = new Size(132, 357);
@@ -640,340 +671,58 @@
             panelFilterExt.TopRightOffset = 0;
             panelFilterExt.TopRightXOffset = 0;
             // 
-            // cbAVIF
+            // flowPanelImageCheckboxes
             // 
-            cbAVIF.Appearance = Appearance.Button;
-            cbAVIF.BackColor = Color.Transparent;
-            cbAVIF.CheckedBackColor = Color.LightPink;
-            cbAVIF.FlatAppearance.BorderSize = 0;
-            cbAVIF.FlatStyle = FlatStyle.Flat;
-            cbAVIF.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbAVIF.Location = new Point(14, 329);
-            cbAVIF.Name = "cbAVIF";
-            cbAVIF.Size = new Size(48, 25);
-            cbAVIF.TabIndex = 39;
-            cbAVIF.Text = "avif";
-            cbAVIF.TextAlign = ContentAlignment.MiddleCenter;
-            cbAVIF.UncheckedBackColor = Color.MistyRose;
-            cbAVIF.UseVisualStyleBackColor = true;
+            flowPanelImageCheckboxes.Dock = DockStyle.Top;
+            flowPanelImageCheckboxes.Location = new Point(0, 252);
+            flowPanelImageCheckboxes.Name = "flowPanelImageCheckboxes";
+            flowPanelImageCheckboxes.Padding = new Padding(6, 0, 0, 0);
+            flowPanelImageCheckboxes.Size = new Size(132, 10);
+            flowPanelImageCheckboxes.TabIndex = 3;
+            flowPanelImageCheckboxes.Visible = false;
             // 
-            // cbWEBP
+            // btnImageExtensions
             // 
-            cbWEBP.Appearance = Appearance.Button;
-            cbWEBP.BackColor = Color.Transparent;
-            cbWEBP.CheckedBackColor = Color.LightPink;
-            cbWEBP.FlatAppearance.BorderSize = 0;
-            cbWEBP.FlatStyle = FlatStyle.Flat;
-            cbWEBP.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbWEBP.Location = new Point(68, 298);
-            cbWEBP.Name = "cbWEBP";
-            cbWEBP.Size = new Size(48, 25);
-            cbWEBP.TabIndex = 38;
-            cbWEBP.Text = "webp";
-            cbWEBP.TextAlign = ContentAlignment.MiddleCenter;
-            cbWEBP.UncheckedBackColor = Color.MistyRose;
-            cbWEBP.UseVisualStyleBackColor = true;
+            btnImageExtensions.Dock = DockStyle.Top;
+            btnImageExtensions.FlatAppearance.BorderSize = 0;
+            btnImageExtensions.FlatStyle = FlatStyle.Flat;
+            btnImageExtensions.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnImageExtensions.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnImageExtensions.IconColor = Color.Black;
+            btnImageExtensions.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnImageExtensions.Location = new Point(0, 216);
+            btnImageExtensions.Name = "btnImageExtensions";
+            btnImageExtensions.Size = new Size(132, 36);
+            btnImageExtensions.TabIndex = 2;
+            btnImageExtensions.Text = "Image ext";
+            btnImageExtensions.UseVisualStyleBackColor = true;
+            btnImageExtensions.Click += btnImageExtensions_Click;
             // 
-            // cbTIFF
+            // flowPanelVideoCheckboxes
             // 
-            cbTIFF.Appearance = Appearance.Button;
-            cbTIFF.BackColor = Color.Transparent;
-            cbTIFF.CheckedBackColor = Color.LightPink;
-            cbTIFF.FlatAppearance.BorderSize = 0;
-            cbTIFF.FlatStyle = FlatStyle.Flat;
-            cbTIFF.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbTIFF.Location = new Point(14, 298);
-            cbTIFF.Name = "cbTIFF";
-            cbTIFF.Size = new Size(48, 25);
-            cbTIFF.TabIndex = 37;
-            cbTIFF.Text = "tiff";
-            cbTIFF.TextAlign = ContentAlignment.MiddleCenter;
-            cbTIFF.UncheckedBackColor = Color.MistyRose;
-            cbTIFF.UseVisualStyleBackColor = true;
+            flowPanelVideoCheckboxes.Dock = DockStyle.Top;
+            flowPanelVideoCheckboxes.Location = new Point(0, 36);
+            flowPanelVideoCheckboxes.Name = "flowPanelVideoCheckboxes";
+            flowPanelVideoCheckboxes.Padding = new Padding(6, 0, 0, 0);
+            flowPanelVideoCheckboxes.Size = new Size(132, 180);
+            flowPanelVideoCheckboxes.TabIndex = 1;
             // 
-            // cbTIF
+            // btnVideoExtensions
             // 
-            cbTIF.Appearance = Appearance.Button;
-            cbTIF.BackColor = Color.Transparent;
-            cbTIF.CheckedBackColor = Color.LightPink;
-            cbTIF.FlatAppearance.BorderSize = 0;
-            cbTIF.FlatStyle = FlatStyle.Flat;
-            cbTIF.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbTIF.Location = new Point(68, 267);
-            cbTIF.Name = "cbTIF";
-            cbTIF.Size = new Size(48, 25);
-            cbTIF.TabIndex = 36;
-            cbTIF.Text = "tif";
-            cbTIF.TextAlign = ContentAlignment.MiddleCenter;
-            cbTIF.UncheckedBackColor = Color.MistyRose;
-            cbTIF.UseVisualStyleBackColor = true;
-            // 
-            // cbBMP
-            // 
-            cbBMP.Appearance = Appearance.Button;
-            cbBMP.BackColor = Color.Transparent;
-            cbBMP.CheckedBackColor = Color.LightPink;
-            cbBMP.FlatAppearance.BorderSize = 0;
-            cbBMP.FlatStyle = FlatStyle.Flat;
-            cbBMP.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbBMP.Location = new Point(14, 267);
-            cbBMP.Name = "cbBMP";
-            cbBMP.Size = new Size(48, 25);
-            cbBMP.TabIndex = 35;
-            cbBMP.Text = "bmp";
-            cbBMP.TextAlign = ContentAlignment.MiddleCenter;
-            cbBMP.UncheckedBackColor = Color.MistyRose;
-            cbBMP.UseVisualStyleBackColor = true;
-            // 
-            // cbGIF
-            // 
-            cbGIF.Appearance = Appearance.Button;
-            cbGIF.BackColor = Color.Transparent;
-            cbGIF.CheckedBackColor = Color.LightPink;
-            cbGIF.FlatAppearance.BorderSize = 0;
-            cbGIF.FlatStyle = FlatStyle.Flat;
-            cbGIF.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbGIF.Location = new Point(68, 236);
-            cbGIF.Name = "cbGIF";
-            cbGIF.Size = new Size(48, 25);
-            cbGIF.TabIndex = 34;
-            cbGIF.Text = "gif";
-            cbGIF.TextAlign = ContentAlignment.MiddleCenter;
-            cbGIF.UncheckedBackColor = Color.MistyRose;
-            cbGIF.UseVisualStyleBackColor = true;
-            // 
-            // cbPNG
-            // 
-            cbPNG.Appearance = Appearance.Button;
-            cbPNG.BackColor = Color.Transparent;
-            cbPNG.CheckedBackColor = Color.LightPink;
-            cbPNG.FlatAppearance.BorderSize = 0;
-            cbPNG.FlatStyle = FlatStyle.Flat;
-            cbPNG.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbPNG.Location = new Point(14, 236);
-            cbPNG.Name = "cbPNG";
-            cbPNG.Size = new Size(48, 25);
-            cbPNG.TabIndex = 33;
-            cbPNG.Text = "png";
-            cbPNG.TextAlign = ContentAlignment.MiddleCenter;
-            cbPNG.UncheckedBackColor = Color.MistyRose;
-            cbPNG.UseVisualStyleBackColor = true;
-            // 
-            // cbJPEG
-            // 
-            cbJPEG.Appearance = Appearance.Button;
-            cbJPEG.BackColor = Color.Transparent;
-            cbJPEG.CheckedBackColor = Color.LightPink;
-            cbJPEG.FlatAppearance.BorderSize = 0;
-            cbJPEG.FlatStyle = FlatStyle.Flat;
-            cbJPEG.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbJPEG.Location = new Point(68, 205);
-            cbJPEG.Name = "cbJPEG";
-            cbJPEG.Size = new Size(48, 25);
-            cbJPEG.TabIndex = 32;
-            cbJPEG.Text = "jpeg";
-            cbJPEG.TextAlign = ContentAlignment.MiddleCenter;
-            cbJPEG.UncheckedBackColor = Color.MistyRose;
-            cbJPEG.UseVisualStyleBackColor = true;
-            // 
-            // cbJPG
-            // 
-            cbJPG.Appearance = Appearance.Button;
-            cbJPG.BackColor = Color.Transparent;
-            cbJPG.CheckedBackColor = Color.LightPink;
-            cbJPG.FlatAppearance.BorderSize = 0;
-            cbJPG.FlatStyle = FlatStyle.Flat;
-            cbJPG.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbJPG.Location = new Point(14, 205);
-            cbJPG.Name = "cbJPG";
-            cbJPG.Size = new Size(48, 25);
-            cbJPG.TabIndex = 31;
-            cbJPG.Text = "jpg";
-            cbJPG.TextAlign = ContentAlignment.MiddleCenter;
-            cbJPG.UncheckedBackColor = Color.MistyRose;
-            cbJPG.UseVisualStyleBackColor = true;
-            // 
-            // cbAVCHD
-            // 
-            cbAVCHD.Appearance = Appearance.Button;
-            cbAVCHD.BackColor = Color.Transparent;
-            cbAVCHD.CheckedBackColor = Color.LightPink;
-            cbAVCHD.FlatAppearance.BorderSize = 0;
-            cbAVCHD.FlatStyle = FlatStyle.Flat;
-            cbAVCHD.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbAVCHD.Location = new Point(68, 160);
-            cbAVCHD.Name = "cbAVCHD";
-            cbAVCHD.Size = new Size(48, 25);
-            cbAVCHD.TabIndex = 30;
-            cbAVCHD.Text = "avchd";
-            cbAVCHD.TextAlign = ContentAlignment.MiddleCenter;
-            cbAVCHD.UncheckedBackColor = Color.MistyRose;
-            cbAVCHD.UseVisualStyleBackColor = true;
-            // 
-            // cbWEBM
-            // 
-            cbWEBM.Appearance = Appearance.Button;
-            cbWEBM.BackColor = Color.Transparent;
-            cbWEBM.CheckedBackColor = Color.LightPink;
-            cbWEBM.FlatAppearance.BorderSize = 0;
-            cbWEBM.FlatStyle = FlatStyle.Flat;
-            cbWEBM.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbWEBM.Location = new Point(14, 160);
-            cbWEBM.Name = "cbWEBM";
-            cbWEBM.Size = new Size(48, 25);
-            cbWEBM.TabIndex = 29;
-            cbWEBM.Text = "webm";
-            cbWEBM.TextAlign = ContentAlignment.MiddleCenter;
-            cbWEBM.UncheckedBackColor = Color.MistyRose;
-            cbWEBM.UseVisualStyleBackColor = true;
-            // 
-            // cbMP4
-            // 
-            cbMP4.Appearance = Appearance.Button;
-            cbMP4.BackColor = Color.Transparent;
-            cbMP4.CheckedBackColor = Color.LightPink;
-            cbMP4.FlatAppearance.BorderSize = 0;
-            cbMP4.FlatStyle = FlatStyle.Flat;
-            cbMP4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbMP4.Location = new Point(68, 129);
-            cbMP4.Name = "cbMP4";
-            cbMP4.Size = new Size(48, 25);
-            cbMP4.TabIndex = 28;
-            cbMP4.Text = "mp4";
-            cbMP4.TextAlign = ContentAlignment.MiddleCenter;
-            cbMP4.UncheckedBackColor = Color.MistyRose;
-            cbMP4.UseVisualStyleBackColor = true;
-            // 
-            // cbF4V
-            // 
-            cbF4V.Appearance = Appearance.Button;
-            cbF4V.BackColor = Color.Transparent;
-            cbF4V.CheckedBackColor = Color.LightPink;
-            cbF4V.FlatAppearance.BorderSize = 0;
-            cbF4V.FlatStyle = FlatStyle.Flat;
-            cbF4V.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbF4V.Location = new Point(14, 129);
-            cbF4V.Name = "cbF4V";
-            cbF4V.Size = new Size(48, 25);
-            cbF4V.TabIndex = 27;
-            cbF4V.Text = "f4v";
-            cbF4V.TextAlign = ContentAlignment.MiddleCenter;
-            cbF4V.UncheckedBackColor = Color.MistyRose;
-            cbF4V.UseVisualStyleBackColor = true;
-            // 
-            // cbFLV
-            // 
-            cbFLV.Appearance = Appearance.Button;
-            cbFLV.BackColor = Color.Transparent;
-            cbFLV.CheckedBackColor = Color.LightPink;
-            cbFLV.FlatAppearance.BorderSize = 0;
-            cbFLV.FlatStyle = FlatStyle.Flat;
-            cbFLV.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbFLV.Location = new Point(68, 98);
-            cbFLV.Name = "cbFLV";
-            cbFLV.Size = new Size(48, 25);
-            cbFLV.TabIndex = 26;
-            cbFLV.Text = "flv";
-            cbFLV.TextAlign = ContentAlignment.MiddleCenter;
-            cbFLV.UncheckedBackColor = Color.MistyRose;
-            cbFLV.UseVisualStyleBackColor = true;
-            // 
-            // cbWMV
-            // 
-            cbWMV.Appearance = Appearance.Button;
-            cbWMV.BackColor = Color.Transparent;
-            cbWMV.CheckedBackColor = Color.LightPink;
-            cbWMV.FlatAppearance.BorderSize = 0;
-            cbWMV.FlatStyle = FlatStyle.Flat;
-            cbWMV.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbWMV.Location = new Point(14, 98);
-            cbWMV.Name = "cbWMV";
-            cbWMV.Size = new Size(48, 25);
-            cbWMV.TabIndex = 25;
-            cbWMV.Text = "wmv";
-            cbWMV.TextAlign = ContentAlignment.MiddleCenter;
-            cbWMV.UncheckedBackColor = Color.MistyRose;
-            cbWMV.UseVisualStyleBackColor = true;
-            // 
-            // cbM4V
-            // 
-            cbM4V.Appearance = Appearance.Button;
-            cbM4V.BackColor = Color.Transparent;
-            cbM4V.CheckedBackColor = Color.LightPink;
-            cbM4V.FlatAppearance.BorderSize = 0;
-            cbM4V.FlatStyle = FlatStyle.Flat;
-            cbM4V.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbM4V.Location = new Point(68, 67);
-            cbM4V.Name = "cbM4V";
-            cbM4V.Size = new Size(48, 25);
-            cbM4V.TabIndex = 24;
-            cbM4V.Text = "m4v";
-            cbM4V.TextAlign = ContentAlignment.MiddleCenter;
-            cbM4V.UncheckedBackColor = Color.MistyRose;
-            cbM4V.UseVisualStyleBackColor = true;
-            // 
-            // cbMKV
-            // 
-            cbMKV.Appearance = Appearance.Button;
-            cbMKV.BackColor = Color.Transparent;
-            cbMKV.CheckedBackColor = Color.LightPink;
-            cbMKV.FlatAppearance.BorderSize = 0;
-            cbMKV.FlatStyle = FlatStyle.Flat;
-            cbMKV.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbMKV.Location = new Point(14, 67);
-            cbMKV.Name = "cbMKV";
-            cbMKV.Size = new Size(48, 25);
-            cbMKV.TabIndex = 23;
-            cbMKV.Text = "mkv";
-            cbMKV.TextAlign = ContentAlignment.MiddleCenter;
-            cbMKV.UncheckedBackColor = Color.MistyRose;
-            cbMKV.UseVisualStyleBackColor = true;
-            // 
-            // cbMOV
-            // 
-            cbMOV.Appearance = Appearance.Button;
-            cbMOV.BackColor = Color.Transparent;
-            cbMOV.CheckedBackColor = Color.LightPink;
-            cbMOV.FlatAppearance.BorderSize = 0;
-            cbMOV.FlatStyle = FlatStyle.Flat;
-            cbMOV.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbMOV.Location = new Point(68, 36);
-            cbMOV.Name = "cbMOV";
-            cbMOV.Size = new Size(48, 25);
-            cbMOV.TabIndex = 22;
-            cbMOV.Text = "mov";
-            cbMOV.TextAlign = ContentAlignment.MiddleCenter;
-            cbMOV.UncheckedBackColor = Color.MistyRose;
-            cbMOV.UseVisualStyleBackColor = true;
-            // 
-            // cbAVI
-            // 
-            cbAVI.Appearance = Appearance.Button;
-            cbAVI.BackColor = Color.Transparent;
-            cbAVI.CheckedBackColor = Color.LightPink;
-            cbAVI.FlatAppearance.BorderSize = 0;
-            cbAVI.FlatStyle = FlatStyle.Flat;
-            cbAVI.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            cbAVI.Location = new Point(14, 36);
-            cbAVI.Name = "cbAVI";
-            cbAVI.Size = new Size(48, 25);
-            cbAVI.TabIndex = 21;
-            cbAVI.Text = "avi";
-            cbAVI.TextAlign = ContentAlignment.MiddleCenter;
-            cbAVI.UncheckedBackColor = Color.MistyRose;
-            cbAVI.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            label3.Dock = DockStyle.Top;
-            label3.Font = new Font("Segoe UI Semibold", 14F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.Location = new Point(0, 0);
-            label3.Margin = new Padding(3);
-            label3.Name = "label3";
-            label3.Size = new Size(132, 30);
-            label3.TabIndex = 0;
-            label3.Text = "Filter";
-            label3.TextAlign = ContentAlignment.MiddleCenter;
+            btnVideoExtensions.Dock = DockStyle.Top;
+            btnVideoExtensions.FlatAppearance.BorderSize = 0;
+            btnVideoExtensions.FlatStyle = FlatStyle.Flat;
+            btnVideoExtensions.Font = new Font("Segoe UI Semibold", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            btnVideoExtensions.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnVideoExtensions.IconColor = Color.Black;
+            btnVideoExtensions.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnVideoExtensions.Location = new Point(0, 0);
+            btnVideoExtensions.Name = "btnVideoExtensions";
+            btnVideoExtensions.Size = new Size(132, 36);
+            btnVideoExtensions.TabIndex = 0;
+            btnVideoExtensions.Text = "Video ext";
+            btnVideoExtensions.UseVisualStyleBackColor = true;
+            btnVideoExtensions.Click += btnVideoExtensions_Click;
             // 
             // lvCustomList
             // 
@@ -987,7 +736,7 @@
             lvCustomList.Location = new Point(127, 39);
             lvCustomList.Name = "lvCustomList";
             lvCustomList.ShowItemToolTips = true;
-            lvCustomList.Size = new Size(468, 627);
+            lvCustomList.Size = new Size(466, 627);
             lvCustomList.TabIndex = 19;
             lvCustomList.UseCompatibleStateImageBehavior = false;
             lvCustomList.View = System.Windows.Forms.View.Details;
@@ -1225,7 +974,6 @@
         private FontAwesome.Sharp.IconButton btnDeleteFav;
         private FontAwesome.Sharp.IconButton btnAddFav;
         private FontAwesome.Sharp.IconButton btnUseList;
-        private Label label3;
         private ImageList imageListLarge;
         private Controls.CustomPanel customPanel1;
         private ListView lvCustomList;
@@ -1242,30 +990,18 @@
         private Panel panel1;
         private Panel panel2;
         private Controls.CustomPanel customPanel2;
-        private Controls.RoundedCheckBox cbAVI;
-        private Controls.RoundedCheckBox cbAVCHD;
-        private Controls.RoundedCheckBox cbWEBM;
-        private Controls.RoundedCheckBox cbMP4;
-        private Controls.RoundedCheckBox cbF4V;
-        private Controls.RoundedCheckBox cbFLV;
-        private Controls.RoundedCheckBox cbWMV;
-        private Controls.RoundedCheckBox cbM4V;
-        private Controls.RoundedCheckBox cbMKV;
-        private Controls.RoundedCheckBox cbMOV;
-        private Controls.RoundedCheckBox cbAVIF;
-        private Controls.RoundedCheckBox cbWEBP;
-        private Controls.RoundedCheckBox cbTIFF;
-        private Controls.RoundedCheckBox cbTIF;
-        private Controls.RoundedCheckBox cbBMP;
-        private Controls.RoundedCheckBox cbGIF;
-        private Controls.RoundedCheckBox cbPNG;
-        private Controls.RoundedCheckBox cbJPEG;
-        private Controls.RoundedCheckBox cbJPG;
         private Controls.RoundedCheckBox cbFullPath;
         private Controls.RoundedCheckBox cbShowIcons;
         private Label label2;
         private Label label1;
         private Label label4;
         private FontAwesome.Sharp.IconButton btnAddFromPlaylist;
+        private FontAwesome.Sharp.IconButton btnVideoExtensions;
+        private FlowLayoutPanel flowPanelImageCheckboxes;
+        private FontAwesome.Sharp.IconButton btnImageExtensions;
+        private FlowLayoutPanel flowPanelVideoCheckboxes;
+        private Controls.RoundedImageCheckBox cbEnableVideoFilter;
+        private Controls.RoundedImageCheckBox cbEnableImageFilter;
+        private Controls.RoundedImageCheckBox cbEnableScriptFilter;
     }
 }

@@ -94,7 +94,7 @@
             cbSourceSelector.CheckedBackColor = Color.PaleGreen;
             cbSourceSelector.FlatAppearance.BorderSize = 0;
             cbSourceSelector.FlatStyle = FlatStyle.Flat;
-            cbSourceSelector.Location = new Point(63, 241);
+            cbSourceSelector.Location = new Point(67, 241);
             cbSourceSelector.Margin = new Padding(12, 3, 3, 3);
             cbSourceSelector.Name = "cbSourceSelector";
             cbSourceSelector.Size = new Size(168, 28);
@@ -106,9 +106,9 @@
             // flowPanel
             // 
             flowPanel.FlowDirection = FlowDirection.TopDown;
-            flowPanel.Location = new Point(237, 0);
+            flowPanel.Location = new Point(241, 0);
             flowPanel.Name = "flowPanel";
-            flowPanel.Size = new Size(117, 278);
+            flowPanel.Size = new Size(66, 278);
             flowPanel.TabIndex = 8;
             // 
             // cbListAddButton
@@ -118,7 +118,7 @@
             cbListAddButton.CheckedBackColor = Color.PaleGreen;
             cbListAddButton.FlatAppearance.BorderSize = 0;
             cbListAddButton.FlatStyle = FlatStyle.Flat;
-            cbListAddButton.Location = new Point(63, 71);
+            cbListAddButton.Location = new Point(67, 71);
             cbListAddButton.Margin = new Padding(12, 3, 3, 3);
             cbListAddButton.Name = "cbListAddButton";
             cbListAddButton.Size = new Size(168, 28);
@@ -134,7 +134,7 @@
             cbMoveToButton.CheckedBackColor = Color.PaleGreen;
             cbMoveToButton.FlatAppearance.BorderSize = 0;
             cbMoveToButton.FlatStyle = FlatStyle.Flat;
-            cbMoveToButton.Location = new Point(63, 139);
+            cbMoveToButton.Location = new Point(67, 139);
             cbMoveToButton.Margin = new Padding(12, 3, 3, 3);
             cbMoveToButton.Name = "cbMoveToButton";
             cbMoveToButton.Size = new Size(168, 28);
@@ -150,7 +150,7 @@
             cbLoopButton.CheckedBackColor = Color.PaleGreen;
             cbLoopButton.FlatAppearance.BorderSize = 0;
             cbLoopButton.FlatStyle = FlatStyle.Flat;
-            cbLoopButton.Location = new Point(63, 207);
+            cbLoopButton.Location = new Point(67, 207);
             cbLoopButton.Margin = new Padding(12, 3, 3, 3);
             cbLoopButton.Name = "cbLoopButton";
             cbLoopButton.Size = new Size(168, 28);
@@ -166,7 +166,7 @@
             cbShuffleButton.CheckedBackColor = Color.PaleGreen;
             cbShuffleButton.FlatAppearance.BorderSize = 0;
             cbShuffleButton.FlatStyle = FlatStyle.Flat;
-            cbShuffleButton.Location = new Point(63, 173);
+            cbShuffleButton.Location = new Point(67, 173);
             cbShuffleButton.Margin = new Padding(12, 3, 3, 3);
             cbShuffleButton.Name = "cbShuffleButton";
             cbShuffleButton.Size = new Size(168, 28);
@@ -182,7 +182,7 @@
             cbAddToFavButton.CheckedBackColor = Color.PaleGreen;
             cbAddToFavButton.FlatAppearance.BorderSize = 0;
             cbAddToFavButton.FlatStyle = FlatStyle.Flat;
-            cbAddToFavButton.Location = new Point(63, 105);
+            cbAddToFavButton.Location = new Point(67, 105);
             cbAddToFavButton.Margin = new Padding(12, 3, 3, 3);
             cbAddToFavButton.Name = "cbAddToFavButton";
             cbAddToFavButton.Size = new Size(168, 28);
@@ -198,7 +198,7 @@
             cbListRemoveButton.CheckedBackColor = Color.PaleGreen;
             cbListRemoveButton.FlatAppearance.BorderSize = 0;
             cbListRemoveButton.FlatStyle = FlatStyle.Flat;
-            cbListRemoveButton.Location = new Point(63, 37);
+            cbListRemoveButton.Location = new Point(67, 37);
             cbListRemoveButton.Margin = new Padding(12, 3, 3, 3);
             cbListRemoveButton.Name = "cbListRemoveButton";
             cbListRemoveButton.Size = new Size(168, 28);
@@ -214,7 +214,7 @@
             cbDeleteButton.CheckedBackColor = Color.PaleGreen;
             cbDeleteButton.FlatAppearance.BorderSize = 0;
             cbDeleteButton.FlatStyle = FlatStyle.Flat;
-            cbDeleteButton.Location = new Point(63, 3);
+            cbDeleteButton.Location = new Point(67, 3);
             cbDeleteButton.Margin = new Padding(12, 3, 3, 3);
             cbDeleteButton.Name = "cbDeleteButton";
             cbDeleteButton.Size = new Size(168, 28);
@@ -234,14 +234,14 @@
             // 
             // btnRestore
             // 
-            btnRestore.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnRestore.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnRestore.BackColor = Color.FromArgb(230, 230, 255);
             btnRestore.FlatAppearance.BorderSize = 0;
             btnRestore.FlatStyle = FlatStyle.Flat;
             btnRestore.IconChar = FontAwesome.Sharp.IconChar.None;
             btnRestore.IconColor = Color.Black;
             btnRestore.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnRestore.Location = new Point(3, 6);
+            btnRestore.Location = new Point(291, 6);
             btnRestore.Name = "btnRestore";
             btnRestore.Size = new Size(146, 27);
             btnRestore.TabIndex = 5;

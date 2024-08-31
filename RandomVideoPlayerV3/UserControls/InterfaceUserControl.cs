@@ -114,7 +114,7 @@ namespace RandomVideoPlayer.UserControls
             Button clickedButton = sender as Button;
             int buttonIndex = (int)clickedButton.Tag;
 
-            if (buttonIndex == settings.ButtonStates.Length -1) return;
+            if (buttonIndex == settings.ButtonStates.Length - 1) return;
 
             int buttonIndexEntry = settings.ButtonOrder[buttonIndex];
             settings.ButtonOrder.RemoveAt(buttonIndex);
@@ -146,7 +146,5 @@ namespace RandomVideoPlayer.UserControls
                 y += cbx.Height + margin;
             }
         }
-
-
     }
 }

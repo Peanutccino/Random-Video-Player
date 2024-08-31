@@ -1,4 +1,5 @@
 ﻿using RandomVideoPlayer.Functions;
+using System.Windows.Navigation;
 
 namespace RandomVideoPlayer.Model
 {
@@ -208,23 +209,6 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.includeScripts = value;
-                _settingsInstance.Save();
-            }
-        }
-
-
-        /// <value>Loop currently played media (true) or play next media in list(false).</value> 
-        public static bool LoopPlayer
-        {
-            get 
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.loopPlayer; 
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.loopPlayer = value;
                 _settingsInstance.Save();
             }
         }
@@ -463,6 +447,81 @@ namespace RandomVideoPlayer.Model
             }
         }
 
+        public static double PanAmount
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.panAmount;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.panAmount = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static double ZoomAmount
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.zoomAmount;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.zoomAmount = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static int ZoomEasingFunction
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.zoomEasingFunction;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.zoomEasingFunction = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static int PanEasingFunction
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.panEasingFunction;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.panEasingFunction = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool BurnsEffectEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.burnsEffectEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.burnsEffectEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
         public static bool AlwaysCheckUpdate
         {
             get
@@ -474,6 +533,145 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.alwaysCheckUpdate = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static AutoPlayMethod AutoPlayMethod
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.autoPlayMethod;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.autoPlayMethod = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int AutoPlayTimerValueStartPoint(bool returnRandom = true)
+        {
+                var _settingsInstance = CustomSettings.Instance;
+                if (SettingsHandler.AutoPlayTimerRangeEnabled == false || returnRandom == false)
+                {
+                    return _settingsInstance.autoPlayTimerValueStartPoint;
+                }
+                else
+                {
+                    Random rng = new Random();
+                    return rng.Next(_settingsInstance.autoPlayTimerValueStartPoint, _settingsInstance.autoPlayTimerValueEndPoint + 1);
+                }                  
+        }
+
+        public static void SetAutoPlayTimerValueStartPoint(int value)
+        {
+            var _settingsInstance = CustomSettings.Instance;
+            _settingsInstance.autoPlayTimerValueStartPoint = value;
+            _settingsInstance.Save();
+        }
+
+        public static int AutoPlayTimerValueEndPoint
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.autoPlayTimerValueEndPoint;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.autoPlayTimerValueEndPoint = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool AutoPlayTimerRangeEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.autoPlayTimerRangeEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.autoPlayTimerRangeEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool SubtitlesEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.subtitlesEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.subtitlesEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static int SubtitleFontSize
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.subtitleFontSize;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.subtitleFontSize = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int SubtitleBorderSize
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.subtitleBorderSize;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.subtitleBorderSize = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static string SubtitleFontType
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.subtitleFontName;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.subtitleFontName = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static string SubtitleFontColor
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.subtitleFontColor;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.subtitleFontColor = value;
                 _settingsInstance.Save();
             }
         }

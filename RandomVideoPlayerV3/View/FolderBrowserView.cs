@@ -73,6 +73,9 @@ namespace RandomVideoPlayer.View
             }
 
             cbIncludeSubfolders.Checked = ListHandler.IncludeSubfolders;
+            cbEnableImageFilter.Checked = ListHandler.FilterImageEnabled;
+            cbEnableVideoFilter.Checked = ListHandler.FilterVideoEnabled;
+            cbEnableScriptFilter.Checked = ListHandler.FilterScriptEnabled;
 
             PopulateFavoriteFolders();
 
@@ -236,8 +239,33 @@ namespace RandomVideoPlayer.View
         {
             ChangeViewFileExplore("Grid");
         }
+        private void cbEnableVideoFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            if(cbEnableVideoFilter.Checked)
+            {
+                cbEnableScriptFilter.Checked = false;
+            }
+            ListHandler.FilterVideoEnabled = cbEnableVideoFilter.Checked;
+        }
 
+        private void cbEnableImageFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            if(cbEnableImageFilter.Checked)
+            {
+                cbEnableScriptFilter.Checked = false;
+            }
+            ListHandler.FilterImageEnabled = cbEnableImageFilter.Checked;
+        }
 
+        private void cbEnableScriptFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbEnableScriptFilter.Checked)
+            {
+                cbEnableVideoFilter.Checked = false;
+                cbEnableImageFilter.Checked = false;
+            }
+            ListHandler.FilterScriptEnabled = cbEnableScriptFilter.Checked;
+        }
         private void tbCount_TextChanged(object sender, EventArgs e)
         {
             toolTipInfo.SetToolTip(cbUseRecent, $"Check to load only the latest {tbCount.Text} files chosen on the input to the right");
@@ -497,6 +525,10 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(cbIncludeSubfolders, "Include all subdirectories of the current selected directory");
             cbUseRecent.Text = $"Only latest {tbCount.Text} files";
             toolTipInfo.SetToolTip(tbCount, "Input how many of the latest files are loaded into the playlist");
+
+            toolTipInfo.SetToolTip(cbEnableVideoFilter, "Use selected video extensions");
+            toolTipInfo.SetToolTip(cbEnableImageFilter, "Use selected image extensions");
+            toolTipInfo.SetToolTip(cbEnableScriptFilter, "Play only videos that have a funscript available");
         }
         #endregion
 
@@ -587,6 +619,7 @@ namespace RandomVideoPlayer.View
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
         #endregion
+
 
     }
 }

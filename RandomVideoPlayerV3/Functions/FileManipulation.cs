@@ -1,4 +1,5 @@
-﻿namespace RandomVideoPlayer.Functions
+﻿
+namespace RandomVideoPlayer.Functions
 {
     public class FileManipulation
     {
@@ -90,5 +91,16 @@
 
             return numberOfRows; 
         }
+
+        public static async Task CopyFileAsync(string sourceFilePath, string destinationFilePath)
+        {
+            await Task.Run(() => File.Copy(sourceFilePath, destinationFilePath, true));
+        }
+
+        public static async Task MoveFileAsync(string sourceFilePath, string destinationFilePath)
+        {
+            await Task.Run(() => File.Move(sourceFilePath, destinationFilePath, true));
+        }
+
     }
 }
