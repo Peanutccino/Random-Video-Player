@@ -108,14 +108,7 @@ namespace RandomVideoPlayer
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            if (SettingsHandler.IsPlaying)
-            {
-                PlayerPause();
-            }
-            else
-            {
-                PlayerResume();
-            }
+            PlayerPlayPauseToggle();
         }
         private void btnPrevious_Click(object sender, EventArgs e)
         {
@@ -245,7 +238,7 @@ namespace RandomVideoPlayer
         private void Checkwatch_Tick(object? sender, EventArgs e)
         {
             checkwatch.Stop();
-            PlayerResume();
+            PlayerPlayPauseToggle();
         }
         private void ToggleExclusiveFullscreen()
         {

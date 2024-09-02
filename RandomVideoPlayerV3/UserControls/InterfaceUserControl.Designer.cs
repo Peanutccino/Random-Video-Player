@@ -155,7 +155,7 @@
             cbLoopButton.Name = "cbLoopButton";
             cbLoopButton.Size = new Size(168, 28);
             cbLoopButton.TabIndex = 4;
-            cbLoopButton.Text = "Toggle loop";
+            cbLoopButton.Text = "Switch playback behavior";
             cbLoopButton.UncheckedBackColor = Color.LightGray;
             cbLoopButton.UseVisualStyleBackColor = false;
             // 
