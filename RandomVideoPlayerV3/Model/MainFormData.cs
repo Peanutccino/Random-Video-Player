@@ -9,6 +9,8 @@ namespace RandomVideoPlayer.Model
     public static class MainFormData
     {
         public static readonly string VersionUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version.txt";
+        public static readonly string VersionHistoryUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version_history.txt";
+
         public static readonly int doubleClickDelay = 180; //Delay to wait for potential double click otherwise execute single click
 
         //Safety time to prevent event spamming

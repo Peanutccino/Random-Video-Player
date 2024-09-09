@@ -63,6 +63,22 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool ReShuffle
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.reShuffle;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.reShuffle = value;
+                _settingsInstance.Save();
+            }
+        }
+
         /// <value>Holds shuffled playlist of the media files to play</value> 
         public static IEnumerable<string> PlayList
         {

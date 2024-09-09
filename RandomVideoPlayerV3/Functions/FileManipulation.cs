@@ -102,5 +102,17 @@ namespace RandomVideoPlayer.Functions
             await Task.Run(() => File.Move(sourceFilePath, destinationFilePath, true));
         }
 
+        public static bool IsIncrementalVersion(string version1, string version2)
+        {
+            Version v1 = new Version(version1);
+            Version v2 = new Version(version2);
+
+            if (v1.Major == v2.Major)
+            {
+                return v2.Minor == v1.Minor + 1;
+            }
+
+            return false;
+        }
     }
 }

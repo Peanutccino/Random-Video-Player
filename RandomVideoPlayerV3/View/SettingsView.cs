@@ -79,6 +79,7 @@ namespace RandomVideoPlayer.View
             settingsModel.AutoPlayTimerValueEndPoint = SettingsHandler.AutoPlayTimerValueEndPoint;
             settingsModel.AutoPlayTimerRangeEnabled = SettingsHandler.AutoPlayTimerRangeEnabled;
             settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
+            settingsModel.ReShuffle = ListHandler.ReShuffle;
             settingsModel.SortCreated = SettingsHandler.CreationDate;
 
             settingsModel.EnableSubtitles = SettingsHandler.SubtitlesEnabled;
@@ -88,6 +89,7 @@ namespace RandomVideoPlayer.View
             settingsModel.SubtitleFontColor = SettingsHandler.SubtitleFontColor;
 
             settingsModel.LeftMousePause = SettingsHandler.LeftMousePause;
+            settingsModel.SelectedAnimations = SettingsHandler.SelectedAnimations;
             settingsModel.BurnsEffectEnabled = SettingsHandler.BurnsEffectEnabled;
             settingsModel.PanAmount = SettingsHandler.PanAmount;
             settingsModel.ZoomAmount = SettingsHandler.ZoomAmount;
@@ -144,6 +146,7 @@ namespace RandomVideoPlayer.View
             SettingsHandler.AutoPlayTimerValueEndPoint = settingsModel.AutoPlayTimerValueEndPoint;
             SettingsHandler.AutoPlayTimerRangeEnabled = settingsModel.AutoPlayTimerRangeEnabled;
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
+            ListHandler.ReShuffle = settingsModel.ReShuffle;
             SettingsHandler.CreationDate = settingsModel.SortCreated;
 
             SettingsHandler.SubtitlesEnabled = settingsModel.EnableSubtitles;
@@ -153,6 +156,7 @@ namespace RandomVideoPlayer.View
             SettingsHandler.SubtitleFontColor = settingsModel.SubtitleFontColor;
 
             SettingsHandler.LeftMousePause = settingsModel.LeftMousePause;
+            SettingsHandler.SelectedAnimations = settingsModel.SelectedAnimations;
             SettingsHandler.BurnsEffectEnabled = settingsModel.BurnsEffectEnabled;
             SettingsHandler.PanAmount = settingsModel.PanAmount;
             SettingsHandler.ZoomAmount = settingsModel.ZoomAmount;

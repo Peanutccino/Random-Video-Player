@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Web;
@@ -278,6 +279,8 @@ namespace RandomVideoPlayer
             }
             MainFormData.lastPlayCommandTime = DateTime.Now; // Update the last command time
 
+
+
             ListHandler.PreparePlayList(SettingsHandler.SourceSelected, MainFormData.startedByFile, MainFormData.filepathFromStartupFile); //If needed, prepare the Playlist
 
             if (!(ListHandler.PlayList?.Any() ?? false))
@@ -303,10 +306,16 @@ namespace RandomVideoPlayer
             if (!ListHandler.FirstPlay)
             {
                 ListHandler.PlayListIndex = (ListHandler.PlayListIndex + 1) % ListHandler.PlayList.Count();
+
+                if (ListHandler.PlayListIndex == 0 && ListHandler.DoShuffle && ListHandler.ReShuffle)
+                {
+                    ListHandler.shufflePlayList(MainFormData.startedByFile, MainFormData.filepathFromStartupFile);
+                }
             }
             else
             {
                 ListHandler.FirstPlay = false;
+
             }
 
             string videoFile = ListHandler.PlayList.ElementAt(ListHandler.PlayListIndex);
@@ -333,6 +342,8 @@ namespace RandomVideoPlayer
 
             ChangePlaybackSpeed(VideoManipulation.Speed.Reset);
             VideoManipulation.ResetVideoManipulation(playerMPV);
+
+
 
             PlayerResume(); //Resumes player if it's paused
         }
@@ -2196,8 +2207,14 @@ namespace RandomVideoPlayer
         {
             using (HttpClient client = new HttpClient())
             {
-                var versionString = await client.GetStringAsync(MainFormData.VersionUrl);
-                return new Version(versionString.Trim());
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+                {
+                    NoCache = true
+                };
+
+                var versionHistory = UpdateFunctions.GetVersionHistory(MainFormData.VersionHistoryUrl);
+
+                return new Version(versionHistory.Last().Key);
             }
         }
         #endregion

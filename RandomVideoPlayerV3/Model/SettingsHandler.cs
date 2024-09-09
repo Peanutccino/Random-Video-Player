@@ -522,6 +522,20 @@ namespace RandomVideoPlayer.Model
             }
         }
 
+        public static List<int> SelectedAnimations
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.selectedAnimations;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.selectedAnimations = value;
+                _settingsInstance.Save();
+            }
+        }
         public static bool AlwaysCheckUpdate
         {
             get

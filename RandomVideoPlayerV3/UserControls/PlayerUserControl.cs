@@ -28,6 +28,7 @@ namespace RandomVideoPlayer.UserControls
                 rbDateModified.Checked = true;
             }
             cbShufflePlayer.Checked = settings.ShufflePlaylist;
+            cbReshuffle.Checked = settings.ReShuffle;
 
             cbLeftMousePause.Checked = settings.LeftMousePause;
 
@@ -43,6 +44,10 @@ namespace RandomVideoPlayer.UserControls
                     rbAutoTimer.Checked = true;
                     break;
             }
+
+            cbToggleZoomEffect.Checked = settings.SelectedAnimations.Contains(0);
+            cbToggleMoveHorizontalEffect.Checked = settings.SelectedAnimations.Contains(1);
+            cbToggleMoveVerticalEffect.Checked = settings.SelectedAnimations.Contains(2);
 
             cbKenBurnsEffect.Checked = settings.BurnsEffectEnabled;
 
@@ -69,6 +74,11 @@ namespace RandomVideoPlayer.UserControls
             cbShufflePlayer.CheckedChanged += (s, e) =>
             {
                 settings.ShufflePlaylist = cbShufflePlayer.Checked;
+            };
+
+            cbReshuffle.CheckedChanged += (s, e) =>
+            {
+                settings.ReShuffle = cbReshuffle.Checked;
             };
 
             rbDateCreated.CheckedChanged += (s, e) =>
@@ -100,6 +110,21 @@ namespace RandomVideoPlayer.UserControls
             {
                 settings.AutoPlayTimerRangeEnabled = cbEnableTimeRange.Checked;
                 UpdateRangeIndicator();
+            };
+
+            cbToggleZoomEffect.CheckedChanged += (s, e) =>
+            {
+                UpdateSelectedAnimations();
+            };
+
+            cbToggleMoveHorizontalEffect.CheckedChanged += (s, e) =>
+            {
+                UpdateSelectedAnimations();
+            };
+
+            cbToggleMoveVerticalEffect.CheckedChanged += (s, e) =>
+            {
+                UpdateSelectedAnimations();
             };
 
             cbKenBurnsEffect.CheckedChanged += (s, e) =>
@@ -175,6 +200,16 @@ namespace RandomVideoPlayer.UserControls
                 lblAfterTime.Visible = false;
                 inputTimerValueEndPoint.Visible = false;
             }
+        }
+
+        private void UpdateSelectedAnimations()
+        {
+            var checkedEffects = new List<int>();
+            if (cbToggleZoomEffect.Checked) checkedEffects.Add(0);
+            if (cbToggleMoveHorizontalEffect.Checked) checkedEffects.Add(1);
+            if (cbToggleMoveVerticalEffect.Checked) checkedEffects.Add(2);
+
+            settings.SelectedAnimations = checkedEffects;
         }
 
         private void TimeRangeValidation(object sender)

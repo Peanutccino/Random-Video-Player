@@ -187,7 +187,8 @@ namespace RandomVideoPlayer.Functions
 
         public static void StartRandomAnimation(MpvPlayer player, AnimationCompletedHandler onAnimationCompleted = null)
         {
-            int animationType = _random.Next(3); // 0: Zoom, 1: PanHorizontal, 2: PanVertical
+            int randomIndex = SettingsHandler.SelectedAnimations.Count > 0 ? _random.Next(SettingsHandler.SelectedAnimations.Count) : _random.Next(3);
+            int animationType = SettingsHandler.SelectedAnimations[randomIndex]; // 0: Zoom, 1: PanHorizontal, 2: PanVertical
             double direction = _random.Next(2) == 0 ? 1 : -1; //Randomize direction of paning
             double preZoomFactor = 0.3; // Only used to pre-zoom before paning
 

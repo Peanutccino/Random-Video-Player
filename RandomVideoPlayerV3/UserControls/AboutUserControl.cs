@@ -12,7 +12,7 @@ namespace RandomVideoPlayer.UserControls
 
     public partial class AboutUserControl : UserControl
     {
-        private const string VersionUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version.txt";
+        private const string VersionHistoryUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version_history.txt";
 
         private SettingsModel settings;
         private static System.Timers.Timer blinkTimer;
@@ -25,6 +25,7 @@ namespace RandomVideoPlayer.UserControls
         private bool needToRestart = false;
         private bool gotCancelled = false;
         private string latestVersionSaved;
+        private Dictionary<string, string> versionHistory;
 
         private TaskCompletionSource<bool> restartApplication;
 
@@ -98,54 +99,40 @@ namespace RandomVideoPlayer.UserControls
                 UpdateProgress("Looking for update files...");
 
                 string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                string latestVersion = latestVersionSaved;
+                var versionsToUpdate = versionHistory
+                    .Where(v => new Version(v.Key) > new Version(currentVersion))
+                    .ToList();
 
-
-                string zipUrl = $"https://github.com/Peanutccino/Random-Video-Player/releases/download/v{latestVersion}/RVP-v{latestVersion}_UpdateOnly.zip";
-                string tempZipPath = Path.Combine(Path.GetTempPath(), $"RVP-v{latestVersion}_UpdateOnly.zip");
+                List<string> zipPaths = new List<string>();
                 string extractPath = Path.Combine(Path.GetTempPath(), "update");
 
-                try
+                foreach (var version in versionsToUpdate) 
                 {
-                    DownloadUpdate(zipUrl, tempZipPath);
-                    UpdateProgress("Extracting files...");
+                    string versionNumber = version.Key;
+                    string updateUrl = version.Value;
+                    Uri uri = new Uri(updateUrl);
+                    string fileName = Path.GetFileName(uri.LocalPath);
 
-                    ExtractUpdate(tempZipPath, extractPath);
-                    UpdateProgress("Extraction complete, waiting for user input...");
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex,"Error during download/extraction");
-                    btnGitHub.Enabled = true;
-                    return;
-                }
+                    string tempZipPath = Path.Combine(Path.GetTempPath(), $"{fileName}");
+                    zipPaths.Add(tempZipPath);
 
-                //Batch content
-                string batchScript = $@"
-@echo off
-echo Waiting for application to exit...
-:loop
-tasklist /fi ""imagename eq RandomVideoPlayer.exe"" | find /i ""RandomVideoPlayer.exe"" >nul 2>&1
-if not errorlevel 1 (
-    timeout /t 1 /nobreak >nul
-    goto loop
-)
-echo Copy new files...
-timeout /t 2 /nobreak >nul
-xcopy /s /e /y ""{extractPath}"" ""{Application.StartupPath}""
-echo Delete update files...
-rd /s /q ""{extractPath}""
-echo Delete download package...
-del ""{tempZipPath}""
-echo Restart application...
-timeout /t 3 /nobreak >nul
-start """" ""{Application.StartupPath}RandomVideoPlayer.exe""
-echo All done!
-echo Deleting myself...
-del ""%~f0"" & exit
-";
+                    try
+                    {
+                        DownloadUpdate(updateUrl, tempZipPath);
+                        ExtractUpdate(tempZipPath, extractPath);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Error.Log(ex, "Error during download/extraction");
+                        btnGitHub.Enabled = true;
+                        return;
+                    }
+                }
+                UpdateProgress("Extraction complete, waiting for user input...");
 
                 string batchFilePath = Path.Combine(Path.GetTempPath(), "update.bat");
+                string batchScript = UpdateFunctions.CreateBatchScript(extractPath, zipPaths);
 
                 File.WriteAllText(batchFilePath, batchScript);
 
@@ -200,9 +187,12 @@ del ""%~f0"" & exit
                             Directory.Delete(extractPath, true);                          
                         }
                         UpdateProgress("Deleting downloaded package...");
-                        if (File.Exists(tempZipPath))
+                        foreach(var file in zipPaths)
                         {
-                            File.Delete(tempZipPath);
+                            if (File.Exists(file))
+                            {
+                                File.Delete(file);
+                            }
                         }
                         UpdateProgress("Deleting updater...");
                         if (File.Exists(batchFilePath))
@@ -216,7 +206,10 @@ del ""%~f0"" & exit
                         UpdateProgress("Failed to delete downloaded files...");
                         UpdateProgress("You can delete them manually under:");
                         UpdateProgress($"{extractPath}");
-                        UpdateProgress($"{tempZipPath}");
+                        foreach(var file in zipPaths)
+                        {
+                            UpdateProgress($"{file}");
+                        }
                         UpdateProgress($"{batchFilePath}");
                     }
                     finally
@@ -253,8 +246,16 @@ del ""%~f0"" & exit
                         NoCache = true
                     };
 
-                    var response = await client.GetStringAsync(VersionUrl);
-                    string latestVersionString = response.Trim();
+                    versionHistory = UpdateFunctions.GetVersionHistory(VersionHistoryUrl);
+
+                    if (versionHistory.Count == 0)
+                    {
+                        UpdateProgress("Couldn't fetch version history, aborting update...");
+                        btnGitHub.Enabled = true;
+                        return;
+                    }
+
+                    string latestVersionString = versionHistory.Last().Key;
 
                     if (Version.TryParse(latestVersionString, out Version latestVersion))
                     {
@@ -320,7 +321,7 @@ del ""%~f0"" & exit
                         byte[] buffer = new byte[4096];
                         int bytesRead;
 
-                        UpdateProgress("Downloading...");
+                       //UpdateProgress("Downloading...");
 
                         while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
@@ -333,7 +334,7 @@ del ""%~f0"" & exit
                             string progressBar = new string('▋', progressBlocks).PadRight(progressBarLength, '-');
                             string progressMessage = $"[{progressBar}] {progressPercentage}%";
 
-                            UpdateProgressLastLine($"{progressMessage}");
+                            UpdateProgressLastLine($"Downloading: {progressMessage}");
 
                             Application.DoEvents();
                         }
@@ -396,14 +397,12 @@ del ""%~f0"" & exit
                     string progressBar = new string('▋', progressBlocks).PadRight(progressBarLength, '-');
                     string progressMessage = $"[{progressBar}] {progressPercentage}%";
 
-                    UpdateProgressLastLine($"{progressMessage}");
+                    UpdateProgressLastLine($"Extracting: {progressMessage}");
 
                     Application.DoEvents();
                 }
                 UpdateProgress("", false);
             }
-
-            //ZipFile.ExtractToDirectory(zipPath, extractPath, true);
         }
 
         private void UpdateProgress(string message, bool timeStamp = true)

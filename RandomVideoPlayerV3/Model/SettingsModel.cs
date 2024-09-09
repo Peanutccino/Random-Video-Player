@@ -31,12 +31,14 @@ namespace RandomVideoPlayer.Model
 
         #region Player
         public bool ShufflePlaylist { get; set; }
+        public bool ReShuffle { get; set; }
         public bool SortCreated { get; set; }
         public bool LeftMousePause { get; set; }
         public AutoPlayMethod AutoPlayMethod { get; set; }
         public int AutoPlayTimerValueStartPoint { get; set; }
         public int AutoPlayTimerValueEndPoint { get; set; }
         public bool AutoPlayTimerRangeEnabled { get; set; }
+        public List<int> SelectedAnimations { get; set; }
         public bool BurnsEffectEnabled { get; set; }
         public double PanAmount { get; set; }
         public double ZoomAmount { get; set; }

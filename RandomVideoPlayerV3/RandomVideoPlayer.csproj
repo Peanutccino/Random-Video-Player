@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>Resources\RVP_IconSimple.ico</ApplicationIcon>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <AssemblyVersion>1.49</AssemblyVersion>
+    <AssemblyVersion>1.50</AssemblyVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Authors>Peanutccino</Authors>
   </PropertyGroup>

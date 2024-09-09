@@ -26,6 +26,7 @@ namespace RandomVideoPlayer.Functions
         public string tempLastFolder { get; set; }
         public bool sortCreationDate { get; set; } = true;
         public bool shuffle { get; set; } = true;
+        public bool reShuffle { get; set; } = false;
         public AutoPlayMethod autoPlayMethod { get; set; } = AutoPlayMethod.LoopVideo;
         public int autoPlayTimerValueStartPoint { get; set; } = 8;
         public int autoPlayTimerValueEndPoint { get; set; } = 12;
@@ -58,6 +59,7 @@ namespace RandomVideoPlayer.Functions
         public bool[] buttonStates { get; set; } = Enumerable.Repeat(true, 8).ToArray();
         public List<int> buttonOrder { get; set; }
         
+        public List<int> selectedAnimations { get; set; } = new List<int> { 0, 1, 2 };
         public bool burnsEffectEnabled { get; set; } = false;
         public double panAmount { get; set; } = 0.2;
         public double zoomAmount { get; set; } = 0.5;
