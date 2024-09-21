@@ -75,7 +75,8 @@
             // lblTitle
             // 
             lblTitle.Dock = DockStyle.Top;
-            lblTitle.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitle.ForeColor = Color.DarkOliveGreen;
             lblTitle.Location = new Point(0, 0);
             lblTitle.Name = "lblTitle";
             lblTitle.Size = new Size(359, 40);
