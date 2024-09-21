@@ -35,6 +35,11 @@ namespace RandomVideoPlayer.Functions
         public bool applyFilterToList { get; set; }
         public bool timeCodeServer { get; set; } = false;
         public bool graphEnabled { get; set; } = false;
+        public StringCollection scriptDirectories { get; set; } = new StringCollection();
+        public bool showScriptPath { get; set; } = true;
+        public bool handleMultiAxisScripts { get; set; } = false;
+        public bool usingScriptPlayer { get; set; } = false;
+
         public string viewStateListFileExplore { get; set; } = "Tile";
         public string viewStateFolderFileExplore { get; set; } = "Tile";
         public bool showIconsCustomList { get; set; } = false;
@@ -61,6 +66,7 @@ namespace RandomVideoPlayer.Functions
         
         public List<int> selectedAnimations { get; set; } = new List<int> { 0, 1, 2 };
         public bool burnsEffectEnabled { get; set; } = false;
+        public bool fadeEnabled { get; set; } = true;
         public double panAmount { get; set; } = 0.2;
         public double zoomAmount { get; set; } = 0.5;
 

@@ -131,6 +131,25 @@ namespace RandomVideoPlayer.Model
             }
         }
 
+        public static IEnumerable<string> ScriptDirectories
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                if(_settingsInstance.scriptDirectories.Count <= 0)
+                {
+                    _settingsInstance.scriptDirectories.Add("local");
+                }
+                return _settingsInstance.scriptDirectories.Cast<string>().ToList();
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.scriptDirectories.Clear();
+                _settingsInstance.scriptDirectories.AddRange(value.ToArray());
+                _settingsInstance.Save();
+            }
+        }
         public static bool FilterImageEnabled
         {
             get

@@ -54,6 +54,10 @@ namespace RandomVideoPlayer.View
         {
             settingsModel.IsTimeCodeServerEnabled = SettingsHandler.TimeCodeServer;
             settingsModel.IsGraphEnabled = SettingsHandler.GraphEnabled;
+            settingsModel.ScriptDirectories = ListHandler.ScriptDirectories.ToList();
+            settingsModel.ShowScriptPath = SettingsHandler.ShowScriptPath;
+            settingsModel.HandleMultiAxisScripts = SettingsHandler.HandleMultiAxisScripts;
+            settingsModel.UsingScriptPlayer = SettingsHandler.UsingScriptPlayer;
 
             settingsModel.DefaultPathText = PathHandler.DefaultFolder;
             settingsModel.RemovalPathText = PathHandler.RemoveFolder;
@@ -91,6 +95,7 @@ namespace RandomVideoPlayer.View
             settingsModel.LeftMousePause = SettingsHandler.LeftMousePause;
             settingsModel.SelectedAnimations = SettingsHandler.SelectedAnimations;
             settingsModel.BurnsEffectEnabled = SettingsHandler.BurnsEffectEnabled;
+            settingsModel.FadeEffectEnabled = SettingsHandler.FadeEnabled;
             settingsModel.PanAmount = SettingsHandler.PanAmount;
             settingsModel.ZoomAmount = SettingsHandler.ZoomAmount;
             settingsModel.ZoomEasingFunction = SettingsHandler.ZoomEasingFunction;
@@ -126,6 +131,10 @@ namespace RandomVideoPlayer.View
         {
             SettingsHandler.TimeCodeServer = settingsModel.IsTimeCodeServerEnabled;
             SettingsHandler.GraphEnabled = settingsModel.IsGraphEnabled;
+            ListHandler.ScriptDirectories = settingsModel.ScriptDirectories;
+            SettingsHandler.ShowScriptPath = settingsModel.ShowScriptPath;
+            SettingsHandler.HandleMultiAxisScripts = settingsModel.HandleMultiAxisScripts;
+            SettingsHandler.UsingScriptPlayer = settingsModel.UsingScriptPlayer;
 
             PathHandler.DefaultFolder = settingsModel.DefaultPathText;
             PathHandler.TempRecentFolder = PathHandler.DefaultFolder;
@@ -158,6 +167,7 @@ namespace RandomVideoPlayer.View
             SettingsHandler.LeftMousePause = settingsModel.LeftMousePause;
             SettingsHandler.SelectedAnimations = settingsModel.SelectedAnimations;
             SettingsHandler.BurnsEffectEnabled = settingsModel.BurnsEffectEnabled;
+            SettingsHandler.FadeEnabled = settingsModel.FadeEffectEnabled;
             SettingsHandler.PanAmount = settingsModel.PanAmount;
             SettingsHandler.ZoomAmount = settingsModel.ZoomAmount;
             SettingsHandler.ZoomEasingFunction = settingsModel.ZoomEasingFunction;

@@ -40,7 +40,9 @@ namespace RandomVideoPlayer
         private ToolStripMenuItem enableDisableSubtitlesItem;
         private ToolStripMenuItem loadExternalSubtitlesItem;
         private ContextMenuStrip contextMenuAudioTracks;
+        private ContextMenuStrip contextMenuScriptFiles;
 
+        private int brightness = 0;
         public MainForm(string filePath)
         {
             InitializeComponent();
@@ -73,7 +75,7 @@ namespace RandomVideoPlayer
             if (ListHandler.ExtensionFilterForList.Count<string>() <= 0)
             {
                 ListHandler.ExtensionFilterForList = ListHandler.CombinedExtensions;
-                
+
             }
 
             CheckStartedByFile(filePath);
@@ -137,6 +139,8 @@ namespace RandomVideoPlayer
         }
         private void btnListAdd_Click(object sender, EventArgs e)
         {
+
+
             AddCurrentToList();
         }
         private void btnSettings_Click(object sender, EventArgs e)
@@ -175,11 +179,15 @@ namespace RandomVideoPlayer
         {
             contextMenuSubtitles.Show(btnSubtitleMenu, new Point(0, btnSubtitleMenu.Height));
         }
-
         private void btnAudioTrackMenu_Click(object sender, EventArgs e)
         {
             contextMenuAudioTracks.Show(btnAudioTrackMenu, new Point(0, btnAudioTrackMenu.Height));
         }
+        private void btnScriptMenu_Click(object sender, EventArgs e)
+        {
+            contextMenuScriptFiles.Show(btnScriptMenu, new Point(0, btnScriptMenu.Height));
+        }
+
         private void lblCurrentInfo_Click(object sender, EventArgs e)
         {
             var filePath = lblCurrentInfo.Text;
@@ -265,7 +273,7 @@ namespace RandomVideoPlayer
         #endregion
 
         #region Player Controls
-        private void PlayNext()
+        private async void PlayNext()
         {
             if (SettingsHandler.InitPlay == false && MainFormData.playingSingleFile == false)
             {
@@ -336,6 +344,22 @@ namespace RandomVideoPlayer
 
             MainFormData.currentFile = videoFile;
 
+            await ScriptHandler.RevertDefaultScript();
+            await ScriptHandler.RevertDefaultMultiAxisScript();
+
+            if (SettingsHandler.TimeCodeServer)
+            {
+                await ScriptHandler.FillScriptList(MainFormData.currentFile);
+
+                await ScriptHandler.LoadScript(0, MainFormData.currentFile);
+                foreach (var multiAxisScript in ScriptHandler.MultiAxisScriptsFound)
+                {
+                    if (multiAxisScript.Value.ScriptFiles.Count <= 0) continue;
+                    await ScriptHandler.LoadMultiAxisScript(0, MainFormData.currentFile, multiAxisScript.Key);
+                }
+            }
+
+
             playerMPV.Load(videoFile, true);
 
             SettingsHandler.IsPlaying = false;
@@ -347,7 +371,7 @@ namespace RandomVideoPlayer
 
             PlayerResume(); //Resumes player if it's paused
         }
-        private void PlayPrevious()
+        private async void PlayPrevious()
         {
             if (SettingsHandler.InitPlay == false)
             {
@@ -890,7 +914,10 @@ namespace RandomVideoPlayer
             if (SettingsHandler.SubtitlesEnabled) enableDisableSubtitlesItem.Checked = true;
             ToggleSubtitles();
             SubFunctions.UpdateSubtitleParameters(playerMPV);
+
             contextMenuAudioTracks = new ContextMenuStrip { Renderer = new CustomRenderer() };
+
+            contextMenuScriptFiles = new ContextMenuStrip { Renderer = new CustomRenderer() };
         }
 
         private void LoadExternalSubtitles()
@@ -1000,6 +1027,86 @@ namespace RandomVideoPlayer
             }
         }
 
+        private void UpdateScriptFiles()
+        {
+            bool isFirstItem = true;
+            if (InvokeRequired)
+            {
+                Invoke(new Action(UpdateScriptFiles));
+            }
+            else
+            {
+                for (int i = contextMenuScriptFiles.Items.Count - 1; i >= 0; i--)
+                {
+                    contextMenuScriptFiles.Items.RemoveAt(i);
+                }
+
+                bool anyScriptFound = false;
+
+                foreach (var scriptFile in ScriptHandler.scriptFilesFound)
+                {
+                    var scriptItem = new ToolStripMenuItem(scriptFile);
+                    scriptItem.Click += ScriptItem_Click;
+                    if (isFirstItem)
+                    {
+                        scriptItem.Checked = true;
+                        isFirstItem = false;
+                    }
+                    if (!SettingsHandler.ShowScriptPath)
+                    {
+                        scriptItem.Text = Path.GetFileName(scriptFile);
+                    }
+                    contextMenuScriptFiles.Items.Add(scriptItem);
+                    anyScriptFound = true;
+                }
+
+                foreach(var kvp in ScriptHandler.MultiAxisScriptsFound)
+                {
+                    string menuName = kvp.Key;
+                    List<string> scripts = kvp.Value.ScriptFiles;
+
+                    if (scripts.Count > 0)
+                    {
+                        var menuItem = new ToolStripMenuItem(menuName);
+                        contextMenuScriptFiles.Items.Add(menuItem);
+
+                        bool isFirstItemInMulti = true;
+                        foreach (var script in scripts)
+                        {
+                            var scriptItem = new ToolStripMenuItem(script)
+                            {
+                                CheckOnClick = true
+                            };
+                            scriptItem.Click += MultiScriptItem_Click;
+
+                            if(isFirstItemInMulti)
+                            {
+                                scriptItem.Checked = true;
+                                isFirstItemInMulti = false;
+                            }
+
+                            if(!SettingsHandler.ShowScriptPath)
+                            {
+                                scriptItem.Text = Path.GetFileName(script);
+                            }
+
+                            menuItem.DropDownItems.Add(scriptItem);
+                        }
+                        anyScriptFound = true;
+                    }
+                }
+
+                if (anyScriptFound)
+                {
+                    btnScriptMenu.Enabled = true;
+                }
+                else
+                {
+                    btnScriptMenu.Enabled = false;
+                }
+            }
+        }
+
         private void EnableDisableSubtitlesItem_CheckedChanged(object sender, EventArgs e)
         {
             ToggleSubtitles();
@@ -1022,6 +1129,71 @@ namespace RandomVideoPlayer
                 clickedItem.Checked = true;
                 var index = contextMenuAudioTracks.Items.IndexOf(clickedItem) + 1;
                 playerMPV.SetAudioTrack(index);
+            }
+        }
+
+        private async void ScriptItem_Click(object sender, EventArgs e)
+        {
+            var clickedItem = sender as ToolStripMenuItem;
+            if (clickedItem != null)
+            {
+                foreach (ToolStripItem item in contextMenuScriptFiles.Items)
+                {
+                    if (item is ToolStripMenuItem menuItem)
+                    {
+                        menuItem.Checked = false;
+                    }
+                }
+
+                clickedItem.Checked = true;
+                var index = contextMenuScriptFiles.Items.IndexOf(clickedItem);
+                await ScriptHandler.RevertDefaultScript();
+                await ScriptHandler.LoadScript(index, MainFormData.currentFile);
+                string updatedCurrentFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
+                await SetTimeServerFile("Reload", true);
+                Thread.Sleep(1000);
+                await SetTimeServerFile(updatedCurrentFile);
+                UpdateFunscriptGraph();
+            }
+        }
+
+        private async void MultiScriptItem_Click(object sender, EventArgs e)
+        {
+            var clickedItem = sender as ToolStripMenuItem;
+            if (clickedItem != null)
+            {
+                var parentItem = clickedItem.OwnerItem as ToolStripMenuItem;
+                if(parentItem != null)
+                {
+                    foreach (ToolStripMenuItem item in parentItem.DropDownItems)
+                    {
+                        item.Checked = false;
+                    }
+                }               
+
+                clickedItem.Checked = true;
+                var selectedText = clickedItem.Text;
+                var selectedAxis = parentItem.Text;
+                var index = parentItem.DropDownItems.IndexOf(clickedItem);
+                await ScriptHandler.RevertDefaultMultiAxisScript();
+                foreach (var multiAxisScript in ScriptHandler.MultiAxisScriptsFound)
+                {
+                    if (multiAxisScript.Value.ScriptFiles.Count <= 0) continue;
+                    if (multiAxisScript.Key == selectedAxis)
+                    {                        
+                        multiAxisScript.Value.SelectedIndex = index;
+                        await ScriptHandler.LoadMultiAxisScript(index, MainFormData.currentFile, multiAxisScript.Key);
+                    }
+                    else
+                    {
+                        var oldIndex = multiAxisScript.Value.SelectedIndex;
+                        await ScriptHandler.LoadMultiAxisScript(oldIndex, MainFormData.currentFile, multiAxisScript.Key);
+                    }
+                }
+                string updatedCurrentFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
+                await SetTimeServerFile("Reload", true);
+                Thread.Sleep(1000);
+                await SetTimeServerFile(updatedCurrentFile);
             }
         }
 
@@ -1440,16 +1612,14 @@ namespace RandomVideoPlayer
 
             pbPlayerProgress.Maximum = MainFormData.durationMS;
 
-            if (!string.IsNullOrWhiteSpace(MainFormData.currentFile))
+            string updatedCurrentFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
+
+            if (!string.IsNullOrWhiteSpace(updatedCurrentFile))
             {
-                MainFormData.favoriteMatch = MainFormData.playingSingleFile ? FavFunctions.IsFavoriteMatched(MainFormData.draggedFilePath, MainFormData.tempFavorites, btnAddToFav) : FavFunctions.IsFavoriteMatched(MainFormData.currentFile, MainFormData.tempFavorites, btnAddToFav);
-                tcServer.File = Path.GetFileName(MainFormData.currentFile);
-                tcServer.FilePathArg = Uri.EscapeDataString(MainFormData.currentFile).Replace("%3A", ":").Replace("%5C", "%5c");
-                tcServer.Filepath = MainFormData.currentFile;
-                tcServer.FileDir = Path.GetDirectoryName(MainFormData.currentFile);
+                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(updatedCurrentFile, MainFormData.tempFavorites, btnAddToFav);
+                SetTimeServerFile(updatedCurrentFile);
 
-
-                var currentFileExtension = Path.GetExtension(MainFormData.currentFile).TrimStart('.').ToLower();
+                var currentFileExtension = Path.GetExtension(updatedCurrentFile).TrimStart('.').ToLower();
                 if (ListHandler.ImageExtensions.Contains(currentFileExtension))
                 {
                     pbPlayerProgress.DeleteActionsPoints();
@@ -1458,6 +1628,11 @@ namespace RandomVideoPlayer
                 TrackInfo.GrabTrackInfo(playerMPV);
                 UpdateSubtitleOptions();
                 UpdateAudioTracks();
+
+                if (SettingsHandler.TimeCodeServer)
+                {
+                    UpdateScriptFiles();
+                }
                 ToggleSubtitles();
             }
             else
@@ -1466,6 +1641,10 @@ namespace RandomVideoPlayer
                 return;
             }
             pbPlayerProgress.DeleteActionsPoints();
+            UpdateFunscriptGraph();
+        }
+        private void UpdateFunscriptGraph()
+        {
             if (SettingsHandler.GraphEnabled)
             {
                 var funscriptFilePath = MainFormData.playingSingleFile ? FileManipulation.GetFilePathWithDifferentExtension(MainFormData.draggedFilePath, ".funscript") : FileManipulation.GetFilePathWithDifferentExtension(MainFormData.currentFile, ".funscript");
@@ -1530,6 +1709,46 @@ namespace RandomVideoPlayer
                 MainFormData.tempFavorites = FavFunctions.DeleteFromFavorites(tempFile, MainFormData.tempFavorites);
                 MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, MainFormData.tempFavorites, btnAddToFav);
             }
+        }
+
+        private async Task SetTimeServerFile(string fileName, bool reload = false)
+        {
+            var tempFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
+            string content = @"{""actions"":[{""at"":0,""pos"":50}],""inverted"":false,""metadata"":{""bookmarks"":[],""chapters"":[],""creator"":"""",""description"":"""",""duration"":504,""license"":"""",""notes"":"""",""performers"":[],""script_url"":"""",""tags"":[],""title"":"""",""type"":""basic"",""video_url"":""""},""range"":100,""version"":""1.0""}";
+            var pathTempScript = Path.Combine(Path.GetDirectoryName(tempFile), "Reload.funscript");
+            var pathTempVideo = Path.Combine(Path.GetDirectoryName(tempFile), "Reload.mp4");
+            try
+            {
+                if (reload)
+                {
+                    if (SettingsHandler.UsingScriptPlayer)
+                    {
+                        File.WriteAllText(pathTempScript, content);
+                    }
+                    tcServer.File = Path.GetFileName(pathTempVideo);
+                    tcServer.FilePathArg = Uri.EscapeDataString(pathTempVideo).Replace("%3A", ":").Replace("%5C", "%5c");
+                    tcServer.Filepath = pathTempVideo;
+                    tcServer.FileDir = Path.GetDirectoryName(pathTempVideo);
+                }
+                else
+                {
+                    tcServer.File = Path.GetFileName(fileName);
+                    tcServer.FilePathArg = Uri.EscapeDataString(fileName).Replace("%3A", ":").Replace("%5C", "%5c");
+                    tcServer.Filepath = fileName;
+                    tcServer.FileDir = Path.GetDirectoryName(fileName);
+
+                    if (File.Exists(pathTempScript))
+                    {
+                        File.Delete(pathTempScript);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex, "Failed to create or delete temporary funscript file");
+            }
+
+
         }
         #endregion
 
@@ -1969,7 +2188,7 @@ namespace RandomVideoPlayer
             }
         }
 
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        private async void MainForm_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -2020,6 +2239,16 @@ namespace RandomVideoPlayer
                         SettingsHandler.IsPlaying = false;
 
                         MainFormData.playingSingleFile = true;
+
+                        await ScriptHandler.RevertDefaultScript();
+                        await ScriptHandler.RevertDefaultMultiAxisScript();
+                        await ScriptHandler.FillScriptList(MainFormData.draggedFilePath);
+                        await ScriptHandler.LoadScript(0, MainFormData.draggedFilePath);
+                        foreach (var multiAxisScript in ScriptHandler.MultiAxisScriptsFound)
+                        {
+                            if (multiAxisScript.Value.ScriptFiles.Count <= 0) continue;
+                            await ScriptHandler.LoadMultiAxisScript(0, MainFormData.draggedFilePath, multiAxisScript.Key);
+                        }
 
                         PlayerResume();
 
@@ -2250,7 +2479,7 @@ namespace RandomVideoPlayer
                 fR.FormSize = fR.TempSize;
             }
         }
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private async void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MainFormData.ongoingTasks.Count > 0)
             {
@@ -2267,6 +2496,8 @@ namespace RandomVideoPlayer
             }
 
             tcServer.Stop();
+            await ScriptHandler.RevertDefaultScript();
+            await ScriptHandler.RevertDefaultMultiAxisScript();
             fR.FormSize = fR.TempSize; //Save last known form size to property
             PathHandler.TempRecentFolder = string.Empty;
 
@@ -2424,7 +2655,6 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
-
 
 
 

@@ -56,6 +56,7 @@
             btnPlay = new FontAwesome.Sharp.IconButton();
             pbPlayerProgress = new FlatProgressBar();
             panelTop = new Panel();
+            btnScriptMenu = new Button();
             btnAudioTrackMenu = new Button();
             btnSubtitleMenu = new Button();
             lblTitleBar = new Label();
@@ -484,6 +485,7 @@
             // panelTop
             // 
             panelTop.BackColor = Color.FromArgb(253, 83, 146);
+            panelTop.Controls.Add(btnScriptMenu);
             panelTop.Controls.Add(btnAudioTrackMenu);
             panelTop.Controls.Add(btnSubtitleMenu);
             panelTop.Controls.Add(lblTitleBar);
@@ -495,6 +497,22 @@
             panelTop.Name = "panelTop";
             panelTop.Size = new Size(914, 20);
             panelTop.TabIndex = 1;
+            // 
+            // btnScriptMenu
+            // 
+            btnScriptMenu.Dock = DockStyle.Left;
+            btnScriptMenu.Enabled = false;
+            btnScriptMenu.FlatAppearance.BorderSize = 0;
+            btnScriptMenu.FlatStyle = FlatStyle.Flat;
+            btnScriptMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold, GraphicsUnit.Point);
+            btnScriptMenu.ForeColor = Color.Indigo;
+            btnScriptMenu.Location = new Point(80, 0);
+            btnScriptMenu.Name = "btnScriptMenu";
+            btnScriptMenu.Size = new Size(46, 20);
+            btnScriptMenu.TabIndex = 6;
+            btnScriptMenu.Text = "SCRIPT";
+            btnScriptMenu.UseVisualStyleBackColor = true;
+            btnScriptMenu.Click += btnScriptMenu_Click;
             // 
             // btnAudioTrackMenu
             // 
@@ -678,5 +696,6 @@
         private Label lblSpeed;
         private Button btnSubtitleMenu;
         private Button btnAudioTrackMenu;
+        private Button btnScriptMenu;
     }
 }

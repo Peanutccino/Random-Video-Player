@@ -3,41 +3,41 @@ using System.Windows.Navigation;
 
 namespace RandomVideoPlayer.Model
 {
-	public class SettingsHandler
-	{
+    public class SettingsHandler
+    {
         public static double CurrentVersion = 1.34;
 
         private static int _volumeTemp = 50;
-		private static bool _sourceSelected = false; //False = Folder | True = List
-		private static bool _isPlaying = false;
+        private static bool _sourceSelected = false; //False = Folder | True = List
+        private static bool _isPlaying = false;
         private static bool _initPlay = false;
         private static bool _settingChanged = false;
         public static int VolumeTemp
-		{
-			get { return _volumeTemp; }
-			set { _volumeTemp = value; }
-		}
+        {
+            get { return _volumeTemp; }
+            set { _volumeTemp = value; }
+        }
         public static int VideoDuration { get; set; }
 
         public static int VideoRemaining { get; set; }
 
         /// <value>Play from list (true) or play from folder (false).</value> 
         public static bool SourceSelected
-		{
-			get { return _sourceSelected; }
-			set { _sourceSelected = value; }
-		}
+        {
+            get { return _sourceSelected; }
+            set { _sourceSelected = value; }
+        }
         public static bool IsPlaying
-		{
-			get { return _isPlaying; }
-			set { _isPlaying = value; }
-		}
+        {
+            get { return _isPlaying; }
+            set { _isPlaying = value; }
+        }
         /// <value>Set to true after player is initialized for the first time</value> 
         public static bool InitPlay
-		{
-			get { return _initPlay; }
-			set { _initPlay = value; }
-		}
+        {
+            get { return _initPlay; }
+            set { _initPlay = value; }
+        }
 
         public static bool SettingChanged
         {
@@ -47,35 +47,35 @@ namespace RandomVideoPlayer.Model
 
 
         /// <value>Uses Creation Date (true) or Last Date modified (false).</value> 
-        public static bool CreationDate 
-		{
-			get 
+        public static bool CreationDate
+        {
+            get
             {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.sortCreationDate; 
-            } 
-			set
-			{
+                return _settingsInstance.sortCreationDate;
+            }
+            set
+            {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.sortCreationDate = value;
                 _settingsInstance.Save();
-			}
-		}
+            }
+        }
 
         /// <value>How many of the latest files should be loaded into the playlist</value> 
-        public static int RecentCount 
-		{
-           get 
-           {
+        public static int RecentCount
+        {
+            get
+            {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.recentCount; 
-           }
-           set
-           {
+                return _settingsInstance.recentCount;
+            }
+            set
+            {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.recentCount = value;
                 _settingsInstance.Save();
-           }
+            }
         }
         public static bool RecentCountSaved
         {
@@ -92,14 +92,14 @@ namespace RandomVideoPlayer.Model
             }
         }
 
-        public static int RecentCountSavedTemp { get; set; } 
+        public static int RecentCountSavedTemp { get; set; }
         /// <value>Check if only the latest files should be used</value> 
         public static bool RecentCheckedSaved
         {
-            get 
+            get
             {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.recentCheckedSaved; 
+                return _settingsInstance.recentCheckedSaved;
             }
             set
             {
@@ -125,7 +125,7 @@ namespace RandomVideoPlayer.Model
         public static bool RecentCheckedTemp { get; set; }
         public static bool TempTriggered { get; set; } = false;
 
-        public static bool VolumeMember 
+        public static bool VolumeMember
         {
             get
             {
@@ -139,7 +139,7 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-        public static int VolumeLastValue 
+        public static int VolumeLastValue
         {
             get
             {
@@ -185,10 +185,10 @@ namespace RandomVideoPlayer.Model
         /// <value>Delete videofile completely (true) or move it to set folder(false).</value> 
         public static bool DeleteFull
         {
-            get 
+            get
             {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.deleteFull; 
+                return _settingsInstance.deleteFull;
             }
             set
             {
@@ -198,7 +198,7 @@ namespace RandomVideoPlayer.Model
             }
         }
         /// <value>Look for associated funscripts and apply delete method.</value> 
-        public static bool IncludeScripts 
+        public static bool IncludeScripts
         {
             get
             {
@@ -521,7 +521,20 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
+        public static bool FadeEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fadeEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fadeEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
         public static List<int> SelectedAnimations
         {
             get
@@ -567,16 +580,16 @@ namespace RandomVideoPlayer.Model
         }
         public static int AutoPlayTimerValueStartPoint(bool returnRandom = true)
         {
-                var _settingsInstance = CustomSettings.Instance;
-                if (SettingsHandler.AutoPlayTimerRangeEnabled == false || returnRandom == false)
-                {
-                    return _settingsInstance.autoPlayTimerValueStartPoint;
-                }
-                else
-                {
-                    Random rng = new Random();
-                    return rng.Next(_settingsInstance.autoPlayTimerValueStartPoint, _settingsInstance.autoPlayTimerValueEndPoint + 1);
-                }                  
+            var _settingsInstance = CustomSettings.Instance;
+            if (SettingsHandler.AutoPlayTimerRangeEnabled == false || returnRandom == false)
+            {
+                return _settingsInstance.autoPlayTimerValueStartPoint;
+            }
+            else
+            {
+                Random rng = new Random();
+                return rng.Next(_settingsInstance.autoPlayTimerValueStartPoint, _settingsInstance.autoPlayTimerValueEndPoint + 1);
+            }
         }
 
         public static void SetAutoPlayTimerValueStartPoint(int value)
@@ -686,6 +699,51 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.subtitleFontColor = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool ShowScriptPath
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.showScriptPath;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.showScriptPath = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool HandleMultiAxisScripts
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.handleMultiAxisScripts;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.handleMultiAxisScripts = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool UsingScriptPlayer
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.usingScriptPlayer;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.usingScriptPlayer = value;
                 _settingsInstance.Save();
             }
         }

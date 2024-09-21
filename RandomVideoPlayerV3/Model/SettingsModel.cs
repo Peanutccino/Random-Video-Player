@@ -9,6 +9,10 @@ namespace RandomVideoPlayer.Model
         #region Sync
         public bool IsTimeCodeServerEnabled { get; set; }
         public bool IsGraphEnabled { get; set; }
+        public List<string> ScriptDirectories { get; set; }
+        public bool ShowScriptPath { get; set; }
+        public bool HandleMultiAxisScripts { get; set; }
+        public bool UsingScriptPlayer { get; set; }
         #endregion
 
         #region Paths
@@ -40,6 +44,7 @@ namespace RandomVideoPlayer.Model
         public bool AutoPlayTimerRangeEnabled { get; set; }
         public List<int> SelectedAnimations { get; set; }
         public bool BurnsEffectEnabled { get; set; }
+        public bool FadeEffectEnabled { get; set; }
         public double PanAmount { get; set; }
         public double ZoomAmount { get; set; }
         public int ZoomEasingFunction { get; set; }
