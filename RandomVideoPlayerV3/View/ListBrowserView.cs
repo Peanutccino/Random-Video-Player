@@ -303,6 +303,24 @@ namespace RandomVideoPlayer.View
 
             lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
+
+        private void btnMoveList_Click(object sender, EventArgs e)
+        {
+            MoveListForm moveListForm = new MoveListForm(TempList);
+            moveListForm.StartPosition = FormStartPosition.CenterParent;
+            DialogResult moveResult = moveListForm.ShowDialog();
+
+            if (moveResult == DialogResult.OK)
+            {
+                TempList = moveListForm.movedFilePaths;
+                PopulateCustomList(TempList);
+
+                lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+
+                MessageBox.Show("Remember to save/overwrite the updated list!");
+            }
+        }
+
         private void lvFileExplore_ItemActivate(object sender, EventArgs e)
         {
             try
@@ -610,6 +628,7 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(btnAddAll, "Add all files and files from subfolders from current folder");
             toolTipInfo.SetToolTip(btnClearSelected, "Delete selected entries from list");
             toolTipInfo.SetToolTip(btnClearList, "Delete all entries from list");
+            toolTipInfo.SetToolTip(btnMoveList, "Move all entries from list to a specified directory");
 
             toolTipInfo.SetToolTip(btnDelDuplicates, "Scan list for duplicate entries and remove those");
             toolTipInfo.SetToolTip(btnLoadList, "Load a saved list file");
@@ -1098,6 +1117,7 @@ namespace RandomVideoPlayer.View
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
         #endregion
+
 
 
 

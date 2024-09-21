@@ -53,6 +53,7 @@
             btnViewGrid = new FontAwesome.Sharp.IconButton();
             btnResetSize = new FontAwesome.Sharp.IconButton();
             btnDecreaseSize = new FontAwesome.Sharp.IconButton();
+            btnMoveList = new FontAwesome.Sharp.IconButton();
             btnAddFromPlaylist = new FontAwesome.Sharp.IconButton();
             panel1 = new Panel();
             panelCustomListToolbar = new Controls.CustomPanel();
@@ -240,6 +241,7 @@
             // splitContainerBody.Panel2
             // 
             splitContainerBody.Panel2.BackColor = Color.MintCream;
+            splitContainerBody.Panel2.Controls.Add(btnMoveList);
             splitContainerBody.Panel2.Controls.Add(btnAddFromPlaylist);
             splitContainerBody.Panel2.Controls.Add(panel1);
             splitContainerBody.Panel2.Controls.Add(customPanel1);
@@ -470,6 +472,25 @@
             btnDecreaseSize.UseVisualStyleBackColor = true;
             btnDecreaseSize.Click += btnDecreaseSize_Click;
             // 
+            // btnMoveList
+            // 
+            btnMoveList.FlatAppearance.BorderSize = 0;
+            btnMoveList.FlatStyle = FlatStyle.Flat;
+            btnMoveList.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnMoveList.IconChar = FontAwesome.Sharp.IconChar.ExternalLinkSquare;
+            btnMoveList.IconColor = Color.Black;
+            btnMoveList.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            btnMoveList.IconSize = 26;
+            btnMoveList.ImageAlign = ContentAlignment.MiddleRight;
+            btnMoveList.Location = new Point(4, 307);
+            btnMoveList.Name = "btnMoveList";
+            btnMoveList.Size = new Size(117, 30);
+            btnMoveList.TabIndex = 24;
+            btnMoveList.Text = "Move List";
+            btnMoveList.TextAlign = ContentAlignment.MiddleLeft;
+            btnMoveList.UseVisualStyleBackColor = true;
+            btnMoveList.Click += btnMoveList_Click;
+            // 
             // btnAddFromPlaylist
             // 
             btnAddFromPlaylist.FlatAppearance.BorderSize = 0;
@@ -480,7 +501,7 @@
             btnAddFromPlaylist.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnAddFromPlaylist.IconSize = 26;
             btnAddFromPlaylist.ImageAlign = ContentAlignment.MiddleRight;
-            btnAddFromPlaylist.Location = new Point(4, 273);
+            btnAddFromPlaylist.Location = new Point(4, 275);
             btnAddFromPlaylist.Name = "btnAddFromPlaylist";
             btnAddFromPlaylist.Size = new Size(117, 30);
             btnAddFromPlaylist.TabIndex = 23;
@@ -663,9 +684,9 @@
             panelFilterExt.Controls.Add(btnImageExtensions);
             panelFilterExt.Controls.Add(flowPanelVideoCheckboxes);
             panelFilterExt.Controls.Add(btnVideoExtensions);
-            panelFilterExt.Location = new Point(-6, 309);
+            panelFilterExt.Location = new Point(-6, 341);
             panelFilterExt.Name = "panelFilterExt";
-            panelFilterExt.Size = new Size(132, 357);
+            panelFilterExt.Size = new Size(132, 325);
             panelFilterExt.TabIndex = 21;
             panelFilterExt.TopLeftXOffset = 0;
             panelFilterExt.TopRightOffset = 0;
@@ -760,7 +781,7 @@
             btnSaveList.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnSaveList.IconSize = 26;
             btnSaveList.ImageAlign = ContentAlignment.MiddleRight;
-            btnSaveList.Location = new Point(4, 240);
+            btnSaveList.Location = new Point(4, 242);
             btnSaveList.Name = "btnSaveList";
             btnSaveList.Size = new Size(117, 30);
             btnSaveList.TabIndex = 14;
@@ -779,7 +800,7 @@
             btnClearList.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnClearList.IconSize = 26;
             btnClearList.ImageAlign = ContentAlignment.MiddleRight;
-            btnClearList.Location = new Point(4, 108);
+            btnClearList.Location = new Point(4, 110);
             btnClearList.Name = "btnClearList";
             btnClearList.Size = new Size(117, 30);
             btnClearList.TabIndex = 18;
@@ -798,7 +819,7 @@
             btnDelDuplicates.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnDelDuplicates.IconSize = 26;
             btnDelDuplicates.ImageAlign = ContentAlignment.MiddleRight;
-            btnDelDuplicates.Location = new Point(4, 174);
+            btnDelDuplicates.Location = new Point(4, 176);
             btnDelDuplicates.Name = "btnDelDuplicates";
             btnDelDuplicates.Size = new Size(117, 30);
             btnDelDuplicates.TabIndex = 15;
@@ -817,7 +838,7 @@
             btnClearSelected.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClearSelected.IconSize = 26;
             btnClearSelected.ImageAlign = ContentAlignment.MiddleRight;
-            btnClearSelected.Location = new Point(4, 141);
+            btnClearSelected.Location = new Point(4, 143);
             btnClearSelected.Name = "btnClearSelected";
             btnClearSelected.Size = new Size(117, 30);
             btnClearSelected.TabIndex = 17;
@@ -836,7 +857,7 @@
             btnLoadList.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnLoadList.IconSize = 26;
             btnLoadList.ImageAlign = ContentAlignment.MiddleRight;
-            btnLoadList.Location = new Point(4, 207);
+            btnLoadList.Location = new Point(4, 209);
             btnLoadList.Name = "btnLoadList";
             btnLoadList.Size = new Size(117, 30);
             btnLoadList.TabIndex = 13;
@@ -1003,5 +1024,6 @@
         private Controls.RoundedImageCheckBox cbEnableVideoFilter;
         private Controls.RoundedImageCheckBox cbEnableImageFilter;
         private Controls.RoundedImageCheckBox cbEnableScriptFilter;
+        private FontAwesome.Sharp.IconButton btnMoveList;
     }
 }
