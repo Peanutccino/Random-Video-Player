@@ -74,6 +74,8 @@ namespace RandomVideoPlayer.Functions
             player.RotateVideo(0, true);
             //Reset alignment
             player.VideoAlign("Center");
+            //Reset brightness
+            player.SetBrightness(0);
         }
 
 
@@ -139,7 +141,8 @@ namespace RandomVideoPlayer.Functions
         private static double zoomDuration = 4000;
         private static double panAmount = 0.2; //Distance to move video
         private static double panDuration = 8000;
-
+        private static double fadeDuration = 700;
+        private static bool fadeEnabled = true;
 
         private static AnimationType _animationType;
         private static Random _random = new Random();
@@ -157,6 +160,7 @@ namespace RandomVideoPlayer.Functions
             panDuration = SettingsHandler.AutoPlayTimerValueStartPoint() * 1000;
             selectedZoomEasingFunction = SettingsHandler.ZoomEasingFunction;
             selectedPanEasingFunction = SettingsHandler.PanEasingFunction;
+            fadeEnabled = SettingsHandler.FadeEnabled;
         }
 
         private static Func<double, double> GetZoomEasingFunction()
@@ -199,36 +203,54 @@ namespace RandomVideoPlayer.Functions
             {
                 case 0:
                     player.VideoAlign("Center");
-                    StartZoomAnimation(0, zoomAmount, zoomDuration, zoomEasingFunction, true, onAnimationCompleted); 
+                    StartZoomAnimation(0, zoomAmount, zoomDuration, zoomEasingFunction, true, onAnimationCompleted);
                     break;
                 case 1: //Horizontal
                     double panStartX = -direction * panAmount / 2;
                     double panEndX = direction * panAmount / 2;
                     player.VideoAlign("Top");
-                    StartZoomAndPanAnimation(preZoomFactor, panStartX, panEndX, true, panDuration, panEasingFunction, onAnimationCompleted); 
+                    player.ZoomVideo(preZoomFactor, true);
+                    StartZoomAndPanAnimation(preZoomFactor, panStartX, panEndX, true, panDuration, panEasingFunction, onAnimationCompleted);
                     break;
                 case 2: //Vertical
                     double panStartY = -direction * panAmount / 2;
                     double panEndY = direction * panAmount / 2;
                     player.VideoAlign("Center");
-                    StartZoomAndPanAnimation(preZoomFactor, panStartY, panEndY, false, panDuration, panEasingFunction, onAnimationCompleted); 
+                    player.ZoomVideo(preZoomFactor, true);
+                    StartZoomAndPanAnimation(preZoomFactor, panStartY, panEndY, false, panDuration, panEasingFunction, onAnimationCompleted);
                     break;
             }
         }
         private static void StartZoomAndPanAnimation(double preZoomFactor, double panStart, double panEnd, bool isHorizontal, double duration, Func<double, double> easingFunction, AnimationCompletedHandler onAnimationCompleted = null)
         {
-            // First, zoom in slightly
-            StartZoomAnimation(0, preZoomFactor, 100, Easing.Linear, false, () =>
+
+            //First, zoom in slightly
+            if (fadeEnabled)
             {
                 if (isHorizontal)
-                {                    
-                    StartPanHorizontalAnimation(panStart, panEnd, duration / 2, easingFunction, true, onAnimationCompleted);
+                {
+                    StartPanHorizontalAnimation(panStart, panEnd, duration, easingFunction, true, onAnimationCompleted);
                 }
                 else
                 {
-                    StartPanVerticalAnimation(panStart, panEnd, duration / 2, easingFunction, true, onAnimationCompleted);
+                    StartPanVerticalAnimation(panStart, panEnd, duration, easingFunction, true, onAnimationCompleted);
                 }
-            });
+            }
+            else
+            {
+                StartZoomAnimation(0, preZoomFactor, 100, Easing.Linear, false, () =>
+                {
+                    if (isHorizontal)
+                    {
+                        StartPanHorizontalAnimation(panStart, panEnd, duration, easingFunction, true, onAnimationCompleted);
+                    }
+                    else
+                    {
+                        StartPanVerticalAnimation(panStart, panEnd, duration, easingFunction, true, onAnimationCompleted);
+                    }
+                });
+            }
+
         }
         public static void StartZoomAnimation(double startZoom, double endZoom, double duration, Func<double, double> easingFunction, bool resetAfter = false, AnimationCompletedHandler onAnimationCompleted = null)
         {
@@ -270,6 +292,7 @@ namespace RandomVideoPlayer.Functions
             _animationType = AnimationType.PanVertical;
             _animationTimer.Start();
         }
+
         public static void KenBurnsEffectStop()
         {
             _animationTimer.Stop();
@@ -283,6 +306,7 @@ namespace RandomVideoPlayer.Functions
             if (t > 1) t = 1;
 
             double easedT = _easingFunction(t);
+
 
             switch (_animationType)
             {
@@ -301,11 +325,34 @@ namespace RandomVideoPlayer.Functions
                     break;
             }
 
+            if (fadeEnabled)
+            {
+                if (_elapsedTime <= fadeDuration)
+                {
+                    double fadeInT = _elapsedTime / fadeDuration;
+                    double easedFadeInT = _easingFunction(fadeInT);
+                    double currentBrightness = -100 + (easedFadeInT * 100);
+                    player.SetBrightness((int)currentBrightness);
+                }
+                else if (_elapsedTime >= _duration - fadeDuration)
+                {
+                    double fadeOutT = (_elapsedTime - (_duration - fadeDuration)) / fadeDuration;
+                    double easedFadeOutT = _easingFunction(fadeOutT);
+                    double currentBrightness = 0 - (easedFadeOutT * 100);
+                    player.SetBrightness((int)currentBrightness);
+                }
+            }
+
             if (t >= 1)
             {
-                _animationTimer.Stop();
-                if (_resetAfter)
-                {                                      
+                if (fadeEnabled)
+                {
+                    _animationTimer.Stop();
+                    ResetVideoManipulation(player);
+                    _onAnimationCompleted?.Invoke();
+                }
+                else if (!fadeEnabled && _resetAfter)
+                {
                     switch (_animationType)
                     {
                         case AnimationType.Zoom:
@@ -330,7 +377,8 @@ namespace RandomVideoPlayer.Functions
         {
             Zoom,
             PanHorizontal,
-            PanVertical
+            PanVertical,
+            Fade
         }
     }
 }
