@@ -48,8 +48,10 @@
             rbAutoNext = new RadioButton();
             rbRepeatVideo = new RadioButton();
             panel4 = new Panel();
+            cbReshuffle = new CheckBox();
             label5 = new Label();
             panel5 = new Panel();
+            cbFadeEffect = new CheckBox();
             label4 = new Label();
             cbToggleMoveVerticalEffect = new CheckBox();
             cbToggleMoveHorizontalEffect = new CheckBox();
@@ -66,7 +68,6 @@
             cbKenBurnsEffect = new CheckBox();
             label8 = new Label();
             label6 = new Label();
-            cbReshuffle = new CheckBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -144,7 +145,7 @@
             // cbShufflePlayer
             // 
             cbShufflePlayer.AutoSize = true;
-            cbShufflePlayer.Location = new Point(3, 29);
+            cbShufflePlayer.Location = new Point(3, 27);
             cbShufflePlayer.Name = "cbShufflePlayer";
             cbShufflePlayer.Padding = new Padding(6, 0, 0, 0);
             cbShufflePlayer.Size = new Size(109, 19);
@@ -160,7 +161,7 @@
             panel2.Location = new Point(0, 114);
             panel2.Name = "panel2";
             panel2.Padding = new Padding(6, 0, 0, 0);
-            panel2.Size = new Size(507, 70);
+            panel2.Size = new Size(507, 61);
             panel2.TabIndex = 13;
             // 
             // cbLeftMousePause
@@ -196,9 +197,9 @@
             panel3.Controls.Add(rbRepeatVideo);
             panel3.Controls.Add(label3);
             panel3.Dock = DockStyle.Top;
-            panel3.Location = new Point(0, 184);
+            panel3.Location = new Point(0, 175);
             panel3.Name = "panel3";
-            panel3.Size = new Size(507, 132);
+            panel3.Size = new Size(507, 137);
             panel3.TabIndex = 14;
             // 
             // lblAfterTime
@@ -294,10 +295,21 @@
             panel4.Controls.Add(label5);
             panel4.Controls.Add(cbShufflePlayer);
             panel4.Dock = DockStyle.Top;
-            panel4.Location = new Point(0, 316);
+            panel4.Location = new Point(0, 312);
             panel4.Name = "panel4";
             panel4.Size = new Size(507, 68);
             panel4.TabIndex = 15;
+            // 
+            // cbReshuffle
+            // 
+            cbReshuffle.AutoSize = true;
+            cbReshuffle.Location = new Point(119, 27);
+            cbReshuffle.Name = "cbReshuffle";
+            cbReshuffle.Padding = new Padding(6, 0, 0, 0);
+            cbReshuffle.Size = new Size(196, 19);
+            cbReshuffle.TabIndex = 13;
+            cbReshuffle.Text = "Re-shuffle after playlist finishes";
+            cbReshuffle.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
@@ -306,13 +318,14 @@
             label5.Location = new Point(0, 0);
             label5.Name = "label5";
             label5.Padding = new Padding(6, 0, 0, 0);
-            label5.Size = new Size(507, 26);
+            label5.Size = new Size(507, 23);
             label5.TabIndex = 0;
             label5.Text = "Toggle between random playback or simply parsing in order";
             // 
             // panel5
             // 
             panel5.BackColor = Color.LavenderBlush;
+            panel5.Controls.Add(cbFadeEffect);
             panel5.Controls.Add(label4);
             panel5.Controls.Add(cbToggleMoveVerticalEffect);
             panel5.Controls.Add(cbToggleMoveHorizontalEffect);
@@ -330,16 +343,27 @@
             panel5.Controls.Add(label8);
             panel5.Controls.Add(label6);
             panel5.Dock = DockStyle.Fill;
-            panel5.Location = new Point(0, 384);
+            panel5.Location = new Point(0, 380);
             panel5.Name = "panel5";
-            panel5.Size = new Size(507, 209);
+            panel5.Size = new Size(507, 229);
             panel5.TabIndex = 16;
+            // 
+            // cbFadeEffect
+            // 
+            cbFadeEffect.AutoSize = true;
+            cbFadeEffect.Location = new Point(109, 87);
+            cbFadeEffect.Name = "cbFadeEffect";
+            cbFadeEffect.Padding = new Padding(6, 0, 0, 0);
+            cbFadeEffect.Size = new Size(182, 19);
+            cbFadeEffect.TabIndex = 28;
+            cbFadeEffect.Text = "Enable fade between images";
+            cbFadeEffect.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label4.Location = new Point(3, 158);
+            label4.Location = new Point(3, 178);
             label4.Name = "label4";
             label4.Size = new Size(84, 15);
             label4.TabIndex = 27;
@@ -348,7 +372,7 @@
             // cbToggleMoveVerticalEffect
             // 
             cbToggleMoveVerticalEffect.AutoSize = true;
-            cbToggleMoveVerticalEffect.Location = new Point(188, 176);
+            cbToggleMoveVerticalEffect.Location = new Point(188, 198);
             cbToggleMoveVerticalEffect.Name = "cbToggleMoveVerticalEffect";
             cbToggleMoveVerticalEffect.Size = new Size(97, 19);
             cbToggleMoveVerticalEffect.TabIndex = 26;
@@ -358,7 +382,7 @@
             // cbToggleMoveHorizontalEffect
             // 
             cbToggleMoveHorizontalEffect.AutoSize = true;
-            cbToggleMoveHorizontalEffect.Location = new Point(70, 176);
+            cbToggleMoveHorizontalEffect.Location = new Point(70, 198);
             cbToggleMoveHorizontalEffect.Name = "cbToggleMoveHorizontalEffect";
             cbToggleMoveHorizontalEffect.Size = new Size(112, 19);
             cbToggleMoveHorizontalEffect.TabIndex = 25;
@@ -368,7 +392,7 @@
             // cbToggleZoomEffect
             // 
             cbToggleZoomEffect.AutoSize = true;
-            cbToggleZoomEffect.Location = new Point(6, 176);
+            cbToggleZoomEffect.Location = new Point(6, 198);
             cbToggleZoomEffect.Name = "cbToggleZoomEffect";
             cbToggleZoomEffect.Size = new Size(58, 19);
             cbToggleZoomEffect.TabIndex = 24;
@@ -378,7 +402,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(184, 131);
+            label12.Location = new Point(184, 148);
             label12.Name = "label12";
             label12.Size = new Size(97, 15);
             label12.TabIndex = 23;
@@ -387,7 +411,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(184, 100);
+            label11.Location = new Point(184, 117);
             label11.Name = "label11";
             label11.Size = new Size(99, 15);
             label11.TabIndex = 22;
@@ -401,7 +425,7 @@
             comboPanEffects.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             comboPanEffects.FormattingEnabled = true;
             comboPanEffects.ItemHeight = 16;
-            comboPanEffects.Location = new Point(289, 129);
+            comboPanEffects.Location = new Point(289, 146);
             comboPanEffects.Name = "comboPanEffects";
             comboPanEffects.Size = new Size(121, 22);
             comboPanEffects.TabIndex = 21;
@@ -414,7 +438,7 @@
             comboZoomEffects.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             comboZoomEffects.FormattingEnabled = true;
             comboZoomEffects.ItemHeight = 16;
-            comboZoomEffects.Location = new Point(289, 98);
+            comboZoomEffects.Location = new Point(289, 115);
             comboZoomEffects.Name = "comboZoomEffects";
             comboZoomEffects.Size = new Size(121, 22);
             comboZoomEffects.TabIndex = 20;
@@ -425,7 +449,7 @@
             btnRestoreDefaults.BackColor = Color.LightPink;
             btnRestoreDefaults.FlatAppearance.BorderSize = 0;
             btnRestoreDefaults.FlatStyle = FlatStyle.Flat;
-            btnRestoreDefaults.Location = new Point(384, 176);
+            btnRestoreDefaults.Location = new Point(384, 196);
             btnRestoreDefaults.Name = "btnRestoreDefaults";
             btnRestoreDefaults.Size = new Size(120, 30);
             btnRestoreDefaults.TabIndex = 19;
@@ -436,7 +460,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(6, 131);
+            label10.Location = new Point(6, 148);
             label10.Margin = new Padding(3, 3, 3, 0);
             label10.Name = "label10";
             label10.Size = new Size(87, 15);
@@ -446,7 +470,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(6, 100);
+            label9.Location = new Point(6, 117);
             label9.Margin = new Padding(3, 0, 3, 3);
             label9.Name = "label9";
             label9.Size = new Size(89, 15);
@@ -455,7 +479,7 @@
             // 
             // inputPanAmountValue
             // 
-            inputPanAmountValue.Location = new Point(101, 131);
+            inputPanAmountValue.Location = new Point(101, 148);
             inputPanAmountValue.Maximum = 9;
             inputPanAmountValue.Minimum = 1;
             inputPanAmountValue.Name = "inputPanAmountValue";
@@ -466,7 +490,7 @@
             // 
             // inputZoomAmountValue
             // 
-            inputZoomAmountValue.Location = new Point(101, 100);
+            inputZoomAmountValue.Location = new Point(101, 117);
             inputZoomAmountValue.Maximum = 9;
             inputZoomAmountValue.Minimum = 1;
             inputZoomAmountValue.Name = "inputZoomAmountValue";
@@ -477,11 +501,11 @@
             // 
             // cbKenBurnsEffect
             // 
-            cbKenBurnsEffect.Dock = DockStyle.Top;
-            cbKenBurnsEffect.Location = new Point(0, 67);
+            cbKenBurnsEffect.AutoSize = true;
+            cbKenBurnsEffect.Location = new Point(3, 87);
             cbKenBurnsEffect.Name = "cbKenBurnsEffect";
             cbKenBurnsEffect.Padding = new Padding(6, 0, 0, 0);
-            cbKenBurnsEffect.Size = new Size(507, 26);
+            cbKenBurnsEffect.Size = new Size(100, 19);
             cbKenBurnsEffect.TabIndex = 13;
             cbKenBurnsEffect.Text = "Enable effect";
             cbKenBurnsEffect.UseVisualStyleBackColor = true;
@@ -490,7 +514,7 @@
             // 
             label8.Dock = DockStyle.Top;
             label8.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            label8.Location = new Point(0, 19);
+            label8.Location = new Point(0, 24);
             label8.Name = "label8";
             label8.Padding = new Padding(6, 0, 0, 0);
             label8.Size = new Size(507, 48);
@@ -504,20 +528,9 @@
             label6.Location = new Point(0, 0);
             label6.Name = "label6";
             label6.Padding = new Padding(6, 0, 0, 0);
-            label6.Size = new Size(507, 19);
+            label6.Size = new Size(507, 24);
             label6.TabIndex = 0;
             label6.Text = "(Experimental) Ken Burns effect - for static images";
-            // 
-            // cbReshuffle
-            // 
-            cbReshuffle.AutoSize = true;
-            cbReshuffle.Location = new Point(119, 29);
-            cbReshuffle.Name = "cbReshuffle";
-            cbReshuffle.Padding = new Padding(6, 0, 0, 0);
-            cbReshuffle.Size = new Size(196, 19);
-            cbReshuffle.TabIndex = 13;
-            cbReshuffle.Text = "Re-shuffle after playlist finishes";
-            cbReshuffle.UseVisualStyleBackColor = true;
             // 
             // PlayerUserControl
             // 
@@ -532,7 +545,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "PlayerUserControl";
-            Size = new Size(507, 593);
+            Size = new Size(507, 609);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
@@ -588,5 +601,6 @@
         private CheckBox cbToggleZoomEffect;
         private Label label4;
         private CheckBox cbReshuffle;
+        private CheckBox cbFadeEffect;
     }
 }

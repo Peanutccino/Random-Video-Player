@@ -50,6 +50,7 @@ namespace RandomVideoPlayer.UserControls
             cbToggleMoveVerticalEffect.Checked = settings.SelectedAnimations.Contains(2);
 
             cbKenBurnsEffect.Checked = settings.BurnsEffectEnabled;
+            cbFadeEffect.Checked = settings.FadeEffectEnabled;
 
             inputTimerValueStartPoint.Value = settings.AutoPlayTimerValueStartPoint;
             inputTimerValueEndPoint.Value = settings.AutoPlayTimerValueEndPoint;
@@ -130,6 +131,11 @@ namespace RandomVideoPlayer.UserControls
             cbKenBurnsEffect.CheckedChanged += (s, e) =>
             {
                 settings.BurnsEffectEnabled = cbKenBurnsEffect.Checked;
+            };
+
+            cbFadeEffect.CheckedChanged += (s, e) =>
+            {
+                settings.FadeEffectEnabled = cbFadeEffect.Checked;
             };
 
             inputPanAmountValue.ValueChanged += (s, e) =>
