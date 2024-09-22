@@ -1,5 +1,6 @@
 ﻿using Mpv.NET.Player;
 using RandomVideoPlayer.Model;
+using System.Numerics;
 
 namespace RandomVideoPlayer.Functions
 {
@@ -74,8 +75,6 @@ namespace RandomVideoPlayer.Functions
             player.RotateVideo(0, true);
             //Reset alignment
             player.VideoAlign("Center");
-            //Reset brightness
-            player.SetBrightness(0);
         }
 
 

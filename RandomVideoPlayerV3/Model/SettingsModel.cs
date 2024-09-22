@@ -13,6 +13,7 @@ namespace RandomVideoPlayer.Model
         public bool ShowScriptPath { get; set; }
         public bool HandleMultiAxisScripts { get; set; }
         public bool UsingScriptPlayer { get; set; }
+        public bool IncludeSubdirectoriesForScriptLoad { get; set; }
         #endregion
 
         #region Paths

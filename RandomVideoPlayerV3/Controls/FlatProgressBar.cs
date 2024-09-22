@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using RandomVideoPlayer.Functions;
 
 namespace RandomVideoPlayer
 {
@@ -173,14 +174,23 @@ namespace RandomVideoPlayer
 
         public void LoadFunScript(string filePath)
         {
-            string jsonContent = File.ReadAllText(filePath);
-            var jObject = JObject.Parse(jsonContent);
+            try
+            {
+                string jsonContent = File.ReadAllText(filePath);
+                var jObject = JObject.Parse(jsonContent);
 
-            actionPoints = jObject["actions"]
-                .Select(jt => new ActionPoint { At = (long)jt["at"], Pos = (int)jt["pos"] })
-                .ToList();
+                actionPoints = jObject["actions"]
+                    .Select(jt => new ActionPoint { At = (long)jt["at"], Pos = (int)jt["pos"] })
+                    .ToList();
 
-            PreRenderGraph(); // Pre-render the graph after loading new data
+                PreRenderGraph(); // Pre-render the graph after loading new data
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex,"Load Funscript to display graph failed");
+                throw;
+            }
+
         }
 
         public void DeleteActionsPoints()
@@ -222,7 +232,7 @@ namespace RandomVideoPlayer
         }
         private void DrawFunscriptGraph(Graphics g, Color graphcolor)
         {
-            if (actionPoints.Count < 2) return;
+            if (actionPoints.Count < 2 || Maximum <= 0) return;
 
             int maxTime = Maximum;
 

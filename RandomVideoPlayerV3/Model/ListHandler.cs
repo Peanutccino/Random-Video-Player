@@ -136,7 +136,7 @@ namespace RandomVideoPlayer.Model
             get
             {
                 var _settingsInstance = CustomSettings.Instance;
-                if(_settingsInstance.scriptDirectories.Count <= 0)
+                if (_settingsInstance.scriptDirectories.Count <= 0)
                 {
                     _settingsInstance.scriptDirectories.Add("local");
                 }
@@ -291,8 +291,8 @@ namespace RandomVideoPlayer.Model
         public static List<string> Extensions
         {
             get
-            {               
-                if(FilterScriptEnabled)
+            {
+                if (FilterScriptEnabled)
                 {
                     return VideoExtensions;
                 }
@@ -312,12 +312,12 @@ namespace RandomVideoPlayer.Model
                         }
                     }
 
-                    if (foundVideo == false) 
-                    { 
+                    if (foundVideo == false)
+                    {
                         selectedExtensionsFiltered.AddRange(VideoExtensions);
                     }
                 }
-                if(FilterImageEnabled)
+                if (FilterImageEnabled)
                 {
                     bool foundImage = false;
 
@@ -330,7 +330,7 @@ namespace RandomVideoPlayer.Model
                         }
                     }
 
-                    if(foundImage == false)
+                    if (foundImage == false)
                     {
                         selectedExtensionsFiltered.AddRange(ImageExtensions);
                     }
@@ -443,7 +443,9 @@ namespace RandomVideoPlayer.Model
                 Error.Log(ex, "Couldn't access folder - latestFolderList");
             }
         }
-        private static IEnumerable<string> GetFiles(string folderpath, bool includeSubfolders)
+        private static List<string> multiAxis = new List<string>
+        { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
+        public static IEnumerable<string> GetFiles(string folderpath, bool includeSubfolders)
         {
             List<string> files = new List<string>();
 
@@ -451,26 +453,65 @@ namespace RandomVideoPlayer.Model
             {
                 if (FilterScriptEnabled)
                 {
-                    var funscriptFiles = Directory.EnumerateFiles(folderpath, "*.funscript");
-                    foreach (var funscriptFile in funscriptFiles)
-                    {
-                        var baseFileName = Path.GetFileNameWithoutExtension(funscriptFile);
-
-                        foreach (var extension in Extensions)
-                        {
-                            var videoFilePath = Path.Combine(Path.GetDirectoryName(funscriptFile), baseFileName + "." + extension);
-                            if (File.Exists(videoFilePath))
-                            {
-                                files.Add(videoFilePath);
-                            }
-                        }
-                    }
+                    List<string> foundScripts = Directory.EnumerateFiles(folderpath, "*.funscript")
+                        .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
+                        .ToList();
 
                     if (includeSubfolders)
                     {
                         foreach (var directory in Directory.EnumerateDirectories(folderpath))
                         {
-                            files.AddRange(GetFiles(directory, includeSubfolders));
+                            foundScripts.AddRange(GetFiles(directory, includeSubfolders));
+                        }
+                    }
+
+                    foreach(var dir in ListHandler.ScriptDirectories)
+                    {
+                        if (dir == "local")
+                        {
+                            continue;
+                        }
+
+                        if (!Directory.Exists(dir)) continue;
+
+                        var matchingfiles = Directory.GetFiles(dir, "*.funscript")
+                            .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
+                            .ToList();
+
+                        foreach(var subDir in Directory.EnumerateDirectories(dir))
+                        {
+                            matchingfiles.AddRange(Directory.GetFiles(subDir, "*.funscript")
+                                .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
+                                .ToList());
+                        }
+
+                        foundScripts.AddRange(matchingfiles);
+                    }
+
+                    List<string> filesToCheck = new List<string>();
+
+                    filesToCheck.AddRange(Directory.EnumerateFiles(folderpath)
+                        .Where(s => ListHandler.VideoExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant())));
+
+                    if (includeSubfolders)
+                    {
+                        foreach (var directory in Directory.EnumerateDirectories(folderpath))
+                        {
+                            filesToCheck.AddRange(GetFiles(directory, includeSubfolders));
+                        }
+                    }
+
+                    foreach (var video in filesToCheck)
+                    {
+                        if(foundScripts.Any(script => Path.GetFileNameWithoutExtension(script).StartsWith(Path.GetFileNameWithoutExtension(video), StringComparison.OrdinalIgnoreCase)))
+                        {
+                            if (!files.Contains(video))
+                            {
+                                if (File.Exists(video))
+                                {
+                                    files.Add(video);
+                                }
+                            }
                         }
                     }
                 }

@@ -747,5 +747,20 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool IncludeSubdirectoriesForScriptLoad
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.includeSubdirectoriesForScriptLoad;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.includeSubdirectoriesForScriptLoad = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }

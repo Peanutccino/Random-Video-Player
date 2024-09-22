@@ -36,6 +36,7 @@
             cbScriptGraph = new Controls.RoundedCheckBox();
             panel1 = new Panel();
             panel2 = new Panel();
+            cbIncludeSubdirectoriesForScriptLoad = new CheckBox();
             label7 = new Label();
             cbUsingScriptPlayer = new CheckBox();
             cbHandleMultiAxis = new CheckBox();
@@ -63,7 +64,7 @@
             label1.Margin = new Padding(3, 3, 3, 10);
             label1.Name = "label1";
             label1.Padding = new Padding(0, 0, 0, 8);
-            label1.Size = new Size(453, 55);
+            label1.Size = new Size(475, 55);
             label1.TabIndex = 0;
             label1.Text = "Sync";
             // 
@@ -76,7 +77,7 @@
             label2.Margin = new Padding(3, 6, 3, 3);
             label2.Name = "label2";
             label2.Padding = new Padding(6, 0, 6, 0);
-            label2.Size = new Size(453, 25);
+            label2.Size = new Size(475, 25);
             label2.TabIndex = 3;
             label2.Text = "The video info gets synced locally via 'http://127.0.0.1:13579/variables.html'";
             // 
@@ -88,7 +89,7 @@
             label3.Margin = new Padding(3, 6, 3, 3);
             label3.Name = "label3";
             label3.Padding = new Padding(6, 0, 6, 9);
-            label3.Size = new Size(453, 24);
+            label3.Size = new Size(475, 24);
             label3.TabIndex = 4;
             label3.Text = "Script graph is shown within the players progress bar and is only a visual indicator. ";
             // 
@@ -132,12 +133,13 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 225);
             panel1.Name = "panel1";
-            panel1.Size = new Size(453, 345);
+            panel1.Size = new Size(475, 378);
             panel1.TabIndex = 7;
             // 
             // panel2
             // 
             panel2.BackColor = Color.MintCream;
+            panel2.Controls.Add(cbIncludeSubdirectoriesForScriptLoad);
             panel2.Controls.Add(label7);
             panel2.Controls.Add(cbUsingScriptPlayer);
             panel2.Controls.Add(cbHandleMultiAxis);
@@ -150,10 +152,20 @@
             panel2.Controls.Add(btnDeleteFolder);
             panel2.Controls.Add(btnItemUp);
             panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 49);
+            panel2.Location = new Point(0, 61);
             panel2.Name = "panel2";
-            panel2.Size = new Size(453, 296);
+            panel2.Size = new Size(475, 317);
             panel2.TabIndex = 15;
+            // 
+            // cbIncludeSubdirectoriesForScriptLoad
+            // 
+            cbIncludeSubdirectoriesForScriptLoad.AutoSize = true;
+            cbIncludeSubdirectoriesForScriptLoad.Location = new Point(6, 291);
+            cbIncludeSubdirectoriesForScriptLoad.Name = "cbIncludeSubdirectoriesForScriptLoad";
+            cbIncludeSubdirectoriesForScriptLoad.Size = new Size(248, 19);
+            cbIncludeSubdirectoriesForScriptLoad.TabIndex = 20;
+            cbIncludeSubdirectoriesForScriptLoad.Text = "Include subdirectories to search for scripts";
+            cbIncludeSubdirectoriesForScriptLoad.UseVisualStyleBackColor = true;
             // 
             // label7
             // 
@@ -213,7 +225,7 @@
             lvDirectories.Location = new Point(6, 26);
             lvDirectories.Margin = new Padding(6, 3, 3, 3);
             lvDirectories.Name = "lvDirectories";
-            lvDirectories.Size = new Size(406, 184);
+            lvDirectories.Size = new Size(428, 184);
             lvDirectories.TabIndex = 7;
             lvDirectories.UseCompatibleStateImageBehavior = false;
             lvDirectories.View = System.Windows.Forms.View.List;
@@ -227,7 +239,7 @@
             btnAddLocal.IconColor = Color.Black;
             btnAddLocal.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnAddLocal.IconSize = 33;
-            btnAddLocal.Location = new Point(418, 178);
+            btnAddLocal.Location = new Point(440, 178);
             btnAddLocal.Name = "btnAddLocal";
             btnAddLocal.Size = new Size(32, 32);
             btnAddLocal.TabIndex = 13;
@@ -243,7 +255,7 @@
             btnAddFolder.IconColor = Color.Black;
             btnAddFolder.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnAddFolder.IconSize = 33;
-            btnAddFolder.Location = new Point(418, 26);
+            btnAddFolder.Location = new Point(440, 26);
             btnAddFolder.Name = "btnAddFolder";
             btnAddFolder.Size = new Size(32, 32);
             btnAddFolder.TabIndex = 8;
@@ -259,7 +271,7 @@
             btnItemDown.IconColor = Color.Black;
             btnItemDown.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnItemDown.IconSize = 33;
-            btnItemDown.Location = new Point(418, 140);
+            btnItemDown.Location = new Point(440, 140);
             btnItemDown.Name = "btnItemDown";
             btnItemDown.Size = new Size(32, 32);
             btnItemDown.TabIndex = 12;
@@ -275,7 +287,7 @@
             btnDeleteFolder.IconColor = Color.Black;
             btnDeleteFolder.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnDeleteFolder.IconSize = 33;
-            btnDeleteFolder.Location = new Point(418, 64);
+            btnDeleteFolder.Location = new Point(440, 64);
             btnDeleteFolder.Name = "btnDeleteFolder";
             btnDeleteFolder.Size = new Size(32, 32);
             btnDeleteFolder.TabIndex = 9;
@@ -291,7 +303,7 @@
             btnItemUp.IconColor = Color.Black;
             btnItemUp.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnItemUp.IconSize = 33;
-            btnItemUp.Location = new Point(418, 102);
+            btnItemUp.Location = new Point(440, 102);
             btnItemUp.Name = "btnItemUp";
             btnItemUp.Size = new Size(32, 32);
             btnItemUp.TabIndex = 11;
@@ -306,7 +318,7 @@
             label4.Margin = new Padding(3, 6, 3, 3);
             label4.Name = "label4";
             label4.Padding = new Padding(6, 0, 6, 0);
-            label4.Size = new Size(453, 66);
+            label4.Size = new Size(475, 66);
             label4.TabIndex = 8;
             label4.Text = "Check Timecode Server, to activate syncing. (Only after settings are saved)\r\n\r\nCurrently these two can read RVP information and use them for their toy syncing method, here is how to set it up:";
             // 
@@ -318,7 +330,7 @@
             label5.Margin = new Padding(3, 6, 3, 3);
             label5.Name = "label5";
             label5.Padding = new Padding(10, 0, 6, 0);
-            label5.Size = new Size(453, 55);
+            label5.Size = new Size(475, 55);
             label5.TabIndex = 9;
             label5.Text = "- In MultiFunPlayer, activate media source \"MPC-HC\". Either connect manually or activate auto-connect.\r\n- In ScriptPlayer, click \"Video Player\" and select \"MPC-HC\".\r\n";
             // 
@@ -334,7 +346,7 @@
             Controls.Add(label4);
             Controls.Add(label1);
             Name = "SyncUserControl";
-            Size = new Size(453, 570);
+            Size = new Size(475, 603);
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
@@ -364,5 +376,6 @@
         private CheckBox cbHandleMultiAxis;
         private CheckBox cbUsingScriptPlayer;
         private Label label7;
+        private CheckBox cbIncludeSubdirectoriesForScriptLoad;
     }
 }

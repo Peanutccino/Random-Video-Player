@@ -39,6 +39,7 @@ namespace RandomVideoPlayer.Functions
         public bool showScriptPath { get; set; } = true;
         public bool handleMultiAxisScripts { get; set; } = false;
         public bool usingScriptPlayer { get; set; } = false;
+        public bool includeSubdirectoriesForScriptLoad { get; set; } = true;
 
         public string viewStateListFileExplore { get; set; } = "Tile";
         public string viewStateFolderFileExplore { get; set; } = "Tile";

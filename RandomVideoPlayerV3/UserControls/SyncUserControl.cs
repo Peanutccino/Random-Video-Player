@@ -27,6 +27,7 @@ namespace RandomVideoPlayer.UserControls
             cbShowScriptPath.Checked = settings.ShowScriptPath;
             cbHandleMultiAxis.Checked = settings.HandleMultiAxisScripts;
             cbUsingScriptPlayer.Checked = settings.UsingScriptPlayer;
+            cbIncludeSubdirectoriesForScriptLoad.Checked = settings.IncludeSubdirectoriesForScriptLoad;
         }
 
         private void BindControls()
@@ -54,6 +55,11 @@ namespace RandomVideoPlayer.UserControls
             cbUsingScriptPlayer.CheckedChanged += (s, e) =>
             {
                 settings.UsingScriptPlayer = cbUsingScriptPlayer.Checked;
+            };
+
+            cbIncludeSubdirectoriesForScriptLoad.CheckedChanged += (s, e) =>
+            {
+                settings.IncludeSubdirectoriesForScriptLoad = cbIncludeSubdirectoriesForScriptLoad.Checked;
             };
         }
 

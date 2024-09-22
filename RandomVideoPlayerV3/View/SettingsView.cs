@@ -58,6 +58,7 @@ namespace RandomVideoPlayer.View
             settingsModel.ShowScriptPath = SettingsHandler.ShowScriptPath;
             settingsModel.HandleMultiAxisScripts = SettingsHandler.HandleMultiAxisScripts;
             settingsModel.UsingScriptPlayer = SettingsHandler.UsingScriptPlayer;
+            settingsModel.IncludeSubdirectoriesForScriptLoad = SettingsHandler.IncludeSubdirectoriesForScriptLoad;
 
             settingsModel.DefaultPathText = PathHandler.DefaultFolder;
             settingsModel.RemovalPathText = PathHandler.RemoveFolder;
@@ -135,6 +136,7 @@ namespace RandomVideoPlayer.View
             SettingsHandler.ShowScriptPath = settingsModel.ShowScriptPath;
             SettingsHandler.HandleMultiAxisScripts = settingsModel.HandleMultiAxisScripts;
             SettingsHandler.UsingScriptPlayer = settingsModel.UsingScriptPlayer;
+            SettingsHandler.IncludeSubdirectoriesForScriptLoad = settingsModel.IncludeSubdirectoriesForScriptLoad;
 
             PathHandler.DefaultFolder = settingsModel.DefaultPathText;
             PathHandler.TempRecentFolder = PathHandler.DefaultFolder;

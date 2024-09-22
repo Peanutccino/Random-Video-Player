@@ -501,7 +501,6 @@
             // btnScriptMenu
             // 
             btnScriptMenu.Dock = DockStyle.Left;
-            btnScriptMenu.Enabled = false;
             btnScriptMenu.FlatAppearance.BorderSize = 0;
             btnScriptMenu.FlatStyle = FlatStyle.Flat;
             btnScriptMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold, GraphicsUnit.Point);

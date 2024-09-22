@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RandomVideoPlayer.Functions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,10 @@ namespace RandomVideoPlayer.Model
     public static class ScriptHandler
     {
         public static List<string> scriptFilesFound = new List<string>();
-        private static List<string> multiAxis = new List<string> 
+        private static List<string> multiAxis = new List<string>
         { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
 
-        public static Dictionary<string, AxisData> MultiAxisScriptsFound = new Dictionary<string, AxisData>
+        private static Dictionary<string, AxisData> multiAxisScriptsFound = new Dictionary<string, AxisData>
         {
             {"Surge",   new AxisData()},
             {"Sway",    new AxisData()},
@@ -24,8 +25,12 @@ namespace RandomVideoPlayer.Model
             {"Pump",    new AxisData()},
             {"Raw",     new AxisData()}
         };
+        public static Dictionary<string, AxisData> MultiAxisScriptsFound
+        {
+            get { return multiAxisScriptsFound; }
+            private set { multiAxisScriptsFound = value; }
+        }
 
-        
         public async static Task FillScriptList(string videoPath)
         {
             ResetScriptList();
@@ -59,10 +64,21 @@ namespace RandomVideoPlayer.Model
 
                 if (!Directory.Exists(dir)) continue;
 
-                var matchingfiles = Directory.GetFiles(dir, "*.funscript", SearchOption.TopDirectoryOnly)
+                var matchingfiles = Directory.GetFiles(dir, "*.funscript")
                     .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
                     .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
                     .ToList();
+
+                if (SettingsHandler.IncludeSubdirectoriesForScriptLoad)
+                {
+                    foreach (var subDir in Directory.EnumerateDirectories(dir))
+                    {
+                        matchingfiles.AddRange(Directory.GetFiles(subDir, "*.funscript")
+                            .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
+                            .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
+                            .ToList());
+                    }
+                }
 
                 foreach (var file in matchingfiles)
                 {
@@ -74,11 +90,21 @@ namespace RandomVideoPlayer.Model
                 foreach (var kvp in MultiAxisScriptsFound)
                 {
                     var multiScriptType = kvp.Key.ToLower();
-                    //var multiScriptPath = Path.Combine(dir, fileNameWithoutExtension + "." + multiScriptType + ".funscript");
-                    var matchingFiles = Directory.GetFiles(dir, "*.funscript", SearchOption.TopDirectoryOnly)
+                    var matchingFiles = Directory.GetFiles(dir, "*.funscript")
                         .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase) &&
                         Path.GetFileName(file).EndsWith(multiScriptType + ".funscript", StringComparison.OrdinalIgnoreCase))
                         .ToList();
+
+                    if (SettingsHandler.IncludeSubdirectoriesForScriptLoad)
+                    {
+                        foreach (var subDir in Directory.EnumerateDirectories(dir))
+                        {
+                            matchingFiles.AddRange(Directory.GetFiles(subDir, "*.funscript")
+                                .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase) &&
+                                Path.GetFileName(file).EndsWith(multiScriptType + ".funscript", StringComparison.OrdinalIgnoreCase))
+                                .ToList());
+                        }
+                    }
 
                     foreach (var file in matchingFiles)
                     {
@@ -114,7 +140,7 @@ namespace RandomVideoPlayer.Model
 
                 await CreateBackupScript(scriptLocalPath, videoFileDirectory, videoFileNameWithoutExt);
 
-                File.Copy(selectedScript, scriptLocalPath, true);
+                await Task.Run(() => File.Copy(selectedScript, scriptLocalPath, true));
 
                 movedScriptWithoutLocal = backupScriptCreated ? false : true;
             }
@@ -146,7 +172,7 @@ namespace RandomVideoPlayer.Model
 
                 await CreateBackupMultiAxisScript(scriptLocalPath, videoFileDirectory, videoFileNameWithoutExt, Axis);
 
-                File.Copy(selectedScript, scriptLocalPath, true);                
+                await Task.Run(() => File.Copy(selectedScript, scriptLocalPath, true));
             }
         }
 
@@ -155,7 +181,7 @@ namespace RandomVideoPlayer.Model
             if (File.Exists(scriptLocal))
             {
                 tempScriptBackupPath = Path.Combine(videoDir, videoNameWithoutExt + ".backup");
-                File.Copy(scriptLocal, tempScriptBackupPath);
+                await Task.Run(() => File.Copy(scriptLocal, tempScriptBackupPath, true));
                 backupScriptCreated = true;
             }
             else
@@ -170,17 +196,17 @@ namespace RandomVideoPlayer.Model
             if (File.Exists(scriptLocal))
             {
                 var backupPath = Path.Combine(videoDir, videoNameWithoutExt + "." + Axis + ".backup");
-                if(MultiAxisScriptsFound.ContainsKey(Axis))
+                if (MultiAxisScriptsFound.ContainsKey(Axis))
                 {
                     MultiAxisScriptsFound[Axis].BackupPath = backupPath;
                     MultiAxisScriptsFound[Axis].LocalPath = scriptLocal;
                 }
-                File.Copy(scriptLocal, backupPath, true);
+                await Task.Run(() => File.Copy(scriptLocal, backupPath, true));
                 UpdateAxisData(Axis, hasBackup: true, movedWithoutLocal: false);
             }
             else
             {
-                if(MultiAxisScriptsFound.ContainsKey(Axis))
+                if (MultiAxisScriptsFound.ContainsKey(Axis))
                 {
                     MultiAxisScriptsFound[Axis].BackupPath = string.Empty;
                     MultiAxisScriptsFound[Axis].LocalPath = scriptLocal;
@@ -229,7 +255,7 @@ namespace RandomVideoPlayer.Model
         {
             if (MultiAxisScriptsFound.ContainsKey(axisName))
             {
-                MultiAxisScriptsFound[axisName].ScriptFiles.Add(newScript);                
+                MultiAxisScriptsFound[axisName].ScriptFiles.Add(newScript);
             }
         }
 
@@ -241,7 +267,7 @@ namespace RandomVideoPlayer.Model
                 {
                     MultiAxisScriptsFound[axisName].HasBackup = hasBackup.Value;
                 }
-                if(movedWithoutLocal.HasValue)
+                if (movedWithoutLocal.HasValue)
                 {
                     MultiAxisScriptsFound[axisName].MovedWithoutLocal = movedWithoutLocal.Value;
                 }
@@ -255,7 +281,7 @@ namespace RandomVideoPlayer.Model
         private static void ResetScriptList()
         {
             scriptFilesFound.Clear();
-            foreach(var kvp in MultiAxisScriptsFound)
+            foreach (var kvp in MultiAxisScriptsFound)
             {
                 kvp.Value.ScriptFiles.Clear();
                 kvp.Value.LocalPath = string.Empty;
@@ -284,5 +310,5 @@ namespace RandomVideoPlayer.Model
             BackupPath = string.Empty;
             LocalPath = string.Empty;
         }
-     }
+    }
 }

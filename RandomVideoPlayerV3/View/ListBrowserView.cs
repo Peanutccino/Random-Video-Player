@@ -128,7 +128,8 @@ namespace RandomVideoPlayer.View
                 GoBack();
             }
         }
-
+        private static List<string> multiAxis = new List<string>
+        { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
         private void btnAddSelected_Click(object sender, EventArgs e)
         {
             var filteredPaths = new List<string>();
@@ -140,11 +141,52 @@ namespace RandomVideoPlayer.View
                 var fileType = item.SubItems[1].Text;
                 if (ListHandler.LbFilterScriptEnabled)
                 {
-                    var funscriptFilePath = FileManipulation.GetFilePathWithDifferentExtension(filePath, ".funscript");
-                    if (File.Exists(funscriptFilePath) && ListHandler.VideoExtensions.Contains(fileType.TrimStart('.')))
+                    foreach (var dir in ListHandler.ScriptDirectories)
                     {
-                        filteredPaths.Add(funscriptFilePath);
+                        if (dir == "local")
+                        {
+                            var funscriptFilePath = FileManipulation.GetFilePathWithDifferentExtension(filePath, ".funscript");
+                            if (File.Exists(funscriptFilePath) && ListHandler.VideoExtensions.Contains(fileType.TrimStart('.')))
+                            {
+                                if (!filteredPaths.Contains(filePath))
+                                {
+                                    filteredPaths.Add(filePath);
+                                }
+                            }
+                            continue;
+                        }
+
+                        if (!Directory.Exists(dir)) continue;
+
+                        var matchingfiles = Directory.GetFiles(dir, "*.funscript")
+                            .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
+                            .ToList();
+
+                        foreach (var subDir in Directory.EnumerateDirectories(dir))
+                        {
+                            matchingfiles.AddRange(Directory.GetFiles(subDir, "*.funscript")
+                                .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
+                                .ToList());
+                        }
+
+                        foreach(var funscript in matchingfiles)
+                        {
+                            if (Path.GetFileNameWithoutExtension(funscript).ToLower().Contains(Path.GetFileNameWithoutExtension(filePath).ToLower()))
+                            {
+                                if (!filteredPaths.Contains(filePath))
+                                {
+                                    filteredPaths.Add(filePath);
+                                }
+                            }
+                        }
                     }
+
+
+                    //var funscriptFilePath = FileManipulation.GetFilePathWithDifferentExtension(filePath, ".funscript");
+                    //if (File.Exists(funscriptFilePath) && ListHandler.VideoExtensions.Contains(fileType.TrimStart('.')))
+                    //{
+                    //    filteredPaths.Add(funscriptFilePath);
+                    //}
                 }
                 else
                 {
@@ -816,6 +858,7 @@ namespace RandomVideoPlayer.View
             lvCustomList.SmallImageList = _showIcons ? imageListLarge : null;
             lvCustomList.Refresh();
         }
+
         private void GrabFromDirectory(string folderPath)
         {
             List<string> files = new List<string>();
@@ -824,26 +867,7 @@ namespace RandomVideoPlayer.View
             {
                 if (ListHandler.LbFilterScriptEnabled)
                 {
-                    var funscriptFiles = Directory.EnumerateFiles(folderPath, "*.funscript");
-                    foreach (var funscriptFile in funscriptFiles)
-                    {
-                        var baseFileName = Path.GetFileNameWithoutExtension(funscriptFile);
-
-                        foreach (var extension in ListHandler.VideoExtensions)
-                        {
-                            var videoFilePath = Path.Combine(Path.GetDirectoryName(funscriptFile), baseFileName + "." + extension);
-                            if (File.Exists(videoFilePath))
-                            {
-                                files.Add(videoFilePath);
-                            }
-                        }
-                    }
-
-                    foreach (var directory in Directory.EnumerateDirectories(folderPath))
-                    {
-                        GrabFromDirectory(directory);
-                    }
-
+                    files.AddRange(ListHandler.GetFiles(folderPath, true));
                 }
                 else
                 {
