@@ -291,7 +291,7 @@ namespace RandomVideoPlayer.View
                 try
                 {
                     var pathToList = PathHandler.PathToListFolder + @"\" + saveListView.ListToSave + ".txt";
-                    File.WriteAllLines(pathToList, TempList);
+                    File.WriteAllLines(pathToList, TempList, Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {

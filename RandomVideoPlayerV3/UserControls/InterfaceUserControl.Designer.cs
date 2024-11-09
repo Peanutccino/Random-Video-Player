@@ -42,6 +42,7 @@
             cbDeleteButton = new Controls.RoundedCheckBox();
             panelButtonPreview = new Panel();
             btnRestore = new FontAwesome.Sharp.IconButton();
+            cbSkipButton = new Controls.RoundedCheckBox();
             panel1.SuspendLayout();
             panelButtonPreview.SuspendLayout();
             SuspendLayout();
@@ -72,6 +73,7 @@
             // panel1
             // 
             panel1.AllowDrop = true;
+            panel1.Controls.Add(cbSkipButton);
             panel1.Controls.Add(cbSourceSelector);
             panel1.Controls.Add(flowPanel);
             panel1.Controls.Add(cbListAddButton);
@@ -108,7 +110,7 @@
             flowPanel.FlowDirection = FlowDirection.TopDown;
             flowPanel.Location = new Point(241, 0);
             flowPanel.Name = "flowPanel";
-            flowPanel.Size = new Size(66, 278);
+            flowPanel.Size = new Size(66, 313);
             flowPanel.TabIndex = 8;
             // 
             // cbListAddButton
@@ -249,6 +251,22 @@
             btnRestore.UseVisualStyleBackColor = false;
             btnRestore.Click += btnRestore_Click;
             // 
+            // cbSkipButton
+            // 
+            cbSkipButton.Appearance = Appearance.Button;
+            cbSkipButton.BackColor = Color.Transparent;
+            cbSkipButton.CheckedBackColor = Color.PaleGreen;
+            cbSkipButton.FlatAppearance.BorderSize = 0;
+            cbSkipButton.FlatStyle = FlatStyle.Flat;
+            cbSkipButton.Location = new Point(67, 275);
+            cbSkipButton.Margin = new Padding(12, 3, 3, 3);
+            cbSkipButton.Name = "cbSkipButton";
+            cbSkipButton.Size = new Size(168, 28);
+            cbSkipButton.TabIndex = 10;
+            cbSkipButton.Text = "Auto skip";
+            cbSkipButton.UncheckedBackColor = Color.LightGray;
+            cbSkipButton.UseVisualStyleBackColor = false;
+            // 
             // InterfaceUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -280,5 +298,6 @@
         private FlowLayoutPanel flowPanel;
         private Controls.RoundedCheckBox cbSourceSelector;
         private FontAwesome.Sharp.IconButton btnRestore;
+        private Controls.RoundedCheckBox cbSkipButton;
     }
 }

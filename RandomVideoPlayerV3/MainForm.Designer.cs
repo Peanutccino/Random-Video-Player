@@ -38,6 +38,7 @@
             btnStartFromFile = new FontAwesome.Sharp.IconButton();
             btnAddToQueue = new FontAwesome.Sharp.IconButton();
             panelControls = new Panel();
+            btnAutoSkip = new FontAwesome.Sharp.IconButton();
             btnSourceSelector = new Button();
             btnRepeat = new FontAwesome.Sharp.IconButton();
             btnMoveTo = new FontAwesome.Sharp.IconButton();
@@ -69,6 +70,7 @@
             fbDialog = new FolderBrowserDialog();
             timeVolumeCheck = new System.Windows.Forms.Timer(components);
             toolTipUI = new ToolTip(components);
+            timerAutoSkipCheck = new System.Windows.Forms.Timer(components);
             panelBottom.SuspendLayout();
             panel1.SuspendLayout();
             panelControls.SuspendLayout();
@@ -94,7 +96,7 @@
             panelBottom.Dock = DockStyle.Bottom;
             panelBottom.Location = new Point(0, 306);
             panelBottom.Name = "panelBottom";
-            panelBottom.Size = new Size(914, 75);
+            panelBottom.Size = new Size(970, 75);
             panelBottom.TabIndex = 0;
             // 
             // panel1
@@ -105,7 +107,7 @@
             panel1.Dock = DockStyle.Bottom;
             panel1.Location = new Point(0, 58);
             panel1.Name = "panel1";
-            panel1.Size = new Size(914, 17);
+            panel1.Size = new Size(970, 17);
             panel1.TabIndex = 24;
             // 
             // lblCurrentInfo
@@ -116,7 +118,7 @@
             lblCurrentInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
             lblCurrentInfo.Location = new Point(0, 0);
             lblCurrentInfo.Name = "lblCurrentInfo";
-            lblCurrentInfo.Size = new Size(800, 17);
+            lblCurrentInfo.Size = new Size(856, 17);
             lblCurrentInfo.TabIndex = 14;
             lblCurrentInfo.Text = "Current Folder";
             lblCurrentInfo.TextAlign = ContentAlignment.MiddleLeft;
@@ -127,7 +129,7 @@
             lblSpeed.AutoSize = true;
             lblSpeed.Dock = DockStyle.Right;
             lblSpeed.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblSpeed.Location = new Point(800, 0);
+            lblSpeed.Location = new Point(856, 0);
             lblSpeed.Name = "lblSpeed";
             lblSpeed.Size = new Size(0, 15);
             lblSpeed.TabIndex = 15;
@@ -137,7 +139,7 @@
             lblDurationInfo.AutoSize = true;
             lblDurationInfo.Dock = DockStyle.Right;
             lblDurationInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblDurationInfo.Location = new Point(800, 0);
+            lblDurationInfo.Location = new Point(856, 0);
             lblDurationInfo.Name = "lblDurationInfo";
             lblDurationInfo.Size = new Size(114, 15);
             lblDurationInfo.TabIndex = 13;
@@ -153,7 +155,7 @@
             btnStartFromFile.IconColor = Color.Cyan;
             btnStartFromFile.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnStartFromFile.IconSize = 28;
-            btnStartFromFile.Location = new Point(650, 22);
+            btnStartFromFile.Location = new Point(706, 22);
             btnStartFromFile.Margin = new Padding(10, 3, 5, 3);
             btnStartFromFile.Name = "btnStartFromFile";
             btnStartFromFile.Size = new Size(30, 30);
@@ -171,7 +173,7 @@
             btnAddToQueue.IconColor = Color.Cyan;
             btnAddToQueue.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnAddToQueue.IconSize = 28;
-            btnAddToQueue.Location = new Point(687, 22);
+            btnAddToQueue.Location = new Point(743, 22);
             btnAddToQueue.Margin = new Padding(10, 3, 5, 3);
             btnAddToQueue.Name = "btnAddToQueue";
             btnAddToQueue.Size = new Size(30, 30);
@@ -183,6 +185,7 @@
             // panelControls
             // 
             panelControls.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            panelControls.Controls.Add(btnAutoSkip);
             panelControls.Controls.Add(btnSourceSelector);
             panelControls.Controls.Add(btnRepeat);
             panelControls.Controls.Add(btnMoveTo);
@@ -193,8 +196,24 @@
             panelControls.Controls.Add(btnListDel);
             panelControls.Location = new Point(254, 23);
             panelControls.Name = "panelControls";
-            panelControls.Size = new Size(390, 29);
+            panelControls.Size = new Size(446, 29);
             panelControls.TabIndex = 21;
+            // 
+            // btnAutoSkip
+            // 
+            btnAutoSkip.FlatAppearance.BorderSize = 0;
+            btnAutoSkip.FlatStyle = FlatStyle.Flat;
+            btnAutoSkip.IconChar = FontAwesome.Sharp.IconChar.Forward;
+            btnAutoSkip.IconColor = Color.Black;
+            btnAutoSkip.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            btnAutoSkip.IconSize = 29;
+            btnAutoSkip.Location = new Point(407, -1);
+            btnAutoSkip.Margin = new Padding(10, 3, 10, 3);
+            btnAutoSkip.Name = "btnAutoSkip";
+            btnAutoSkip.Size = new Size(30, 30);
+            btnAutoSkip.TabIndex = 24;
+            btnAutoSkip.UseVisualStyleBackColor = true;
+            btnAutoSkip.Click += btnAutoSkip_Click;
             // 
             // btnSourceSelector
             // 
@@ -346,7 +365,7 @@
             btnMuteToggle.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnMuteToggle.IconSize = 21;
             btnMuteToggle.ImageAlign = ContentAlignment.MiddleLeft;
-            btnMuteToggle.Location = new Point(768, 26);
+            btnMuteToggle.Location = new Point(824, 26);
             btnMuteToggle.Margin = new Padding(10, 3, 10, 3);
             btnMuteToggle.Name = "btnMuteToggle";
             btnMuteToggle.Size = new Size(33, 23);
@@ -362,7 +381,7 @@
             pbVolume.CompletedBrush = Color.Black;
             pbVolume.CompletedGraphBrush = Color.White;
             pbVolume.GraphThickness = 1;
-            pbVolume.Location = new Point(804, 26);
+            pbVolume.Location = new Point(860, 26);
             pbVolume.Maximum = 100;
             pbVolume.Minimum = 0;
             pbVolume.MouseoverBrush = Color.Black;
@@ -385,7 +404,7 @@
             btnSettings.IconColor = Color.Black;
             btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSettings.IconSize = 28;
-            btnSettings.Location = new Point(727, 22);
+            btnSettings.Location = new Point(783, 22);
             btnSettings.Margin = new Padding(5, 3, 10, 3);
             btnSettings.Name = "btnSettings";
             btnSettings.Size = new Size(30, 30);
@@ -474,7 +493,7 @@
             pbPlayerProgress.RemainingBrush = Color.Black;
             pbPlayerProgress.RemainingGraphBrush = Color.MistyRose;
             pbPlayerProgress.ShowBorder = false;
-            pbPlayerProgress.Size = new Size(914, 17);
+            pbPlayerProgress.Size = new Size(970, 17);
             pbPlayerProgress.TabIndex = 0;
             pbPlayerProgress.Text = "flatProgressBar1";
             pbPlayerProgress.Value = 0;
@@ -495,7 +514,7 @@
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(914, 20);
+            panelTop.Size = new Size(970, 20);
             panelTop.TabIndex = 1;
             // 
             // btnScriptMenu
@@ -550,7 +569,7 @@
             lblTitleBar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
             lblTitleBar.Location = new Point(93, 0);
             lblTitleBar.Name = "lblTitleBar";
-            lblTitleBar.Size = new Size(729, 20);
+            lblTitleBar.Size = new Size(785, 20);
             lblTitleBar.TabIndex = 3;
             lblTitleBar.Text = "Random Video Player ";
             lblTitleBar.TextAlign = ContentAlignment.MiddleCenter;
@@ -565,7 +584,7 @@
             btnMinimizeForm.IconColor = Color.Black;
             btnMinimizeForm.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnMinimizeForm.IconSize = 15;
-            btnMinimizeForm.Location = new Point(824, 0);
+            btnMinimizeForm.Location = new Point(880, 0);
             btnMinimizeForm.Name = "btnMinimizeForm";
             btnMinimizeForm.Size = new Size(30, 20);
             btnMinimizeForm.TabIndex = 2;
@@ -581,7 +600,7 @@
             btnMaximizeForm.IconColor = Color.Black;
             btnMaximizeForm.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnMaximizeForm.IconSize = 15;
-            btnMaximizeForm.Location = new Point(854, 0);
+            btnMaximizeForm.Location = new Point(910, 0);
             btnMaximizeForm.Name = "btnMaximizeForm";
             btnMaximizeForm.Size = new Size(30, 20);
             btnMaximizeForm.TabIndex = 1;
@@ -598,7 +617,7 @@
             btnExitForm.IconColor = Color.Black;
             btnExitForm.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnExitForm.IconSize = 15;
-            btnExitForm.Location = new Point(884, 0);
+            btnExitForm.Location = new Point(940, 0);
             btnExitForm.Name = "btnExitForm";
             btnExitForm.Size = new Size(30, 20);
             btnExitForm.TabIndex = 0;
@@ -611,7 +630,7 @@
             panelPlayerMPV.BackColor = Color.Black;
             panelPlayerMPV.Location = new Point(0, 20);
             panelPlayerMPV.Name = "panelPlayerMPV";
-            panelPlayerMPV.Size = new Size(914, 287);
+            panelPlayerMPV.Size = new Size(970, 287);
             panelPlayerMPV.TabIndex = 2;
             panelPlayerMPV.MouseDown += panelPlayerMPV_MouseDown;
             panelPlayerMPV.MouseMove += panelPlayerMPV_MouseMove;
@@ -627,13 +646,18 @@
             timeVolumeCheck.Enabled = true;
             timeVolumeCheck.Tick += timeVolumeCheck_Tick;
             // 
+            // timerAutoSkipCheck
+            // 
+            timerAutoSkipCheck.Interval = 1000;
+            timerAutoSkipCheck.Tick += timerAutoSkipCheck_Tick;
+            // 
             // MainForm
             // 
             AllowDrop = true;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(914, 381);
+            ClientSize = new Size(970, 381);
             Controls.Add(panelTop);
             Controls.Add(panelBottom);
             Controls.Add(panelPlayerMPV);
@@ -696,5 +720,7 @@
         private Button btnSubtitleMenu;
         private Button btnAudioTrackMenu;
         private Button btnScriptMenu;
+        private FontAwesome.Sharp.IconButton btnAutoSkip;
+        private System.Windows.Forms.Timer timerAutoSkipCheck;
     }
 }

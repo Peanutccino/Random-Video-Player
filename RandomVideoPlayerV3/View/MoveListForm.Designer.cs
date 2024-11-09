@@ -33,6 +33,9 @@
             panel2 = new Panel();
             btnCloseForm = new FontAwesome.Sharp.IconButton();
             panel1 = new Panel();
+            label2 = new Label();
+            cbMoveFunscripts = new CheckBox();
+            comboScriptDirectories = new Controls.ButtonComboBox();
             btnFinish = new FontAwesome.Sharp.IconButton();
             btnStartCopyAction = new FontAwesome.Sharp.IconButton();
             pbMoveProgress = new FlatProgressBar();
@@ -97,6 +100,9 @@
             // panel1
             // 
             panel1.BackColor = Color.MintCream;
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(cbMoveFunscripts);
+            panel1.Controls.Add(comboScriptDirectories);
             panel1.Controls.Add(btnFinish);
             panel1.Controls.Add(btnStartCopyAction);
             panel1.Controls.Add(pbMoveProgress);
@@ -108,8 +114,43 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 20);
             panel1.Name = "panel1";
-            panel1.Size = new Size(564, 66);
+            panel1.Size = new Size(564, 161);
             panel1.TabIndex = 1;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Location = new Point(12, 111);
+            label2.Margin = new Padding(3, 6, 3, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(440, 15);
+            label2.TabIndex = 10;
+            label2.Text = "Moved with file when choosing 'local' or move scripts to specified script directory:";
+            // 
+            // cbMoveFunscripts
+            // 
+            cbMoveFunscripts.AutoSize = true;
+            cbMoveFunscripts.Checked = true;
+            cbMoveFunscripts.CheckState = CheckState.Checked;
+            cbMoveFunscripts.Location = new Point(12, 83);
+            cbMoveFunscripts.Name = "cbMoveFunscripts";
+            cbMoveFunscripts.Size = new Size(307, 19);
+            cbMoveFunscripts.TabIndex = 9;
+            cbMoveFunscripts.Text = "Move .funscripts with the file or to specified directory";
+            cbMoveFunscripts.UseVisualStyleBackColor = true;
+            // 
+            // comboScriptDirectories
+            // 
+            comboScriptDirectories.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            comboScriptDirectories.BackColor = Color.LightCyan;
+            comboScriptDirectories.DrawMode = DrawMode.OwnerDrawFixed;
+            comboScriptDirectories.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboScriptDirectories.FormattingEnabled = true;
+            comboScriptDirectories.Location = new Point(3, 138);
+            comboScriptDirectories.Name = "comboScriptDirectories";
+            comboScriptDirectories.Size = new Size(558, 24);
+            comboScriptDirectories.TabIndex = 8;
             // 
             // btnFinish
             // 
@@ -154,7 +195,7 @@
             pbMoveProgress.CompletedGraphBrush = Color.White;
             pbMoveProgress.ForeColor = Color.MintCream;
             pbMoveProgress.GraphThickness = 1;
-            pbMoveProgress.Location = new Point(3, 80);
+            pbMoveProgress.Location = new Point(3, 168);
             pbMoveProgress.Maximum = 100;
             pbMoveProgress.Minimum = 0;
             pbMoveProgress.MouseoverBrush = Color.PaleGreen;
@@ -162,7 +203,7 @@
             pbMoveProgress.RemainingBrush = Color.MintCream;
             pbMoveProgress.RemainingGraphBrush = Color.Black;
             pbMoveProgress.ShowBorder = false;
-            pbMoveProgress.Size = new Size(558, 18);
+            pbMoveProgress.Size = new Size(558, 24);
             pbMoveProgress.TabIndex = 5;
             pbMoveProgress.Text = "flatProgressBar1";
             pbMoveProgress.Value = 0;
@@ -192,7 +233,7 @@
             btnCancelMoveAction.IconChar = FontAwesome.Sharp.IconChar.None;
             btnCancelMoveAction.IconColor = Color.Black;
             btnCancelMoveAction.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnCancelMoveAction.Location = new Point(179, 51);
+            btnCancelMoveAction.Location = new Point(375, 51);
             btnCancelMoveAction.Name = "btnCancelMoveAction";
             btnCancelMoveAction.Size = new Size(75, 23);
             btnCancelMoveAction.TabIndex = 3;
@@ -237,13 +278,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(564, 86);
+            ClientSize = new Size(564, 181);
             Controls.Add(panel1);
             Controls.Add(panelTitle);
-            MaximumSize = new Size(580, 125);
-            MinimumSize = new Size(580, 125);
+            MaximumSize = new Size(580, 220);
+            MinimumSize = new Size(580, 220);
             Name = "MoveListForm";
             Text = "MoveListForm";
+            Load += MoveListForm_Load;
             panelTitle.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -265,5 +307,8 @@
         private TextBox tbDestinationPath;
         private FontAwesome.Sharp.IconButton btnStartCopyAction;
         private FontAwesome.Sharp.IconButton btnFinish;
+        private CheckBox cbMoveFunscripts;
+        private Controls.ButtonComboBox comboScriptDirectories;
+        private Label label2;
     }
 }

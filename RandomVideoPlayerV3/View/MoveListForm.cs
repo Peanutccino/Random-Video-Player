@@ -1,6 +1,8 @@
 ﻿using RandomVideoPlayer.Functions;
 using System.Runtime.InteropServices;
 using RandomVideoPlayer.Model;
+using System.IO;
+using Microsoft.VisualBasic.FileIO;
 
 namespace RandomVideoPlayer.View
 {
@@ -15,6 +17,9 @@ namespace RandomVideoPlayer.View
         private bool deleteAfterCopy = false;
         private bool fileMoveSuccess = false;
         private bool gotCancelled = false;
+
+        private static List<string> multiAxis = new List<string>
+        {  ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
         public MoveListForm(List<string> fileList)
         {
             InitializeComponent();
@@ -23,6 +28,14 @@ namespace RandomVideoPlayer.View
             this.BackColor = Color.FromArgb(152, 251, 152);//Border color
 
             filePathsForMoving = fileList;
+        }
+        private void MoveListForm_Load(object sender, EventArgs e)
+        {
+            var scriptDirectories = ListHandler.ScriptDirectories.ToList();
+            int index = scriptDirectories.IndexOf("local");
+
+            comboScriptDirectories.DataSource = scriptDirectories;
+            comboScriptDirectories.SelectedIndex = index >= 0 ? index : 0;
         }
         private void lblTitle_MouseDown(object sender, MouseEventArgs e)
         {
@@ -48,11 +61,14 @@ namespace RandomVideoPlayer.View
             btnStartMoveAction.Enabled = false;
             btnStartCopyAction.Enabled = false;
             btnCloseForm.Enabled = false;
+            cbMoveFunscripts.Enabled = false;
+            comboScriptDirectories.Enabled = false;
             btnCancelMoveAction.Visible = true;
 
             if (sameDirectory)
             {
                 await MoveFilesToDirectoryAsync(filePathsForMoving, targetDirectory, token, false);
+
             }
             else
             {
@@ -75,6 +91,8 @@ namespace RandomVideoPlayer.View
                 btnStartMoveAction.Enabled = true;
                 btnStartCopyAction.Enabled = true;
                 btnCloseForm.Enabled = true;
+                cbMoveFunscripts.Enabled = true;
+                comboScriptDirectories.Enabled = true;
                 btnCancelMoveAction.Visible = false;
                 btnFinish.Visible = false;
             }
@@ -179,6 +197,9 @@ namespace RandomVideoPlayer.View
             List<(string Source, string Destination)> movedFiles = new List<(string, string)>();
             int filesMoved = 0;
 
+            var scriptDirectory = comboScriptDirectories.SelectedItem.ToString();
+            List<string> scriptFilesFound = new List<string>();
+
             try
             {
                 foreach (string sourceFilePath in sourceFilePaths)
@@ -206,7 +227,11 @@ namespace RandomVideoPlayer.View
                     try
                     {
                         string fileName = Path.GetFileName(sourceFilePath);
+                        string directory = Path.GetDirectoryName(sourceFilePath);
+                        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(sourceFilePath);
+                        string scriptFilePath = Path.Combine(directory, fileNameWithoutExtension + ".funscript");
                         string destFilePath = Path.Combine(targetDirectory, fileName);
+
 
                         if (!File.Exists(sourceFilePath))
                         {
@@ -218,18 +243,75 @@ namespace RandomVideoPlayer.View
                             continue;
                         }
 
+                        if (cbMoveFunscripts.Checked)
+                        {
+                            if (File.Exists(scriptFilePath))
+                            {
+                                scriptFilesFound.Add(scriptFilePath);
+
+                                foreach(var multiScriptType in multiAxis)
+                                {
+                                    var matchingFiles = Directory.GetFiles(directory, "*.funscript", System.IO.SearchOption.TopDirectoryOnly)
+                                    .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase) &&
+                                    Path.GetFileName(file).EndsWith(multiScriptType + ".funscript", StringComparison.OrdinalIgnoreCase))
+                                    .ToList();
+
+                                    foreach (var file in matchingFiles)
+                                    {
+                                        scriptFilesFound.Add(file);
+                                    }
+                                }     
+                            }
+                        }
+
                         if (copy)
                         {
                             await Task.Run(() => File.Copy(sourceFilePath, destFilePath, true));
+
+                            foreach(var file in scriptFilesFound)
+                            {
+                                string scriptFileName = Path.GetFileName(file);
+                                string scriptDestFilePath = "";
+
+                                if(scriptDirectory == "local")
+                                {
+                                    scriptDestFilePath = Path.Combine(targetDirectory, scriptFileName);
+                                }
+                                else
+                                {
+                                    scriptDestFilePath = Path.Combine(scriptDirectory, scriptFileName);
+                                }
+
+                                await Task.Run(() => File.Copy(file, scriptDestFilePath, true));
+                            }
                         }
                         else
                         {
                             await Task.Run(() => File.Move(sourceFilePath, destFilePath, true));
+
+                            foreach (var file in scriptFilesFound)
+                            {
+                                string scriptFileName = Path.GetFileName(file);
+                                string scriptDestFilePath = "";
+
+                                if (scriptDirectory == "local")
+                                {
+                                    scriptDestFilePath = Path.Combine(targetDirectory, scriptFileName);
+                                }
+                                else
+                                {
+                                    scriptDestFilePath = Path.Combine(scriptDirectory, scriptFileName);
+                                }
+
+                                await Task.Run(() => File.Move(file, scriptDestFilePath, true));
+                            }
                         }
 
 
                         newFilePaths.Add(destFilePath);
                         movedFiles.Add((sourceFilePath, destFilePath));
+
+                        scriptFilesFound.Clear();
 
                         filesMoved++;
 
@@ -270,6 +352,7 @@ namespace RandomVideoPlayer.View
             {
                 pbMoveProgress.Value = 0;
                 cancellationTokenSource = null;
+                scriptFilesFound.Clear();
             }
         }
 
@@ -375,6 +458,7 @@ namespace RandomVideoPlayer.View
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
         #endregion
+
 
 
 

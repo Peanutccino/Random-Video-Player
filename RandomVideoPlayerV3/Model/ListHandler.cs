@@ -405,6 +405,7 @@ namespace RandomVideoPlayer.Model
             }
             catch (Exception ex)
             {
+                _folderList = Enumerable.Empty<string>();
                 Error.Log(ex, "Couldn't access folder - fillFolderList");
             }
         }

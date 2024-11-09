@@ -17,7 +17,7 @@ namespace RandomVideoPlayer.Functions
             {
                 fromTXT.Add(currentFile);
             }
-            File.WriteAllLines(favFile, fromTXT);
+            File.WriteAllLines(favFile, fromTXT, System.Text.Encoding.UTF8);
             
             return fromTXT;
         }
@@ -28,7 +28,7 @@ namespace RandomVideoPlayer.Functions
 
             tempFavorites.Remove(currentFile);
 
-            File.WriteAllLines(favFile, tempFavorites);
+            File.WriteAllLines(favFile, tempFavorites, System.Text.Encoding.UTF8);
             
             return tempFavorites;
         }

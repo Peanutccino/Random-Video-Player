@@ -60,6 +60,11 @@ namespace RandomVideoPlayer.View
             settingsModel.UsingScriptPlayer = SettingsHandler.UsingScriptPlayer;
             settingsModel.IncludeSubdirectoriesForScriptLoad = SettingsHandler.IncludeSubdirectoriesForScriptLoad;
 
+            settingsModel.EnableAutoSkip = SettingsHandler.EnableAutoSkip;
+            settingsModel.SkipVideoStart = SettingsHandler.SkipVideoStart;
+            settingsModel.SkipAlways = SettingsHandler.SkipAlways;
+            settingsModel.AutoSkipSeconds = SettingsHandler.AutoSkipSeconds;
+
             settingsModel.DefaultPathText = PathHandler.DefaultFolder;
             settingsModel.RemovalPathText = PathHandler.RemoveFolder;
             settingsModel.ListPathText = PathHandler.PathToListFolder;
@@ -123,6 +128,7 @@ namespace RandomVideoPlayer.View
             sbtnInputs.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InputsUserControl()); };
             sbtnSubtitles.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SubtitlesUserControl(settingsModel)); };
             sbtnSync.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SyncUserControl(settingsModel)); };
+            sbtnSkip.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SkipUserControl(settingsModel)); };
             sbtnInterface.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InterfaceUserControl(settingsModel)); };
             sbtnDragDrop.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new DragDropUserControl(settingsModel)); };
             sbtnAbout.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new AboutUserControl(settingsModel)); };
@@ -137,6 +143,11 @@ namespace RandomVideoPlayer.View
             SettingsHandler.HandleMultiAxisScripts = settingsModel.HandleMultiAxisScripts;
             SettingsHandler.UsingScriptPlayer = settingsModel.UsingScriptPlayer;
             SettingsHandler.IncludeSubdirectoriesForScriptLoad = settingsModel.IncludeSubdirectoriesForScriptLoad;
+
+            SettingsHandler.EnableAutoSkip = settingsModel.EnableAutoSkip;
+            SettingsHandler.SkipVideoStart = settingsModel.SkipVideoStart;
+            SettingsHandler.SkipAlways = settingsModel.SkipAlways;
+            SettingsHandler.AutoSkipSeconds = settingsModel.AutoSkipSeconds;
 
             PathHandler.DefaultFolder = settingsModel.DefaultPathText;
             PathHandler.TempRecentFolder = PathHandler.DefaultFolder;

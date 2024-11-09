@@ -16,6 +16,13 @@ namespace RandomVideoPlayer.Model
         public bool IncludeSubdirectoriesForScriptLoad { get; set; }
         #endregion
 
+        #region Skip
+        public bool EnableAutoSkip { get; set; }
+        public bool SkipVideoStart { get; set; }
+        public bool SkipAlways { get; set; }
+        public int AutoSkipSeconds { get; set; }
+        #endregion
+
         #region Paths
         public string DefaultPathText { get; set; }
         public string RemovalPathText { get; set; }

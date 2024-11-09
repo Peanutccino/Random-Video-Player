@@ -762,5 +762,65 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool EnableAutoSkip
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.enableAutoSkip;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.enableAutoSkip = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool SkipVideoStart
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.skipVideoStart;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.skipVideoStart = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool SkipAlways
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.skipAlways;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.skipAlways = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static int AutoSkipSeconds
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.autoSkipSeconds;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.autoSkipSeconds = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }

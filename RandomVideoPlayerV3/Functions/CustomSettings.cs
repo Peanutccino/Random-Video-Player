@@ -41,6 +41,11 @@ namespace RandomVideoPlayer.Functions
         public bool usingScriptPlayer { get; set; } = false;
         public bool includeSubdirectoriesForScriptLoad { get; set; } = true;
 
+        public bool enableAutoSkip { get; set; } = false;
+        public bool skipVideoStart { get; set; } = true;
+        public bool skipAlways { get; set; } = false;
+        public int autoSkipSeconds { get; set; } = 5;
+
         public string viewStateListFileExplore { get; set; } = "Tile";
         public string viewStateFolderFileExplore { get; set; } = "Tile";
         public bool showIconsCustomList { get; set; } = false;
@@ -94,7 +99,7 @@ namespace RandomVideoPlayer.Functions
 
         private CustomSettings() 
         {
-            buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
+            buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
         }
 
         public static CustomSettings Instance

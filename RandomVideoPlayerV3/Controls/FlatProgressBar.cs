@@ -193,6 +193,38 @@ namespace RandomVideoPlayer
 
         }
 
+        public long DetectGap(long currentVideoPosition, int gapThreshhold)
+        {
+            long nextActionPoint = 0;
+
+            if (actionPoints.Count == 0 || actionPoints == null)
+            {
+                return 0;
+            }
+            else
+            {
+                for (int i = 0; i < actionPoints.Count; i++)
+                {
+                    var action = actionPoints[i];
+
+                    if (action.At > currentVideoPosition)
+                    {
+                        if (action.At > (currentVideoPosition + gapThreshhold))
+                        {
+                            nextActionPoint = action.At;
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                }
+                return nextActionPoint;
+            }
+        }
+
         public void DeleteActionsPoints()
         {
             actionPoints.Clear();

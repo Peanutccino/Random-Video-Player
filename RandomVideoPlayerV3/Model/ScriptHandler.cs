@@ -64,21 +64,14 @@ namespace RandomVideoPlayer.Model
 
                 if (!Directory.Exists(dir)) continue;
 
-                var matchingfiles = Directory.GetFiles(dir, "*.funscript")
+
+                SearchOption searchOption = SettingsHandler.IncludeSubdirectoriesForScriptLoad ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+                var matchingfiles = Directory.GetFiles(dir, "*.funscript", searchOption)
                     .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
                     .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
                     .ToList();
 
-                if (SettingsHandler.IncludeSubdirectoriesForScriptLoad)
-                {
-                    foreach (var subDir in Directory.EnumerateDirectories(dir))
-                    {
-                        matchingfiles.AddRange(Directory.GetFiles(subDir, "*.funscript")
-                            .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
-                            .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
-                            .ToList());
-                    }
-                }
 
                 foreach (var file in matchingfiles)
                 {
@@ -90,21 +83,12 @@ namespace RandomVideoPlayer.Model
                 foreach (var kvp in MultiAxisScriptsFound)
                 {
                     var multiScriptType = kvp.Key.ToLower();
-                    var matchingFiles = Directory.GetFiles(dir, "*.funscript")
+
+                    var matchingFiles = Directory.GetFiles(dir, "*.funscript", searchOption)
                         .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase) &&
                         Path.GetFileName(file).EndsWith(multiScriptType + ".funscript", StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
-                    if (SettingsHandler.IncludeSubdirectoriesForScriptLoad)
-                    {
-                        foreach (var subDir in Directory.EnumerateDirectories(dir))
-                        {
-                            matchingFiles.AddRange(Directory.GetFiles(subDir, "*.funscript")
-                                .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase) &&
-                                Path.GetFileName(file).EndsWith(multiScriptType + ".funscript", StringComparison.OrdinalIgnoreCase))
-                                .ToList());
-                        }
-                    }
 
                     foreach (var file in matchingFiles)
                     {
