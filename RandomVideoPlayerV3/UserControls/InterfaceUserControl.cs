@@ -14,7 +14,7 @@ namespace RandomVideoPlayer.UserControls
             InitializeComponent();
             this.settings = settings;
 
-            checkboxes = new List<CheckBox> { cbDeleteButton, cbListRemoveButton, cbListAddButton, cbAddToFavButton, cbMoveToButton, cbShuffleButton, cbLoopButton, cbSourceSelector, cbSkipButton };
+            checkboxes = new List<CheckBox> { cbDeleteButton, cbListRemoveButton, cbListAddButton, cbAddToFavButton, cbMoveToButton, cbShuffleButton, cbLoopButton, cbSourceSelector, cbSkipButton, cbTouchButton };
 
             LoadSettings();
             BindControls();
@@ -34,6 +34,9 @@ namespace RandomVideoPlayer.UserControls
             cbLoopButton.Checked = settings.ButtonStates[6];
             cbSourceSelector.Checked = settings.ButtonStates[7];
             cbSkipButton.Checked = settings.ButtonStates[8];
+            cbTouchButton.Checked = settings.ButtonStates[9];
+
+            cbShowButtonToPlayFromCurrentFolder.Checked = settings.ShowButtonToPlayFromCurrentFolder;
         }
         private void BindControls()
         {
@@ -46,6 +49,12 @@ namespace RandomVideoPlayer.UserControls
             cbLoopButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbSourceSelector.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbSkipButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
+            cbTouchButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
+
+            cbShowButtonToPlayFromCurrentFolder.CheckedChanged += (s, e) =>
+            {
+                settings.ShowButtonToPlayFromCurrentFolder = cbShowButtonToPlayFromCurrentFolder.Checked;
+            };
         }
 
         private void CheckBox_CheckedChanged(object sender, EventArgs e)
@@ -59,6 +68,7 @@ namespace RandomVideoPlayer.UserControls
             settings.ButtonStates[6] = cbLoopButton.Checked;
             settings.ButtonStates[7] = cbSourceSelector.Checked;
             settings.ButtonStates[8] = cbSkipButton.Checked;
+            settings.ButtonStates[9] = cbTouchButton.Checked;
         }
         private void InitializeDynamicButtons(int buttonCount)
         {
@@ -138,8 +148,8 @@ namespace RandomVideoPlayer.UserControls
         }
         private void RepositionButtons()
         {
-            int x = 65; //Startting x position
-            int y = 1; //Startting Y position
+            int x = 65; //Starting x position
+            int y = 1; //Starting Y position
             int margin = 6; //Spacing
 
             foreach (int index in settings.ButtonOrder)

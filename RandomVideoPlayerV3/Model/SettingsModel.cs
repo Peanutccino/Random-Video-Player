@@ -21,6 +21,7 @@ namespace RandomVideoPlayer.Model
         public bool SkipVideoStart { get; set; }
         public bool SkipAlways { get; set; }
         public int AutoSkipSeconds { get; set; }
+        public bool EnableRandomVideoStartPoint { get; set; }
         #endregion
 
         #region Paths
@@ -89,6 +90,7 @@ namespace RandomVideoPlayer.Model
         #region Interface
         public bool[] ButtonStates { get; set; }
         public List<int> ButtonOrder { get; set; }
+        public bool ShowButtonToPlayFromCurrentFolder { get; set; }
         #endregion
 
         #region About

@@ -42,10 +42,14 @@
             label6 = new Label();
             inputSkipGapLength = new Controls.CustomNumericUpDown();
             label5 = new Label();
+            panel5 = new Panel();
+            cbRandomStartPoint = new CheckBox();
+            label7 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             panel4.SuspendLayout();
+            panel5.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -164,7 +168,7 @@
             panel4.Dock = DockStyle.Top;
             panel4.Location = new Point(0, 284);
             panel4.Name = "panel4";
-            panel4.Size = new Size(475, 100);
+            panel4.Size = new Size(475, 93);
             panel4.TabIndex = 5;
             // 
             // label6
@@ -197,10 +201,43 @@
             label5.TabIndex = 3;
             label5.Text = "Specify minimum length of gaps that should be skipped:";
             // 
+            // panel5
+            // 
+            panel5.Controls.Add(cbRandomStartPoint);
+            panel5.Controls.Add(label7);
+            panel5.Dock = DockStyle.Top;
+            panel5.Location = new Point(0, 377);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(475, 100);
+            panel5.TabIndex = 6;
+            // 
+            // cbRandomStartPoint
+            // 
+            cbRandomStartPoint.AutoSize = true;
+            cbRandomStartPoint.Location = new Point(3, 37);
+            cbRandomStartPoint.Name = "cbRandomStartPoint";
+            cbRandomStartPoint.Padding = new Padding(6, 0, 0, 0);
+            cbRandomStartPoint.Size = new Size(198, 19);
+            cbRandomStartPoint.TabIndex = 5;
+            cbRandomStartPoint.Text = "Enable random video startpoint";
+            cbRandomStartPoint.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            label7.Dock = DockStyle.Top;
+            label7.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label7.Location = new Point(0, 0);
+            label7.Name = "label7";
+            label7.Padding = new Padding(6, 0, 0, 0);
+            label7.Size = new Size(475, 34);
+            label7.TabIndex = 4;
+            label7.Text = "Start videos at a random startpoint (If Skip gap is enabled, will prioritize that on script videos):";
+            // 
             // SkipUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel5);
             Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(panel2);
@@ -214,6 +251,8 @@
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
             panel4.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -233,5 +272,8 @@
         private CheckBox cbSkipAlways;
         private CheckBox cbSkipVideoStart;
         private Label label6;
+        private Panel panel5;
+        private CheckBox cbRandomStartPoint;
+        private Label label7;
     }
 }

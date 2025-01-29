@@ -64,6 +64,7 @@ namespace RandomVideoPlayer.View
             settingsModel.SkipVideoStart = SettingsHandler.SkipVideoStart;
             settingsModel.SkipAlways = SettingsHandler.SkipAlways;
             settingsModel.AutoSkipSeconds = SettingsHandler.AutoSkipSeconds;
+            settingsModel.EnableRandomVideoStartPoint = SettingsHandler.EnableRandomVideoStartPoint;
 
             settingsModel.DefaultPathText = PathHandler.DefaultFolder;
             settingsModel.RemovalPathText = PathHandler.RemoveFolder;
@@ -116,6 +117,7 @@ namespace RandomVideoPlayer.View
 
             settingsModel.ButtonStates = SettingsHandler.ButtonStates;
             settingsModel.ButtonOrder = SettingsHandler.ButtonOrder;
+            settingsModel.ShowButtonToPlayFromCurrentFolder = SettingsHandler.ShowButtonStayInCurrentFolder;
 
             settingsModel.AlwaysCheckUpdate = SettingsHandler.AlwaysCheckUpdate;
         }
@@ -148,6 +150,7 @@ namespace RandomVideoPlayer.View
             SettingsHandler.SkipVideoStart = settingsModel.SkipVideoStart;
             SettingsHandler.SkipAlways = settingsModel.SkipAlways;
             SettingsHandler.AutoSkipSeconds = settingsModel.AutoSkipSeconds;
+            SettingsHandler.EnableRandomVideoStartPoint = settingsModel.EnableRandomVideoStartPoint;
 
             PathHandler.DefaultFolder = settingsModel.DefaultPathText;
             PathHandler.TempRecentFolder = PathHandler.DefaultFolder;
@@ -208,6 +211,7 @@ namespace RandomVideoPlayer.View
 
             SettingsHandler.ButtonStates = settingsModel.ButtonStates;
             SettingsHandler.ButtonOrder = settingsModel.ButtonOrder;
+            SettingsHandler.ShowButtonStayInCurrentFolder = settingsModel.ShowButtonToPlayFromCurrentFolder;
 
             SettingsHandler.AlwaysCheckUpdate = settingsModel.AlwaysCheckUpdate;
         }

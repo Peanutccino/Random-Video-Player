@@ -31,6 +31,7 @@
             label1 = new Label();
             label5 = new Label();
             panel1 = new Panel();
+            cbSkipButton = new Controls.RoundedCheckBox();
             cbSourceSelector = new Controls.RoundedCheckBox();
             flowPanel = new FlowLayoutPanel();
             cbListAddButton = new Controls.RoundedCheckBox();
@@ -41,8 +42,10 @@
             cbListRemoveButton = new Controls.RoundedCheckBox();
             cbDeleteButton = new Controls.RoundedCheckBox();
             panelButtonPreview = new Panel();
+            label2 = new Label();
+            cbShowButtonToPlayFromCurrentFolder = new CheckBox();
             btnRestore = new FontAwesome.Sharp.IconButton();
-            cbSkipButton = new Controls.RoundedCheckBox();
+            cbTouchButton = new Controls.RoundedCheckBox();
             panel1.SuspendLayout();
             panelButtonPreview.SuspendLayout();
             SuspendLayout();
@@ -55,7 +58,7 @@
             label1.Location = new Point(0, 0);
             label1.Name = "label1";
             label1.Padding = new Padding(0, 0, 0, 8);
-            label1.Size = new Size(440, 55);
+            label1.Size = new Size(500, 55);
             label1.TabIndex = 2;
             label1.Text = "Interface";
             // 
@@ -66,13 +69,14 @@
             label5.Location = new Point(0, 55);
             label5.Name = "label5";
             label5.Padding = new Padding(6, 0, 0, 0);
-            label5.Size = new Size(440, 62);
+            label5.Size = new Size(500, 62);
             label5.TabIndex = 3;
             label5.Text = "You can customize which buttons should be visible in the player and order them to your liking. \r\nNote: Does not affect shortcuts";
             // 
             // panel1
             // 
             panel1.AllowDrop = true;
+            panel1.Controls.Add(cbTouchButton);
             panel1.Controls.Add(cbSkipButton);
             panel1.Controls.Add(cbSourceSelector);
             panel1.Controls.Add(flowPanel);
@@ -86,8 +90,24 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 117);
             panel1.Name = "panel1";
-            panel1.Size = new Size(440, 337);
+            panel1.Size = new Size(500, 380);
             panel1.TabIndex = 4;
+            // 
+            // cbSkipButton
+            // 
+            cbSkipButton.Appearance = Appearance.Button;
+            cbSkipButton.BackColor = Color.Transparent;
+            cbSkipButton.CheckedBackColor = Color.PaleGreen;
+            cbSkipButton.FlatAppearance.BorderSize = 0;
+            cbSkipButton.FlatStyle = FlatStyle.Flat;
+            cbSkipButton.Location = new Point(67, 275);
+            cbSkipButton.Margin = new Padding(12, 3, 3, 3);
+            cbSkipButton.Name = "cbSkipButton";
+            cbSkipButton.Size = new Size(168, 28);
+            cbSkipButton.TabIndex = 10;
+            cbSkipButton.Text = "Auto skip";
+            cbSkipButton.UncheckedBackColor = Color.LightGray;
+            cbSkipButton.UseVisualStyleBackColor = false;
             // 
             // cbSourceSelector
             // 
@@ -110,7 +130,7 @@
             flowPanel.FlowDirection = FlowDirection.TopDown;
             flowPanel.Location = new Point(241, 0);
             flowPanel.Name = "flowPanel";
-            flowPanel.Size = new Size(66, 313);
+            flowPanel.Size = new Size(66, 342);
             flowPanel.TabIndex = 8;
             // 
             // cbListAddButton
@@ -227,12 +247,36 @@
             // 
             // panelButtonPreview
             // 
+            panelButtonPreview.Controls.Add(label2);
+            panelButtonPreview.Controls.Add(cbShowButtonToPlayFromCurrentFolder);
             panelButtonPreview.Controls.Add(btnRestore);
             panelButtonPreview.Dock = DockStyle.Fill;
-            panelButtonPreview.Location = new Point(0, 454);
+            panelButtonPreview.Location = new Point(0, 497);
             panelButtonPreview.Name = "panelButtonPreview";
-            panelButtonPreview.Size = new Size(440, 36);
+            panelButtonPreview.Size = new Size(500, 103);
             panelButtonPreview.TabIndex = 5;
+            // 
+            // label2
+            // 
+            label2.Dock = DockStyle.Top;
+            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Location = new Point(0, 0);
+            label2.Name = "label2";
+            label2.Padding = new Padding(6, 0, 0, 0);
+            label2.Size = new Size(500, 21);
+            label2.TabIndex = 7;
+            label2.Text = "Show button to play from current folder while playing random files:";
+            // 
+            // cbShowButtonToPlayFromCurrentFolder
+            // 
+            cbShowButtonToPlayFromCurrentFolder.AutoSize = true;
+            cbShowButtonToPlayFromCurrentFolder.Location = new Point(3, 24);
+            cbShowButtonToPlayFromCurrentFolder.Name = "cbShowButtonToPlayFromCurrentFolder";
+            cbShowButtonToPlayFromCurrentFolder.Padding = new Padding(6, 0, 0, 0);
+            cbShowButtonToPlayFromCurrentFolder.Size = new Size(158, 19);
+            cbShowButtonToPlayFromCurrentFolder.TabIndex = 6;
+            cbShowButtonToPlayFromCurrentFolder.Text = "Play from current folder";
+            cbShowButtonToPlayFromCurrentFolder.UseVisualStyleBackColor = true;
             // 
             // btnRestore
             // 
@@ -243,7 +287,7 @@
             btnRestore.IconChar = FontAwesome.Sharp.IconChar.None;
             btnRestore.IconColor = Color.Black;
             btnRestore.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnRestore.Location = new Point(291, 6);
+            btnRestore.Location = new Point(351, 73);
             btnRestore.Name = "btnRestore";
             btnRestore.Size = new Size(146, 27);
             btnRestore.TabIndex = 5;
@@ -251,21 +295,21 @@
             btnRestore.UseVisualStyleBackColor = false;
             btnRestore.Click += btnRestore_Click;
             // 
-            // cbSkipButton
+            // cbTouchButton
             // 
-            cbSkipButton.Appearance = Appearance.Button;
-            cbSkipButton.BackColor = Color.Transparent;
-            cbSkipButton.CheckedBackColor = Color.PaleGreen;
-            cbSkipButton.FlatAppearance.BorderSize = 0;
-            cbSkipButton.FlatStyle = FlatStyle.Flat;
-            cbSkipButton.Location = new Point(67, 275);
-            cbSkipButton.Margin = new Padding(12, 3, 3, 3);
-            cbSkipButton.Name = "cbSkipButton";
-            cbSkipButton.Size = new Size(168, 28);
-            cbSkipButton.TabIndex = 10;
-            cbSkipButton.Text = "Auto skip";
-            cbSkipButton.UncheckedBackColor = Color.LightGray;
-            cbSkipButton.UseVisualStyleBackColor = false;
+            cbTouchButton.Appearance = Appearance.Button;
+            cbTouchButton.BackColor = Color.Transparent;
+            cbTouchButton.CheckedBackColor = Color.PaleGreen;
+            cbTouchButton.FlatAppearance.BorderSize = 0;
+            cbTouchButton.FlatStyle = FlatStyle.Flat;
+            cbTouchButton.Location = new Point(67, 309);
+            cbTouchButton.Margin = new Padding(12, 3, 3, 3);
+            cbTouchButton.Name = "cbTouchButton";
+            cbTouchButton.Size = new Size(168, 28);
+            cbTouchButton.TabIndex = 11;
+            cbTouchButton.Text = "Touch mode";
+            cbTouchButton.UncheckedBackColor = Color.LightGray;
+            cbTouchButton.UseVisualStyleBackColor = false;
             // 
             // InterfaceUserControl
             // 
@@ -276,9 +320,10 @@
             Controls.Add(label5);
             Controls.Add(label1);
             Name = "InterfaceUserControl";
-            Size = new Size(440, 490);
+            Size = new Size(500, 600);
             panel1.ResumeLayout(false);
             panelButtonPreview.ResumeLayout(false);
+            panelButtonPreview.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -299,5 +344,8 @@
         private Controls.RoundedCheckBox cbSourceSelector;
         private FontAwesome.Sharp.IconButton btnRestore;
         private Controls.RoundedCheckBox cbSkipButton;
+        private Label label2;
+        private CheckBox cbShowButtonToPlayFromCurrentFolder;
+        private Controls.RoundedCheckBox cbTouchButton;
     }
 }

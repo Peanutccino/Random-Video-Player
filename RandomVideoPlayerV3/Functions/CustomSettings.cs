@@ -22,6 +22,8 @@ namespace RandomVideoPlayer.Functions
         public bool startupAlwaysAsk { get; set; } = true;
         public bool startupAllDirectories { get; set; } = false;
 
+        public bool showButtonStayInCurrentFolder { get; set; } = true;
+
         public bool includeSubfolders { get; set; } = true;
         public string tempLastFolder { get; set; }
         public bool sortCreationDate { get; set; } = true;
@@ -45,6 +47,7 @@ namespace RandomVideoPlayer.Functions
         public bool skipVideoStart { get; set; } = true;
         public bool skipAlways { get; set; } = false;
         public int autoSkipSeconds { get; set; } = 5;
+        public bool enableRandomVideoStartPoint { get; set; } = false;
 
         public string viewStateListFileExplore { get; set; } = "Tile";
         public string viewStateFolderFileExplore { get; set; } = "Tile";
@@ -99,7 +102,7 @@ namespace RandomVideoPlayer.Functions
 
         private CustomSettings() 
         {
-            buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+            buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         }
 
         public static CustomSettings Instance

@@ -111,7 +111,7 @@ namespace RandomVideoPlayer.Functions
         {
             int buttonWidth = 30;
             int margin = 20;
-            int newFormSize = 930;
+            int newFormSize = 1018;
             int minimumFormSize = 800;
 
             foreach(bool state in SettingsHandler.ButtonStates)

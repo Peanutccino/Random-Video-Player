@@ -174,7 +174,15 @@ namespace RandomVideoPlayer
         }
         private void btnStartFromFile_Click(object sender, EventArgs e)
         {
-            StartFromCurrentFile();
+            if (MainFormData.playingSingleFile)
+            {
+                StartFromCurrentFile();
+            }
+            else if (SettingsHandler.ShowButtonStayInCurrentFolder)
+            {
+                var currentFolder = Path.GetDirectoryName(MainFormData.currentFile);
+                StartFromFolder(currentFolder, true);
+            }
         }
         private void btnSourceSelector_Click(object sender, EventArgs e)
         {
@@ -184,6 +192,11 @@ namespace RandomVideoPlayer
         private void btnAutoSkip_Click(object sender, EventArgs e)
         {
             ToggleSkip();
+        }
+
+        private void btnTouch_Click(object sender, EventArgs e)
+        {
+            ToggleTouchMode();
         }
 
         private void btnSubtitleMenu_Click(object sender, EventArgs e)
@@ -209,7 +222,7 @@ namespace RandomVideoPlayer
         #region ExclusiveFullscreen
         private void panelPlayerMPV_MouseMove(object sender, MouseEventArgs e) //Used to determin Cursor position in exclusive Fullscreen mode to show or hide Panels
         {
-            if (fR.WindowExclusiveFullscreen) //Only use when exclusive Fullscreen is enabled
+            if (fR.WindowExclusiveFullscreen && !MainFormData.TouchEnabled) //Only use when exclusive Fullscreen is enabled
             {
                 panelBottom.Visible = areaBottom.Contains(e.Location) ? true : false;
                 panelTop.Visible = areaTop.Contains(e.Location) ? true : false;
@@ -219,7 +232,7 @@ namespace RandomVideoPlayer
         private void panelPlayerMPV_MouseDown(object sender, MouseEventArgs e)
         {
             base.OnMouseClick(e);
-            if (e.Button == MouseButtons.Left && this.WindowState != FormWindowState.Maximized)
+            if (e.Button == MouseButtons.Left && this.WindowState != FormWindowState.Maximized && !MainFormData.TouchEnabled)
             {
                 stopwatch.Restart();
 
@@ -231,7 +244,7 @@ namespace RandomVideoPlayer
                     checkwatch.Start();
                 }
             }
-            else if (e.Button == MouseButtons.Left && this.WindowState == FormWindowState.Maximized)
+            else if (e.Button == MouseButtons.Left && this.WindowState == FormWindowState.Maximized && !MainFormData.TouchEnabled)
             {
                 stopwatch.Restart();
                 long elapsedTime = stopwatch.ElapsedMilliseconds;
@@ -240,7 +253,12 @@ namespace RandomVideoPlayer
                     checkwatch.Start();
                 }
             }
-            if (e.Button == MouseButtons.Left && e.Clicks >= 2)
+            else if (e.Button == MouseButtons.Left && this.WindowState == FormWindowState.Maximized && MainFormData.TouchEnabled)
+            {
+                panelBottom.Visible = !panelBottom.Visible;
+                panelTop.Visible = !panelTop.Visible;
+            }
+            if (e.Button == MouseButtons.Left && e.Clicks >= 2 && !MainFormData.TouchEnabled) //Double Click
             {
                 checkwatch.Stop();
                 ToggleExclusiveFullscreen();
@@ -279,6 +297,37 @@ namespace RandomVideoPlayer
                 activityTimer.Enabled = false;
                 Cursor.Show();
                 this.Size = MainFormData.backupSize;
+            }
+        }
+        private void ToggleTouchMode()
+        {
+            MainFormData.TouchEnabled = !MainFormData.TouchEnabled;
+
+            if (MainFormData.TouchEnabled)
+            {
+                panelBottom.Height = 92; //75
+                pbPlayerProgress.Height = 34; //17
+                btnTouch.IconColor = Color.PaleGreen;
+
+                if (!fR.WindowExclusiveFullscreen)
+                {
+                    ToggleExclusiveFullscreen();
+                }
+                else
+                {
+                    fR.UpdateFullscreenSize(this, panelTop, panelBottom, panelPlayerMPV);
+                }
+            }
+            else
+            {
+                panelBottom.Height = 75;
+                pbPlayerProgress.Height = 17;
+                btnTouch.IconColor = Color.Black;
+
+                if (fR.WindowExclusiveFullscreen)
+                {
+                    ToggleExclusiveFullscreen();
+                }
             }
         }
         #endregion
@@ -538,7 +587,7 @@ namespace RandomVideoPlayer
 
 
             UpdateSourceSelectorIcon();
-
+            UpdateButtonStates();
             MainFormData.startedByFile = false;
         }
 
@@ -798,7 +847,7 @@ namespace RandomVideoPlayer
                 {
                     tcServer.Stop();
                 }
-                UpdateButtonStates(); //Update Player behavior
+
                 initStartUp(""); //Used to fix issues at first time startup
                 if (SettingsHandler.SettingChanged)
                     PlayNext();
@@ -815,10 +864,13 @@ namespace RandomVideoPlayer
                 enableDisableSubtitlesItem.Checked = SettingsHandler.SubtitlesEnabled;
                 ToggleSubtitles();
                 SubFunctions.UpdateSubtitleParameters(playerMPV);
+
+                AutoSkipHandler();
+
             }
 
             UpdateButtonStates();
-            AutoSkipHandler();
+
             if (fR.WindowExclusiveFullscreen)
             {
                 fR.UpdateFullscreenSize(this, panelTop, panelBottom, panelPlayerMPV);
@@ -832,7 +884,7 @@ namespace RandomVideoPlayer
         #region CustomButton
         private void RepositionButtons()
         {
-            List<Button> buttons = new List<Button> { btnRemove, btnListDel, btnListAdd, btnAddToFav, btnMoveTo, btnShuffle, btnRepeat, btnSourceSelector, btnAutoSkip };
+            List<Button> buttons = new List<Button> { btnRemove, btnListDel, btnListAdd, btnAddToFav, btnMoveTo, btnShuffle, btnRepeat, btnSourceSelector, btnAutoSkip, btnTouch };
             if (buttons.Count != SettingsHandler.ButtonStates.Length)
             {
                 SettingsHandler.ButtonStates = Enumerable.Repeat(true, buttons.Count).ToArray();
@@ -859,12 +911,14 @@ namespace RandomVideoPlayer
             btnRepeat.Visible = buttonStates[6];
             btnSourceSelector.Visible = buttonStates[7];
             btnAutoSkip.Visible = buttonStates[8];
+            btnTouch.Visible = buttonStates[9];
+                      
 
             int x = 10; // starting x position
             int y = 0; // starting y position
             int margin = 20; // space between buttons
 
-            int minimumFormSize = 930;
+            int minimumFormSize = 1018;
 
             foreach (int index in buttonOrder)
             {
@@ -912,6 +966,15 @@ namespace RandomVideoPlayer
             btnShuffle.IconColor = ListHandler.DoShuffle ? Color.PaleGreen : Color.Black;
 
             btnAutoSkip.IconColor = SettingsHandler.EnableAutoSkip ? Color.PaleGreen : Color.Black;
+
+            if (SettingsHandler.ShowButtonStayInCurrentFolder && !MainFormData.playingSingleFile && SettingsHandler.InitPlay)
+            {
+                btnStartFromFile.Visible = true;
+            }
+            else
+            {
+                btnStartFromFile.Visible = false;
+            }
         }
 
         private void UpdateSourceSelectorIcon()
@@ -1779,14 +1842,33 @@ namespace RandomVideoPlayer
             pbPlayerProgress.DeleteActionsPoints();
             UpdateFunscriptGraph();
 
-            if (SettingsHandler.EnableAutoSkip && SettingsHandler.SkipVideoStart)
+            //if (SettingsHandler.EnableAutoSkip && SettingsHandler.SkipVideoStart)
+            //{
+            //    var nextActionToSkipTo = pbPlayerProgress.DetectGap(0, 5000);
+
+            //    if (nextActionToSkipTo > 0)
+            //    {
+            //        playerMPV.ShowText("Skipping to next action");
+            //        playerMPV.SeekAsync(nextActionToSkipTo / 1000);
+            //    }
+            //}
+            if(SettingsHandler.EnableAutoSkip || SettingsHandler.EnableRandomVideoStartPoint)
             {
                 var nextActionToSkipTo = pbPlayerProgress.DetectGap(0, 5000);
 
-                if (nextActionToSkipTo > 0)
+                if (nextActionToSkipTo > 0 && SettingsHandler.SkipVideoStart)
                 {
                     playerMPV.ShowText("Skipping to next action");
                     playerMPV.SeekAsync(nextActionToSkipTo / 1000);
+                }
+                else if(SettingsHandler.EnableRandomVideoStartPoint)
+                {
+                    int maxRange = (int)(MainFormData.durationMS / 1000 * 0.9);
+                    Random random = new Random();
+                    int randomStartPoint = random.Next(0, maxRange);
+
+                    //MessageBox.Show($"Start was: {randomStartPoint}");
+                    playerMPV.SeekAsync(randomStartPoint);
                 }
             }
         }
@@ -1857,7 +1939,6 @@ namespace RandomVideoPlayer
                 MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, MainFormData.tempFavorites, btnAddToFav);
             }
         }
-
         private async Task SetTimeServerFile(string fileName, bool reload = false)
         {
             var tempFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
@@ -1930,7 +2011,7 @@ namespace RandomVideoPlayer
 
             // Set the label's location directly above the progress bar, horizontally centered on the cursor
             var labelX = controlRelativePosition.X - (timeOverlayLabel.Width / 2) + pbPlayerProgress.Location.X;
-            var labelY = this.Height - 94;
+            var labelY = this.Height - (panelBottom.Height + 19); //94
 
             // Prevent the label from going beyond the left or right bounds of the progress bar
             labelX = Math.Max(labelX, panelBottom.Location.X);
@@ -2098,6 +2179,7 @@ namespace RandomVideoPlayer
             toolTipUI.SetToolTip(btnAddToQueue, "Add dropped file to queue");
             toolTipUI.SetToolTip(btnSourceSelector, "Switch between Folder and List Queue");
             toolTipUI.SetToolTip(btnAutoSkip, "Auto skip gaps in funscript");
+            toolTipUI.SetToolTip(btnTouch, "Toggle Touch mode");
 
             toolTipUI.SetToolTip(btnAddToQueue, "Add the dropped file to the end of the current queue");
             toolTipUI.SetToolTip(btnStartFromFile, "Start playing from the files directory");
@@ -2185,7 +2267,14 @@ namespace RandomVideoPlayer
                         VolumeChange(false);
                         return true;
                     case "ToggleExclusiveFullscreen":
-                        ToggleExclusiveFullscreen();
+                        if (MainFormData.TouchEnabled)
+                        {
+                            ToggleTouchMode();
+                        }
+                        else
+                        {
+                            ToggleExclusiveFullscreen();
+                        }
                         return true;
                     case "SeekForward":
                         SeekForward();
@@ -2344,7 +2433,7 @@ namespace RandomVideoPlayer
         #region AutoSkip
         private void AutoSkipHandler()
         {
-            if(SettingsHandler.EnableAutoSkip && SettingsHandler.SkipAlways)
+            if (SettingsHandler.EnableAutoSkip && SettingsHandler.SkipAlways)
             {
                 timerAutoSkipCheck.Enabled = true;
             }
@@ -2357,6 +2446,7 @@ namespace RandomVideoPlayer
             {
                 SettingsHandler.GraphEnabled = true;
             }
+            InitializeContextMenus();
         }
         #endregion
 
@@ -2519,25 +2609,21 @@ namespace RandomVideoPlayer
         }
         private void StartFromCurrentFile()
         {
-            if (MainFormData.playingSingleFile)
+            try
             {
-                try
-                {
-                    ListHandler.fillFolderList(FileManipulation.GetFileDirectory(MainFormData.draggedFilePath), false);
+                ListHandler.fillFolderList(FileManipulation.GetFileDirectory(MainFormData.draggedFilePath), false);
 
-                    ListHandler.NeedsToPrepare = true;
-                    SettingsHandler.SourceSelected = false;
-                    ListHandler.PreparePlayList(SettingsHandler.SourceSelected, true, MainFormData.draggedFilePath);
+                ListHandler.NeedsToPrepare = true;
+                SettingsHandler.SourceSelected = false;
+                ListHandler.PreparePlayList(SettingsHandler.SourceSelected, true, MainFormData.draggedFilePath);
 
-                    MainFormData.playingSingleFile = false;
-                    PlayNext();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error playing from this path: {ex}");
-                    throw;
-                }
-
+                MainFormData.playingSingleFile = false;
+                PlayNext();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error playing from this path: {ex}");
+                throw;
             }
         }
         private void StartFromFolder(string path, bool includeSubDirectories)
@@ -2845,6 +2931,7 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
+
 
 
     }

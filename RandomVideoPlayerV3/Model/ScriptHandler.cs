@@ -43,9 +43,16 @@ namespace RandomVideoPlayer.Model
             {
                 if (dir == "local")
                 {
-                    if (File.Exists(scriptFilePath))
+                    SearchOption searchOptionLocal = SettingsHandler.IncludeSubdirectoriesForScriptLoad ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+                    var matchingfilesLocal = Directory.GetFiles(directory, "*.funscript", searchOptionLocal)
+                        .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
+                        .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
+                        .ToList();
+
+                    foreach (var file in matchingfilesLocal)
                     {
-                        scriptFilesFound.Add(scriptFilePath);
+                        scriptFilesFound.Add(file);
                     }
 
                     foreach (var kvp in MultiAxisScriptsFound)

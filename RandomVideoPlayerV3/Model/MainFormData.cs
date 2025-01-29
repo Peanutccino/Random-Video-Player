@@ -34,6 +34,7 @@ namespace RandomVideoPlayer.Model
         public static bool foundUpdate { get; set; } = false;
 
         public static bool cursorHidden { get; set; } = false;
+        public static bool TouchEnabled { get; set; } = false;
 
         public static List<string> tempFavorites = new List<string>();
         public static List<Task> ongoingTasks = new List<Task>();

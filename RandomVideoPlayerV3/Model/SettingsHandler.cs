@@ -822,5 +822,35 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool EnableRandomVideoStartPoint
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.enableRandomVideoStartPoint;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.enableRandomVideoStartPoint = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool ShowButtonStayInCurrentFolder
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.showButtonStayInCurrentFolder;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.showButtonStayInCurrentFolder = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }
