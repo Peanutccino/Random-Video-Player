@@ -29,6 +29,7 @@ namespace RandomVideoPlayer.UserControls
             cbSkipAlways.Checked = settings.SkipAlways;
             inputSkipGapLength.Value = settings.AutoSkipSeconds;
             cbRandomStartPoint.Checked = settings.EnableRandomVideoStartPoint;
+            cbRandomVideoStartPointIgnoreScripts.Checked = settings.RandomVideoStartPointIgnoreScripts;
         }
         private void BindControls()
         {
@@ -51,6 +52,10 @@ namespace RandomVideoPlayer.UserControls
             cbRandomStartPoint.CheckedChanged += (s, e) =>
             {
                 settings.EnableRandomVideoStartPoint = cbRandomStartPoint.Checked;
+            };
+            cbRandomVideoStartPointIgnoreScripts.CheckedChanged += (s, e) =>
+            {
+                settings.RandomVideoStartPointIgnoreScripts = cbRandomVideoStartPointIgnoreScripts.Checked;
             };
         }
 

@@ -65,6 +65,7 @@ namespace RandomVideoPlayer.View
             settingsModel.SkipAlways = SettingsHandler.SkipAlways;
             settingsModel.AutoSkipSeconds = SettingsHandler.AutoSkipSeconds;
             settingsModel.EnableRandomVideoStartPoint = SettingsHandler.EnableRandomVideoStartPoint;
+            settingsModel.RandomVideoStartPointIgnoreScripts = SettingsHandler.RandomVideoStartPointIgnoreScripts;
 
             settingsModel.DefaultPathText = PathHandler.DefaultFolder;
             settingsModel.RemovalPathText = PathHandler.RemoveFolder;
@@ -84,6 +85,7 @@ namespace RandomVideoPlayer.View
             settingsModel.FilterImageEnabled = ListHandler.FilterImageEnabled;
             settingsModel.FilterScriptEnabled = ListHandler.FilterScriptEnabled;
             settingsModel.ApplyFilterToList = SettingsHandler.ApplyFilterToList;
+            settingsModel.SortCreated = SettingsHandler.CreationDate;
 
             settingsModel.AutoPlayMethod = SettingsHandler.AutoPlayMethod;
             settingsModel.AutoPlayTimerValueStartPoint = SettingsHandler.AutoPlayTimerValueStartPoint(false);
@@ -91,7 +93,7 @@ namespace RandomVideoPlayer.View
             settingsModel.AutoPlayTimerRangeEnabled = SettingsHandler.AutoPlayTimerRangeEnabled;
             settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
             settingsModel.ReShuffle = ListHandler.ReShuffle;
-            settingsModel.SortCreated = SettingsHandler.CreationDate;
+            settingsModel.RTXVSREnabled = SettingsHandler.RTXVSREnabled;
 
             settingsModel.EnableSubtitles = SettingsHandler.SubtitlesEnabled;
             settingsModel.SubtitleSize = SettingsHandler.SubtitleFontSize;
@@ -151,6 +153,7 @@ namespace RandomVideoPlayer.View
             SettingsHandler.SkipAlways = settingsModel.SkipAlways;
             SettingsHandler.AutoSkipSeconds = settingsModel.AutoSkipSeconds;
             SettingsHandler.EnableRandomVideoStartPoint = settingsModel.EnableRandomVideoStartPoint;
+            SettingsHandler.RandomVideoStartPointIgnoreScripts = settingsModel.RandomVideoStartPointIgnoreScripts;
 
             PathHandler.DefaultFolder = settingsModel.DefaultPathText;
             PathHandler.TempRecentFolder = PathHandler.DefaultFolder;
@@ -172,7 +175,7 @@ namespace RandomVideoPlayer.View
             SettingsHandler.AutoPlayTimerRangeEnabled = settingsModel.AutoPlayTimerRangeEnabled;
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
             ListHandler.ReShuffle = settingsModel.ReShuffle;
-            SettingsHandler.CreationDate = settingsModel.SortCreated;
+            SettingsHandler.RTXVSREnabled = settingsModel.RTXVSREnabled;
 
             SettingsHandler.SubtitlesEnabled = settingsModel.EnableSubtitles;
             SettingsHandler.SubtitleFontSize = settingsModel.SubtitleSize;
@@ -198,6 +201,7 @@ namespace RandomVideoPlayer.View
             ListHandler.FilterImageEnabled = settingsModel.FilterImageEnabled;
             ListHandler.FilterScriptEnabled = settingsModel.FilterScriptEnabled;
             SettingsHandler.ApplyFilterToList = settingsModel.ApplyFilterToList;
+            SettingsHandler.CreationDate = settingsModel.SortCreated;
 
             if (!ListHandler.SelectedExtensions.SequenceEqual(settingsModel.SelectedExtensions))
             {

@@ -29,10 +29,6 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            label2 = new Label();
-            panel1 = new Panel();
-            rbDateModified = new RadioButton();
-            rbDateCreated = new RadioButton();
             label3 = new Label();
             cbShufflePlayer = new CheckBox();
             panel2 = new Panel();
@@ -68,11 +64,16 @@
             cbKenBurnsEffect = new CheckBox();
             label8 = new Label();
             label6 = new Label();
-            panel1.SuspendLayout();
+            panel1 = new Panel();
+            label2 = new Label();
+            cbEnableRTXVSR = new CheckBox();
+            label13 = new Label();
+            btnRTXHelp = new FontAwesome.Sharp.IconButton();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             panel4.SuspendLayout();
             panel5.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -85,51 +86,6 @@
             label1.Size = new Size(507, 55);
             label1.TabIndex = 0;
             label1.Text = "Player";
-            // 
-            // label2
-            // 
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.Location = new Point(0, 55);
-            label2.Name = "label2";
-            label2.Padding = new Padding(6, 0, 0, 0);
-            label2.Size = new Size(507, 18);
-            label2.TabIndex = 1;
-            label2.Text = "Change the behavior of the recent filter:";
-            // 
-            // panel1
-            // 
-            panel1.Controls.Add(rbDateModified);
-            panel1.Controls.Add(rbDateCreated);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 73);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(507, 41);
-            panel1.TabIndex = 2;
-            // 
-            // rbDateModified
-            // 
-            rbDateModified.AutoSize = true;
-            rbDateModified.Location = new Point(162, 3);
-            rbDateModified.Margin = new Padding(20, 3, 3, 3);
-            rbDateModified.Name = "rbDateModified";
-            rbDateModified.Size = new Size(139, 19);
-            rbDateModified.TabIndex = 1;
-            rbDateModified.TabStop = true;
-            rbDateModified.Text = "Sort by date modified";
-            rbDateModified.UseVisualStyleBackColor = true;
-            // 
-            // rbDateCreated
-            // 
-            rbDateCreated.AutoSize = true;
-            rbDateCreated.Location = new Point(3, 3);
-            rbDateCreated.Name = "rbDateCreated";
-            rbDateCreated.Padding = new Padding(6, 0, 0, 0);
-            rbDateCreated.Size = new Size(136, 19);
-            rbDateCreated.TabIndex = 0;
-            rbDateCreated.TabStop = true;
-            rbDateCreated.Text = "Sort by date created";
-            rbDateCreated.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -158,10 +114,10 @@
             panel2.Controls.Add(cbLeftMousePause);
             panel2.Controls.Add(label7);
             panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(0, 114);
+            panel2.Location = new Point(0, 55);
             panel2.Name = "panel2";
             panel2.Padding = new Padding(6, 0, 0, 0);
-            panel2.Size = new Size(507, 61);
+            panel2.Size = new Size(507, 55);
             panel2.TabIndex = 13;
             // 
             // cbLeftMousePause
@@ -197,9 +153,9 @@
             panel3.Controls.Add(rbRepeatVideo);
             panel3.Controls.Add(label3);
             panel3.Dock = DockStyle.Top;
-            panel3.Location = new Point(0, 175);
+            panel3.Location = new Point(0, 110);
             panel3.Name = "panel3";
-            panel3.Size = new Size(507, 137);
+            panel3.Size = new Size(507, 125);
             panel3.TabIndex = 14;
             // 
             // lblAfterTime
@@ -214,7 +170,7 @@
             // cbEnableTimeRange
             // 
             cbEnableTimeRange.AutoSize = true;
-            cbEnableTimeRange.Location = new Point(3, 107);
+            cbEnableTimeRange.Location = new Point(3, 101);
             cbEnableTimeRange.Name = "cbEnableTimeRange";
             cbEnableTimeRange.Padding = new Padding(6, 0, 0, 0);
             cbEnableTimeRange.Size = new Size(172, 19);
@@ -291,13 +247,14 @@
             // 
             // panel4
             // 
+            panel4.Controls.Add(panel1);
             panel4.Controls.Add(cbReshuffle);
             panel4.Controls.Add(label5);
             panel4.Controls.Add(cbShufflePlayer);
             panel4.Dock = DockStyle.Top;
-            panel4.Location = new Point(0, 312);
+            panel4.Location = new Point(0, 235);
             panel4.Name = "panel4";
-            panel4.Size = new Size(507, 68);
+            panel4.Size = new Size(507, 130);
             panel4.TabIndex = 15;
             // 
             // cbReshuffle
@@ -343,9 +300,9 @@
             panel5.Controls.Add(label8);
             panel5.Controls.Add(label6);
             panel5.Dock = DockStyle.Fill;
-            panel5.Location = new Point(0, 380);
+            panel5.Location = new Point(0, 365);
             panel5.Name = "panel5";
-            panel5.Size = new Size(507, 229);
+            panel5.Size = new Size(507, 244);
             panel5.TabIndex = 16;
             // 
             // cbFadeEffect
@@ -449,7 +406,7 @@
             btnRestoreDefaults.BackColor = Color.LightPink;
             btnRestoreDefaults.FlatAppearance.BorderSize = 0;
             btnRestoreDefaults.FlatStyle = FlatStyle.Flat;
-            btnRestoreDefaults.Location = new Point(384, 196);
+            btnRestoreDefaults.Location = new Point(384, 211);
             btnRestoreDefaults.Name = "btnRestoreDefaults";
             btnRestoreDefaults.Size = new Size(120, 30);
             btnRestoreDefaults.TabIndex = 19;
@@ -532,6 +489,65 @@
             label6.TabIndex = 0;
             label6.Text = "(Experimental) Ken Burns effect - for static images";
             // 
+            // panel1
+            // 
+            panel1.Controls.Add(btnRTXHelp);
+            panel1.Controls.Add(label13);
+            panel1.Controls.Add(cbEnableRTXVSR);
+            panel1.Controls.Add(label2);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 55);
+            panel1.Margin = new Padding(3, 6, 3, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(507, 75);
+            panel1.TabIndex = 14;
+            // 
+            // label2
+            // 
+            label2.Dock = DockStyle.Top;
+            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Location = new Point(0, 0);
+            label2.Name = "label2";
+            label2.Padding = new Padding(6, 0, 0, 0);
+            label2.Size = new Size(507, 23);
+            label2.TabIndex = 1;
+            label2.Text = "Activate RTX VSR compatibility (Nvidia only)";
+            // 
+            // cbEnableRTXVSR
+            // 
+            cbEnableRTXVSR.AutoSize = true;
+            cbEnableRTXVSR.Location = new Point(3, 26);
+            cbEnableRTXVSR.Name = "cbEnableRTXVSR";
+            cbEnableRTXVSR.Padding = new Padding(6, 0, 0, 0);
+            cbEnableRTXVSR.Size = new Size(112, 19);
+            cbEnableRTXVSR.TabIndex = 2;
+            cbEnableRTXVSR.Text = "Enable RTX VSR";
+            cbEnableRTXVSR.UseVisualStyleBackColor = true;
+            // 
+            // label13
+            // 
+            label13.Location = new Point(6, 48);
+            label13.Name = "label13";
+            label13.Size = new Size(230, 23);
+            label13.TabIndex = 3;
+            label13.Text = "Needs to be anabled in Nvidia driver, see:";
+            label13.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // btnRTXHelp
+            // 
+            btnRTXHelp.FlatAppearance.BorderSize = 0;
+            btnRTXHelp.FlatStyle = FlatStyle.Flat;
+            btnRTXHelp.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            btnRTXHelp.IconColor = Color.Blue;
+            btnRTXHelp.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnRTXHelp.IconSize = 23;
+            btnRTXHelp.Location = new Point(242, 48);
+            btnRTXHelp.Name = "btnRTXHelp";
+            btnRTXHelp.Size = new Size(23, 23);
+            btnRTXHelp.TabIndex = 4;
+            btnRTXHelp.UseVisualStyleBackColor = true;
+            btnRTXHelp.Click += btnRTXHelp_Click;
+            // 
             // PlayerUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -541,13 +557,9 @@
             Controls.Add(panel4);
             Controls.Add(panel3);
             Controls.Add(panel2);
-            Controls.Add(panel1);
-            Controls.Add(label2);
             Controls.Add(label1);
             Name = "PlayerUserControl";
             Size = new Size(507, 609);
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             panel3.ResumeLayout(false);
@@ -556,16 +568,14 @@
             panel4.PerformLayout();
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private Label label1;
-        private Label label2;
-        private Panel panel1;
-        private RadioButton rbDateModified;
-        private RadioButton rbDateCreated;
         private Label label3;
         private CheckBox cbShufflePlayer;
         private Panel panel2;
@@ -602,5 +612,10 @@
         private Label label4;
         private CheckBox cbReshuffle;
         private CheckBox cbFadeEffect;
+        private Panel panel1;
+        private FontAwesome.Sharp.IconButton btnRTXHelp;
+        private Label label13;
+        private CheckBox cbEnableRTXVSR;
+        private Label label2;
     }
 }

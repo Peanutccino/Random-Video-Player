@@ -30,6 +30,7 @@ namespace RandomVideoPlayer.Model
         public static int durationMS { get; set; } = 0;
         public static string currentFile { get; set; }
         public static bool favoriteMatch { get; set; } = false;
+        public static bool presentInCustomList { get; set; } = false;
         public static Size backupSize { get; set; }
         public static bool foundUpdate { get; set; } = false;
 

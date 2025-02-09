@@ -837,6 +837,21 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+        public static bool RandomVideoStartPointIgnoreScripts
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.randomVideoStartPointIgnoreScripts;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.randomVideoStartPointIgnoreScripts = value;
+                _settingsInstance.Save();
+            }
+        }
+
 
         public static bool ShowButtonStayInCurrentFolder
         {
@@ -849,6 +864,21 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.showButtonStayInCurrentFolder = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool RTXVSREnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.rtxVSREnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.rtxVSREnabled = value;
                 _settingsInstance.Save();
             }
         }

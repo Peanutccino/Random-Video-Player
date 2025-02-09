@@ -572,6 +572,19 @@ namespace RandomVideoPlayer.Model
             _settingsInstance.Save();
         }
 
+        public static bool DoesCustomListContainString(string path)
+        {
+            var _settingsInstance = CustomSettings.Instance;
+            if (_settingsInstance.customListConfig.Contains(path))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         /// <value>Randomize Playlist</value> 
         public static void shufflePlayList(bool preserveFirstFile, string startupFilePath)
         {

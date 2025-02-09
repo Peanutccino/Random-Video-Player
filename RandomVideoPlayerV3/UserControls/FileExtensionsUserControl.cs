@@ -47,10 +47,24 @@ namespace RandomVideoPlayer.UserControls
                     cbEnableImageFilter.Checked = false;
                 }
             };
+
+            rbDateCreated.CheckedChanged += (s, e) =>
+            {
+                settings.SortCreated = rbDateCreated.Checked;
+            };
         }
 
         private void LoadSettings()
         {
+            if (settings.SortCreated)
+            {
+                rbDateCreated.Checked = true;
+            }
+            else
+            {
+                rbDateModified.Checked = true;
+            }
+
             cbFilterApply.Checked = settings.ApplyFilterToList;
             cbEnableVideoFilter.Checked = settings.FilterVideoEnabled;
             cbEnableImageFilter.Checked = settings.FilterImageEnabled;

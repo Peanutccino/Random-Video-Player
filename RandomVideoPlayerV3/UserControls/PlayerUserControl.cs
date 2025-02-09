@@ -1,6 +1,7 @@
 ﻿using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 
@@ -19,16 +20,10 @@ namespace RandomVideoPlayer.UserControls
 
         private void LoadSettings()
         {
-            if (settings.SortCreated)
-            {
-                rbDateCreated.Checked = true;
-            }
-            else
-            {
-                rbDateModified.Checked = true;
-            }
             cbShufflePlayer.Checked = settings.ShufflePlaylist;
             cbReshuffle.Checked = settings.ReShuffle;
+
+            cbEnableRTXVSR.Checked = settings.RTXVSREnabled;
 
             cbLeftMousePause.Checked = settings.LeftMousePause;
 
@@ -82,10 +77,11 @@ namespace RandomVideoPlayer.UserControls
                 settings.ReShuffle = cbReshuffle.Checked;
             };
 
-            rbDateCreated.CheckedChanged += (s, e) =>
+            cbEnableRTXVSR.CheckedChanged += (s, e) =>
             {
-                settings.SortCreated = rbDateCreated.Checked;
+                settings.RTXVSREnabled = cbEnableRTXVSR.Checked;
             };
+
             cbLeftMousePause.CheckedChanged += (s, e) =>
             {
                 settings.LeftMousePause = cbLeftMousePause.Checked;
@@ -225,7 +221,7 @@ namespace RandomVideoPlayer.UserControls
 
             CustomNumericUpDown inputBox = sender as CustomNumericUpDown;
 
-            if(inputBox != null && inputBox == inputTimerValueStartPoint)
+            if (inputBox != null && inputBox == inputTimerValueStartPoint)
             {
                 if (minValue >= maxValue)
                 {
@@ -240,6 +236,11 @@ namespace RandomVideoPlayer.UserControls
                 }
             }
 
+        }
+
+        private void btnRTXHelp_Click(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://nvidia.custhelp.com/app/answers/detail/a_id/5448/~/rtx-video-faq") { UseShellExecute = true });
         }
     }
 }

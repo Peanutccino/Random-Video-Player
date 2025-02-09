@@ -48,6 +48,7 @@ namespace RandomVideoPlayer.Functions
         public bool skipAlways { get; set; } = false;
         public int autoSkipSeconds { get; set; } = 5;
         public bool enableRandomVideoStartPoint { get; set; } = false;
+        public bool randomVideoStartPointIgnoreScripts { get; set; } = false;
 
         public string viewStateListFileExplore { get; set; } = "Tile";
         public string viewStateFolderFileExplore { get; set; } = "Tile";
@@ -94,6 +95,7 @@ namespace RandomVideoPlayer.Functions
         public int subtitleBorderSize { get; set; } = 3;
         public string subtitleFontName { get; set; } = "Sans-Serif";
         public string subtitleFontColor { get; set; } = "#FFFFFF";
+        public bool rtxVSREnabled { get; set; } = false;
 
         private static string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RVP-Config.json");
 

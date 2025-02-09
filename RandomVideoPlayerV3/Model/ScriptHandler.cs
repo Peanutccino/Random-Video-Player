@@ -9,6 +9,8 @@ namespace RandomVideoPlayer.Model
 {
     public static class ScriptHandler
     {
+        public static string CurrentlySelectedScript = "";
+
         public static List<string> scriptFilesFound = new List<string>();
         private static List<string> multiAxis = new List<string>
         { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
@@ -111,20 +113,22 @@ namespace RandomVideoPlayer.Model
         private static bool movedScriptWithoutLocal = false;
         public async static Task LoadScript(int index, string videoFile)
         {
-            if (scriptFilesFound.Count <= 0) return;
+            if (scriptFilesFound.Count <= 0 && index > scriptFilesFound.Count - 1) return;
 
             var selectedScript = scriptFilesFound[index];
+            CurrentlySelectedScript = selectedScript;
+
             var selectedScriptNameWithoutExt = Path.GetFileNameWithoutExtension(selectedScript);
             var selectedScriptDirectory = Path.GetDirectoryName(selectedScript);
 
             var videoFileNameWithoutExt = Path.GetFileNameWithoutExtension(videoFile);
             var videoFileDirectory = Path.GetDirectoryName(videoFile);
 
-            if (selectedScriptDirectory == videoFileDirectory)
+            if (selectedScriptDirectory == videoFileDirectory && selectedScriptNameWithoutExt == videoFileNameWithoutExt) //selectedScriptDirectory == videoFileDirectory
             {
                 return;
             }
-            else if (selectedScriptDirectory != videoFileDirectory)
+            else //if (selectedScriptDirectory != videoFileDirectory)
             {
                 var scriptLocalPath = Path.Combine(videoFileDirectory, videoFileNameWithoutExt + ".funscript");
                 tempScriptLocalPath = scriptLocalPath;

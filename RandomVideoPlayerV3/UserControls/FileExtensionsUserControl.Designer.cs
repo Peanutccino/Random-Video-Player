@@ -49,9 +49,14 @@
             panel1 = new Panel();
             label2 = new Label();
             toolTipInfo = new ToolTip(components);
+            label3 = new Label();
+            panel2 = new Panel();
+            rbDateModified = new RadioButton();
+            rbDateCreated = new RadioButton();
             panelVideoExtensionContainer.SuspendLayout();
             panelImageExtensionContainer.SuspendLayout();
             panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -277,7 +282,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 352);
             panel1.Name = "panel1";
-            panel1.Size = new Size(500, 94);
+            panel1.Size = new Size(500, 72);
             panel1.TabIndex = 20;
             // 
             // label2
@@ -291,10 +296,57 @@
             label2.TabIndex = 20;
             label2.Text = "Toggle which filters to use:";
             // 
+            // label3
+            // 
+            label3.Dock = DockStyle.Top;
+            label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label3.Location = new Point(0, 424);
+            label3.Name = "label3";
+            label3.Padding = new Padding(6, 0, 0, 0);
+            label3.Size = new Size(500, 18);
+            label3.TabIndex = 21;
+            label3.Text = "Change the behavior of the recent filter:";
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(rbDateModified);
+            panel2.Controls.Add(rbDateCreated);
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(0, 442);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(500, 41);
+            panel2.TabIndex = 22;
+            // 
+            // rbDateModified
+            // 
+            rbDateModified.AutoSize = true;
+            rbDateModified.Location = new Point(162, 3);
+            rbDateModified.Margin = new Padding(20, 3, 3, 3);
+            rbDateModified.Name = "rbDateModified";
+            rbDateModified.Size = new Size(139, 19);
+            rbDateModified.TabIndex = 1;
+            rbDateModified.TabStop = true;
+            rbDateModified.Text = "Sort by date modified";
+            rbDateModified.UseVisualStyleBackColor = true;
+            // 
+            // rbDateCreated
+            // 
+            rbDateCreated.AutoSize = true;
+            rbDateCreated.Location = new Point(3, 3);
+            rbDateCreated.Name = "rbDateCreated";
+            rbDateCreated.Padding = new Padding(6, 0, 0, 0);
+            rbDateCreated.Size = new Size(136, 19);
+            rbDateCreated.TabIndex = 0;
+            rbDateCreated.TabStop = true;
+            rbDateCreated.Text = "Sort by date created";
+            rbDateCreated.UseVisualStyleBackColor = true;
+            // 
             // FileExtensionsUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel2);
+            Controls.Add(label3);
             Controls.Add(panel1);
             Controls.Add(cbFilterApply);
             Controls.Add(panelImageExtensionContainer);
@@ -308,6 +360,8 @@
             panelVideoExtensionContainer.ResumeLayout(false);
             panelImageExtensionContainer.ResumeLayout(false);
             panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -333,5 +387,9 @@
         private Panel panel1;
         private Label label2;
         private ToolTip toolTipInfo;
+        private Label label3;
+        private Panel panel2;
+        private RadioButton rbDateModified;
+        private RadioButton rbDateCreated;
     }
 }

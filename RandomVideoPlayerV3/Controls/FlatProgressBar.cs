@@ -151,6 +151,21 @@ namespace RandomVideoPlayer
             }
         }
 
+        public bool HasActionPoints
+        {
+            get
+            {
+                if (actionPoints.Count == 0 || actionPoints == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);

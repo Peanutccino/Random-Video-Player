@@ -156,19 +156,6 @@
         6IOfmXNfMt6VPFzymogAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="btnListDel.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABQAAAATCAYAAACQjC21AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        jAAAAIwBFCEVQAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAF5SURBVDhPrdRP
-        KERRFMfx5+9m1AiFUnZTamoW9jYksbChlGJlI2sbS8rOAjuxH2VJSf6UyAI1Fhb+lFjIvwjFQsb3N+7V
-        9dxRL0596t3zzj1z7533XkD04BpnaMpms4EQDeiOoAu1CK6gDrJtmlXjxeSiOEZw4SQ2TMNKPJpcFAcI
-        2nGIXTQ6W65DSwTNKM9N/k/e5F8oStGLThT4iqJQzENXMm6ShZi2Y6e4HqNYxibm0BaqCZ5gG2ZMMmHG
-        aadwEK8mH7aIuG2ogb0xZZJa4Qzsivtga/JZRRGCGAagcyyxK7KIOO4QbuDT/22yD2FXp+2e5nED1ax7
-        m7iICbwj6bsvRDH0J91r0Ip9bCHlFOl9TmISb6hym4QRC3jWxTmUkTVzswL6tTSGoOQJ9Ij5rEA1e/ja
-        v+yYhjXQmamh3ul8j0vYMHKH/oBLNDtbSNkxMQZ3os8RYj/OwofQ8zWLcBNLx5HI1YYn/4bowBJuoQ9w
-        BiMo+6zJBh9YH0Iqjeh5SQAAAABJRU5ErkJggg==
-</value>
-  </data>
   <metadata name="timerProgressUpdate.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

@@ -22,6 +22,7 @@ namespace RandomVideoPlayer.Model
         public bool SkipAlways { get; set; }
         public int AutoSkipSeconds { get; set; }
         public bool EnableRandomVideoStartPoint { get; set; }
+        public bool RandomVideoStartPointIgnoreScripts { get; set; }
         #endregion
 
         #region Paths
@@ -45,7 +46,6 @@ namespace RandomVideoPlayer.Model
         #region Player
         public bool ShufflePlaylist { get; set; }
         public bool ReShuffle { get; set; }
-        public bool SortCreated { get; set; }
         public bool LeftMousePause { get; set; }
         public AutoPlayMethod AutoPlayMethod { get; set; }
         public int AutoPlayTimerValueStartPoint { get; set; }
@@ -58,6 +58,7 @@ namespace RandomVideoPlayer.Model
         public double ZoomAmount { get; set; }
         public int ZoomEasingFunction { get; set; }
         public int PanEasingFunction { get; set; }
+        public bool RTXVSREnabled { get; set; }
         #endregion
 
         #region FilterExtensions    
@@ -66,6 +67,7 @@ namespace RandomVideoPlayer.Model
         public bool FilterVideoEnabled { get; set; }
         public bool FilterScriptEnabled { get; set; }
         public bool ApplyFilterToList { get; set; }
+        public bool SortCreated { get; set; }
         #endregion
 
         #region Subtitles

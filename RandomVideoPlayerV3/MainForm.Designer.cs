@@ -47,7 +47,6 @@
             btnShuffle = new FontAwesome.Sharp.IconButton();
             btnListAdd = new Button();
             btnAddToFav = new FontAwesome.Sharp.IconButton();
-            btnListDel = new Button();
             btnFileBrowse = new FontAwesome.Sharp.IconButton();
             btnMuteToggle = new FontAwesome.Sharp.IconButton();
             pbVolume = new FlatProgressBar();
@@ -195,7 +194,6 @@
             panelControls.Controls.Add(btnShuffle);
             panelControls.Controls.Add(btnListAdd);
             panelControls.Controls.Add(btnAddToFav);
-            panelControls.Controls.Add(btnListDel);
             panelControls.Location = new Point(254, 23);
             panelControls.Name = "panelControls";
             panelControls.Size = new Size(494, 29);
@@ -209,7 +207,7 @@
             btnTouch.IconColor = Color.Black;
             btnTouch.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnTouch.IconSize = 29;
-            btnTouch.Location = new Point(457, -1);
+            btnTouch.Location = new Point(407, -1);
             btnTouch.Margin = new Padding(10, 3, 10, 3);
             btnTouch.Name = "btnTouch";
             btnTouch.Size = new Size(30, 30);
@@ -225,7 +223,7 @@
             btnAutoSkip.IconColor = Color.Black;
             btnAutoSkip.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnAutoSkip.IconSize = 29;
-            btnAutoSkip.Location = new Point(407, -1);
+            btnAutoSkip.Location = new Point(357, -1);
             btnAutoSkip.Margin = new Padding(10, 3, 10, 3);
             btnAutoSkip.Name = "btnAutoSkip";
             btnAutoSkip.Size = new Size(30, 30);
@@ -238,7 +236,7 @@
             btnSourceSelector.FlatAppearance.BorderSize = 0;
             btnSourceSelector.FlatStyle = FlatStyle.Flat;
             btnSourceSelector.Image = (Image)resources.GetObject("btnSourceSelector.Image");
-            btnSourceSelector.Location = new Point(357, -1);
+            btnSourceSelector.Location = new Point(307, -1);
             btnSourceSelector.Margin = new Padding(10, 3, 10, 3);
             btnSourceSelector.Name = "btnSourceSelector";
             btnSourceSelector.Size = new Size(30, 29);
@@ -254,7 +252,7 @@
             btnRepeat.IconColor = Color.Black;
             btnRepeat.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnRepeat.IconSize = 29;
-            btnRepeat.Location = new Point(307, 0);
+            btnRepeat.Location = new Point(257, 0);
             btnRepeat.Margin = new Padding(10, 3, 10, 3);
             btnRepeat.Name = "btnRepeat";
             btnRepeat.Size = new Size(30, 30);
@@ -271,7 +269,7 @@
             btnMoveTo.IconColor = Color.Black;
             btnMoveTo.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnMoveTo.IconSize = 29;
-            btnMoveTo.Location = new Point(207, 0);
+            btnMoveTo.Location = new Point(157, 0);
             btnMoveTo.Margin = new Padding(10, 3, 10, 3);
             btnMoveTo.Name = "btnMoveTo";
             btnMoveTo.Size = new Size(30, 30);
@@ -304,7 +302,7 @@
             btnShuffle.IconColor = Color.Black;
             btnShuffle.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnShuffle.IconSize = 29;
-            btnShuffle.Location = new Point(257, 0);
+            btnShuffle.Location = new Point(207, 0);
             btnShuffle.Margin = new Padding(10, 3, 10, 3);
             btnShuffle.Name = "btnShuffle";
             btnShuffle.Size = new Size(30, 30);
@@ -318,7 +316,7 @@
             btnListAdd.FlatAppearance.BorderSize = 0;
             btnListAdd.FlatStyle = FlatStyle.Flat;
             btnListAdd.Image = (Image)resources.GetObject("btnListAdd.Image");
-            btnListAdd.Location = new Point(107, 0);
+            btnListAdd.Location = new Point(57, 0);
             btnListAdd.Margin = new Padding(10, 3, 10, 3);
             btnListAdd.Name = "btnListAdd";
             btnListAdd.Size = new Size(30, 29);
@@ -335,27 +333,13 @@
             btnAddToFav.IconColor = Color.Black;
             btnAddToFav.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnAddToFav.IconSize = 29;
-            btnAddToFav.Location = new Point(157, 0);
+            btnAddToFav.Location = new Point(107, 0);
             btnAddToFav.Margin = new Padding(10, 3, 10, 3);
             btnAddToFav.Name = "btnAddToFav";
             btnAddToFav.Size = new Size(30, 30);
             btnAddToFav.TabIndex = 17;
             btnAddToFav.UseVisualStyleBackColor = true;
             btnAddToFav.Click += btnAddToFav_Click;
-            // 
-            // btnListDel
-            // 
-            btnListDel.Enabled = false;
-            btnListDel.FlatAppearance.BorderSize = 0;
-            btnListDel.FlatStyle = FlatStyle.Flat;
-            btnListDel.Image = (Image)resources.GetObject("btnListDel.Image");
-            btnListDel.Location = new Point(57, 0);
-            btnListDel.Margin = new Padding(10, 3, 10, 3);
-            btnListDel.Name = "btnListDel";
-            btnListDel.Size = new Size(30, 29);
-            btnListDel.TabIndex = 19;
-            btnListDel.UseVisualStyleBackColor = true;
-            btnListDel.Click += btnListDel_Click;
             // 
             // btnFileBrowse
             // 
@@ -730,7 +714,6 @@
         private ToolTip toolTipUI;
         private FontAwesome.Sharp.IconButton btnAddToFav;
         private FontAwesome.Sharp.IconButton btnShuffle;
-        private Button btnListDel;
         private Panel panelControls;
         private Button btnListAdd;
         private FontAwesome.Sharp.IconButton btnRepeat;

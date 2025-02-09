@@ -1,12 +1,8 @@
-using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Web;
 using Mpv.NET.Player;
-using Newtonsoft.Json;
 using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
@@ -46,6 +42,9 @@ namespace RandomVideoPlayer
         private ContextMenuStrip contextMenuScriptFiles;
         private ToolStripMenuItem enableDisableTimeServerItem;
         private ToolStripMenuItem enableDisableShowGraphItem;
+        private ToolStripMenuItem savePreferredScriptSetupItem;
+
+        private const string VSRFilter = "d3d11vpp=scale=2:scaling-mode=nvidia"; 
 
         private int brightness = 0;
         public MainForm(string filePath)
@@ -115,7 +114,6 @@ namespace RandomVideoPlayer
 
             if (MainFormData.startedByFile) PlayerResume();
         }
-
         private void btnPlay_Click(object sender, EventArgs e)
         {
             PlayerPlayPauseToggle();
@@ -140,13 +138,9 @@ namespace RandomVideoPlayer
         {
             DeleteCurrent();
         }
-        private void btnListDel_Click(object sender, EventArgs e)
-        {
-            DeleteCurrentFromList();
-        }
         private void btnListAdd_Click(object sender, EventArgs e)
         {
-            AddCurrentToList();
+            MatchCustomList();
         }
         private void btnSettings_Click(object sender, EventArgs e)
         {
@@ -343,7 +337,7 @@ namespace RandomVideoPlayer
             // Check if the method is called too quickly in succession
             if ((DateTime.Now - MainFormData.lastPlayCommandTime) < MainFormData.minimumInterval)
             {
-                return; // Exit if the call is too soon
+                return;
             }
             MainFormData.lastPlayCommandTime = DateTime.Now; // Update the last command time
 
@@ -411,7 +405,16 @@ namespace RandomVideoPlayer
             {
                 await ScriptHandler.FillScriptList(MainFormData.currentFile);
 
-                await ScriptHandler.LoadScript(0, MainFormData.currentFile);
+                string videoPath = MainFormData.currentFile;
+                string preferredScript = ScriptConfigManager.GetVideoConfig(videoPath, "script");
+                int preferredScriptIndex = 0;
+
+                if (!string.IsNullOrWhiteSpace(preferredScript))
+                {
+                    preferredScriptIndex = ScriptHandler.scriptFilesFound.FindIndex(file => file == preferredScript);
+                }
+
+                await ScriptHandler.LoadScript(preferredScriptIndex, MainFormData.currentFile);
                 foreach (var multiAxisScript in ScriptHandler.MultiAxisScriptsFound)
                 {
                     if (multiAxisScript.Value.ScriptFiles.Count <= 0) continue;
@@ -439,7 +442,7 @@ namespace RandomVideoPlayer
             // Check if the method is called too quickly in succession
             if ((DateTime.Now - MainFormData.lastPlayCommandTime) < MainFormData.minimumInterval)
             {
-                return; // Exit if the call is too soon
+                return;
             }
             MainFormData.lastPlayCommandTime = DateTime.Now; // Update the last command time
 
@@ -542,7 +545,6 @@ namespace RandomVideoPlayer
                 btnNext.Enabled = true;
                 btnPrevious.Enabled = true;
                 btnRemove.Enabled = true;
-                btnListDel.Enabled = true;
                 btnListAdd.Enabled = true;
                 btnMoveTo.Enabled = true;
                 btnAddToFav.Enabled = true;
@@ -587,6 +589,7 @@ namespace RandomVideoPlayer
 
 
             UpdateSourceSelectorIcon();
+            UpdateListEditIcon();
             UpdateButtonStates();
             MainFormData.startedByFile = false;
         }
@@ -867,6 +870,14 @@ namespace RandomVideoPlayer
 
                 AutoSkipHandler();
 
+                if (SettingsHandler.RTXVSREnabled)
+                {
+                    playerMPV.API.Command("vf", "add", VSRFilter);
+                }
+                else
+                {
+                    playerMPV.API.Command("vf", "del", "d3d11vpp");
+                }
             }
 
             UpdateButtonStates();
@@ -884,7 +895,7 @@ namespace RandomVideoPlayer
         #region CustomButton
         private void RepositionButtons()
         {
-            List<Button> buttons = new List<Button> { btnRemove, btnListDel, btnListAdd, btnAddToFav, btnMoveTo, btnShuffle, btnRepeat, btnSourceSelector, btnAutoSkip, btnTouch };
+            List<Button> buttons = new List<Button> { btnRemove, btnListAdd, btnAddToFav, btnMoveTo, btnShuffle, btnRepeat, btnSourceSelector, btnAutoSkip, btnTouch };
             if (buttons.Count != SettingsHandler.ButtonStates.Length)
             {
                 SettingsHandler.ButtonStates = Enumerable.Repeat(true, buttons.Count).ToArray();
@@ -903,16 +914,15 @@ namespace RandomVideoPlayer
             bool[] buttonStates = SettingsHandler.ButtonStates;
 
             btnRemove.Visible = buttonStates[0];
-            btnListDel.Visible = buttonStates[1];
-            btnListAdd.Visible = buttonStates[2];
-            btnAddToFav.Visible = buttonStates[3];
-            btnMoveTo.Visible = buttonStates[4];
-            btnShuffle.Visible = buttonStates[5];
-            btnRepeat.Visible = buttonStates[6];
-            btnSourceSelector.Visible = buttonStates[7];
-            btnAutoSkip.Visible = buttonStates[8];
-            btnTouch.Visible = buttonStates[9];
-                      
+            btnListAdd.Visible = buttonStates[1];
+            btnAddToFav.Visible = buttonStates[2];
+            btnMoveTo.Visible = buttonStates[3];
+            btnShuffle.Visible = buttonStates[4];
+            btnRepeat.Visible = buttonStates[5];
+            btnSourceSelector.Visible = buttonStates[6];
+            btnAutoSkip.Visible = buttonStates[7];
+            btnTouch.Visible = buttonStates[8];
+
 
             int x = 10; // starting x position
             int y = 0; // starting y position
@@ -979,7 +989,6 @@ namespace RandomVideoPlayer
 
         private void UpdateSourceSelectorIcon()
         {
-            // Method 1: If the image is an embedded resource
             var assembly = Assembly.GetExecutingAssembly();
 
             var resourceName = SettingsHandler.SourceSelected ? "RandomVideoPlayer.Resources.SplitIconListHighlight.png" : "RandomVideoPlayer.Resources.SplitIconFolderHighlight.png";
@@ -992,13 +1001,38 @@ namespace RandomVideoPlayer
                     {
                         var image = Image.FromStream(stream);
                         btnSourceSelector.Image = image;
-                        btnSourceSelector.ImageAlign = ContentAlignment.MiddleCenter; // Adjust alignment as needed
-                        btnSourceSelector.TextImageRelation = TextImageRelation.ImageAboveText; // Adjust as needed
+                        btnSourceSelector.ImageAlign = ContentAlignment.MiddleCenter;
+                        btnSourceSelector.TextImageRelation = TextImageRelation.ImageAboveText;
                     }
                 }
                 catch (Exception ex)
                 {
                     Error.Log(ex, "Failed to load SplitIcon");
+                }
+            }
+        }
+
+        private void UpdateListEditIcon()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var resourceName = MainFormData.presentInCustomList ? "RandomVideoPlayer.Resources.list-colored-remove.png" : "RandomVideoPlayer.Resources.list-colored-add.png";
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                try
+                {
+                    if (stream != null)
+                    {
+                        var image = Image.FromStream(stream);
+                        btnListAdd.Image = image;
+                        btnListAdd.ImageAlign = ContentAlignment.MiddleCenter;
+                        btnListAdd.TextImageRelation = TextImageRelation.ImageAboveText;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, "Failed to load ListEdit icon");
                 }
             }
         }
@@ -1008,8 +1042,8 @@ namespace RandomVideoPlayer
 
         private void InitializeContextMenus()
         {
+            //Subtitle menu
             contextMenuSubtitles = new ContextMenuStrip { Renderer = new CustomRenderer() };
-
             //Create first context menu item for toggling subtitles
             enableDisableSubtitlesItem = new ToolStripMenuItem("Enable") { CheckOnClick = true };
             enableDisableSubtitlesItem.CheckedChanged += EnableDisableSubtitlesItem_CheckedChanged;
@@ -1018,15 +1052,14 @@ namespace RandomVideoPlayer
             loadExternalSubtitlesItem = new ToolStripMenuItem("Load external subtitle file");
             loadExternalSubtitlesItem.Click += (sender, e) => LoadExternalSubtitles();
             contextMenuSubtitles.Items.Add(loadExternalSubtitlesItem);
-
             contextMenuSubtitles.Items.Add(new ToolStripSeparator());
             if (SettingsHandler.SubtitlesEnabled) enableDisableSubtitlesItem.Checked = true;
             ToggleSubtitles();
             SubFunctions.UpdateSubtitleParameters(playerMPV);
-
+            //Audio menu
             contextMenuAudioTracks = new ContextMenuStrip { Renderer = new CustomRenderer() };
 
-
+            //Script menu
             contextMenuScriptFiles = new ContextMenuStrip { Renderer = new CustomRenderer() };
             //Create first context menu item for toggling time server
             enableDisableTimeServerItem = new ToolStripMenuItem("Enable Timecode Server") { CheckOnClick = true };
@@ -1036,11 +1069,17 @@ namespace RandomVideoPlayer
             enableDisableShowGraphItem = new ToolStripMenuItem("Show Graph") { CheckOnClick = true };
             enableDisableShowGraphItem.CheckedChanged += EnableDisableShowGraphItem_CheckedChanged;
             contextMenuScriptFiles.Items.Add(enableDisableShowGraphItem);
+            //Create context menu button to save preferred script config
+            savePreferredScriptSetupItem = new ToolStripMenuItem("Save preferred script for this video");
+            savePreferredScriptSetupItem.Click += SavePreferredScriptSetup_Click;
+            contextMenuScriptFiles.Items.Add(savePreferredScriptSetupItem);
 
             contextMenuScriptFiles.Items.Add(new ToolStripSeparator());
             if (SettingsHandler.TimeCodeServer) enableDisableTimeServerItem.Checked = true;
             if (SettingsHandler.GraphEnabled) enableDisableShowGraphItem.Checked = true;
         }
+
+
 
         private void LoadExternalSubtitles()
         {
@@ -1158,7 +1197,7 @@ namespace RandomVideoPlayer
             }
             else
             {
-                for (int i = contextMenuScriptFiles.Items.Count - 1; i >= 3; i--)
+                for (int i = contextMenuScriptFiles.Items.Count - 1; i >= 4; i--)
                 {
                     contextMenuScriptFiles.Items.RemoveAt(i);
                 }
@@ -1173,11 +1212,29 @@ namespace RandomVideoPlayer
 
                 bool anyScriptFound = false;
 
+                string videoPath = MainFormData.currentFile;
+                string preferredScript = ScriptConfigManager.GetVideoConfig(videoPath, "script");
+                int preferredScriptIndex = 0;
+
+                if (!string.IsNullOrWhiteSpace(preferredScript))
+                {
+                    preferredScriptIndex = ScriptHandler.scriptFilesFound.FindIndex(file => file == preferredScript);
+                }
+                int scriptIndex = 0;
                 foreach (var scriptFile in ScriptHandler.scriptFilesFound)
                 {
                     var scriptItem = new ToolStripMenuItem(scriptFile);
                     scriptItem.Click += ScriptItem_Click;
-                    if (isFirstItem)
+                    if (preferredScriptIndex > 0)
+                    {
+                        if (preferredScriptIndex == scriptIndex)
+                        {
+                            scriptItem.Checked = true;
+                            isFirstItem = false;
+                            scriptIndex = 0;
+                        }
+                    }
+                    else if (isFirstItem)
                     {
                         scriptItem.Checked = true;
                         isFirstItem = false;
@@ -1188,6 +1245,7 @@ namespace RandomVideoPlayer
                     }
                     contextMenuScriptFiles.Items.Add(scriptItem);
                     anyScriptFound = true;
+                    scriptIndex++;
                 }
 
                 foreach (var kvp in ScriptHandler.MultiAxisScriptsFound)
@@ -1229,6 +1287,7 @@ namespace RandomVideoPlayer
                 if (anyScriptFound == false)
                 {
                     var placeholder = new ToolStripMenuItem("No scripts found");
+                    ScriptHandler.CurrentlySelectedScript = "";
                     placeholder.Enabled = false;
                     contextMenuScriptFiles.Items.Add(placeholder);
                     return;
@@ -1316,7 +1375,16 @@ namespace RandomVideoPlayer
                 playerMPV.SetAudioTrack(index);
             }
         }
+        private void SavePreferredScriptSetup_Click(object sender, EventArgs e)
+        {
+            string videoPath = MainFormData.currentFile;
+            string scriptPath = ScriptHandler.CurrentlySelectedScript;
 
+            if (string.IsNullOrWhiteSpace(videoPath) || string.IsNullOrWhiteSpace(scriptPath)) return;
+
+            ScriptConfigManager.SaveVideoConfig(videoPath, "script", scriptPath);
+            playerMPV.ShowText("Script config saved");
+        }
         private void ScriptItem_Click(object sender, EventArgs e)
         {
             var clickedItem = sender as ToolStripMenuItem;
@@ -1335,7 +1403,7 @@ namespace RandomVideoPlayer
                 }
 
                 clickedItem.Checked = true;
-                var index = contextMenuScriptFiles.Items.IndexOf(clickedItem) - 3;
+                var index = contextMenuScriptFiles.Items.IndexOf(clickedItem) - 4;
                 Task.Run(async () =>
                 {
                     await ScriptHandler.RevertDefaultScript();
@@ -1777,6 +1845,18 @@ namespace RandomVideoPlayer
             pbVolume.Value = initVolume;
             string libMpv = MainFormData.startupPath + "lib\\libmpv-2.dll";
             playerMPV = new MpvPlayer(panelPlayerMPV.Handle, libMpv) { Loop = (!(SettingsHandler.AutoPlayMethod == AutoPlayMethod.AutoNext)), Volume = initVolume, KeepOpen = KeepOpen.Yes };
+            if (SettingsHandler.RTXVSREnabled)
+            {
+                try
+                {
+                    playerMPV.API.Command("vf", "add", VSRFilter);
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, "Failed to load RTX VSR");
+                }
+            }
+
         }
         #endregion
 
@@ -1833,6 +1913,8 @@ namespace RandomVideoPlayer
                 UpdateScriptFiles();
 
                 ToggleSubtitles();
+                MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(updatedCurrentFile);
+                UpdateListEditIcon();
             }
             else
             {
@@ -1842,32 +1924,33 @@ namespace RandomVideoPlayer
             pbPlayerProgress.DeleteActionsPoints();
             UpdateFunscriptGraph();
 
-            //if (SettingsHandler.EnableAutoSkip && SettingsHandler.SkipVideoStart)
-            //{
-            //    var nextActionToSkipTo = pbPlayerProgress.DetectGap(0, 5000);
-
-            //    if (nextActionToSkipTo > 0)
-            //    {
-            //        playerMPV.ShowText("Skipping to next action");
-            //        playerMPV.SeekAsync(nextActionToSkipTo / 1000);
-            //    }
-            //}
-            if(SettingsHandler.EnableAutoSkip || SettingsHandler.EnableRandomVideoStartPoint)
+            if (SettingsHandler.EnableAutoSkip)
             {
                 var nextActionToSkipTo = pbPlayerProgress.DetectGap(0, 5000);
 
-                if (nextActionToSkipTo > 0 && SettingsHandler.SkipVideoStart)
+
+                if (nextActionToSkipTo > 0 && SettingsHandler.EnableRandomVideoStartPoint && SettingsHandler.RandomVideoStartPointIgnoreScripts == false)
+                {
+                    var startRange = (int)(nextActionToSkipTo / 1000);
+                    var maxRange = (int)(MainFormData.durationMS / 1000 * 0.8);
+                    var random = new Random();
+
+                    var randomStartPoint = random.Next(startRange, maxRange);
+
+                    playerMPV.SeekAsync(randomStartPoint);
+                }
+                else if (nextActionToSkipTo > 0 && SettingsHandler.SkipVideoStart)
                 {
                     playerMPV.ShowText("Skipping to next action");
                     playerMPV.SeekAsync(nextActionToSkipTo / 1000);
                 }
-                else if(SettingsHandler.EnableRandomVideoStartPoint)
+                else if (SettingsHandler.EnableRandomVideoStartPoint && (SettingsHandler.RandomVideoStartPointIgnoreScripts && pbPlayerProgress.HasActionPoints) == false)
                 {
-                    int maxRange = (int)(MainFormData.durationMS / 1000 * 0.9);
-                    Random random = new Random();
-                    int randomStartPoint = random.Next(0, maxRange);
+                    var maxRange = (int)(MainFormData.durationMS / 1000 * 0.8);
+                    var random = new Random();
 
-                    //MessageBox.Show($"Start was: {randomStartPoint}");
+                    var randomStartPoint = random.Next(0, maxRange);
+
                     playerMPV.SeekAsync(randomStartPoint);
                 }
             }
@@ -1937,6 +2020,26 @@ namespace RandomVideoPlayer
             {
                 MainFormData.tempFavorites = FavFunctions.DeleteFromFavorites(tempFile, MainFormData.tempFavorites);
                 MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, MainFormData.tempFavorites, btnAddToFav);
+            }
+        }
+
+        private void MatchCustomList()
+        {
+            if (ListHandler.FirstPlay && !MainFormData.playingSingleFile) return;
+
+            string tempFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
+
+            if (!MainFormData.presentInCustomList)
+            {
+                AddCurrentToList();
+                MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(tempFile);
+                UpdateListEditIcon();
+            }
+            else
+            {
+                DeleteCurrentFromList();
+                MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(tempFile);
+                UpdateListEditIcon();
             }
         }
         private async Task SetTimeServerFile(string fileName, bool reload = false)
@@ -2168,8 +2271,7 @@ namespace RandomVideoPlayer
             toolTipUI.SetToolTip(btnNext, $"{GetKeyCombination(nextHotkey)} | Next track");
             toolTipUI.SetToolTip(btnFileBrowse, "Choose folder to play from");
             toolTipUI.SetToolTip(btnListBrowser, "Create your own lists with selected videos");
-            toolTipUI.SetToolTip(btnListDel, $"{GetKeyCombination(deleteCurrentFromListHotkey)} | Remove currently played videofile from custom List and Playlist (No deletion)");
-            toolTipUI.SetToolTip(btnListAdd, $"{GetKeyCombination(addToCurrentListHotkey)} | Add currently played videofile to custom List and Playlist");
+            toolTipUI.SetToolTip(btnListAdd, $"{GetKeyCombination(addToCurrentListHotkey)} | Add/Remove currently played videofile to/from custom List and Playlist");
             toolTipUI.SetToolTip(btnSettings, "Open settings menu");
             toolTipUI.SetToolTip(btnAddToFav, $"{GetKeyCombination(addToFavHotkey)} | Add current to favorite list");
             toolTipUI.SetToolTip(btnShuffle, $"{GetKeyCombination(shuffleHotkey)} | Toggle shuffle / Parse order");
@@ -2239,11 +2341,8 @@ namespace RandomVideoPlayer
                     case "DeleteCurrent":
                         DeleteCurrent();
                         return true;
-                    case "DeleteCurrentFromList":
-                        DeleteCurrentFromList();
-                        return true;
-                    case "AddCurrentToList":
-                        AddCurrentToList();
+                    case "AddRemoveCurrentToList":
+                        MatchCustomList();
                         return true;
                     case "Favorite":
                         MatchFavorites();
@@ -2538,7 +2637,6 @@ namespace RandomVideoPlayer
                         btnNext.Enabled = true;
                         btnPrevious.Enabled = false;
                         btnRemove.Enabled = true;
-                        btnListDel.Enabled = true;
                         btnListAdd.Enabled = true;
                         btnMoveTo.Enabled = true;
                         btnAddToFav.Enabled = true;
@@ -2931,6 +3029,7 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
+
 
 
 

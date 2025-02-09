@@ -14,7 +14,7 @@ namespace RandomVideoPlayer.UserControls
             InitializeComponent();
             this.settings = settings;
 
-            checkboxes = new List<CheckBox> { cbDeleteButton, cbListRemoveButton, cbListAddButton, cbAddToFavButton, cbMoveToButton, cbShuffleButton, cbLoopButton, cbSourceSelector, cbSkipButton, cbTouchButton };
+            checkboxes = new List<CheckBox> { cbDeleteButton, cbListAddButton, cbAddToFavButton, cbMoveToButton, cbShuffleButton, cbLoopButton, cbSourceSelector, cbSkipButton, cbTouchButton };
 
             LoadSettings();
             BindControls();
@@ -26,22 +26,20 @@ namespace RandomVideoPlayer.UserControls
         private void LoadSettings()
         {
             cbDeleteButton.Checked = settings.ButtonStates[0];
-            cbListRemoveButton.Checked = settings.ButtonStates[1];
-            cbListAddButton.Checked = settings.ButtonStates[2];
-            cbAddToFavButton.Checked = settings.ButtonStates[3];
-            cbMoveToButton.Checked = settings.ButtonStates[4];
-            cbShuffleButton.Checked = settings.ButtonStates[5];
-            cbLoopButton.Checked = settings.ButtonStates[6];
-            cbSourceSelector.Checked = settings.ButtonStates[7];
-            cbSkipButton.Checked = settings.ButtonStates[8];
-            cbTouchButton.Checked = settings.ButtonStates[9];
+            cbListAddButton.Checked = settings.ButtonStates[1];
+            cbAddToFavButton.Checked = settings.ButtonStates[2];
+            cbMoveToButton.Checked = settings.ButtonStates[3];
+            cbShuffleButton.Checked = settings.ButtonStates[4];
+            cbLoopButton.Checked = settings.ButtonStates[5];
+            cbSourceSelector.Checked = settings.ButtonStates[6];
+            cbSkipButton.Checked = settings.ButtonStates[7];
+            cbTouchButton.Checked = settings.ButtonStates[8];
 
             cbShowButtonToPlayFromCurrentFolder.Checked = settings.ShowButtonToPlayFromCurrentFolder;
         }
         private void BindControls()
         {
             cbDeleteButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
-            cbListRemoveButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbListAddButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbAddToFavButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbMoveToButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
@@ -60,15 +58,14 @@ namespace RandomVideoPlayer.UserControls
         private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
             settings.ButtonStates[0] = cbDeleteButton.Checked;
-            settings.ButtonStates[1] = cbListRemoveButton.Checked;
-            settings.ButtonStates[2] = cbListAddButton.Checked;
-            settings.ButtonStates[3] = cbAddToFavButton.Checked;
-            settings.ButtonStates[4] = cbMoveToButton.Checked;
-            settings.ButtonStates[5] = cbShuffleButton.Checked;
-            settings.ButtonStates[6] = cbLoopButton.Checked;
-            settings.ButtonStates[7] = cbSourceSelector.Checked;
-            settings.ButtonStates[8] = cbSkipButton.Checked;
-            settings.ButtonStates[9] = cbTouchButton.Checked;
+            settings.ButtonStates[1] = cbListAddButton.Checked;
+            settings.ButtonStates[2] = cbAddToFavButton.Checked;
+            settings.ButtonStates[3] = cbMoveToButton.Checked;
+            settings.ButtonStates[4] = cbShuffleButton.Checked;
+            settings.ButtonStates[5] = cbLoopButton.Checked;
+            settings.ButtonStates[6] = cbSourceSelector.Checked;
+            settings.ButtonStates[7] = cbSkipButton.Checked;
+            settings.ButtonStates[8] = cbTouchButton.Checked;
         }
         private void InitializeDynamicButtons(int buttonCount)
         {
