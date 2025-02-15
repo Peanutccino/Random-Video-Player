@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Timers;
 using Mpv.NET.Player;
 using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
@@ -31,6 +32,8 @@ namespace RandomVideoPlayer
         Stopwatch stopwatch = new Stopwatch();
         Timer checkwatch = new Timer();
         System.Timers.Timer timerAutoPlayNext = new System.Timers.Timer();
+        private System.Timers.Timer seekTimer;
+
         private bool isImage = false;
 
         private ContextMenuStrip contextMenuSubtitles;
@@ -44,7 +47,7 @@ namespace RandomVideoPlayer
         private ToolStripMenuItem enableDisableShowGraphItem;
         private ToolStripMenuItem savePreferredScriptSetupItem;
 
-        private const string VSRFilter = "d3d11vpp=scale=2:scaling-mode=nvidia"; 
+        private const string VSRFilter = "d3d11vpp=scale=2:nvidia-true-hdr:scaling-mode=nvidia";
 
         private int brightness = 0;
         public MainForm(string filePath)
@@ -414,11 +417,21 @@ namespace RandomVideoPlayer
                     preferredScriptIndex = ScriptHandler.scriptFilesFound.FindIndex(file => file == preferredScript);
                 }
 
+
                 await ScriptHandler.LoadScript(preferredScriptIndex, MainFormData.currentFile);
                 foreach (var multiAxisScript in ScriptHandler.MultiAxisScriptsFound)
                 {
                     if (multiAxisScript.Value.ScriptFiles.Count <= 0) continue;
-                    await ScriptHandler.LoadMultiAxisScript(0, MainFormData.currentFile, multiAxisScript.Key);
+                    string multiAxis = multiAxisScript.Key;
+                    string preferredMultiAxisScript = ScriptConfigManager.GetVideoConfig(videoPath, multiAxis);
+                    int preferredMultiAxisScriptIndex = 0;
+
+                    if (!string.IsNullOrWhiteSpace(preferredMultiAxisScript))
+                    {
+                        preferredMultiAxisScriptIndex = ScriptHandler.FindMatchingScriptFileIndex(multiAxis, preferredMultiAxisScript);
+                    }
+
+                    await ScriptHandler.LoadMultiAxisScript(preferredMultiAxisScriptIndex, MainFormData.currentFile, multiAxis);
                 }
             }
 
@@ -487,11 +500,30 @@ namespace RandomVideoPlayer
             {
                 await ScriptHandler.FillScriptList(MainFormData.currentFile);
 
-                await ScriptHandler.LoadScript(0, MainFormData.currentFile);
+                string videoPath = MainFormData.currentFile;
+                string preferredScript = ScriptConfigManager.GetVideoConfig(videoPath, "script");
+                int preferredScriptIndex = 0;
+
+                if (!string.IsNullOrWhiteSpace(preferredScript))
+                {
+                    preferredScriptIndex = ScriptHandler.scriptFilesFound.FindIndex(file => file == preferredScript);
+                }
+
+
+                await ScriptHandler.LoadScript(preferredScriptIndex, MainFormData.currentFile);
                 foreach (var multiAxisScript in ScriptHandler.MultiAxisScriptsFound)
                 {
                     if (multiAxisScript.Value.ScriptFiles.Count <= 0) continue;
-                    await ScriptHandler.LoadMultiAxisScript(0, MainFormData.currentFile, multiAxisScript.Key);
+                    string multiAxis = multiAxisScript.Key;
+                    string preferredMultiAxisScript = ScriptConfigManager.GetVideoConfig(videoPath, multiAxis);
+                    int preferredMultiAxisScriptIndex = 0;
+
+                    if (!string.IsNullOrWhiteSpace(preferredMultiAxisScript))
+                    {
+                        preferredMultiAxisScriptIndex = ScriptHandler.FindMatchingScriptFileIndex(multiAxis, preferredMultiAxisScript);
+                    }
+
+                    await ScriptHandler.LoadMultiAxisScript(preferredMultiAxisScriptIndex, MainFormData.currentFile, multiAxis);
                 }
             }
 
@@ -621,14 +653,36 @@ namespace RandomVideoPlayer
 
         private void panelPlayerMPV_MouseWheel(object sender, MouseEventArgs e) //Move through video by Scrolling
         {
+            MainFormData.progressBufferActive = true;
+
             if (e.Delta > 0)
             {
-                SeekForward();
+                bool isShortVideo = SettingsHandler.VideoDuration <= 60; //Smaller seek increments in short videos
+                bool isLongVideo = SettingsHandler.VideoDuration >= 1800; //Bigger seek increments in long video (30 minutes+)
+                bool isNearEnd = SettingsHandler.VideoRemaining > 0 && SettingsHandler.VideoRemaining < 15; //Decrease seek increments at the end to trigger next etc.
+
+                if (isShortVideo)
+                {
+                    MainFormData.cumulativeSeek += isNearEnd ? 1 : 2;
+                }
+                else if (isLongVideo)
+                {
+                    MainFormData.cumulativeSeek += isNearEnd ? 1 : 15;
+                }
+                else
+                {
+                    MainFormData.cumulativeSeek += isNearEnd ? 1 : 5;
+                }
             }
             else if (e.Delta < 0)
             {
-                SeekBackward();
+                MainFormData.cumulativeSeek -= 5;
             }
+            var positionMS = (int)playerMPV.Position.TotalMilliseconds;
+            pbPlayerProgress.Value = positionMS + (MainFormData.cumulativeSeek * 1000);
+
+            seekTimer.Stop();
+            seekTimer.Start();
         }
         private void SeekForward()
         {
@@ -832,6 +886,10 @@ namespace RandomVideoPlayer
                 SettingsHandler.SourceSelected = true;
                 PlayNext();
             }
+            string tempFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
+
+            MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(tempFile);
+            UpdateListEditIcon();
         }
         private void OpenSettingsMenu()
         {
@@ -1231,7 +1289,6 @@ namespace RandomVideoPlayer
                         {
                             scriptItem.Checked = true;
                             isFirstItem = false;
-                            scriptIndex = 0;
                         }
                     }
                     else if (isFirstItem)
@@ -1253,6 +1310,18 @@ namespace RandomVideoPlayer
                     string menuName = kvp.Key;
                     List<string> scripts = kvp.Value.ScriptFiles;
 
+                    string preferredMultiAxisScript = ScriptConfigManager.GetVideoConfig(videoPath, menuName);
+
+                    int preferredMultiAxisScriptIndex = 0;
+
+                    if (!string.IsNullOrWhiteSpace(preferredMultiAxisScript))
+                    {
+                        preferredMultiAxisScriptIndex = ScriptHandler.FindMatchingScriptFileIndex(menuName, preferredMultiAxisScript);
+                    }
+
+
+                    int multiAxisScriptIndex = 0;
+
                     if (scripts.Count > 0)
                     {
                         var menuItem = new ToolStripMenuItem(menuName);
@@ -1267,7 +1336,15 @@ namespace RandomVideoPlayer
                             };
                             scriptItem.Click += MultiScriptItem_Click;
 
-                            if (isFirstItemInMulti)
+                            if (preferredMultiAxisScriptIndex > 0)
+                            {
+                                if (preferredMultiAxisScriptIndex == multiAxisScriptIndex)
+                                {
+                                    scriptItem.Checked = true;
+                                    isFirstItem = false;
+                                }
+                            }
+                            else if (isFirstItemInMulti)
                             {
                                 scriptItem.Checked = true;
                                 isFirstItemInMulti = false;
@@ -1279,6 +1356,7 @@ namespace RandomVideoPlayer
                             }
 
                             menuItem.DropDownItems.Add(scriptItem);
+                            multiAxisScriptIndex++;
                         }
                         anyScriptFound = true;
                     }
@@ -1287,9 +1365,11 @@ namespace RandomVideoPlayer
                 if (anyScriptFound == false)
                 {
                     var placeholder = new ToolStripMenuItem("No scripts found");
-                    ScriptHandler.CurrentlySelectedScript = "";
                     placeholder.Enabled = false;
                     contextMenuScriptFiles.Items.Add(placeholder);
+
+                    ScriptHandler.CurrentlySelectedScript = "";
+                    ScriptHandler.CurrentlySelectedMultiAxisScript = ScriptHandler.CurrentlySelectedMultiAxisScript.ToDictionary(k => k.Key, k => "");
                     return;
                 }
             }
@@ -1383,6 +1463,13 @@ namespace RandomVideoPlayer
             if (string.IsNullOrWhiteSpace(videoPath) || string.IsNullOrWhiteSpace(scriptPath)) return;
 
             ScriptConfigManager.SaveVideoConfig(videoPath, "script", scriptPath);
+            foreach (var entry in ScriptHandler.CurrentlySelectedMultiAxisScript)
+            {
+                if (!string.IsNullOrWhiteSpace(entry.Value))
+                {
+                    ScriptConfigManager.SaveVideoConfig(videoPath, entry.Key, entry.Value);
+                }
+            }
             playerMPV.ShowText("Script config saved");
         }
         private void ScriptItem_Click(object sender, EventArgs e)
@@ -1849,7 +1936,7 @@ namespace RandomVideoPlayer
             {
                 try
                 {
-                    playerMPV.API.Command("vf", "add", VSRFilter);
+                    playerMPV.API.Command("vf", "append", VSRFilter);
                 }
                 catch (Exception ex)
                 {
@@ -2457,6 +2544,37 @@ namespace RandomVideoPlayer
 
             timerAutoPlayNext.Interval = SettingsHandler.AutoPlayTimerValueStartPoint() * 1000;
             timerAutoPlayNext.Elapsed += timerAutoPlayNext_Tick;
+
+            seekTimer = new System.Timers.Timer(MainFormData.seekTimerDelay); // 100ms delay
+            seekTimer.AutoReset = false; // Only trigger once after delay
+            seekTimer.Elapsed += SeekTimer_Elapsed;
+        }
+        private void SeekTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (!playerMPV.IsMediaLoaded) return;
+
+            try
+            {
+                var positionMS = (int)playerMPV.Position.TotalMilliseconds;
+                var newSeekPositionMS = positionMS + (MainFormData.cumulativeSeek * 1000);
+
+                if (newSeekPositionMS < 0)
+                {
+                    newSeekPositionMS = 0;
+                }
+                else if (newSeekPositionMS > MainFormData.durationMS)
+                {
+                    newSeekPositionMS = MainFormData.durationMS;
+                }
+
+
+                playerMPV.SeekAsync(newSeekPositionMS / 1000);
+            }
+            catch (Exception) { } //player is busy
+
+            MainFormData.cumulativeSeek = 0;
+
+            MainFormData.progressBufferActive = false;
         }
         private void timerProgressUpdate_Tick(object sender, EventArgs e) //Updates the ProgressBar to show current Videoposition
         {
@@ -2468,7 +2586,12 @@ namespace RandomVideoPlayer
                     var remainingS = (int)playerMPV.Remaining.TotalSeconds;
 
                     SettingsHandler.VideoRemaining = remainingS;
-                    pbPlayerProgress.Value = positionMS;
+
+                    if (MainFormData.progressBufferActive == false)
+                    {
+                        pbPlayerProgress.Value = positionMS;
+                    }
+
 
                     var _totalSpan = TimeSpan.FromMilliseconds(MainFormData.durationMS);
                     var _currentSpan = TimeSpan.FromMilliseconds(positionMS);
@@ -2483,7 +2606,10 @@ namespace RandomVideoPlayer
                     var remainingS = (int)playerMPV.Remaining.TotalSeconds;
 
                     SettingsHandler.VideoRemaining = remainingS;
-                    pbPlayerProgress.Value = positionMS;
+                    if (MainFormData.progressBufferActive == false)
+                    {
+                        pbPlayerProgress.Value = positionMS;
+                    }
 
                     var _totalSpan = TimeSpan.FromMilliseconds(MainFormData.durationMS);
                     var _currentSpan = TimeSpan.FromMilliseconds(positionMS);
@@ -3029,9 +3155,5 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
-
-
-
-
     }
 }

@@ -9,7 +9,20 @@ namespace RandomVideoPlayer.Model
 {
     public static class ScriptHandler
     {
-        public static string CurrentlySelectedScript = "";
+        public static string CurrentlySelectedScript { get; set; } = "";
+
+        public static Dictionary<string, string> CurrentlySelectedMultiAxisScript = new Dictionary<string, string>
+        {
+            {"Surge",   ""},
+            {"Sway",    ""},
+            {"Suck",    ""},
+            {"Twist",   ""},
+            {"Roll",    ""},
+            {"Pitch",   ""},
+            {"Vib",     ""},
+            {"Pump",    ""},
+            {"Raw",     ""}
+        };
 
         public static List<string> scriptFilesFound = new List<string>();
         private static List<string> multiAxis = new List<string>
@@ -128,7 +141,7 @@ namespace RandomVideoPlayer.Model
             {
                 return;
             }
-            else //if (selectedScriptDirectory != videoFileDirectory)
+            else
             {
                 var scriptLocalPath = Path.Combine(videoFileDirectory, videoFileNameWithoutExt + ".funscript");
                 tempScriptLocalPath = scriptLocalPath;
@@ -151,6 +164,8 @@ namespace RandomVideoPlayer.Model
             if (scripts.Count <= 0) return;
 
             var selectedScript = scripts[index];
+            AddPreferredMultiAxisScriptEntry(Axis, selectedScript);
+
             var selectedScriptNameWithoutExt = Path.GetFileNameWithoutExtension(selectedScript);
             var selectedScriptDirectory = Path.GetDirectoryName(selectedScript);
 
@@ -254,6 +269,28 @@ namespace RandomVideoPlayer.Model
             }
         }
 
+        private static void AddPreferredMultiAxisScriptEntry(string axisName, string preferredMultiAxisScript)
+        {
+            if (CurrentlySelectedMultiAxisScript.ContainsKey(axisName))
+            {
+                CurrentlySelectedMultiAxisScript[axisName] = preferredMultiAxisScript;
+            }
+        }
+
+        public static int FindMatchingScriptFileIndex(string axisKey, string selectedFilePath)
+        {
+            if (multiAxisScriptsFound.TryGetValue(axisKey, out AxisData axisData))
+            {
+                int index = axisData.ScriptFiles.IndexOf(selectedFilePath);
+                if(index == -1)
+                {
+                    return 0;
+                }
+                return index;
+            }
+            return 0;
+        }
+
         private static void UpdateAxisData(string axisName, bool? hasBackup = null, bool? movedWithoutLocal = null, int? selectedIndex = null)
         {
             if (MultiAxisScriptsFound.ContainsKey(axisName))
@@ -276,6 +313,8 @@ namespace RandomVideoPlayer.Model
         private static void ResetScriptList()
         {
             scriptFilesFound.Clear();
+            CurrentlySelectedScript = "";
+            CurrentlySelectedMultiAxisScript = CurrentlySelectedMultiAxisScript.ToDictionary(k => k.Key, k => "");
             foreach (var kvp in MultiAxisScriptsFound)
             {
                 kvp.Value.ScriptFiles.Clear();

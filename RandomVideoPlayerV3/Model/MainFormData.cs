@@ -33,7 +33,9 @@ namespace RandomVideoPlayer.Model
         public static bool presentInCustomList { get; set; } = false;
         public static Size backupSize { get; set; }
         public static bool foundUpdate { get; set; } = false;
-
+        public static bool progressBufferActive { get; set; } = false;
+        public static int cumulativeSeek = 0;
+        public static int seekTimerDelay = 200;
         public static bool cursorHidden { get; set; } = false;
         public static bool TouchEnabled { get; set; } = false;
 

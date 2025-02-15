@@ -44,6 +44,11 @@
             rbAutoNext = new RadioButton();
             rbRepeatVideo = new RadioButton();
             panel4 = new Panel();
+            panel1 = new Panel();
+            btnRTXHelp = new FontAwesome.Sharp.IconButton();
+            label13 = new Label();
+            cbEnableRTXVSR = new CheckBox();
+            label2 = new Label();
             cbReshuffle = new CheckBox();
             label5 = new Label();
             panel5 = new Panel();
@@ -64,16 +69,11 @@
             cbKenBurnsEffect = new CheckBox();
             label8 = new Label();
             label6 = new Label();
-            panel1 = new Panel();
-            label2 = new Label();
-            cbEnableRTXVSR = new CheckBox();
-            label13 = new Label();
-            btnRTXHelp = new FontAwesome.Sharp.IconButton();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             panel4.SuspendLayout();
-            panel5.SuspendLayout();
             panel1.SuspendLayout();
+            panel5.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -256,6 +256,65 @@
             panel4.Name = "panel4";
             panel4.Size = new Size(507, 130);
             panel4.TabIndex = 15;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(btnRTXHelp);
+            panel1.Controls.Add(label13);
+            panel1.Controls.Add(cbEnableRTXVSR);
+            panel1.Controls.Add(label2);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 55);
+            panel1.Margin = new Padding(3, 6, 3, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(507, 75);
+            panel1.TabIndex = 14;
+            // 
+            // btnRTXHelp
+            // 
+            btnRTXHelp.FlatAppearance.BorderSize = 0;
+            btnRTXHelp.FlatStyle = FlatStyle.Flat;
+            btnRTXHelp.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            btnRTXHelp.IconColor = Color.Blue;
+            btnRTXHelp.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnRTXHelp.IconSize = 23;
+            btnRTXHelp.Location = new Point(242, 48);
+            btnRTXHelp.Name = "btnRTXHelp";
+            btnRTXHelp.Size = new Size(23, 23);
+            btnRTXHelp.TabIndex = 4;
+            btnRTXHelp.UseVisualStyleBackColor = true;
+            btnRTXHelp.Click += btnRTXHelp_Click;
+            // 
+            // label13
+            // 
+            label13.Location = new Point(6, 48);
+            label13.Name = "label13";
+            label13.Size = new Size(230, 23);
+            label13.TabIndex = 3;
+            label13.Text = "Needs to be enabled in Nvidia driver, see:";
+            label13.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cbEnableRTXVSR
+            // 
+            cbEnableRTXVSR.AutoSize = true;
+            cbEnableRTXVSR.Location = new Point(3, 26);
+            cbEnableRTXVSR.Name = "cbEnableRTXVSR";
+            cbEnableRTXVSR.Padding = new Padding(6, 0, 0, 0);
+            cbEnableRTXVSR.Size = new Size(112, 19);
+            cbEnableRTXVSR.TabIndex = 2;
+            cbEnableRTXVSR.Text = "Enable RTX VSR";
+            cbEnableRTXVSR.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            label2.Dock = DockStyle.Top;
+            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.Location = new Point(0, 0);
+            label2.Name = "label2";
+            label2.Padding = new Padding(6, 0, 0, 0);
+            label2.Size = new Size(507, 23);
+            label2.TabIndex = 1;
+            label2.Text = "Activate RTX VSR compatibility (Nvidia only)";
             // 
             // cbReshuffle
             // 
@@ -489,65 +548,6 @@
             label6.TabIndex = 0;
             label6.Text = "(Experimental) Ken Burns effect - for static images";
             // 
-            // panel1
-            // 
-            panel1.Controls.Add(btnRTXHelp);
-            panel1.Controls.Add(label13);
-            panel1.Controls.Add(cbEnableRTXVSR);
-            panel1.Controls.Add(label2);
-            panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 55);
-            panel1.Margin = new Padding(3, 6, 3, 3);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(507, 75);
-            panel1.TabIndex = 14;
-            // 
-            // label2
-            // 
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.Location = new Point(0, 0);
-            label2.Name = "label2";
-            label2.Padding = new Padding(6, 0, 0, 0);
-            label2.Size = new Size(507, 23);
-            label2.TabIndex = 1;
-            label2.Text = "Activate RTX VSR compatibility (Nvidia only)";
-            // 
-            // cbEnableRTXVSR
-            // 
-            cbEnableRTXVSR.AutoSize = true;
-            cbEnableRTXVSR.Location = new Point(3, 26);
-            cbEnableRTXVSR.Name = "cbEnableRTXVSR";
-            cbEnableRTXVSR.Padding = new Padding(6, 0, 0, 0);
-            cbEnableRTXVSR.Size = new Size(112, 19);
-            cbEnableRTXVSR.TabIndex = 2;
-            cbEnableRTXVSR.Text = "Enable RTX VSR";
-            cbEnableRTXVSR.UseVisualStyleBackColor = true;
-            // 
-            // label13
-            // 
-            label13.Location = new Point(6, 48);
-            label13.Name = "label13";
-            label13.Size = new Size(230, 23);
-            label13.TabIndex = 3;
-            label13.Text = "Needs to be anabled in Nvidia driver, see:";
-            label13.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // btnRTXHelp
-            // 
-            btnRTXHelp.FlatAppearance.BorderSize = 0;
-            btnRTXHelp.FlatStyle = FlatStyle.Flat;
-            btnRTXHelp.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
-            btnRTXHelp.IconColor = Color.Blue;
-            btnRTXHelp.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnRTXHelp.IconSize = 23;
-            btnRTXHelp.Location = new Point(242, 48);
-            btnRTXHelp.Name = "btnRTXHelp";
-            btnRTXHelp.Size = new Size(23, 23);
-            btnRTXHelp.TabIndex = 4;
-            btnRTXHelp.UseVisualStyleBackColor = true;
-            btnRTXHelp.Click += btnRTXHelp_Click;
-            // 
             // PlayerUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -566,10 +566,10 @@
             panel3.PerformLayout();
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
-            panel5.ResumeLayout(false);
-            panel5.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
             ResumeLayout(false);
         }
 
