@@ -31,7 +31,6 @@ namespace RandomVideoPlayer
 
             DPI.SetScalingFactor();
 
-            //this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             this.DoubleBuffered = true;
 
             hkSettings = HotkeyManager.LoadHotkeySettings();
@@ -116,9 +115,7 @@ namespace RandomVideoPlayer
         }
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            var (result, isChecked) = CustomMessageBox.Show("Choose how to proceed", "You're about to play from the file's current directory, should I also include all subdirectories?", "Always ask? (You can change it in settings)", true);
-
-            //DeleteCurrent();
+            DeleteCurrent();
         }
         private void btnListAdd_Click(object sender, EventArgs e)
         {
@@ -289,14 +286,22 @@ namespace RandomVideoPlayer
                 this.Size = MainFormData.backupSize;
             }
         }
+        private int tempPanelBottomHeight = 75;
         private void ToggleTouchMode()
         {
             MainFormData.TouchEnabled = !MainFormData.TouchEnabled;
 
             if (MainFormData.TouchEnabled)
             {
-                panelBottom.Height = 92; //75
+                tempPanelBottomHeight = panelBottom.Height;
+                panelBottom.Height = 102; //75
                 pbPlayerProgress.Height = 34; //17
+
+                panelMainButtons.Location = new Point(0, pbPlayerProgress.Height);
+                panelControls.Location = new Point(6 + panelMainButtons.Width, pbPlayerProgress.Height + 6);
+                panelExtraButtons.Location = new Point(pbVolume.Location.X - panelExtraButtons.Width - 6, pbPlayerProgress.Height + 6);
+                pbVolume.Location = new Point(panelBottom.Width - pbVolume.Width - 2, pbPlayerProgress.Height + 9);
+
                 btnTouch.IconColor = Color.PaleGreen;
 
                 if (!fR.WindowExclusiveFullscreen)
@@ -310,8 +315,14 @@ namespace RandomVideoPlayer
             }
             else
             {
-                panelBottom.Height = 75;
+                panelBottom.Height = tempPanelBottomHeight;
                 pbPlayerProgress.Height = 17;
+
+                panelMainButtons.Location = new Point(0, pbPlayerProgress.Height);
+                panelControls.Location = new Point(6 + panelMainButtons.Width, pbPlayerProgress.Height + 6);
+                panelExtraButtons.Location = new Point(pbVolume.Location.X - panelExtraButtons.Width - 6, pbPlayerProgress.Height + 6);
+                pbVolume.Location = new Point(panelBottom.Width - pbVolume.Width - 2, pbPlayerProgress.Height + 9);
+
                 btnTouch.IconColor = Color.Black;
 
                 if (fR.WindowExclusiveFullscreen)
@@ -319,6 +330,7 @@ namespace RandomVideoPlayer
                     ToggleExclusiveFullscreen();
                 }
             }
+
         }
         #endregion
 
@@ -3122,9 +3134,9 @@ namespace RandomVideoPlayer
             panelBottom.Height = DPI.GetDivided(panelBottom.Height);
             panelTop.Height = DPI.GetDivided(panelTop.Height);
 
-            panelMainButtons.Size = new Size(DPI.GetDivided(panelMainButtons.Width), DPI.GetDivided(panelMainButtons.Height));
-            panelControls.Size = new Size(DPI.GetDivided(panelControls.Width), DPI.GetDivided(panelControls.Height));
-            panelExtraButtons.Size = new Size(DPI.GetDivided(panelExtraButtons.Width), DPI.GetDivided(panelExtraButtons.Height));
+            panelMainButtons.Size = DPI.GetSizeScaled(panelMainButtons.Size);
+            panelControls.Size = DPI.GetSizeScaled(panelControls.Size);
+            panelExtraButtons.Size = DPI.GetSizeScaled(panelExtraButtons.Size);
 
             pbVolume.Location = new Point(panelBottom.Width - pbVolume.Width - 2, pbPlayerProgress.Height + 9);
 
@@ -3143,18 +3155,18 @@ namespace RandomVideoPlayer
             lblTitleBar.Height = (int)(lblTitleBar.Height / DPI.Scale);
             lblTitleBar.Font = new Font(lblTitleBar.Font.FontFamily, lblTitleBar.Font.Size / DPI.Scale,lblTitleBar.Font.Style);
 
-            btnAudioTrackMenu.Size = new Size(DPI.GetDivided(btnAudioTrackMenu.Width), DPI.GetDivided(btnAudioTrackMenu.Height));
+            btnAudioTrackMenu.Size = DPI.GetSizeScaled(btnAudioTrackMenu.Size);
             btnAudioTrackMenu.Font = new Font(btnAudioTrackMenu.Font.FontFamily, btnAudioTrackMenu.Font.Size / DPI.Scale, btnAudioTrackMenu.Font.Style);
 
-            btnSubtitleMenu.Size = new Size(DPI.GetDivided(btnSubtitleMenu.Width), DPI.GetDivided(btnSubtitleMenu.Height));
+            btnSubtitleMenu.Size = DPI.GetSizeScaled(btnSubtitleMenu.Size);
             btnSubtitleMenu.Font = new Font(btnSubtitleMenu.Font.FontFamily, btnSubtitleMenu.Font.Size / DPI.Scale, btnSubtitleMenu.Font.Style);
 
-            btnScriptMenu.Size = new Size(DPI.GetDivided(btnScriptMenu.Width), DPI.GetDivided(btnScriptMenu.Height));
+            btnScriptMenu.Size = DPI.GetSizeScaled(btnScriptMenu.Size);
             btnScriptMenu.Font = new Font(btnScriptMenu.Font.FontFamily, btnScriptMenu.Font.Size / DPI.Scale,btnScriptMenu.Font.Style);
 
-            btnMinimizeForm.Size = new Size(DPI.GetDivided(btnMinimizeForm.Width), DPI.GetDivided(btnMinimizeForm.Height));
-            btnMaximizeForm.Size = new Size(DPI.GetDivided(btnMaximizeForm.Width), DPI.GetDivided(btnMaximizeForm.Height));
-            btnExitForm.Size = new Size(DPI.GetDivided(btnExitForm.Width), DPI.GetDivided(btnExitForm.Height));
+            btnMinimizeForm.Size = DPI.GetSizeScaled(btnMinimizeForm.Size);
+            btnMaximizeForm.Size = DPI.GetSizeScaled(btnMaximizeForm.Size);
+            btnExitForm.Size = DPI.GetSizeScaled(btnExitForm.Size);
 
             fR.PlayerIsWindowSize(this, panelTop, panelBottom, panelPlayerMPV);
 
