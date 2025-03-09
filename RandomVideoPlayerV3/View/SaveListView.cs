@@ -17,9 +17,14 @@ namespace RandomVideoPlayer.View
         public SaveListView()
         {
             InitializeComponent();
+            UpdateDPIScaling();
+
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
             this.BackColor = Color.PaleGreen;//Border color
+
+            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
+            this.Size = DPI.GetSizeScaled(this.Size);
         }
 
         private void SaveListView_Load(object sender, EventArgs e)
@@ -183,6 +188,38 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(lblEntries, "Amount of files within the list");
         }
 
+        private void UpdateDPIScaling()
+        {
+            lblTitle.Size = DPI.GetSizeScaled(lblTitle.Size);
+            lblTitle.Font = DPI.GetFontScaled(lblTitle.Font);
+
+            lblFiles.Size = DPI.GetSizeScaled(lblFiles.Size);
+            lblFiles.Font = DPI.GetFontScaled(lblFiles.Font);
+            lblFiles.Location = new Point(3, panelTop.Height - lblFiles.Height - 3);
+
+            lblEntries.Size = DPI.GetSizeScaled(lblEntries.Size);
+            lblEntries.Font = DPI.GetFontScaled(lblEntries.Font);
+            lblEntries.Location = new Point(panelTop.Width - lblEntries.Width - 3, panelTop.Height - lblEntries.Height - 3);
+
+            lvListSelect.Font = DPI.GetFontScaled(lvListSelect.Font);
+
+            tbListName.Font = DPI.GetFontScaled(tbListName.Font);
+            tbListName.Location = new Point(3, 6);
+            tbListName.Width = panelTop.Width - 6;
+
+            btnSaveList.Size = DPI.GetSizeScaled(btnSaveList.Size);
+            btnSaveList.Font = DPI.GetFontScaled(btnSaveList.Font);
+            btnSaveList.Location = new Point(3, panelBottom.Height - btnSaveList.Height - 3);
+
+            btnDelete.Size = DPI.GetSizeScaled(btnDelete.Size);
+            btnDelete.Font = DPI.GetFontScaled(btnDelete.Font);
+            btnDelete.Location = new Point((panelBottom.Width / 2) - (btnDelete.Width / 2), panelBottom.Height - btnDelete.Height - 3);
+
+            btnCancel.Size = DPI.GetSizeScaled(btnCancel.Size);
+            btnCancel.Font = DPI.GetFontScaled(btnCancel.Font);
+            btnCancel.Location = new Point(panelBottom.Width - btnCancel.Width - 3, panelBottom.Height - btnCancel.Height - 3);
+        }
+
         #region WndProc Code for clean style of the Form and regaining usabality
         //Resizable Windows Form Spaghetti
         protected override void WndProc(ref Message m)
@@ -255,8 +292,6 @@ namespace RandomVideoPlayer.View
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
         #endregion
-
-
 
     }
 }

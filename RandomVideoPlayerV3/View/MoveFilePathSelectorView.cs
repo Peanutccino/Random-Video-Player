@@ -1,72 +1,121 @@
-﻿
-using RandomVideoPlayer.Functions;
+﻿using RandomVideoPlayer.Functions;
+using RandomVideoPlayer.Model;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RandomVideoPlayer.View
 {
-    public partial class CustomMessageBoxView : Form
+    public partial class MoveFilePathSelectorView : Form
     {
-        FormResize fR = new FormResize();
-        public bool CheckboxChecked { get; private set; }
-        public DialogResult Result { get; private set; }
-
-        public CustomMessageBoxView(string title, string message, string checkboxText, bool checkboxDefaultState)
+        string targetDirectory = "";
+        string initialDirectory = "";
+        private FormResize fR = new FormResize();
+        public MoveFilePathSelectorView()
         {
             InitializeComponent();
 
             UpdateDPIScaling();
 
-            this.Padding = new Padding(fR.BorderSize); //Border size
-            this.BackColor = Color.DeepSkyBlue; //Border color
-
-            this.Text = title;
-            lblInfoText.Text = message;
-            cbOption.Text = checkboxText;
-            cbOption.Checked = checkboxDefaultState;
+            this.Padding = new Padding(fR.BorderSize);//Border size
+            this.BackColor = Color.FromArgb(152, 251, 152);//Border color
         }
 
-        private void btnYes_Click(object sender, EventArgs e)
+        private void MoveFilePathSelectorView_Load(object sender, EventArgs e)
         {
-            CheckboxChecked = cbOption.Checked;
-            Result = DialogResult.Yes;
+            if (!string.IsNullOrWhiteSpace(PathHandler.FileMoveFolderPath))
+            {
+                tbDestinationPath.Text = PathHandler.FileMoveFolderPath;
+                initialDirectory = PathHandler.FileMoveFolderPath;
+            }
+            else if (!string.IsNullOrWhiteSpace(PathHandler.DefaultFolder))
+            {
+                tbDestinationPath.Text = PathHandler.DefaultFolder;
+                initialDirectory = PathHandler.DefaultFolder;
+            }
+
+            this.Size = this.MinimumSize;
+        }
+        private void btnBrowseFolder_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+            folderBrowser.InitialDirectory = initialDirectory;
+            folderBrowser.Description = "Select the folder to move the files to";
+            folderBrowser.UseDescriptionForTitle = true;
+
+            var result = folderBrowser.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                tbDestinationPath.Text = folderBrowser.SelectedPath;
+                targetDirectory = folderBrowser.SelectedPath;
+            }
+        }
+
+        private void btnSavePath_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(targetDirectory))
+            {
+                PathHandler.FileMoveFolderPath = targetDirectory;
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
             this.Close();
         }
 
-        private void btnNo_Click(object sender, EventArgs e)
+        private void btnCloseForm_Click(object sender, EventArgs e)
         {
-            CheckboxChecked = cbOption.Checked;
-            Result = DialogResult.No;
             this.Close();
         }
-
-        private void lblInfoText_MouseDown(object sender, MouseEventArgs e)
+        private void lblTitle_MouseDown(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
-
-        private void CustomMessageBoxView_Resize(object sender, EventArgs e)
+        private void MoveFilePathSelectorView_Resize(object sender, EventArgs e)
         {
             fR.AdjustForm(this);
         }
+
         private void UpdateDPIScaling()
         {
             this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
             this.Size = DPI.GetSizeScaled(this.Size);
 
-            lblInfoText.Size = DPI.GetSizeScaled(lblInfoText.Size);
-            lblInfoText.Font = DPI.GetFontScaled(lblInfoText.Font);
+            panelMain.Size = DPI.GetSizeScaled(panelMain.Size);
 
-            cbOption.Size = DPI.GetSizeScaled(cbOption.Size);
-            cbOption.Font = DPI.GetFontScaled(cbOption.Font);
+            panelTitleBar.Height = DPI.GetDivided(panelTitleBar.Height);
 
-            btnYes.Size = DPI.GetSizeScaled(btnYes.Size);
-            btnYes.Font = DPI.GetFontScaled(btnYes.Font);
-            btnYes.Location = new Point(3, panelBody.Height - btnYes.Height - 3);
+            lblTitle.Font = DPI.GetFontScaled(lblTitle.Font);
 
-            btnNo.Size = DPI.GetSizeScaled(btnNo.Size);
-            btnNo.Font = DPI.GetFontScaled(btnNo.Font);
-            btnNo.Location = new Point(panelBody.Width - btnNo.Width - 3, panelBody.Height - btnNo.Height - 3);
+            btnCloseForm.Size = DPI.GetSizeScaled(btnCloseForm.Size);
+
+            lblDestInfo.Size = DPI.GetSizeScaled(lblDestInfo.Size);
+            lblDestInfo.Font = DPI.GetFontScaled(lblDestInfo.Font);
+
+            tbDestinationPath.Font = DPI.GetFontScaled(tbDestinationPath.Font);
+            tbDestinationPath.Location = new Point(3, lblDestInfo.Location.Y + lblDestInfo.Height);
+            btnBrowseFolder.Size = DPI.GetSizeScaled(btnBrowseFolder.Size);
+            btnBrowseFolder.Location = new Point(panelMain.Width - btnBrowseFolder.Width - 3, tbDestinationPath.Location.Y);
+            tbDestinationPath.Width = panelMain.Width - btnBrowseFolder.Width - 9;
+
+            btnCancel.Size = DPI.GetSizeScaled(btnCancel.Size);
+            btnCancel.Font = DPI.GetFontScaled(btnCancel.Font);
+            btnCancel.Location = new Point(3, panelMain.Height - btnCancel.Height - 9);
+
+            btnSavePath.Size = DPI.GetSizeScaled(btnSavePath.Size);
+            btnSavePath.Font = DPI.GetFontScaled(btnSavePath.Font);
+            btnSavePath.Location = new Point(panelMain.Width - btnSavePath.Width - 3, panelMain.Height - btnSavePath.Height - 9);
         }
 
         #region WndProc Code for clean style of the Form and regaining usabality
@@ -143,5 +192,4 @@ namespace RandomVideoPlayer.View
         #endregion
 
     }
-
 }

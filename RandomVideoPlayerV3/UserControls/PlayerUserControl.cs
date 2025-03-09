@@ -13,11 +13,13 @@ namespace RandomVideoPlayer.UserControls
         public PlayerUserControl(SettingsModel settings)
         {
             InitializeComponent();
+
+            UpdateDPIScaling();
+
             this.settings = settings;
             LoadSettings();
             BindControls();
         }
-
         private void LoadSettings()
         {
             cbShufflePlayer.Checked = settings.ShufflePlaylist;
@@ -40,26 +42,9 @@ namespace RandomVideoPlayer.UserControls
                     break;
             }
 
-            cbToggleZoomEffect.Checked = settings.SelectedAnimations.Contains(0);
-            cbToggleMoveHorizontalEffect.Checked = settings.SelectedAnimations.Contains(1);
-            cbToggleMoveVerticalEffect.Checked = settings.SelectedAnimations.Contains(2);
-
-            cbKenBurnsEffect.Checked = settings.BurnsEffectEnabled;
-            cbFadeEffect.Checked = settings.FadeEffectEnabled;
-
             inputTimerValueStartPoint.Value = settings.AutoPlayTimerValueStartPoint;
             inputTimerValueEndPoint.Value = settings.AutoPlayTimerValueEndPoint;
             cbEnableTimeRange.Checked = settings.AutoPlayTimerRangeEnabled;
-
-
-            inputPanAmountValue.Value = (int)(settings.PanAmount * 10);
-            inputZoomAmountValue.Value = (int)(settings.ZoomAmount * 10);
-
-            comboZoomEffects.DataSource = Enum.GetValues(typeof(EasingMethods));
-            comboZoomEffects.SelectedIndex = settings.ZoomEasingFunction;
-
-            comboPanEffects.DataSource = Enum.GetValues(typeof(EasingMethods));
-            comboPanEffects.SelectedIndex = settings.PanEasingFunction;
 
             UpdateRangeIndicator();
         }
@@ -108,51 +93,6 @@ namespace RandomVideoPlayer.UserControls
                 settings.AutoPlayTimerRangeEnabled = cbEnableTimeRange.Checked;
                 UpdateRangeIndicator();
             };
-
-            cbToggleZoomEffect.CheckedChanged += (s, e) =>
-            {
-                UpdateSelectedAnimations();
-            };
-
-            cbToggleMoveHorizontalEffect.CheckedChanged += (s, e) =>
-            {
-                UpdateSelectedAnimations();
-            };
-
-            cbToggleMoveVerticalEffect.CheckedChanged += (s, e) =>
-            {
-                UpdateSelectedAnimations();
-            };
-
-            cbKenBurnsEffect.CheckedChanged += (s, e) =>
-            {
-                settings.BurnsEffectEnabled = cbKenBurnsEffect.Checked;
-            };
-
-            cbFadeEffect.CheckedChanged += (s, e) =>
-            {
-                settings.FadeEffectEnabled = cbFadeEffect.Checked;
-            };
-
-            inputPanAmountValue.ValueChanged += (s, e) =>
-            {
-                settings.PanAmount = ((double)inputPanAmountValue.Value / 10);
-            };
-
-            inputZoomAmountValue.ValueChanged += (s, e) =>
-            {
-                settings.ZoomAmount = ((double)inputZoomAmountValue.Value / 10);
-            };
-
-            comboZoomEffects.SelectedIndexChanged += (s, e) =>
-            {
-                settings.ZoomEasingFunction = comboZoomEffects.SelectedIndex;
-            };
-
-            comboPanEffects.SelectedIndexChanged += (s, e) =>
-            {
-                settings.PanEasingFunction = comboPanEffects.SelectedIndex;
-            };
         }
 
         private void RadioButton_CheckedChanged(object? sender, EventArgs e)
@@ -176,18 +116,6 @@ namespace RandomVideoPlayer.UserControls
             }
         }
 
-        private void btnRestoreDefaults_Click(object sender, EventArgs e)
-        {
-            settings.ZoomAmount = 0.5;
-            settings.PanAmount = 0.2;
-
-            inputZoomAmountValue.Value = 5;
-            inputPanAmountValue.Value = 2;
-
-            comboZoomEffects.SelectedIndex = 0;
-            comboPanEffects.SelectedIndex = 0;
-        }
-
         private void UpdateRangeIndicator()
         {
             if (cbEnableTimeRange.Checked)
@@ -203,17 +131,6 @@ namespace RandomVideoPlayer.UserControls
                 inputTimerValueEndPoint.Visible = false;
             }
         }
-
-        private void UpdateSelectedAnimations()
-        {
-            var checkedEffects = new List<int>();
-            if (cbToggleZoomEffect.Checked) checkedEffects.Add(0);
-            if (cbToggleMoveHorizontalEffect.Checked) checkedEffects.Add(1);
-            if (cbToggleMoveVerticalEffect.Checked) checkedEffects.Add(2);
-
-            settings.SelectedAnimations = checkedEffects;
-        }
-
         private void TimeRangeValidation(object sender)
         {
             int minValue = (int)inputTimerValueStartPoint.Value;
@@ -237,10 +154,75 @@ namespace RandomVideoPlayer.UserControls
             }
 
         }
-
         private void btnRTXHelp_Click(object sender, EventArgs e)
         {
             Process.Start(new ProcessStartInfo("https://nvidia.custhelp.com/app/answers/detail/a_id/5448/~/rtx-video-faq") { UseShellExecute = true });
+        }
+
+        private void UpdateDPIScaling()
+        {
+            this.Size = DPI.GetSizeScaled(this.Size);
+
+            panel1.Size = DPI.GetSizeScaled(panel1.Size);
+            panel2.Size = DPI.GetSizeScaled(panel2.Size);
+            panel3.Size = DPI.GetSizeScaled(panel3.Size);
+            panel4.Size = DPI.GetSizeScaled(panel4.Size);
+            flowLayoutPanel1.Size = DPI.GetSizeScaled(flowLayoutPanel1.Size);
+            flowLayoutPanel2.Size = DPI.GetSizeScaled(flowLayoutPanel2.Size);
+            flowLayoutPanel3.Size = DPI.GetSizeScaled(flowLayoutPanel3.Size);
+
+            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
+            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
+
+            lbl1.Size = DPI.GetSizeScaled(lbl1.Size);
+            lbl1.Font = DPI.GetFontScaled(lbl1.Font);
+            lbl2.Size = DPI.GetSizeScaled(lbl2.Size);
+            lbl2.Font = DPI.GetFontScaled(lbl2.Font);
+            lbl3.Size = DPI.GetSizeScaled(lbl3.Size);
+            lbl3.Font = DPI.GetFontScaled(lbl3.Font);
+            lbl4.Size = DPI.GetSizeScaled(lbl4.Size);
+            lbl4.Font = DPI.GetFontScaled(lbl4.Font);
+            lbl5.Size = DPI.GetSizeScaled(lbl5.Size);
+            lbl5.Font = DPI.GetFontScaled(lbl5.Font);
+
+            cbLeftMousePause.Size = DPI.GetSizeScaled(cbLeftMousePause.Size);
+            cbLeftMousePause.Font = DPI.GetFontScaled(cbLeftMousePause.Font);
+
+            rbRepeatVideo.Size = DPI.GetSizeScaled(rbRepeatVideo.Size);
+            rbRepeatVideo.Font = DPI.GetFontScaled(rbRepeatVideo.Font);
+
+            rbAutoNext.Size = DPI.GetSizeScaled(rbAutoNext.Size);
+            rbAutoNext.Font = DPI.GetFontScaled(rbAutoNext.Font);
+
+            rbAutoTimer.Size = DPI.GetSizeScaled(rbAutoTimer.Size);
+            rbAutoTimer.Font = DPI.GetFontScaled(rbAutoTimer.Font);
+
+            inputTimerValueStartPoint.Size = DPI.GetSizeScaled(inputTimerValueStartPoint.Size);
+            inputTimerValueStartPoint.Font = DPI.GetFontScaled(inputTimerValueStartPoint.Font);
+
+            lblBetweenTime.Size = DPI.GetSizeScaled(lblBetweenTime.Size);
+            lblBetweenTime.Font = DPI.GetFontScaled(lblBetweenTime.Font);
+
+            inputTimerValueEndPoint.Size = DPI.GetSizeScaled(inputTimerValueEndPoint.Size);
+            inputTimerValueEndPoint.Font = DPI.GetFontScaled(inputTimerValueEndPoint.Font);
+
+            lblAfterTime.Size = DPI.GetSizeScaled(lblAfterTime.Size);
+            lblAfterTime.Font = DPI.GetFontScaled(lblAfterTime.Font);
+
+            cbEnableTimeRange.Size = DPI.GetSizeScaled(cbEnableTimeRange.Size);
+            cbEnableTimeRange.Font = DPI.GetFontScaled(cbEnableTimeRange.Font);
+
+            cbShufflePlayer.Size = DPI.GetSizeScaled(cbShufflePlayer.Size);
+            cbShufflePlayer.Font = DPI.GetFontScaled(cbShufflePlayer.Font);
+
+            cbReshuffle.Size = DPI.GetSizeScaled(cbReshuffle.Size);
+            cbReshuffle.Font = DPI.GetFontScaled(cbReshuffle.Font);
+
+            cbEnableRTXVSR.Size = DPI.GetSizeScaled(cbEnableRTXVSR.Size);
+            cbEnableRTXVSR.Font = DPI.GetFontScaled(cbEnableRTXVSR.Font);
+
+            btnRTXHelp.Size = DPI.GetSizeScaled(btnRTXHelp.Size);
+            btnRTXHelp.Font = DPI.GetFontScaled(btnRTXHelp.Font);
         }
     }
 }

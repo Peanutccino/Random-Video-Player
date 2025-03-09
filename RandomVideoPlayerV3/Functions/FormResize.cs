@@ -88,10 +88,12 @@ namespace RandomVideoPlayer.Functions
             f.WindowState = FormWindowState.Minimized;
         }
 
-        private void PlayerIsWindowSize(Form f, Panel top, Panel bottom, Panel player) //Logic to align panels automatically in window mode
+        public void PlayerIsWindowSize(Form f, Panel top, Panel bottom, Panel player) //Logic to align panels automatically in window mode
         {
+            player.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
             player.Location = new Point(_borderSize, top.Height + _borderSize);
             player.Size = new Size(f.Width - (_borderSize * 2), f.Height - top.Height - bottom.Height - (_borderSize * 2));
+            
 
             bottom.Dock = DockStyle.Bottom;
             bottom.Location = new Point(0, 286);
@@ -122,6 +124,7 @@ namespace RandomVideoPlayer.Functions
                 }
             }
 
+            player.Anchor = AnchorStyles.None;
             player.Location = new Point(0, 0); 
             player.Size = new Size(f.Width, f.Height);
 
@@ -154,7 +157,7 @@ namespace RandomVideoPlayer.Functions
                 f.WindowState = FormWindowState.Maximized;
                 var currentScreen = Screen.FromControl(f);
                 var bounds = currentScreen.Bounds;
-                f.Bounds = bounds;                
+                f.Bounds = bounds;
                 PlayerIsFullscreenSize(f, top, bottom, player);
             }
         }

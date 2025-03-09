@@ -35,14 +35,14 @@
             lblTitle = new Label();
             btnLoadList = new FontAwesome.Sharp.IconButton();
             btnCancel = new FontAwesome.Sharp.IconButton();
-            panel1 = new Panel();
+            panelTop = new Panel();
             lblFiles = new Label();
             lblEntries = new Label();
-            panel2 = new Panel();
+            panelBottom = new Panel();
             btnDelete = new FontAwesome.Sharp.IconButton();
             toolTipInfo = new ToolTip(components);
-            panel1.SuspendLayout();
-            panel2.SuspendLayout();
+            panelTop.SuspendLayout();
+            panelBottom.SuspendLayout();
             SuspendLayout();
             // 
             // lvListSelect
@@ -119,17 +119,17 @@
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
-            // panel1
+            // panelTop
             // 
-            panel1.BackColor = Color.Honeydew;
-            panel1.Controls.Add(lblFiles);
-            panel1.Controls.Add(lblEntries);
-            panel1.Controls.Add(lblTitle);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(359, 70);
-            panel1.TabIndex = 4;
+            panelTop.BackColor = Color.Honeydew;
+            panelTop.Controls.Add(lblFiles);
+            panelTop.Controls.Add(lblEntries);
+            panelTop.Controls.Add(lblTitle);
+            panelTop.Dock = DockStyle.Top;
+            panelTop.Location = new Point(0, 0);
+            panelTop.Name = "panelTop";
+            panelTop.Size = new Size(359, 70);
+            panelTop.TabIndex = 4;
             // 
             // lblFiles
             // 
@@ -153,17 +153,17 @@
             lblEntries.Text = "Entries";
             lblEntries.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // panel2
+            // panelBottom
             // 
-            panel2.BackColor = Color.Honeydew;
-            panel2.Controls.Add(btnDelete);
-            panel2.Controls.Add(btnLoadList);
-            panel2.Controls.Add(btnCancel);
-            panel2.Dock = DockStyle.Bottom;
-            panel2.Location = new Point(0, 331);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(359, 50);
-            panel2.TabIndex = 5;
+            panelBottom.BackColor = Color.Honeydew;
+            panelBottom.Controls.Add(btnDelete);
+            panelBottom.Controls.Add(btnLoadList);
+            panelBottom.Controls.Add(btnCancel);
+            panelBottom.Dock = DockStyle.Bottom;
+            panelBottom.Location = new Point(0, 331);
+            panelBottom.Name = "panelBottom";
+            panelBottom.Size = new Size(359, 50);
+            panelBottom.TabIndex = 5;
             // 
             // btnDelete
             // 
@@ -188,8 +188,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(359, 381);
             Controls.Add(lvListSelect);
-            Controls.Add(panel2);
-            Controls.Add(panel1);
+            Controls.Add(panelBottom);
+            Controls.Add(panelTop);
             KeyPreview = true;
             MinimumSize = new Size(375, 420);
             Name = "LoadListView";
@@ -197,8 +197,8 @@
             Load += LoadListView_Load;
             KeyDown += LoadListView_KeyDown;
             Resize += LoadListView_Resize;
-            panel1.ResumeLayout(false);
-            panel2.ResumeLayout(false);
+            panelTop.ResumeLayout(false);
+            panelBottom.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -210,8 +210,8 @@
         private FontAwesome.Sharp.IconButton btnCancel;
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
-        private Panel panel1;
-        private Panel panel2;
+        private Panel panelTop;
+        private Panel panelBottom;
         private Label lblEntries;
         private Label lblFiles;
         private ToolTip toolTipInfo;

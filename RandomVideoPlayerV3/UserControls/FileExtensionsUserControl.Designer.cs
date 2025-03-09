@@ -30,45 +30,49 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FileExtensionsUserControl));
-            label1 = new Label();
+            lblHeader = new Label();
             label4 = new Label();
-            label5 = new Label();
+            lbl1 = new Label();
             flowPanelVideoCheckboxes = new FlowLayoutPanel();
             btnSelectVideoExt = new FontAwesome.Sharp.IconButton();
             btnDeselectVideoExt = new FontAwesome.Sharp.IconButton();
             panelVideoExtensionContainer = new Panel();
-            label6 = new Label();
+            lbl2 = new Label();
             panelImageExtensionContainer = new Panel();
             btnDeselectImageExt = new FontAwesome.Sharp.IconButton();
             btnSelectImageExt = new FontAwesome.Sharp.IconButton();
             flowPanelImageCheckboxes = new FlowLayoutPanel();
-            cbFilterApply = new CheckBox();
             cbEnableScriptFilter = new Controls.RoundedImageCheckBox();
             cbEnableImageFilter = new Controls.RoundedImageCheckBox();
             cbEnableVideoFilter = new Controls.RoundedImageCheckBox();
             panel1 = new Panel();
-            label2 = new Label();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            lbl3 = new Label();
             toolTipInfo = new ToolTip(components);
-            label3 = new Label();
+            lbl4 = new Label();
             panel2 = new Panel();
-            rbDateModified = new RadioButton();
-            rbDateCreated = new RadioButton();
+            flowLayoutPanel2 = new FlowLayoutPanel();
+            rbDateCreated = new Controls.CustomRadioButton();
+            rbDateModified = new Controls.CustomRadioButton();
+            cbFilterApply = new Controls.CustomCheckBox();
             panelVideoExtensionContainer.SuspendLayout();
             panelImageExtensionContainer.SuspendLayout();
             panel1.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
             panel2.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
-            // label1
+            // lblHeader
             // 
-            label1.Dock = DockStyle.Top;
-            label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.ForeColor = Color.Indigo;
-            label1.Location = new Point(0, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(500, 55);
-            label1.TabIndex = 1;
-            label1.Text = "Filter Extensions";
+            lblHeader.Dock = DockStyle.Top;
+            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.ForeColor = Color.Indigo;
+            lblHeader.Location = new Point(0, 0);
+            lblHeader.Name = "lblHeader";
+            lblHeader.Size = new Size(500, 55);
+            lblHeader.TabIndex = 1;
+            lblHeader.Text = "Filter Extensions";
             // 
             // label4
             // 
@@ -81,20 +85,20 @@
             label4.TabIndex = 6;
             label4.Text = "Choose which file types will be used for playback:";
             // 
-            // label5
+            // lbl1
             // 
-            label5.Dock = DockStyle.Top;
-            label5.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label5.Location = new Point(0, 81);
-            label5.Name = "label5";
-            label5.Padding = new Padding(6, 0, 0, 0);
-            label5.Size = new Size(500, 23);
-            label5.TabIndex = 7;
-            label5.Text = "Video extensions:";
+            lbl1.Dock = DockStyle.Top;
+            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl1.Location = new Point(0, 81);
+            lbl1.Name = "lbl1";
+            lbl1.Padding = new Padding(6, 0, 0, 0);
+            lbl1.Size = new Size(500, 23);
+            lbl1.TabIndex = 7;
+            lbl1.Text = "Video extensions:";
             // 
             // flowPanelVideoCheckboxes
             // 
-            flowPanelVideoCheckboxes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            flowPanelVideoCheckboxes.Dock = DockStyle.Left;
             flowPanelVideoCheckboxes.Location = new Point(0, 0);
             flowPanelVideoCheckboxes.Margin = new Padding(3, 3, 12, 3);
             flowPanelVideoCheckboxes.Name = "flowPanelVideoCheckboxes";
@@ -147,16 +151,16 @@
             panelVideoExtensionContainer.Size = new Size(500, 96);
             panelVideoExtensionContainer.TabIndex = 13;
             // 
-            // label6
+            // lbl2
             // 
-            label6.Dock = DockStyle.Top;
-            label6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label6.Location = new Point(0, 200);
-            label6.Name = "label6";
-            label6.Padding = new Padding(6, 0, 0, 0);
-            label6.Size = new Size(500, 23);
-            label6.TabIndex = 14;
-            label6.Text = "Image extensions:";
+            lbl2.Dock = DockStyle.Top;
+            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl2.Location = new Point(0, 200);
+            lbl2.Name = "lbl2";
+            lbl2.Padding = new Padding(6, 0, 0, 0);
+            lbl2.Size = new Size(500, 23);
+            lbl2.TabIndex = 14;
+            lbl2.Text = "Image extensions:";
             // 
             // panelImageExtensionContainer
             // 
@@ -205,25 +209,13 @@
             // 
             // flowPanelImageCheckboxes
             // 
-            flowPanelImageCheckboxes.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            flowPanelImageCheckboxes.Dock = DockStyle.Left;
             flowPanelImageCheckboxes.Location = new Point(0, 0);
             flowPanelImageCheckboxes.Margin = new Padding(3, 3, 12, 3);
             flowPanelImageCheckboxes.Name = "flowPanelImageCheckboxes";
             flowPanelImageCheckboxes.Padding = new Padding(6, 4, 0, 0);
             flowPanelImageCheckboxes.Size = new Size(380, 96);
             flowPanelImageCheckboxes.TabIndex = 0;
-            // 
-            // cbFilterApply
-            // 
-            cbFilterApply.AutoSize = true;
-            cbFilterApply.Dock = DockStyle.Top;
-            cbFilterApply.Location = new Point(0, 319);
-            cbFilterApply.Name = "cbFilterApply";
-            cbFilterApply.Padding = new Padding(9, 6, 0, 8);
-            cbFilterApply.Size = new Size(500, 33);
-            cbFilterApply.TabIndex = 16;
-            cbFilterApply.Text = "Also apply filter to custom list playback";
-            cbFilterApply.UseVisualStyleBackColor = true;
             // 
             // cbEnableScriptFilter
             // 
@@ -233,7 +225,7 @@
             cbEnableScriptFilter.FlatAppearance.BorderSize = 0;
             cbEnableScriptFilter.FlatStyle = FlatStyle.Flat;
             cbEnableScriptFilter.Image = (Image)resources.GetObject("cbEnableScriptFilter.Image");
-            cbEnableScriptFilter.Location = new Point(86, 28);
+            cbEnableScriptFilter.Location = new Point(81, 3);
             cbEnableScriptFilter.Name = "cbEnableScriptFilter";
             cbEnableScriptFilter.Size = new Size(30, 30);
             cbEnableScriptFilter.TabIndex = 17;
@@ -249,7 +241,7 @@
             cbEnableImageFilter.FlatAppearance.BorderSize = 0;
             cbEnableImageFilter.FlatStyle = FlatStyle.Flat;
             cbEnableImageFilter.Image = (Image)resources.GetObject("cbEnableImageFilter.Image");
-            cbEnableImageFilter.Location = new Point(50, 28);
+            cbEnableImageFilter.Location = new Point(45, 3);
             cbEnableImageFilter.Name = "cbEnableImageFilter";
             cbEnableImageFilter.Size = new Size(30, 30);
             cbEnableImageFilter.TabIndex = 18;
@@ -265,7 +257,7 @@
             cbEnableVideoFilter.FlatAppearance.BorderSize = 0;
             cbEnableVideoFilter.FlatStyle = FlatStyle.Flat;
             cbEnableVideoFilter.Image = (Image)resources.GetObject("cbEnableVideoFilter.Image");
-            cbEnableVideoFilter.Location = new Point(14, 28);
+            cbEnableVideoFilter.Location = new Point(9, 3);
             cbEnableVideoFilter.Name = "cbEnableVideoFilter";
             cbEnableVideoFilter.Size = new Size(30, 30);
             cbEnableVideoFilter.TabIndex = 19;
@@ -275,121 +267,161 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(cbEnableScriptFilter);
-            panel1.Controls.Add(cbEnableVideoFilter);
-            panel1.Controls.Add(cbEnableImageFilter);
+            panel1.Controls.Add(flowLayoutPanel1);
+            panel1.Controls.Add(lbl3);
             panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 352);
+            panel1.Location = new Point(0, 353);
             panel1.Name = "panel1";
             panel1.Size = new Size(500, 72);
             panel1.TabIndex = 20;
             // 
-            // label2
+            // flowLayoutPanel1
             // 
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.Location = new Point(0, 0);
-            label2.Name = "label2";
-            label2.Padding = new Padding(6, 0, 0, 0);
-            label2.Size = new Size(500, 25);
-            label2.TabIndex = 20;
-            label2.Text = "Toggle which filters to use:";
+            flowLayoutPanel1.Controls.Add(cbEnableVideoFilter);
+            flowLayoutPanel1.Controls.Add(cbEnableImageFilter);
+            flowLayoutPanel1.Controls.Add(cbEnableScriptFilter);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(0, 25);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Padding = new Padding(6, 0, 0, 0);
+            flowLayoutPanel1.Size = new Size(500, 47);
+            flowLayoutPanel1.TabIndex = 21;
             // 
-            // label3
+            // lbl3
             // 
-            label3.Dock = DockStyle.Top;
-            label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.Location = new Point(0, 424);
-            label3.Name = "label3";
-            label3.Padding = new Padding(6, 0, 0, 0);
-            label3.Size = new Size(500, 18);
-            label3.TabIndex = 21;
-            label3.Text = "Change the behavior of the recent filter:";
+            lbl3.Dock = DockStyle.Top;
+            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl3.Location = new Point(0, 0);
+            lbl3.Name = "lbl3";
+            lbl3.Padding = new Padding(6, 0, 0, 0);
+            lbl3.Size = new Size(500, 25);
+            lbl3.TabIndex = 20;
+            lbl3.Text = "Toggle which filters to use:";
+            // 
+            // lbl4
+            // 
+            lbl4.Dock = DockStyle.Top;
+            lbl4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl4.Location = new Point(0, 425);
+            lbl4.Name = "lbl4";
+            lbl4.Padding = new Padding(6, 0, 0, 0);
+            lbl4.Size = new Size(500, 18);
+            lbl4.TabIndex = 21;
+            lbl4.Text = "Change the behavior of the recent filter:";
             // 
             // panel2
             // 
-            panel2.Controls.Add(rbDateModified);
-            panel2.Controls.Add(rbDateCreated);
+            panel2.Controls.Add(flowLayoutPanel2);
             panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(0, 442);
+            panel2.Location = new Point(0, 443);
             panel2.Name = "panel2";
             panel2.Size = new Size(500, 41);
             panel2.TabIndex = 22;
             // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.Controls.Add(rbDateCreated);
+            flowLayoutPanel2.Controls.Add(rbDateModified);
+            flowLayoutPanel2.Dock = DockStyle.Fill;
+            flowLayoutPanel2.Location = new Point(0, 0);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Padding = new Padding(6, 0, 0, 0);
+            flowLayoutPanel2.Size = new Size(500, 41);
+            flowLayoutPanel2.TabIndex = 2;
+            // 
+            // rbDateCreated
+            // 
+            rbDateCreated.CircleSize = 12;
+            rbDateCreated.HoverColor = Color.DeepSkyBlue;
+            rbDateCreated.Location = new Point(9, 3);
+            rbDateCreated.Name = "rbDateCreated";
+            rbDateCreated.PaddingLeft = 0;
+            rbDateCreated.Size = new Size(151, 19);
+            rbDateCreated.TabIndex = 24;
+            rbDateCreated.TabStop = true;
+            rbDateCreated.Text = "Sort by date created";
+            rbDateCreated.UseVisualStyleBackColor = true;
+            // 
             // rbDateModified
             // 
-            rbDateModified.AutoSize = true;
-            rbDateModified.Location = new Point(162, 3);
-            rbDateModified.Margin = new Padding(20, 3, 3, 3);
+            rbDateModified.CircleSize = 12;
+            rbDateModified.HoverColor = Color.DeepSkyBlue;
+            rbDateModified.Location = new Point(166, 3);
             rbDateModified.Name = "rbDateModified";
-            rbDateModified.Size = new Size(139, 19);
-            rbDateModified.TabIndex = 1;
+            rbDateModified.PaddingLeft = 0;
+            rbDateModified.Size = new Size(162, 19);
+            rbDateModified.TabIndex = 25;
             rbDateModified.TabStop = true;
             rbDateModified.Text = "Sort by date modified";
             rbDateModified.UseVisualStyleBackColor = true;
             // 
-            // rbDateCreated
+            // cbFilterApply
             // 
-            rbDateCreated.AutoSize = true;
-            rbDateCreated.Location = new Point(3, 3);
-            rbDateCreated.Name = "rbDateCreated";
-            rbDateCreated.Padding = new Padding(6, 0, 0, 0);
-            rbDateCreated.Size = new Size(136, 19);
-            rbDateCreated.TabIndex = 0;
-            rbDateCreated.TabStop = true;
-            rbDateCreated.Text = "Sort by date created";
-            rbDateCreated.UseVisualStyleBackColor = true;
+            cbFilterApply.AutoSize = true;
+            cbFilterApply.BoxSize = 13;
+            cbFilterApply.Dock = DockStyle.Top;
+            cbFilterApply.HoverColor = Color.DeepSkyBlue;
+            cbFilterApply.Location = new Point(0, 319);
+            cbFilterApply.Name = "cbFilterApply";
+            cbFilterApply.Padding = new Padding(3, 3, 3, 12);
+            cbFilterApply.PaddingLeft = 12;
+            cbFilterApply.Size = new Size(500, 34);
+            cbFilterApply.TabIndex = 23;
+            cbFilterApply.Text = "Also apply filter to custom list playback";
+            cbFilterApply.UseVisualStyleBackColor = true;
             // 
             // FileExtensionsUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panel2);
-            Controls.Add(label3);
+            Controls.Add(lbl4);
             Controls.Add(panel1);
             Controls.Add(cbFilterApply);
             Controls.Add(panelImageExtensionContainer);
-            Controls.Add(label6);
+            Controls.Add(lbl2);
             Controls.Add(panelVideoExtensionContainer);
-            Controls.Add(label5);
+            Controls.Add(lbl1);
             Controls.Add(label4);
-            Controls.Add(label1);
+            Controls.Add(lblHeader);
             Name = "FileExtensionsUserControl";
             Size = new Size(500, 542);
             panelVideoExtensionContainer.ResumeLayout(false);
             panelImageExtensionContainer.ResumeLayout(false);
             panel1.ResumeLayout(false);
+            flowLayoutPanel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            flowLayoutPanel2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Label label1;
+        private Label lblHeader;
         private Label label4;
-        private Label label5;
+        private Label lbl1;
         private FlowLayoutPanel flowPanelVideoCheckboxes;
         private FontAwesome.Sharp.IconButton btnSelectVideoExt;
         private FontAwesome.Sharp.IconButton btnDeselectVideoExt;
         private Panel panelVideoExtensionContainer;
-        private Label label6;
+        private Label lbl2;
         private Panel panelImageExtensionContainer;
         private FontAwesome.Sharp.IconButton btnDeselectImageExt;
         private FontAwesome.Sharp.IconButton btnSelectImageExt;
         private FlowLayoutPanel flowPanelImageCheckboxes;
-        private CheckBox cbFilterApply;
         private Controls.RoundedImageCheckBox cbEnableScriptFilter;
         private Controls.RoundedImageCheckBox cbEnableImageFilter;
         private Controls.RoundedImageCheckBox cbEnableVideoFilter;
         private Panel panel1;
-        private Label label2;
+        private Label lbl3;
         private ToolTip toolTipInfo;
-        private Label label3;
+        private Label lbl4;
         private Panel panel2;
-        private RadioButton rbDateModified;
-        private RadioButton rbDateCreated;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private FlowLayoutPanel flowLayoutPanel2;
+        private Controls.CustomCheckBox cbFilterApply;
+        private Controls.CustomRadioButton rbDateCreated;
+        private Controls.CustomRadioButton rbDateModified;
     }
 }

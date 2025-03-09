@@ -1,4 +1,5 @@
-﻿using RandomVideoPlayer.Model;
+﻿using RandomVideoPlayer.Functions;
+using RandomVideoPlayer.Model;
 
 
 namespace RandomVideoPlayer.UserControls
@@ -9,6 +10,9 @@ namespace RandomVideoPlayer.UserControls
         public SyncUserControl(SettingsModel settings)
         {
             InitializeComponent();
+
+            UpdateDPIScaling();
+
             this.settings = settings;
 
             BindControls();
@@ -136,6 +140,56 @@ namespace RandomVideoPlayer.UserControls
             toolTipInfo.SetToolTip(btnItemUp, "Move the selected folder up");
             toolTipInfo.SetToolTip(btnItemDown, "Move the selected folder down");
             toolTipInfo.SetToolTip(btnAddLocal, "Add the local placeholder to the list");
+        }
+        private void UpdateDPIScaling()
+        {
+            this.Size = DPI.GetSizeScaled(this.Size);
+            panelMain.Size = DPI.GetSizeScaled(panelMain.Size);
+            panelDirectories.Size = DPI.GetSizeScaled(panelDirectories.Size);
+            panel2.Size = DPI.GetSizeScaled(panel2.Size);
+            flowLayoutPanel1.Size = DPI.GetSizeScaled(flowLayoutPanel1.Size);
+            flowLayoutPanel2.Size = DPI.GetSizeScaled(flowLayoutPanel2.Size);
+
+            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
+            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
+
+            lbl1.Size = DPI.GetSizeScaled(lbl1.Size);
+            lbl1.Font = DPI.GetFontScaled(lbl1.Font);
+            lbl2.Size = DPI.GetSizeScaled(lbl2.Size);
+            lbl2.Font = DPI.GetFontScaled(lbl2.Font);
+            lbl3.Size = DPI.GetSizeScaled(lbl3.Size);
+            lbl3.Font = DPI.GetFontScaled(lbl3.Font);
+            lbl4.Size = DPI.GetSizeScaled(lbl4.Size);
+            lbl4.Font = DPI.GetFontScaled(lbl4.Font);
+            lbl5.Size = DPI.GetSizeScaled(lbl5.Size);
+            lbl5.Font = DPI.GetFontScaled(lbl5.Font);
+            lbl6.Size = DPI.GetSizeScaled(lbl6.Size);
+            lbl6.Font = DPI.GetFontScaled(lbl6.Font);
+
+            cbTimeCodeServer.Size = DPI.GetSizeScaled(cbTimeCodeServer.Size);
+            cbTimeCodeServer.Font = DPI.GetFontScaled(cbTimeCodeServer.Font);
+            cbTimeCodeServer.Location = new Point((panelMain.Width / 2) - cbTimeCodeServer.Width - 3, 8);
+            cbScriptGraph.Size = DPI.GetSizeScaled(cbScriptGraph.Size);
+            cbScriptGraph.Font = DPI.GetFontScaled(cbScriptGraph.Font);
+            cbScriptGraph.Location = new Point((panelMain.Width / 2) + 3, 8);
+
+            lvDirectories.Size = DPI.GetSizeScaled(lvDirectories.Size);
+            lvDirectories.Font = DPI.GetFontScaled(lvDirectories.Font);
+
+            btnAddFolder.Size = DPI.GetSizeScaled(btnAddFolder.Size);
+            btnDeleteFolder.Size = DPI.GetSizeScaled(btnDeleteFolder.Size);
+            btnItemUp.Size = DPI.GetSizeScaled(btnItemUp.Size);
+            btnItemDown.Size = DPI.GetSizeScaled(btnItemDown.Size);
+            btnAddLocal.Size = DPI.GetSizeScaled(btnAddLocal.Size);
+
+            cbShowScriptPath.Size = DPI.GetSizeScaled(cbShowScriptPath.Size);
+            cbShowScriptPath.Font = DPI.GetFontScaled(cbShowScriptPath.Font);
+            cbHandleMultiAxis.Size = DPI.GetSizeScaled(cbHandleMultiAxis.Size);
+            cbHandleMultiAxis.Font = DPI.GetFontScaled(cbHandleMultiAxis.Font);
+            cbUsingScriptPlayer.Size = DPI.GetSizeScaled(cbUsingScriptPlayer.Size);
+            cbUsingScriptPlayer.Font = DPI.GetFontScaled(cbUsingScriptPlayer.Font);
+            cbIncludeSubdirectoriesForScriptLoad.Size = DPI.GetSizeScaled(cbIncludeSubdirectoriesForScriptLoad.Size);
+            cbIncludeSubdirectoriesForScriptLoad.Font = DPI.GetFontScaled(cbIncludeSubdirectoriesForScriptLoad.Font);
         }
     }
 }

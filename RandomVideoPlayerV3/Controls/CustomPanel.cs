@@ -22,7 +22,7 @@ namespace RandomVideoPlayer.Controls
             {
                 topRightOffset = value;
                 UpdateRegion();
-                Invalidate(); // Redraw the control
+                Invalidate(); 
             }
         }
         [Browsable(true)]
@@ -35,7 +35,7 @@ namespace RandomVideoPlayer.Controls
             {
                 bottomRightXOffset = value;
                 UpdateRegion();
-                Invalidate(); // Redraw the control
+                Invalidate(); 
             }
         }
 
@@ -49,7 +49,7 @@ namespace RandomVideoPlayer.Controls
             {
                 bottomRightOffset = value;
                 UpdateRegion();
-                Invalidate(); // Redraw the control
+                Invalidate(); 
             }
         }
         [Browsable(true)]
@@ -62,7 +62,7 @@ namespace RandomVideoPlayer.Controls
             {
                 topLeftXOffset = value;
                 UpdateRegion();
-                Invalidate(); // Redraw the control
+                Invalidate(); 
             }
         }
         [Browsable(true)]
@@ -75,14 +75,14 @@ namespace RandomVideoPlayer.Controls
             {
                 topRightXOffset = value;
                 UpdateRegion();
-                Invalidate(); // Redraw the control
+                Invalidate(); 
             }
         }
 
         public CustomPanel()
         {
-            this.BackColor = Color.Blue; // Default color, can be changed in designer
-            this.ResizeRedraw = true; // Ensures the control is redrawn when resized
+            this.BackColor = Color.Blue; 
+            this.ResizeRedraw = true; 
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -92,21 +92,18 @@ namespace RandomVideoPlayer.Controls
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            // Define the points for the custom shape (trapezoid in this example)
             Point[] points = {
-            new Point(0, 0),               // Top-left
-            new Point(this.Width, 0 + topRightOffset),      // Top-right
-            new Point(this.Width, this.Height - bottomRightOffset), // Bottom-right (angled)
-            new Point(0, this.Height)     // Bottom-left (angled)
-        };
+            new Point(0, 0),               
+            new Point(this.Width, 0 + topRightOffset),      
+            new Point(this.Width, this.Height - bottomRightOffset), 
+            new Point(0, this.Height)    
+            };
 
-            // Draw the custom shape
             using (SolidBrush brush = new SolidBrush(this.BackColor))
             {
                 g.FillPolygon(brush, points);
             }
 
-            // Optionally draw a border to smooth the edges further
             using (Pen pen = new Pen(this.BackColor, 1))
             {
                 g.DrawPolygon(pen, points);
@@ -121,15 +118,13 @@ namespace RandomVideoPlayer.Controls
 
         private void UpdateRegion()
         {
-            // Define the points for the custom shape (trapezoid in this example)
             Point[] points = {
-            new Point(0 + topLeftXOffset, 0),               // Top-left
-            new Point(this.Width - topRightXOffset, 0 + topRightOffset),      // Top-right
-            new Point(this.Width - bottomRightXOffset, this.Height - bottomRightOffset), // Bottom-right (angled)
-            new Point(0, this.Height)     // Bottom-left (angled)
-        };
+            new Point(0 + topLeftXOffset, 0),              
+            new Point(this.Width - topRightXOffset, 0 + topRightOffset),      
+            new Point(this.Width - bottomRightXOffset, this.Height - bottomRightOffset), 
+            new Point(0, this.Height)     
+            };
 
-            // Create a GraphicsPath from the points and set it as the control's region
             System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
             path.AddPolygon(points);
             this.Region = new Region(path);

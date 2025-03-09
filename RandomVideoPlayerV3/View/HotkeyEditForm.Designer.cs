@@ -30,11 +30,11 @@
         {
             lblAction = new Label();
             lblSelectedKey = new Label();
-            panel1 = new Panel();
+            panelBody = new Panel();
             btnOK = new FontAwesome.Sharp.IconButton();
             btnCancel = new FontAwesome.Sharp.IconButton();
-            label1 = new Label();
-            panel1.SuspendLayout();
+            lblInfo = new Label();
+            panelBody.SuspendLayout();
             SuspendLayout();
             // 
             // lblAction
@@ -61,20 +61,20 @@
             lblSelectedKey.Text = "----";
             lblSelectedKey.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // panel1
+            // panelBody
             // 
-            panel1.BackColor = Color.FromArgb(179, 179, 255);
-            panel1.Controls.Add(btnOK);
-            panel1.Controls.Add(btnCancel);
-            panel1.Controls.Add(lblSelectedKey);
-            panel1.Controls.Add(lblAction);
-            panel1.Controls.Add(label1);
-            panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(263, 216);
-            panel1.TabIndex = 3;
-            panel1.MouseDown += panel1_MouseDown;
+            panelBody.BackColor = Color.FromArgb(179, 179, 255);
+            panelBody.Controls.Add(btnOK);
+            panelBody.Controls.Add(btnCancel);
+            panelBody.Controls.Add(lblSelectedKey);
+            panelBody.Controls.Add(lblAction);
+            panelBody.Controls.Add(lblInfo);
+            panelBody.Dock = DockStyle.Fill;
+            panelBody.Location = new Point(0, 0);
+            panelBody.Name = "panelBody";
+            panelBody.Size = new Size(263, 216);
+            panelBody.TabIndex = 3;
+            panelBody.MouseDown += panel1_MouseDown;
             // 
             // btnOK
             // 
@@ -116,30 +116,31 @@
             btnCancel.UseVisualStyleBackColor = false;
             btnCancel.Click += btnCancel_Click;
             // 
-            // label1
+            // lblInfo
             // 
-            label1.Dock = DockStyle.Top;
-            label1.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.Location = new Point(0, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(263, 65);
-            label1.TabIndex = 1;
-            label1.Text = "Press a Key or Modifier + Key and Confirm";
-            label1.TextAlign = ContentAlignment.MiddleCenter;
-            label1.MouseDown += label1_MouseDown;
+            lblInfo.Dock = DockStyle.Top;
+            lblInfo.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold, GraphicsUnit.Point);
+            lblInfo.Location = new Point(0, 0);
+            lblInfo.Name = "lblInfo";
+            lblInfo.Size = new Size(263, 65);
+            lblInfo.TabIndex = 1;
+            lblInfo.Text = "Press a Key or Modifier + Key and Confirm";
+            lblInfo.TextAlign = ContentAlignment.MiddleCenter;
+            lblInfo.MouseDown += label1_MouseDown;
             // 
             // HotkeyEditForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(263, 216);
-            Controls.Add(panel1);
+            Controls.Add(panelBody);
             KeyPreview = true;
+            MinimumSize = new Size(279, 255);
             Name = "HotkeyEditForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "HotkeyEditForm";
             Resize += HotkeyEditForm_Resize;
-            panel1.ResumeLayout(false);
+            panelBody.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -147,9 +148,9 @@
 
         private Label lblAction;
         private Label lblSelectedKey;
-        private Panel panel1;
+        private Panel panelBody;
         private FontAwesome.Sharp.IconButton btnOK;
-        private Label label1;
+        private Label lblInfo;
         private FontAwesome.Sharp.IconButton btnCancel;
     }
 }

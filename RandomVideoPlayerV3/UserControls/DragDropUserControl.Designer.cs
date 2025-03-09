@@ -28,41 +28,42 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            lblHeader = new Label();
             panel1 = new Panel();
-            rbDropQueue = new RadioButton();
-            rbDropPlay = new RadioButton();
-            label2 = new Label();
+            rbDropQueue = new Controls.CustomRadioButton();
+            rbDropPlay = new Controls.CustomRadioButton();
+            lbl1 = new Label();
             panel2 = new Panel();
-            cbAlwaysAddFilesToQueue = new CheckBox();
-            label4 = new Label();
-            label3 = new Label();
+            cbAlwaysAddFilesToQueue = new Controls.CustomCheckBox();
+            lbl3 = new Label();
+            lbl2 = new Label();
             panel3 = new Panel();
-            cbIncludeSubdirectories = new CheckBox();
-            label6 = new Label();
+            cbIncludeSubdirectories = new Controls.CustomCheckBox();
+            lbl4 = new Label();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
-            // label1
+            // lblHeader
             // 
-            label1.BackColor = Color.GhostWhite;
-            label1.Dock = DockStyle.Top;
-            label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.ForeColor = Color.Indigo;
-            label1.Location = new Point(0, 0);
-            label1.Name = "label1";
-            label1.Padding = new Padding(0, 0, 0, 8);
-            label1.Size = new Size(482, 52);
-            label1.TabIndex = 1;
-            label1.Text = "Drag && Drop";
+            lblHeader.BackColor = Color.GhostWhite;
+            lblHeader.Dock = DockStyle.Top;
+            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.ForeColor = Color.Indigo;
+            lblHeader.Location = new Point(0, 0);
+            lblHeader.Name = "lblHeader";
+            lblHeader.Padding = new Padding(0, 0, 0, 8);
+            lblHeader.Size = new Size(482, 52);
+            lblHeader.TabIndex = 1;
+            lblHeader.Text = "Drag && Drop";
             // 
             // panel1
             // 
-            panel1.Controls.Add(rbDropQueue);
-            panel1.Controls.Add(rbDropPlay);
-            panel1.Controls.Add(label2);
+            panel1.Controls.Add(flowLayoutPanel1);
+            panel1.Controls.Add(lbl1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 52);
             panel1.Name = "panel1";
@@ -71,43 +72,46 @@
             // 
             // rbDropQueue
             // 
-            rbDropQueue.AutoSize = true;
-            rbDropQueue.Location = new Point(182, 33);
+            rbDropQueue.CircleSize = 12;
+            rbDropQueue.HoverColor = Color.DeepSkyBlue;
+            rbDropQueue.Location = new Point(146, 3);
             rbDropQueue.Name = "rbDropQueue";
-            rbDropQueue.Size = new Size(99, 19);
-            rbDropQueue.TabIndex = 2;
+            rbDropQueue.PaddingLeft = 6;
+            rbDropQueue.Size = new Size(137, 19);
+            rbDropQueue.TabIndex = 4;
             rbDropQueue.TabStop = true;
-            rbDropQueue.Text = "Add to Queue";
+            rbDropQueue.Text = "Add to queue";
             rbDropQueue.UseVisualStyleBackColor = true;
             // 
             // rbDropPlay
             // 
-            rbDropPlay.AutoSize = true;
-            rbDropPlay.Location = new Point(3, 33);
+            rbDropPlay.CircleSize = 12;
+            rbDropPlay.HoverColor = Color.DeepSkyBlue;
+            rbDropPlay.Location = new Point(3, 3);
             rbDropPlay.Name = "rbDropPlay";
-            rbDropPlay.Padding = new Padding(6, 0, 0, 0);
-            rbDropPlay.Size = new Size(98, 19);
-            rbDropPlay.TabIndex = 1;
+            rbDropPlay.PaddingLeft = 6;
+            rbDropPlay.Size = new Size(137, 19);
+            rbDropPlay.TabIndex = 3;
             rbDropPlay.TabStop = true;
             rbDropPlay.Text = "Play on drop";
             rbDropPlay.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // lbl1
             // 
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.Location = new Point(0, 0);
-            label2.Name = "label2";
-            label2.Padding = new Padding(6, 0, 0, 0);
-            label2.Size = new Size(482, 30);
-            label2.TabIndex = 0;
-            label2.Text = "Change behaviour when videofile or folder is dragged and dropped onto the player:";
+            lbl1.Dock = DockStyle.Top;
+            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl1.Location = new Point(0, 0);
+            lbl1.Name = "lbl1";
+            lbl1.Padding = new Padding(6, 0, 0, 0);
+            lbl1.Size = new Size(482, 30);
+            lbl1.TabIndex = 0;
+            lbl1.Text = "Change behaviour when videofile or folder is dragged and dropped onto the player:";
             // 
             // panel2
             // 
             panel2.Controls.Add(cbAlwaysAddFilesToQueue);
-            panel2.Controls.Add(label4);
-            panel2.Controls.Add(label3);
+            panel2.Controls.Add(lbl3);
+            panel2.Controls.Add(lbl2);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 127);
             panel2.Name = "panel2";
@@ -117,40 +121,43 @@
             // cbAlwaysAddFilesToQueue
             // 
             cbAlwaysAddFilesToQueue.AutoSize = true;
-            cbAlwaysAddFilesToQueue.Location = new Point(3, 68);
+            cbAlwaysAddFilesToQueue.BoxSize = 13;
+            cbAlwaysAddFilesToQueue.Dock = DockStyle.Top;
+            cbAlwaysAddFilesToQueue.HoverColor = Color.DeepSkyBlue;
+            cbAlwaysAddFilesToQueue.Location = new Point(0, 65);
             cbAlwaysAddFilesToQueue.Name = "cbAlwaysAddFilesToQueue";
-            cbAlwaysAddFilesToQueue.Padding = new Padding(6, 0, 0, 0);
-            cbAlwaysAddFilesToQueue.Size = new Size(303, 19);
-            cbAlwaysAddFilesToQueue.TabIndex = 2;
+            cbAlwaysAddFilesToQueue.PaddingLeft = 6;
+            cbAlwaysAddFilesToQueue.Size = new Size(482, 19);
+            cbAlwaysAddFilesToQueue.TabIndex = 3;
             cbAlwaysAddFilesToQueue.Text = "Always add multiple dropped files directly to queue";
             cbAlwaysAddFilesToQueue.UseVisualStyleBackColor = true;
             // 
-            // label4
+            // lbl3
             // 
-            label4.Dock = DockStyle.Top;
-            label4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label4.Location = new Point(0, 21);
-            label4.Name = "label4";
-            label4.Padding = new Padding(6, 0, 0, 0);
-            label4.Size = new Size(482, 44);
-            label4.TabIndex = 1;
-            label4.Text = "This only affects \"Play on drop\" which would normally play the first file when multiple files are dropped on the player.";
+            lbl3.Dock = DockStyle.Top;
+            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl3.Location = new Point(0, 21);
+            lbl3.Name = "lbl3";
+            lbl3.Padding = new Padding(6, 0, 0, 0);
+            lbl3.Size = new Size(482, 44);
+            lbl3.TabIndex = 1;
+            lbl3.Text = "This only affects \"Play on drop\" which would normally play the first file when multiple files are dropped on the player.";
             // 
-            // label3
+            // lbl2
             // 
-            label3.Dock = DockStyle.Top;
-            label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.Location = new Point(0, 0);
-            label3.Name = "label3";
-            label3.Padding = new Padding(6, 0, 0, 0);
-            label3.Size = new Size(482, 21);
-            label3.TabIndex = 0;
-            label3.Text = "Check to always add files to queue if multiple files dropped onto the player.";
+            lbl2.Dock = DockStyle.Top;
+            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl2.Location = new Point(0, 0);
+            lbl2.Name = "lbl2";
+            lbl2.Padding = new Padding(6, 0, 0, 0);
+            lbl2.Size = new Size(482, 21);
+            lbl2.TabIndex = 0;
+            lbl2.Text = "Check to always add files to queue if multiple files dropped onto the player.";
             // 
             // panel3
             // 
             panel3.Controls.Add(cbIncludeSubdirectories);
-            panel3.Controls.Add(label6);
+            panel3.Controls.Add(lbl4);
             panel3.Dock = DockStyle.Top;
             panel3.Location = new Point(0, 237);
             panel3.Name = "panel3";
@@ -160,24 +167,37 @@
             // cbIncludeSubdirectories
             // 
             cbIncludeSubdirectories.AutoSize = true;
-            cbIncludeSubdirectories.Location = new Point(3, 29);
+            cbIncludeSubdirectories.BoxSize = 13;
+            cbIncludeSubdirectories.Dock = DockStyle.Top;
+            cbIncludeSubdirectories.HoverColor = Color.DeepSkyBlue;
+            cbIncludeSubdirectories.Location = new Point(0, 26);
             cbIncludeSubdirectories.Name = "cbIncludeSubdirectories";
-            cbIncludeSubdirectories.Padding = new Padding(6, 0, 0, 0);
-            cbIncludeSubdirectories.Size = new Size(148, 19);
-            cbIncludeSubdirectories.TabIndex = 2;
+            cbIncludeSubdirectories.PaddingLeft = 6;
+            cbIncludeSubdirectories.Size = new Size(482, 19);
+            cbIncludeSubdirectories.TabIndex = 3;
             cbIncludeSubdirectories.Text = "Include subdirectories";
             cbIncludeSubdirectories.UseVisualStyleBackColor = true;
             // 
-            // label6
+            // lbl4
             // 
-            label6.Dock = DockStyle.Top;
-            label6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label6.Location = new Point(0, 0);
-            label6.Name = "label6";
-            label6.Padding = new Padding(6, 0, 0, 0);
-            label6.Size = new Size(482, 26);
-            label6.TabIndex = 0;
-            label6.Text = "Choose to include found subdirectories when dropping folders:";
+            lbl4.Dock = DockStyle.Top;
+            lbl4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl4.Location = new Point(0, 0);
+            lbl4.Name = "lbl4";
+            lbl4.Padding = new Padding(6, 0, 0, 0);
+            lbl4.Size = new Size(482, 26);
+            lbl4.TabIndex = 0;
+            lbl4.Text = "Choose to include found subdirectories when dropping folders:";
+            // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.Controls.Add(rbDropPlay);
+            flowLayoutPanel1.Controls.Add(rbDropQueue);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(0, 30);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(482, 45);
+            flowLayoutPanel1.TabIndex = 5;
             // 
             // DragDropUserControl
             // 
@@ -186,31 +206,32 @@
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
-            Controls.Add(label1);
+            Controls.Add(lblHeader);
             Name = "DragDropUserControl";
             Size = new Size(482, 462);
             panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Label label1;
+        private Label lblHeader;
         private Panel panel1;
-        private Label label2;
-        private RadioButton rbDropPlay;
-        private RadioButton rbDropQueue;
+        private Label lbl1;
         private Panel panel2;
-        private Label label4;
-        private Label label3;
-        private CheckBox cbAlwaysAddFilesToQueue;
+        private Label lbl3;
+        private Label lbl2;
         private Panel panel3;
-        private CheckBox cbIncludeSubdirectories;
-        private Label label6;
+        private Label lbl4;
+        private Controls.CustomRadioButton rbDropPlay;
+        private Controls.CustomRadioButton rbDropQueue;
+        private Controls.CustomCheckBox cbAlwaysAddFilesToQueue;
+        private Controls.CustomCheckBox cbIncludeSubdirectories;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

@@ -28,126 +28,104 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
-            label2 = new Label();
-            label3 = new Label();
-            panel1 = new Panel();
-            btnSync = new FontAwesome.Sharp.IconButton();
+            lblHeader = new Label();
+            lblTitle = new Label();
+            lblSubtitle = new Label();
+            panelVersion = new Panel();
             lblLatestVersion = new Label();
             lblCurrentVersion = new Label();
-            label5 = new Label();
-            label4 = new Label();
+            btnSync = new FontAwesome.Sharp.IconButton();
             btnGitHub = new FontAwesome.Sharp.IconButton();
-            panel2 = new Panel();
-            cbUpdateAlwaysCheck = new CheckBox();
+            panelBody = new Panel();
+            cbUpdateAlwaysCheck = new Controls.CustomCheckBox();
             btnCancel = new FontAwesome.Sharp.IconButton();
             rtbConsole = new RichTextBox();
-            panel1.SuspendLayout();
-            panel2.SuspendLayout();
+            panelVersion.SuspendLayout();
+            panelBody.SuspendLayout();
             SuspendLayout();
             // 
-            // label1
+            // lblHeader
             // 
-            label1.Dock = DockStyle.Top;
-            label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.ForeColor = Color.Indigo;
-            label1.Location = new Point(0, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(482, 55);
-            label1.TabIndex = 0;
-            label1.Text = "About";
+            lblHeader.Dock = DockStyle.Top;
+            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.ForeColor = Color.Indigo;
+            lblHeader.Location = new Point(0, 0);
+            lblHeader.Name = "lblHeader";
+            lblHeader.Size = new Size(482, 55);
+            lblHeader.TabIndex = 0;
+            lblHeader.Text = "About";
             // 
-            // label2
+            // lblTitle
             // 
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.ForeColor = Color.DarkMagenta;
-            label2.Location = new Point(0, 55);
-            label2.Name = "label2";
-            label2.Size = new Size(482, 50);
-            label2.TabIndex = 1;
-            label2.Text = "Random Video Player";
-            label2.TextAlign = ContentAlignment.MiddleCenter;
+            lblTitle.Dock = DockStyle.Top;
+            lblTitle.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitle.ForeColor = Color.DarkMagenta;
+            lblTitle.Location = new Point(0, 55);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(482, 50);
+            lblTitle.TabIndex = 1;
+            lblTitle.Text = "Random Video Player";
+            lblTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // label3
+            // lblSubtitle
             // 
-            label3.Dock = DockStyle.Top;
-            label3.Location = new Point(0, 105);
-            label3.Name = "label3";
-            label3.Size = new Size(482, 32);
-            label3.TabIndex = 2;
-            label3.Text = "by Peanutccino";
-            label3.TextAlign = ContentAlignment.TopCenter;
+            lblSubtitle.Dock = DockStyle.Top;
+            lblSubtitle.Location = new Point(0, 105);
+            lblSubtitle.Name = "lblSubtitle";
+            lblSubtitle.Size = new Size(482, 32);
+            lblSubtitle.TabIndex = 2;
+            lblSubtitle.Text = "by Peanutccino";
+            lblSubtitle.TextAlign = ContentAlignment.TopCenter;
             // 
-            // panel1
+            // panelVersion
             // 
-            panel1.Controls.Add(btnSync);
-            panel1.Controls.Add(lblLatestVersion);
-            panel1.Controls.Add(lblCurrentVersion);
-            panel1.Controls.Add(label5);
-            panel1.Controls.Add(label4);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 137);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(482, 47);
-            panel1.TabIndex = 3;
+            panelVersion.Controls.Add(lblLatestVersion);
+            panelVersion.Controls.Add(lblCurrentVersion);
+            panelVersion.Controls.Add(btnSync);
+            panelVersion.Dock = DockStyle.Top;
+            panelVersion.Location = new Point(0, 137);
+            panelVersion.Name = "panelVersion";
+            panelVersion.Size = new Size(482, 47);
+            panelVersion.TabIndex = 3;
+            // 
+            // lblLatestVersion
+            // 
+            lblLatestVersion.AutoEllipsis = true;
+            lblLatestVersion.Dock = DockStyle.Top;
+            lblLatestVersion.Location = new Point(0, 20);
+            lblLatestVersion.Name = "lblLatestVersion";
+            lblLatestVersion.Padding = new Padding(3);
+            lblLatestVersion.Size = new Size(429, 20);
+            lblLatestVersion.TabIndex = 3;
+            lblLatestVersion.Text = "Latest Version:      -";
+            // 
+            // lblCurrentVersion
+            // 
+            lblCurrentVersion.AutoEllipsis = true;
+            lblCurrentVersion.Dock = DockStyle.Top;
+            lblCurrentVersion.Location = new Point(0, 0);
+            lblCurrentVersion.Name = "lblCurrentVersion";
+            lblCurrentVersion.Padding = new Padding(3);
+            lblCurrentVersion.Size = new Size(429, 20);
+            lblCurrentVersion.TabIndex = 2;
+            lblCurrentVersion.Text = "Current Version: 1.57";
             // 
             // btnSync
             // 
-            btnSync.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnSync.Dock = DockStyle.Right;
             btnSync.FlatAppearance.BorderSize = 0;
             btnSync.FlatStyle = FlatStyle.Flat;
             btnSync.IconChar = FontAwesome.Sharp.IconChar.Sync;
             btnSync.IconColor = Color.Indigo;
             btnSync.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSync.IconSize = 34;
-            btnSync.Location = new Point(420, 5);
+            btnSync.Location = new Point(429, 0);
             btnSync.Margin = new Padding(3, 5, 3, 5);
             btnSync.Name = "btnSync";
-            btnSync.Size = new Size(34, 37);
+            btnSync.Size = new Size(53, 47);
             btnSync.TabIndex = 4;
             btnSync.UseVisualStyleBackColor = true;
             btnSync.Click += btnSync_Click;
-            // 
-            // lblLatestVersion
-            // 
-            lblLatestVersion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lblLatestVersion.AutoEllipsis = true;
-            lblLatestVersion.Location = new Point(112, 24);
-            lblLatestVersion.Name = "lblLatestVersion";
-            lblLatestVersion.Size = new Size(302, 15);
-            lblLatestVersion.TabIndex = 3;
-            lblLatestVersion.Text = "-";
-            // 
-            // lblCurrentVersion
-            // 
-            lblCurrentVersion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lblCurrentVersion.AutoEllipsis = true;
-            lblCurrentVersion.Location = new Point(112, 3);
-            lblCurrentVersion.Name = "lblCurrentVersion";
-            lblCurrentVersion.Size = new Size(302, 15);
-            lblCurrentVersion.TabIndex = 2;
-            lblCurrentVersion.Text = "1.34";
-            // 
-            // label5
-            // 
-            label5.Location = new Point(3, 24);
-            label5.Margin = new Padding(3);
-            label5.Name = "label5";
-            label5.Padding = new Padding(6, 0, 0, 0);
-            label5.Size = new Size(100, 23);
-            label5.TabIndex = 1;
-            label5.Text = "Latest Version:";
-            // 
-            // label4
-            // 
-            label4.Location = new Point(3, 3);
-            label4.Margin = new Padding(3);
-            label4.Name = "label4";
-            label4.Padding = new Padding(6, 0, 0, 0);
-            label4.Size = new Size(100, 23);
-            label4.TabIndex = 0;
-            label4.Text = "Current Version:";
             // 
             // btnGitHub
             // 
@@ -170,26 +148,28 @@
             btnGitHub.UseVisualStyleBackColor = false;
             btnGitHub.Click += btnGitHub_Click;
             // 
-            // panel2
+            // panelBody
             // 
-            panel2.Controls.Add(cbUpdateAlwaysCheck);
-            panel2.Controls.Add(btnCancel);
-            panel2.Controls.Add(rtbConsole);
-            panel2.Controls.Add(btnGitHub);
-            panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(0, 184);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(482, 376);
-            panel2.TabIndex = 4;
+            panelBody.Controls.Add(cbUpdateAlwaysCheck);
+            panelBody.Controls.Add(btnCancel);
+            panelBody.Controls.Add(rtbConsole);
+            panelBody.Controls.Add(btnGitHub);
+            panelBody.Dock = DockStyle.Fill;
+            panelBody.Location = new Point(0, 184);
+            panelBody.Name = "panelBody";
+            panelBody.Size = new Size(482, 376);
+            panelBody.TabIndex = 4;
             // 
             // cbUpdateAlwaysCheck
             // 
-            cbUpdateAlwaysCheck.AutoSize = true;
-            cbUpdateAlwaysCheck.Location = new Point(3, 3);
+            cbUpdateAlwaysCheck.BoxSize = 13;
+            cbUpdateAlwaysCheck.Dock = DockStyle.Top;
+            cbUpdateAlwaysCheck.HoverColor = Color.DeepSkyBlue;
+            cbUpdateAlwaysCheck.Location = new Point(0, 0);
             cbUpdateAlwaysCheck.Name = "cbUpdateAlwaysCheck";
-            cbUpdateAlwaysCheck.Padding = new Padding(6, 0, 0, 0);
-            cbUpdateAlwaysCheck.Size = new Size(160, 19);
-            cbUpdateAlwaysCheck.TabIndex = 8;
+            cbUpdateAlwaysCheck.PaddingLeft = 6;
+            cbUpdateAlwaysCheck.Size = new Size(482, 19);
+            cbUpdateAlwaysCheck.TabIndex = 9;
             cbUpdateAlwaysCheck.Text = "Always check on startup";
             cbUpdateAlwaysCheck.UseVisualStyleBackColor = true;
             // 
@@ -237,35 +217,32 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.GhostWhite;
-            Controls.Add(panel2);
-            Controls.Add(panel1);
-            Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(label1);
+            Controls.Add(panelBody);
+            Controls.Add(panelVersion);
+            Controls.Add(lblSubtitle);
+            Controls.Add(lblTitle);
+            Controls.Add(lblHeader);
             Name = "AboutUserControl";
             Size = new Size(482, 560);
             Leave += AboutUserControl_Leave;
-            panel1.ResumeLayout(false);
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            panelVersion.ResumeLayout(false);
+            panelBody.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Label label1;
-        private Label label2;
-        private Label label3;
-        private Panel panel1;
+        private Label lblHeader;
+        private Label lblTitle;
+        private Label lblSubtitle;
+        private Panel panelVersion;
         private FontAwesome.Sharp.IconButton btnSync;
         private Label lblLatestVersion;
         private Label lblCurrentVersion;
-        private Label label5;
-        private Label label4;
         private FontAwesome.Sharp.IconButton btnGitHub;
-        private Panel panel2;
+        private Panel panelBody;
         private RichTextBox rtbConsole;
         private FontAwesome.Sharp.IconButton btnCancel;
-        private CheckBox cbUpdateAlwaysCheck;
+        private Controls.CustomCheckBox cbUpdateAlwaysCheck;
     }
 }

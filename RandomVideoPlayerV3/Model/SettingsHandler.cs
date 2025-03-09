@@ -882,5 +882,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
     }
 }

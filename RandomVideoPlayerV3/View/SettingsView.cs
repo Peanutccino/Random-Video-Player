@@ -18,6 +18,8 @@ namespace RandomVideoPlayer.View
         {
             InitializeComponent();
 
+            UpdateDPIScaling();
+
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
             this.BackColor = Color.FromArgb(179, 179, 255);//Border color
@@ -72,6 +74,8 @@ namespace RandomVideoPlayer.View
             settingsModel.ListPathText = PathHandler.PathToListFolder;
             settingsModel.DeleteFull = SettingsHandler.DeleteFull;
             settingsModel.IncludeScript = SettingsHandler.IncludeScripts;
+            settingsModel.FileMovePath = PathHandler.FileMoveFolderPath;
+            settingsModel.FileCopy = SettingsHandler.FileCopy;
 
             settingsModel.MemberWindowSize = fR.SaveLastSize;
             settingsModel.MemberPlayRecent = SettingsHandler.RecentCheckedSaved;
@@ -114,8 +118,6 @@ namespace RandomVideoPlayer.View
             settingsModel.AlwaysAddFilesToQueue = SettingsHandler.AlwaysAddFilesToQueue;
             settingsModel.IncludeSubdirectoriesDnD = SettingsHandler.IncludeSubdirectoriesDnD;
 
-            settingsModel.FileMovePath = PathHandler.FileMoveFolderPath;
-            settingsModel.FileCopy = SettingsHandler.FileCopy;
 
             settingsModel.ButtonStates = SettingsHandler.ButtonStates;
             settingsModel.ButtonOrder = SettingsHandler.ButtonOrder;
@@ -135,6 +137,7 @@ namespace RandomVideoPlayer.View
             sbtnSkip.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SkipUserControl(settingsModel)); };
             sbtnInterface.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InterfaceUserControl(settingsModel)); };
             sbtnDragDrop.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new DragDropUserControl(settingsModel)); };
+            sbtnExperimental.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new ExperimentalUserControl(settingsModel)); };
             sbtnAbout.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new AboutUserControl(settingsModel)); };
         }
 
@@ -240,7 +243,6 @@ namespace RandomVideoPlayer.View
             userControl.Dock = DockStyle.Fill;
             splitUI.Panel2.Controls.Add(userControl);
         }
-
         private void SetupFileMove()
         {
             if (string.IsNullOrWhiteSpace(settingsModel.FileMovePath)) return;
@@ -259,6 +261,23 @@ namespace RandomVideoPlayer.View
             PathHandler.FileMoveFolderPath = settingsModel.FileMovePath;
             SettingsHandler.FileCopy = settingsModel.FileCopy;
         }
+        private void UpdateDPIScaling()
+        {
+            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
+            this.Size = DPI.GetSizeScaled(this.Size);           
+
+            panelTop.Height = DPI.GetDivided(panelTop.Height);
+            lblTitle.Font = DPI.GetFontScaled(lblTitle.Font);
+            lblTitle.Size = DPI.GetSizeScaled(lblTitle.Size);
+            btnClose.Size = DPI.GetSizeScaled(btnClose.Size);            
+
+            foreach (IconButton button in panelSidebar.Controls)
+            {
+                button.Size = DPI.GetSizeScaled(button.Size);
+                button.Font = DPI.GetFontScaled(button.Font);                
+            }
+        }
+
         #region WndProc Code for clean style of the Form and regaining usabality
         //Resizable Windows Form Spaghetti
         protected override void WndProc(ref Message m)

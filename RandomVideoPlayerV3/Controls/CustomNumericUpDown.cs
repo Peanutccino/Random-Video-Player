@@ -1,4 +1,6 @@
 ﻿
+using RandomVideoPlayer.Functions;
+
 namespace RandomVideoPlayer.Controls
 {
     public class CustomNumericUpDown : Control
@@ -69,6 +71,8 @@ namespace RandomVideoPlayer.Controls
             };
             textBox.TextChanged += TextBox_TextChanged;
             textBox.KeyPress += TextBox_KeyPress;
+            textBox.Location = new Point(DPI.GetDivided(textBox.Location.X), 1);
+            textBox.Width = DPI.GetDivided(textBox.Width);
 
             this.Controls.Add(textBox);
         }
@@ -101,20 +105,20 @@ namespace RandomVideoPlayer.Controls
 
             e.Graphics.Clear(SystemColors.Window);
 
-            // Draw the left arrow
             Point[] leftArrow = {
             new Point(0, this.Height / 2),
             new Point(10, this.Height / 4),
             new Point(10, 3 * this.Height / 4)
-        };
+            };
+
             e.Graphics.FillPolygon(Brushes.Indigo, leftArrow);
 
-            // Draw the right arrow
             Point[] rightArrow = {
             new Point(this.Width, this.Height / 2),
             new Point(this.Width - 10, this.Height / 4),
             new Point(this.Width - 10, 3 * this.Height / 4)
-        };
+            };
+
             e.Graphics.FillPolygon(Brushes.Indigo, rightArrow);
         }
 

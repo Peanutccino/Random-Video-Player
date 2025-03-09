@@ -26,7 +26,7 @@ namespace RandomVideoPlayer.Model
         public string Duration { get; set; } = "";      // = 6
         public string VolumeLevel { get; set; } = "5";  // = 7  || Fixed as it's not needed
         public byte Playbackrate { get; set; } = 1;     // = 8  || Maybe sync
-        //HTML data for MFP to read
+        //HTML data
         private string pageData =
             "<!DOCTYPE>\n" +
             "<html>\n" +

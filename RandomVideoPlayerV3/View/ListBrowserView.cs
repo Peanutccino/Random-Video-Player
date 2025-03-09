@@ -33,9 +33,15 @@ namespace RandomVideoPlayer.View
         public ListBrowserView()
         {
             InitializeComponent();
+
+            UpdateDPIScaling();
+
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
             this.BackColor = Color.FromArgb(248, 111, 100);//Border color
+
+            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
+            this.Size = DPI.GetSizeScaled(this.Size);
 
             _showIcons = SettingsHandler.ShowIconsCustomLíst;
             _showFullPath = SettingsHandler.ShowFullPathCustomList;
@@ -102,7 +108,7 @@ namespace RandomVideoPlayer.View
                 PopulateCustomList(TempList);
             }
 
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
 
             PopulateFavoriteFolders();
 
@@ -169,7 +175,7 @@ namespace RandomVideoPlayer.View
                                 .ToList());
                         }
 
-                        foreach(var funscript in matchingfiles)
+                        foreach (var funscript in matchingfiles)
                         {
                             if (Path.GetFileNameWithoutExtension(funscript).ToLower().Contains(Path.GetFileNameWithoutExtension(filePath).ToLower()))
                             {
@@ -180,13 +186,6 @@ namespace RandomVideoPlayer.View
                             }
                         }
                     }
-
-
-                    //var funscriptFilePath = FileManipulation.GetFilePathWithDifferentExtension(filePath, ".funscript");
-                    //if (File.Exists(funscriptFilePath) && ListHandler.VideoExtensions.Contains(fileType.TrimStart('.')))
-                    //{
-                    //    filteredPaths.Add(funscriptFilePath);
-                    //}
                 }
                 else
                 {
@@ -202,7 +201,7 @@ namespace RandomVideoPlayer.View
             }
             TempList.AddRange(filteredPaths);
             PopulateCustomList(TempList);
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
         private void btnAddAll_Click(object sender, EventArgs e)
         {
@@ -211,7 +210,7 @@ namespace RandomVideoPlayer.View
                 GrabFromDirectory(tbPathView.Text);
                 PopulateCustomList(TempList);
             }
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
         private void btnClearSelected_Click(object sender, EventArgs e)
         {
@@ -226,7 +225,7 @@ namespace RandomVideoPlayer.View
                 }
                 PopulateCustomList(TempList);
             }
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
 
         private void btnClearList_Click(object sender, EventArgs e)
@@ -234,7 +233,7 @@ namespace RandomVideoPlayer.View
             lvCustomList.Items.Clear();
             TempList.Clear();
             ListHandler.ClearCustomList();
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -277,7 +276,7 @@ namespace RandomVideoPlayer.View
                 TempList = strings;
                 PopulateCustomList(TempList);
 
-                lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+                lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
             }
         }
         private void btnSaveList_Click_1(object sender, EventArgs e)
@@ -335,7 +334,7 @@ namespace RandomVideoPlayer.View
 
             TempList = filteredList;
             PopulateCustomList(TempList);
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
 
         private void btnAddFromPlaylist_Click(object sender, EventArgs e)
@@ -343,7 +342,7 @@ namespace RandomVideoPlayer.View
             TempList.AddRange(ListHandler.PlayList);
             PopulateCustomList(TempList);
 
-            lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
         }
 
         private void btnMoveList_Click(object sender, EventArgs e)
@@ -357,7 +356,7 @@ namespace RandomVideoPlayer.View
                 TempList = moveListForm.movedFilePaths;
                 PopulateCustomList(TempList);
 
-                lblTitle.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+                lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
 
                 MessageBox.Show("Remember to save/overwrite the updated list!");
             }
@@ -689,6 +688,160 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(cbEnableScriptFilter, "Use script filter to only add files with an available funscript");
         }
 
+        private void UpdateDPIScaling()
+        {
+            panelTop.Height = DPI.GetDivided(panelTop.Height);
+            lblTitleBar.Height = DPI.GetDivided(lblTitleBar.Height);
+            lblTitleBar.Font = DPI.GetFontScaled(lblTitleBar.Font);
+
+            btnBack.Size = DPI.GetSizeScaled(btnBack.Size);
+
+            tbPathView.Height = DPI.GetDivided(tbPathView.Height);
+            tbPathView.Font = DPI.GetFontScaled(tbPathView.Font);
+
+            lblNavigation.Size = DPI.GetSizeScaled(lblNavigation.Size);
+            lblNavigation.Font = DPI.GetFontScaled(lblNavigation.Font);
+            lblNavigation.Location = new Point(0, tbPathView.Height + 13);
+
+            lbDriveFolders.Size = DPI.GetSizeScaled(lbDriveFolders.Size);
+            lbDriveFolders.Font = DPI.GetFontScaled(lbDriveFolders.Font);
+            lbDriveFolders.Location = new Point(0, lblNavigation.Location.Y + lblNavigation.Height);
+
+            lblFavorites.Size = DPI.GetSizeScaled(lblFavorites.Size);
+            lblFavorites.Font = DPI.GetFontScaled(lblFavorites.Font);
+            lblFavorites.Location = new Point(0, lbDriveFolders.Location.Y + lbDriveFolders.Height);
+
+            btnDeleteFav.Size = DPI.GetSizeScaled(btnDeleteFav.Size);
+            btnDeleteFav.Location = new Point(btnDeleteFav.Location.X, lblFavorites.Location.Y + lblFavorites.Height);
+
+            btnAddFav.Size = DPI.GetSizeScaled(btnAddFav.Size);
+            btnAddFav.Location = new Point(btnDeleteFav.Location.X + btnDeleteFav.Width + 33, btnDeleteFav.Location.Y);
+
+            lbFavorites.Font = DPI.GetFontScaled(lbFavorites.Font);
+            lbFavorites.Location = new Point(0, btnAddFav.Location.Y + btnAddFav.Height);
+            lbFavorites.Width = DPI.GetDivided(lbFavorites.Width);
+            lbFavorites.Height = panelBody.Height - lbFavorites.Location.Y - 3;
+
+            splitContainerBody.Location = new Point(lblNavigation.Width, tbPathView.Height + 13);
+            splitContainerBody.Width = panelBody.Width - splitContainerBody.Location.X - 3;
+            splitContainerBody.Height = panelBody.Height - splitContainerBody.Location.Y - 3;
+
+            int x = 10;
+            int y = 3;
+            int margin = 6;
+            int bigMargin = 60;
+            int controlCount = 0;
+
+            var sortedControls = panelToolBar.Controls.OfType<Control>().OrderBy(c => c.TabIndex).ToList();
+
+            foreach (Control c in sortedControls)
+            {
+                if (c is Button button)
+                {
+                    button.Size = DPI.GetSizeScaled(button.Size);
+                    button.Font = DPI.GetFontScaled(button.Font);
+
+                    button.Location = new Point(x, y);
+                    x += button.Width + margin;
+
+                    controlCount++;
+                }
+                if (c is CheckBox checkBox)
+                {
+                    checkBox.Size = DPI.GetSizeScaled(checkBox.Size);
+                    checkBox.Font = DPI.GetFontScaled(checkBox.Font);
+
+                    checkBox.Location = new Point(x, y);
+                    x += checkBox.Width + margin;
+
+                    controlCount++;
+                }
+
+                if (controlCount % 3 == 0 && controlCount < sortedControls.Count)
+                {
+                    x += bigMargin - margin;
+                }
+            }
+            cbEnableVideoFilter.Size = new Size(30, 30);
+            cbEnableImageFilter.Size = new Size(30, 30);
+            cbEnableScriptFilter.Size = new Size(30, 30);
+
+            lvFileExplore.Font = DPI.GetFontScaled(lvFileExplore.Font);
+
+            panelBody.Location = new Point(lblNavigation.Width, tbPathView.Height + 13);
+
+            panelToolBar.Height = DPI.GetDivided(panelToolBar.Height);
+            panelHeaderRightside.Height = DPI.GetDivided(panelHeaderRightside.Height);
+            panelCustomListToolbar.Height = DPI.GetDivided(panelCustomListToolbar.Height);
+
+            lblFunctions.Size = DPI.GetSizeScaled(lblFunctions.Size);
+            lblFunctions.Font = DPI.GetFontScaled(lblFunctions.Font);
+
+            panelFunctions.Location = new Point(0, panelHeaderRightside.Height);
+            panelFunctions.Height = DPI.GetDivided(panelFunctions.Height);
+            panelFunctions.Width = lblFunctions.Width;
+
+            btnAddAll.Location = new Point(4, 5);
+            btnAddAll.Size = DPI.GetSizeScaled(btnAddAll.Size);
+            btnAddAll.Font = DPI.GetFontScaled(btnAddAll.Font);
+
+            btnAddSelected.Location = new Point(4, btnAddAll.Height + 8);
+            btnAddSelected.Size = DPI.GetSizeScaled(btnAddSelected.Size);
+            btnAddSelected.Font = DPI.GetFontScaled(btnAddSelected.Font);
+
+            int funcX = 4;
+            int funcY = panelHeaderRightside.Height + panelFunctions.Height + 3;
+            int funcMargin = 3;
+
+            var sortedFunctions = splitContainerBody.Panel2.Controls.OfType<Button>().OrderBy(c => c.TabIndex).ToList();
+
+            foreach (Button button in sortedFunctions)
+            {
+                button.Size = DPI.GetSizeScaled(button.Size);
+                button.Font = DPI.GetFontScaled(button.Font);
+
+                button.Location = new Point(funcX, funcY);
+                funcY += button.Height + funcMargin;
+            }
+
+
+
+            btnVideoExtensions.Size = DPI.GetSizeScaled(btnVideoExtensions.Size);
+            btnVideoExtensions.Font = DPI.GetFontScaled(btnVideoExtensions.Font);
+
+            flowPanelVideoCheckboxes.Size = DPI.GetSizeScaled(flowPanelVideoCheckboxes.Size);
+
+            btnImageExtensions.Size = DPI.GetSizeScaled(btnImageExtensions.Size);
+            btnImageExtensions.Font = DPI.GetFontScaled(btnImageExtensions.Font);
+
+            flowPanelImageCheckboxes.Size = DPI.GetSizeScaled(flowPanelImageCheckboxes.Size);
+
+            cbFullPath.Size = DPI.GetSizeScaled(cbFullPath.Size);
+            cbFullPath.Font = DPI.GetFontScaled(cbFullPath.Font);
+            cbFullPath.Location = new Point(lblFavorites.Width + 30, 4);
+
+            cbShowIcons.Size = DPI.GetSizeScaled(cbShowIcons.Size);
+            cbShowIcons.Font = DPI.GetFontScaled(cbShowIcons.Font);
+            cbShowIcons.Location = new Point(cbFullPath.Location.X + cbFullPath.Width + 10, 4);
+
+            btnUseList.Size = DPI.GetSizeScaled(btnUseList.Size);
+            btnUseList.Font = DPI.GetFontScaled(btnUseList.Font);
+
+            lvCustomList.Font = DPI.GetFontScaled(lvCustomList.Font);
+            lvCustomList.Location = new Point(lblFunctions.Width, panelHeaderRightside.Height);
+            lvCustomList.Width = splitContainerBody.Panel2.Width - lvCustomList.Location.X;
+            lvCustomList.Height = splitContainerBody.Panel2.Height - lvCustomList.Location.Y;
+
+            splitContainerBody.SplitterDistance = splitContainerBody.Width / 2 - 10;
+
+            panelCustomListToolbar.Width = panelHeaderRightside.Width - btnUseList.Width + 30;
+            panelFilterExt.Location = new Point(-6, btnMoveList.Location.Y + btnMoveList.Height + 6);
+            panelFilterExt.Width = lblFunctions.Width;
+            panelFilterExt.Height = panelBody.Height - panelFilterExt.Location.Y;
+
+            btnClose.Size = DPI.GetSizeScaled(btnClose.Size);
+        }
+
         #region Drag and Drop
         private void lvFileExplore_ItemDrag(object sender, ItemDragEventArgs e)
         {
@@ -1005,6 +1158,7 @@ namespace RandomVideoPlayer.View
                 checkBox.Checked = extensionFilter.Contains(extension);
                 checkBox.CheckedChanged += CheckBox_CheckedChanged;
                 flowPanelVideoCheckboxes.Controls.Add(checkBox);
+                checkBox.Font = DPI.GetFontScaled(checkBox.Font);
             }
 
             foreach (var extension in ListHandler.ImageExtensions)
@@ -1019,6 +1173,7 @@ namespace RandomVideoPlayer.View
                 checkBox.Checked = extensionFilter.Contains(extension);
                 checkBox.CheckedChanged += CheckBox_CheckedChanged;
                 flowPanelImageCheckboxes.Controls.Add(checkBox);
+                checkBox.Font = DPI.GetFontScaled(checkBox.Font);
             }
         }
 
@@ -1141,9 +1296,6 @@ namespace RandomVideoPlayer.View
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
         #endregion
-
-
-
 
     }
 }

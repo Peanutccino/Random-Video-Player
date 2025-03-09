@@ -23,12 +23,21 @@ namespace RandomVideoPlayer.View
         public MoveListForm(List<string> fileList)
         {
             InitializeComponent();
+
+            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
+            this.MaximumSize = DPI.GetSizeScaled(this.MaximumSize);
+            this.Size = DPI.GetSizeScaled(this.Size);
+
+
+            UpdateDPIScaling();
+
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
             this.BackColor = Color.FromArgb(152, 251, 152);//Border color
 
             filePathsForMoving = fileList;
         }
+
         private void MoveListForm_Load(object sender, EventArgs e)
         {
             var scriptDirectories = ListHandler.ScriptDirectories.ToList();
@@ -384,6 +393,55 @@ namespace RandomVideoPlayer.View
             string targetRoot = Path.GetPathRoot(targetDirectory);
 
             return filePathsForMoving.All(filePath => Path.GetPathRoot(filePath) == targetRoot);
+        }
+
+
+        private void UpdateDPIScaling()
+        {
+            panelTitle.Height = DPI.GetDivided(panelTitle.Height);
+            lblTitle.Font = DPI.GetFontScaled(lblTitle.Font);
+            btnCloseForm.Size = DPI.GetSizeScaled(btnCloseForm.Size);
+
+            lblDestinationInfo.Size = DPI.GetSizeScaled(lblDestinationInfo.Size);
+            lblDestinationInfo.Font = DPI.GetFontScaled(lblDestinationInfo.Font);
+
+            tbDestinationPath.Height = DPI.GetDivided(tbDestinationPath.Height);
+            tbDestinationPath.Font = DPI.GetFontScaled(tbDestinationPath.Font);
+            tbDestinationPath.Location = new Point(3, lblDestinationInfo.Height + 3);
+
+            btnBrowseFolder.Size = DPI.GetSizeScaled(btnBrowseFolder.Size);
+            btnBrowseFolder.Location = new Point(panelBody.Width - btnBrowseFolder.Width, tbDestinationPath.Location.Y);
+            tbDestinationPath.Width = panelBody.Width - btnBrowseFolder.Width - 6;
+
+            btnStartMoveAction.Size = DPI.GetSizeScaled(btnStartMoveAction.Size);
+            btnStartMoveAction.Font = DPI.GetFontScaled(btnStartMoveAction.Font);
+            btnStartMoveAction.Location = new Point(3, tbDestinationPath.Location.Y + tbDestinationPath.Height + 3);
+
+            btnStartCopyAction.Size = DPI.GetSizeScaled(btnStartCopyAction.Size);
+            btnStartCopyAction.Font = DPI.GetFontScaled(btnStartCopyAction.Font);
+            btnStartCopyAction.Location = new Point(btnStartMoveAction.Location.X + btnStartMoveAction.Width + 3, btnStartMoveAction.Location.Y);
+
+            btnFinish.Size = DPI.GetSizeScaled(btnFinish.Size);
+            btnFinish.Font = DPI.GetFontScaled(btnFinish.Font);
+            btnFinish.Location = new Point(panelBody.Width - btnFinish.Width, btnStartMoveAction.Location.Y);
+
+            btnCancelMoveAction.Size = DPI.GetSizeScaled(btnCancelMoveAction.Size);
+            btnCancelMoveAction.Font = DPI.GetFontScaled(btnCancelMoveAction.Font);
+            btnCancelMoveAction.Location = new Point(btnFinish.Location.X - btnCancelMoveAction.Width - 3, btnStartMoveAction.Location.Y);
+
+            cbMoveFunscripts.Size = DPI.GetSizeScaled(cbMoveFunscripts.Size);
+            cbMoveFunscripts.Font = DPI.GetFontScaled(cbMoveFunscripts.Font);
+            cbMoveFunscripts.Location = new Point(3, btnStartMoveAction.Location.Y + btnStartMoveAction.Height + 3);
+            cbMoveFunscripts.Width = panelBody.Width - 6;
+
+            lblInfo.Size = DPI.GetSizeScaled(lblInfo.Size);
+            lblInfo.Font = DPI.GetFontScaled(lblInfo.Font);
+            lblInfo.Location = new Point(3, cbMoveFunscripts.Location.Y + cbMoveFunscripts.Height + 9);
+
+            comboScriptDirectories.Size = DPI.GetSizeScaled(comboScriptDirectories.Size);
+            comboScriptDirectories.Font = DPI.GetFontScaled(comboScriptDirectories.Font);
+            comboScriptDirectories.Location = new Point(3, lblInfo.Location.Y + lblInfo.Height + 3);
+            comboScriptDirectories.Width = panelBody.Width - 6;
         }
 
         #region WndProc Code for clean style of the Form and regaining usabality

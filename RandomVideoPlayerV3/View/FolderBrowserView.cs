@@ -18,9 +18,15 @@ namespace RandomVideoPlayer.View
         public FolderBrowserView()
         {
             InitializeComponent();
+
+            UpdateDPIScaling();
+
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);
             this.BackColor = Color.FromArgb(255, 221, 26);
+
+            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
+            this.Size = DPI.GetSizeScaled(this.Size);
 
             _tileSize = SettingsHandler.TileSizeFileBrowser;
             _viewStateFolderFileExplore = SettingsHandler.ViewStateFolderFileExplore;
@@ -544,6 +550,109 @@ namespace RandomVideoPlayer.View
             //Needed to be able to drag the form and use windows aero peek functions
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+
+        private void UpdateDPIScaling()
+        {
+            panelTop.Height = DPI.GetDivided(panelTop.Height);
+            lblTitleBar.Height = DPI.GetDivided(lblTitleBar.Height);
+            lblTitleBar.Font = DPI.GetFontScaled(lblTitleBar.Font);
+
+            btnBack.Size = DPI.GetSizeScaled(btnBack.Size);
+
+            tbPathView.Height = DPI.GetDivided(tbPathView.Height);
+            tbPathView.Font = DPI.GetFontScaled(tbPathView.Font);
+
+            lblNavigation.Size = DPI.GetSizeScaled(lblNavigation.Size); 
+            lblNavigation.Font = DPI.GetFontScaled(lblNavigation.Font);
+            lblNavigation.Location = new Point(0, tbPathView.Height + 13);
+
+            lbDriveFolders.Size = DPI.GetSizeScaled(lbDriveFolders.Size);
+            lbDriveFolders.Font = DPI.GetFontScaled(lbDriveFolders.Font);
+            lbDriveFolders.Location = new Point(0, lblNavigation.Location.Y + lblNavigation.Height);
+
+            lblFavorites.Size = DPI.GetSizeScaled(lblFavorites.Size);
+            lblFavorites.Font = DPI.GetFontScaled(lblFavorites.Font);
+            lblFavorites.Location = new Point(0, lbDriveFolders.Location.Y + lbDriveFolders.Height);
+
+            btnDeleteFav.Size = DPI.GetSizeScaled(btnDeleteFav.Size);
+            btnDeleteFav.Location = new Point(btnDeleteFav.Location.X, lblFavorites.Location.Y + lblFavorites.Height);
+
+            btnAddFav.Size = DPI.GetSizeScaled(btnAddFav.Size);
+            btnAddFav.Location = new Point(btnDeleteFav.Location.X + btnDeleteFav.Width + 33, btnDeleteFav.Location.Y);
+
+            //lbFavorites.Size = DPI.GetSizeScaled(lbFavorites.Size);
+            lbFavorites.Font = DPI.GetFontScaled(lbFavorites.Font);
+            lbFavorites.Location = new Point(0, btnAddFav.Location.Y + btnAddFav.Height);
+            lbFavorites.Height = panel1.Height - lbFavorites.Location.Y - 3;
+
+
+            int x = 10;
+            int y = 3;
+            int margin = 6;
+            int bigMargin = 28;
+            int controlCount = 0;
+
+            var sortedControls = panelToolbar.Controls.OfType<Control>().OrderBy(c => c.TabIndex).ToList();
+
+            foreach (Control c in sortedControls)
+            {
+                if(c is Button button)
+                {
+                    button.Size = DPI.GetSizeScaled(button.Size);
+                    button.Font = DPI.GetFontScaled(button.Font);
+
+                    button.Location = new Point(x, y);
+                    x += button.Width + margin;
+
+                    controlCount++;
+                }
+                if(c is CheckBox checkBox)
+                {
+                    checkBox.Size = DPI.GetSizeScaled(checkBox.Size);
+                    checkBox.Font = DPI.GetFontScaled(checkBox.Font);
+
+                    checkBox.Location = new Point(x, y);
+                    x += checkBox.Width + margin;
+
+                    controlCount++;
+                }
+                if(c is TextBox textBox)
+                {
+                    textBox.Size = DPI.GetSizeScaled(textBox.Size);
+                    textBox.Font = DPI.GetFontScaled(textBox.Font);
+
+                    textBox.Location = new Point(x, y + 2);
+                    x += textBox.Width + margin;
+
+                    controlCount++;
+                }
+
+                if(controlCount % 3 == 0 && controlCount < sortedControls.Count)
+                {
+                    x += bigMargin - margin;
+                }
+            }
+
+            cbEnableVideoFilter.Size = new Size(30, 30);
+            cbEnableImageFilter.Size = new Size(30, 30);
+            cbEnableScriptFilter.Size = new Size(30, 30);
+
+            btnFolderSelect.Size = DPI.GetSizeScaled(btnFolderSelect.Size);
+            btnFolderSelect.Font = DPI.GetFontScaled(btnFolderSelect.Font);
+
+            panelToolbar.Height = DPI.GetDivided(panelToolbar.Height);
+            panelToolbar.Width = btnFolderSelect.Location.X + 28;
+
+            panelHeaderListView.Height = DPI.GetDivided(panelHeaderListView.Height);
+
+            panelMain.Location = new Point(lblNavigation.Width, tbPathView.Height + 13);
+            panelMain.Width =  panel1.Width - panelMain.Location.X - 3;
+            panelMain.Height = panel1.Height - panelMain.Location.Y - 3;
+
+            lvFileExplore.Font = DPI.GetFontScaled(lvFileExplore.Font);
+
+            btnClose.Size = DPI.GetSizeScaled(btnClose.Size);
         }
 
         #endregion

@@ -17,6 +17,8 @@ namespace RandomVideoPlayer.UserControls
         public InputsUserControl()
         {
             InitializeComponent();
+
+            UpdateDPIScaling();
             settings = HotkeyManager.LoadHotkeySettings();
             PopulateListView();
             PopulateFixedListView();
@@ -26,12 +28,12 @@ namespace RandomVideoPlayer.UserControls
 
         private void PopulateListView()
         {
-            listViewHotkeys.Items.Clear();
+            lvHotkeys.Items.Clear();
             foreach (var hotkey in settings.Hotkeys)
             {
                 var item = new ListViewItem(hotkey.Action);
                 item.SubItems.Add(GetKeyCombination(hotkey));
-                listViewHotkeys.Items.Add(item);
+                lvHotkeys.Items.Add(item);
             }
         }
         private void PopulateFixedListView()
@@ -66,9 +68,9 @@ namespace RandomVideoPlayer.UserControls
         }
         private void listViewHotkeys_DoubleClick(object sender, EventArgs e)
         {
-            if (listViewHotkeys.SelectedItems.Count > 0)
+            if (lvHotkeys.SelectedItems.Count > 0)
             {
-                var selectedItem = listViewHotkeys.SelectedItems[0];
+                var selectedItem = lvHotkeys.SelectedItems[0];
                 var action = selectedItem.Text;
                 var hotkeySetting = settings.Hotkeys.First(h => h.Action == action);
                 using (var form = new HotkeyEditForm(hotkeySetting, settings))
@@ -145,5 +147,34 @@ namespace RandomVideoPlayer.UserControls
             {"Double Click player", "Exclusive Fullscreen" },
             {"Escape", "Exit application" }
         };
+
+        private void UpdateDPIScaling()
+        {
+            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
+            this.Size = DPI.GetSizeScaled(this.Size);
+
+            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
+            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
+
+            lbl1.Size = DPI.GetSizeScaled(lbl1.Size);
+            lbl1.Font = DPI.GetFontScaled(lbl1.Font);
+
+            lvHotkeys.Size = DPI.GetSizeScaled(lvHotkeys.Size);
+            lvHotkeys.Font = DPI.GetFontScaled(lvHotkeys.Font);
+
+            lvFixedHotkeys.Size = DPI.GetSizeScaled(lvFixedHotkeys.Size);
+            lvFixedHotkeys.Font = DPI.GetFontScaled(lvFixedHotkeys.Font);
+
+            btnRestore.Size = DPI.GetSizeScaled(btnRestore.Size);
+            btnRestore.Font = DPI.GetFontScaled(btnRestore.Font);
+            btnRestore.Location = new Point(3, panelBottom.Height - btnRestore.Height - 3);
+
+            btnSave.Size = DPI.GetSizeScaled(btnSave.Size);
+            btnSave.Font = DPI.GetFontScaled(btnSave.Font);
+            btnSave.Location = new Point(panelBottom.Width - btnSave.Width - 3, btnRestore.Location.Y);
+
+            panelBottom.Size = DPI.GetSizeScaled(panelBottom.Size);
+            splitUI.Size = DPI.GetSizeScaled(splitUI.Size);
+        }
     }
 }

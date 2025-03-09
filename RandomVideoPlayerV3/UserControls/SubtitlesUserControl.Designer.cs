@@ -28,45 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            lblHeader = new Label();
             panel1 = new Panel();
-            cbEnableSubtitles = new CheckBox();
-            label2 = new Label();
+            cbEnableSubtitles = new Controls.CustomCheckBox();
+            lbl1 = new Label();
             panel2 = new Panel();
+            btnRestoreDefaultsFont = new Button();
             btnPickColor = new Button();
-            label8 = new Label();
-            label7 = new Label();
+            lblFontColor = new Label();
+            lblBorderSize = new Label();
             inputBorderSize = new Controls.CustomNumericUpDown();
             comboFontType = new Controls.ButtonComboBox();
-            label5 = new Label();
+            lblFontType = new Label();
             inputFontSize = new Controls.CustomNumericUpDown();
-            label4 = new Label();
-            label3 = new Label();
+            lblFontSize = new Label();
+            lbl2 = new Label();
             panel3 = new Panel();
             lblPreview = new Controls.CustomLabel();
-            label6 = new Label();
-            btnRestoreDefaultsFont = new Button();
+            lbl3 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             SuspendLayout();
             // 
-            // label1
+            // lblHeader
             // 
-            label1.Dock = DockStyle.Top;
-            label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.ForeColor = Color.Indigo;
-            label1.Location = new Point(0, 0);
-            label1.Name = "label1";
-            label1.Padding = new Padding(0, 0, 0, 8);
-            label1.Size = new Size(515, 55);
-            label1.TabIndex = 3;
-            label1.Text = "Subtitles";
+            lblHeader.Dock = DockStyle.Top;
+            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.ForeColor = Color.Indigo;
+            lblHeader.Location = new Point(0, 0);
+            lblHeader.Name = "lblHeader";
+            lblHeader.Padding = new Padding(0, 0, 0, 8);
+            lblHeader.Size = new Size(515, 55);
+            lblHeader.TabIndex = 3;
+            lblHeader.Text = "Subtitles";
             // 
             // panel1
             // 
             panel1.Controls.Add(cbEnableSubtitles);
-            panel1.Controls.Add(label2);
+            panel1.Controls.Add(lbl1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 55);
             panel1.Name = "panel1";
@@ -76,42 +76,59 @@
             // cbEnableSubtitles
             // 
             cbEnableSubtitles.AutoSize = true;
-            cbEnableSubtitles.Location = new Point(3, 28);
+            cbEnableSubtitles.BoxSize = 13;
+            cbEnableSubtitles.Dock = DockStyle.Top;
+            cbEnableSubtitles.HoverColor = Color.DeepSkyBlue;
+            cbEnableSubtitles.Location = new Point(0, 25);
             cbEnableSubtitles.Name = "cbEnableSubtitles";
-            cbEnableSubtitles.Padding = new Padding(6, 0, 0, 0);
-            cbEnableSubtitles.Size = new Size(114, 19);
-            cbEnableSubtitles.TabIndex = 1;
+            cbEnableSubtitles.PaddingLeft = 9;
+            cbEnableSubtitles.Size = new Size(515, 19);
+            cbEnableSubtitles.TabIndex = 2;
             cbEnableSubtitles.Text = "Enable subtitles";
             cbEnableSubtitles.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // lbl1
             // 
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label2.Location = new Point(0, 0);
-            label2.Name = "label2";
-            label2.Padding = new Padding(6, 0, 0, 0);
-            label2.Size = new Size(515, 25);
-            label2.TabIndex = 0;
-            label2.Text = "Activate subtitles:";
+            lbl1.Dock = DockStyle.Top;
+            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl1.Location = new Point(0, 0);
+            lbl1.Name = "lbl1";
+            lbl1.Padding = new Padding(6, 0, 0, 0);
+            lbl1.Size = new Size(515, 25);
+            lbl1.TabIndex = 0;
+            lbl1.Text = "Activate subtitles:";
             // 
             // panel2
             // 
             panel2.Controls.Add(btnRestoreDefaultsFont);
             panel2.Controls.Add(btnPickColor);
-            panel2.Controls.Add(label8);
-            panel2.Controls.Add(label7);
+            panel2.Controls.Add(lblFontColor);
+            panel2.Controls.Add(lblBorderSize);
             panel2.Controls.Add(inputBorderSize);
             panel2.Controls.Add(comboFontType);
-            panel2.Controls.Add(label5);
+            panel2.Controls.Add(lblFontType);
             panel2.Controls.Add(inputFontSize);
-            panel2.Controls.Add(label4);
-            panel2.Controls.Add(label3);
+            panel2.Controls.Add(lblFontSize);
+            panel2.Controls.Add(lbl2);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 122);
             panel2.Name = "panel2";
             panel2.Size = new Size(515, 125);
             panel2.TabIndex = 5;
+            // 
+            // btnRestoreDefaultsFont
+            // 
+            btnRestoreDefaultsFont.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnRestoreDefaultsFont.BackColor = Color.Lavender;
+            btnRestoreDefaultsFont.FlatAppearance.BorderSize = 0;
+            btnRestoreDefaultsFont.FlatStyle = FlatStyle.Flat;
+            btnRestoreDefaultsFont.Location = new Point(392, 102);
+            btnRestoreDefaultsFont.Name = "btnRestoreDefaultsFont";
+            btnRestoreDefaultsFont.Size = new Size(120, 23);
+            btnRestoreDefaultsFont.TabIndex = 9;
+            btnRestoreDefaultsFont.Text = "Restore defaults";
+            btnRestoreDefaultsFont.UseVisualStyleBackColor = false;
+            btnRestoreDefaultsFont.Click += btnRestoreDefaultsFont_Click;
             // 
             // btnPickColor
             // 
@@ -123,25 +140,25 @@
             btnPickColor.UseVisualStyleBackColor = true;
             btnPickColor.Click += btnPickColor_Click;
             // 
-            // label8
+            // lblFontColor
             // 
-            label8.Location = new Point(276, 54);
-            label8.Name = "label8";
-            label8.Padding = new Padding(6, 0, 0, 0);
-            label8.Size = new Size(79, 30);
-            label8.TabIndex = 7;
-            label8.Text = "Font color:";
-            label8.TextAlign = ContentAlignment.MiddleLeft;
+            lblFontColor.Location = new Point(276, 54);
+            lblFontColor.Name = "lblFontColor";
+            lblFontColor.Padding = new Padding(6, 0, 0, 0);
+            lblFontColor.Size = new Size(79, 30);
+            lblFontColor.TabIndex = 7;
+            lblFontColor.Text = "Font color:";
+            lblFontColor.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // label7
+            // lblBorderSize
             // 
-            label7.Location = new Point(276, 23);
-            label7.Name = "label7";
-            label7.Padding = new Padding(6, 0, 0, 0);
-            label7.Size = new Size(79, 19);
-            label7.TabIndex = 6;
-            label7.Text = "Border size:";
-            label7.TextAlign = ContentAlignment.MiddleLeft;
+            lblBorderSize.Location = new Point(276, 23);
+            lblBorderSize.Name = "lblBorderSize";
+            lblBorderSize.Padding = new Padding(6, 0, 0, 0);
+            lblBorderSize.Size = new Size(79, 19);
+            lblBorderSize.TabIndex = 6;
+            lblBorderSize.Text = "Border size:";
+            lblBorderSize.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // inputBorderSize
             // 
@@ -166,15 +183,15 @@
             comboFontType.Size = new Size(140, 30);
             comboFontType.TabIndex = 4;
             // 
-            // label5
+            // lblFontType
             // 
-            label5.Location = new Point(3, 54);
-            label5.Name = "label5";
-            label5.Padding = new Padding(6, 0, 0, 0);
-            label5.Size = new Size(79, 30);
-            label5.TabIndex = 3;
-            label5.Text = "Font type:";
-            label5.TextAlign = ContentAlignment.MiddleLeft;
+            lblFontType.Location = new Point(3, 54);
+            lblFontType.Name = "lblFontType";
+            lblFontType.Padding = new Padding(6, 0, 0, 0);
+            lblFontType.Size = new Size(79, 30);
+            lblFontType.TabIndex = 3;
+            lblFontType.Text = "Font type:";
+            lblFontType.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // inputFontSize
             // 
@@ -187,31 +204,31 @@
             inputFontSize.Text = "customNumericUpDown1";
             inputFontSize.Value = 55;
             // 
-            // label4
+            // lblFontSize
             // 
-            label4.Location = new Point(3, 23);
-            label4.Name = "label4";
-            label4.Padding = new Padding(6, 0, 0, 0);
-            label4.Size = new Size(79, 19);
-            label4.TabIndex = 1;
-            label4.Text = "Font size:";
-            label4.TextAlign = ContentAlignment.MiddleLeft;
+            lblFontSize.Location = new Point(3, 23);
+            lblFontSize.Name = "lblFontSize";
+            lblFontSize.Padding = new Padding(6, 0, 0, 0);
+            lblFontSize.Size = new Size(79, 19);
+            lblFontSize.TabIndex = 1;
+            lblFontSize.Text = "Font size:";
+            lblFontSize.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // label3
+            // lbl2
             // 
-            label3.Dock = DockStyle.Top;
-            label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.Location = new Point(0, 0);
-            label3.Name = "label3";
-            label3.Padding = new Padding(6, 0, 0, 0);
-            label3.Size = new Size(515, 23);
-            label3.TabIndex = 0;
-            label3.Text = "Change subtitle appearance:";
+            lbl2.Dock = DockStyle.Top;
+            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl2.Location = new Point(0, 0);
+            lbl2.Name = "lbl2";
+            lbl2.Padding = new Padding(6, 0, 0, 0);
+            lbl2.Size = new Size(515, 23);
+            lbl2.TabIndex = 0;
+            lbl2.Text = "Change subtitle appearance:";
             // 
             // panel3
             // 
             panel3.Controls.Add(lblPreview);
-            panel3.Controls.Add(label6);
+            panel3.Controls.Add(lbl3);
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(0, 247);
             panel3.Name = "panel3";
@@ -232,30 +249,16 @@
             lblPreview.Text = "Lorem Ipsum";
             lblPreview.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // label6
+            // lbl3
             // 
-            label6.Dock = DockStyle.Top;
-            label6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            label6.Location = new Point(0, 0);
-            label6.Name = "label6";
-            label6.Padding = new Padding(6, 0, 0, 0);
-            label6.Size = new Size(515, 25);
-            label6.TabIndex = 0;
-            label6.Text = "Preview (Indicative):";
-            // 
-            // btnRestoreDefaultsFont
-            // 
-            btnRestoreDefaultsFont.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnRestoreDefaultsFont.BackColor = Color.Lavender;
-            btnRestoreDefaultsFont.FlatAppearance.BorderSize = 0;
-            btnRestoreDefaultsFont.FlatStyle = FlatStyle.Flat;
-            btnRestoreDefaultsFont.Location = new Point(392, 102);
-            btnRestoreDefaultsFont.Name = "btnRestoreDefaultsFont";
-            btnRestoreDefaultsFont.Size = new Size(120, 23);
-            btnRestoreDefaultsFont.TabIndex = 9;
-            btnRestoreDefaultsFont.Text = "Restore defaults";
-            btnRestoreDefaultsFont.UseVisualStyleBackColor = false;
-            btnRestoreDefaultsFont.Click += btnRestoreDefaultsFont_Click;
+            lbl3.Dock = DockStyle.Top;
+            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl3.Location = new Point(0, 0);
+            lbl3.Name = "lbl3";
+            lbl3.Padding = new Padding(6, 0, 0, 0);
+            lbl3.Size = new Size(515, 25);
+            lbl3.TabIndex = 0;
+            lbl3.Text = "Preview (Indicative):";
             // 
             // SubtitlesUserControl
             // 
@@ -264,7 +267,7 @@
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
-            Controls.Add(label1);
+            Controls.Add(lblHeader);
             Name = "SubtitlesUserControl";
             Size = new Size(515, 536);
             panel1.ResumeLayout(false);
@@ -276,23 +279,23 @@
 
         #endregion
 
-        private Label label1;
+        private Label lblHeader;
         private Panel panel1;
-        private CheckBox cbEnableSubtitles;
-        private Label label2;
+        private Label lbl1;
         private Panel panel2;
-        private Label label3;
+        private Label lbl2;
         private Controls.CustomNumericUpDown inputFontSize;
-        private Label label4;
+        private Label lblFontSize;
         private Controls.ButtonComboBox comboFontType;
-        private Label label5;
+        private Label lblFontType;
         private Panel panel3;
-        private Label label6;
+        private Label lbl3;
         private Controls.CustomLabel lblPreview;
-        private Label label7;
+        private Label lblBorderSize;
         private Controls.CustomNumericUpDown inputBorderSize;
         private Button btnPickColor;
-        private Label label8;
+        private Label lblFontColor;
         private Button btnRestoreDefaultsFont;
+        private Controls.CustomCheckBox cbEnableSubtitles;
     }
 }

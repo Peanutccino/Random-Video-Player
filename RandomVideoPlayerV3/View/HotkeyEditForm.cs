@@ -14,12 +14,19 @@ namespace RandomVideoPlayer.View
         public HotkeyEditForm(HotkeySetting hotkeySetting, HotkeySettings settings)
         {
             InitializeComponent();
+            UpdateDPIScaling();
+
             this.settings = settings;
             //Adjust Form for Borderless Style
             this.Padding = new Padding(fR.BorderSize);//Border size
             this.BackColor = Color.FromArgb(179, 179, 255);//Border color
+
+            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
+            this.Size = DPI.GetSizeScaled(this.Size);
+
             lblAction.Text = hotkeySetting.Action;
         }
+
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
@@ -68,6 +75,29 @@ namespace RandomVideoPlayer.View
         {
             return settings.Hotkeys.Any(h => h.Key == key && h.Modifiers == modifiers);
         }
+
+        private void UpdateDPIScaling()
+        {
+            lblInfo.Size = DPI.GetSizeScaled(lblInfo.Size);
+            lblInfo.Font = DPI.GetFontScaled(lblInfo.Font);
+
+            lblAction.Size = DPI.GetSizeScaled(lblAction.Size);
+            lblAction.Font = DPI.GetFontScaled(lblAction.Font);
+
+            lblSelectedKey.Size = DPI.GetSizeScaled(lblSelectedKey.Size);
+            lblSelectedKey.Font = DPI.GetFontScaled(lblSelectedKey.Font);
+
+            btnOK.Size = DPI.GetSizeScaled(btnOK.Size);
+            btnOK.Font = DPI.GetFontScaled(btnOK.Font);
+            btnOK.Location = new Point(3, panelBody.Height - btnOK.Height - 3);
+
+
+            btnCancel.Size = DPI.GetSizeScaled(btnCancel.Size);
+            btnCancel.Font = DPI.GetFontScaled(btnCancel.Font);
+            btnCancel.Location = new Point(panelBody.Width - btnCancel.Width - 3, panelBody.Height - btnCancel.Height - 3);
+        }
+
+
         #region WndProc Code for clean style of the Form and regaining usabality
         //Resizable Windows Form Spaghetti
         protected override void WndProc(ref Message m)

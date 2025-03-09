@@ -36,6 +36,7 @@ namespace RandomVideoPlayer.Functions
                     new HotkeySetting { Action = "VolumeIncrease", Key = Keys.Up, Modifiers = Keys.None },
                     new HotkeySetting { Action = "VolumeDecrease", Key = Keys.Down, Modifiers = Keys.None },
                     new HotkeySetting { Action = "ToggleExclusiveFullscreen", Key = Keys.F11, Modifiers = Keys.None },
+                    new HotkeySetting { Action = "ToggleStatisticsOverlay", Key = Keys.J, Modifiers = Keys.Control },
                     new HotkeySetting { Action = "SeekForward", Key = Keys.Right, Modifiers = Keys.Alt },
                     new HotkeySetting { Action = "SeekBackward", Key = Keys.Left, Modifiers = Keys.Alt },
                     new HotkeySetting { Action = "SpeedIncrease", Key = Keys.Up, Modifiers = Keys.Control },

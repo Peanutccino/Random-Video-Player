@@ -11,6 +11,7 @@ namespace RandomVideoPlayer.Controls
     {
         public Color CheckedBackColor { get; set; } = Color.LightGreen;
         public Color UncheckedBackColor { get; set; } = Color.LightGray;
+
         private bool isHovered = false;
         private bool isPressed = false;
 
@@ -45,25 +46,21 @@ namespace RandomVideoPlayer.Controls
 
         protected override void OnPaint(PaintEventArgs pevent)
         {
-            // Create a Graphics object
             Graphics g = pevent.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.Clear(this.Parent.BackColor);
 
-            // Determine the checkbox's rectangle
             Rectangle rect = this.ClientRectangle;
             rect.Inflate(-1, -1);
 
-            // Create a path for the rounded rectangle
             GraphicsPath path = new GraphicsPath();
-            int radius = rect.Height; // Full height radius for pill shape
+            int radius = rect.Height; 
             path.AddArc(rect.X, rect.Y, radius, radius, 180, 90);
             path.AddArc(rect.Right - radius, rect.Y, radius, radius, 270, 90);
             path.AddArc(rect.Right - radius, rect.Bottom - radius, radius, radius, 0, 90);
             path.AddArc(rect.X, rect.Bottom - radius, radius, radius, 90, 90);
             path.CloseFigure();
 
-            // Determine background color based on state
             Color baseColor = this.Checked ? CheckedBackColor : UncheckedBackColor;
             Color backColor = baseColor;
 
@@ -76,13 +73,11 @@ namespace RandomVideoPlayer.Controls
                 backColor = DarkenColor(baseColor, 0.06f);
             }
 
-            // Draw the background with appropriate color
             using (Brush brush = new SolidBrush(backColor))
             {
                 g.FillPath(brush, path);
             }
 
-            // Draw the text
             TextRenderer.DrawText(g, this.Text, this.Font, rect, this.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
     }

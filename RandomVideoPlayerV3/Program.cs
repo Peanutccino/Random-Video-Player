@@ -14,10 +14,8 @@ namespace RandomVideoPlayer
             {
                 ApplicationConfiguration.Initialize();
 
-
                 string filePath = args.Length > 0 ? args[0] : string.Empty;
                 Application.Run(new MainForm(filePath));
-
             }
             catch (Exception ex)
             {

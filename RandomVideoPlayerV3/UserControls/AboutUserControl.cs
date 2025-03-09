@@ -32,13 +32,23 @@ namespace RandomVideoPlayer.UserControls
         public AboutUserControl(SettingsModel settings)
         {
             InitializeComponent();
+
+            rtbConsole.Font = new Font(FontFamily.GenericMonospace, 9);
+
+            UpdateDPIScaling();
+
             this.settings = settings;
 
-            lblCurrentVersion.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string[] versionParts = currentVersion.ToString().Split('.');
+            string truncatedVersion = string.Join(".", versionParts[0], versionParts[1]);
+
+            lblCurrentVersion.Text = "Current Version:".PadRight(20) + truncatedVersion;
+            lblLatestVersion.Text = "Latest Version: ".PadRight(22) + "-";
+
             blinkTimer = new System.Timers.Timer(20);
             blinkTimer.Elapsed += OnTimedEvent;
 
-            rtbConsole.Font = new Font(FontFamily.GenericMonospace, 9);
 
             BindControls();
             LoadSettings();
@@ -63,7 +73,6 @@ namespace RandomVideoPlayer.UserControls
             if (gotCancelled) rtbConsole.Clear();
             CheckForUpdates();
         }
-
         private void btnGitHub_Click(object sender, EventArgs e)
         {
             if (updateAvailable && !needToRestart)
@@ -285,14 +294,15 @@ namespace RandomVideoPlayer.UserControls
                         {
                             updateAvailable = false;
 
-                            UpdateProgress("You're using the latest version!");
-                            lblLatestVersion.Text = latestVersion.ToString() + " - You're using the latest version!";
+                            UpdateProgress("You're using the latest version!");                          
+
+                            lblLatestVersion.Text = "Latest Version: ".PadRight(22) + latestVersion.ToString() + " - You're using the latest version!";
                         }
                     }
                     else
                     {
                         UpdateProgress("Error parsing the latest version number");
-                        lblLatestVersion.Text = "Error parsing the latest version number. Please check the version file format.";
+                        lblLatestVersion.Text = "Latest Version: ".PadRight(22) + "Error parsing the latest version number. Please check the version file format.";
                     }
                 }
             }
@@ -469,6 +479,48 @@ namespace RandomVideoPlayer.UserControls
             }
 
             btnGitHub.BackColor = Color.FromArgb(value, value, 255);
+        }
+
+
+        private void UpdateDPIScaling()
+        {
+            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
+            this.Size = DPI.GetSizeScaled(this.Size);
+
+            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
+            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
+
+            lblTitle.Font = DPI.GetFontScaled(lblTitle.Font);
+            lblSubtitle.Font = DPI.GetFontScaled(lblSubtitle.Font);
+
+            panelVersion.Height = DPI.GetDivided(panelVersion.Height);
+
+            lblCurrentVersion.Size = DPI.GetSizeScaled(lblCurrentVersion.Size);
+            lblCurrentVersion.Font = DPI.GetFontScaled(lblCurrentVersion.Font);
+
+            lblLatestVersion.Size = DPI.GetSizeScaled(lblLatestVersion.Size);
+            lblLatestVersion.Font = DPI.GetFontScaled(lblLatestVersion.Font);
+
+            btnSync.Size = DPI.GetSizeScaled(btnSync.Size);
+
+            panelBody.Height = DPI.GetDivided(panelBody.Height);
+
+            cbUpdateAlwaysCheck.Size = DPI.GetSizeScaled(cbUpdateAlwaysCheck.Size);
+            cbUpdateAlwaysCheck.Font = DPI.GetFontScaled(cbUpdateAlwaysCheck.Font);
+
+            btnGitHub.Size = DPI.GetSizeScaled(btnGitHub.Size);
+            btnGitHub.Font = DPI.GetFontScaled(btnGitHub.Font);
+            btnGitHub.Location = new Point((panelBody.Width / 2) - (btnGitHub.Width / 2), cbUpdateAlwaysCheck.Location.Y + cbUpdateAlwaysCheck.Height + 3);
+
+            btnCancel.Size = DPI.GetSizeScaled(btnCancel.Size);
+            btnCancel.Font = DPI.GetFontScaled(btnCancel.Font);
+            btnCancel.Location = new Point((panelBody.Width / 2) - (btnCancel.Width / 2), btnGitHub.Location.Y + btnGitHub.Height + 3);
+
+            rtbConsole.Size = DPI.GetSizeScaled(rtbConsole.Size);
+            rtbConsole.Font = DPI.GetFontScaled(rtbConsole.Font);
+            rtbConsole.Location = new Point(3, btnCancel.Location.Y + btnCancel.Height + 3);
+            rtbConsole.Height = panelBody.Height - rtbConsole.Location.Y - 3;
+            rtbConsole.Width = panelBody.Width - 6;
         }
     }
 }

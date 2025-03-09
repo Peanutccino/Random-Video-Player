@@ -51,13 +51,6 @@ namespace RandomVideoPlayer.Model
         public int AutoPlayTimerValueStartPoint { get; set; }
         public int AutoPlayTimerValueEndPoint { get; set; }
         public bool AutoPlayTimerRangeEnabled { get; set; }
-        public List<int> SelectedAnimations { get; set; }
-        public bool BurnsEffectEnabled { get; set; }
-        public bool FadeEffectEnabled { get; set; }
-        public double PanAmount { get; set; }
-        public double ZoomAmount { get; set; }
-        public int ZoomEasingFunction { get; set; }
-        public int PanEasingFunction { get; set; }
         public bool RTXVSREnabled { get; set; }
         #endregion
 
@@ -93,6 +86,16 @@ namespace RandomVideoPlayer.Model
         public bool[] ButtonStates { get; set; }
         public List<int> ButtonOrder { get; set; }
         public bool ShowButtonToPlayFromCurrentFolder { get; set; }
+        #endregion
+
+        #region Experimental
+        public List<int> SelectedAnimations { get; set; }
+        public bool BurnsEffectEnabled { get; set; }
+        public bool FadeEffectEnabled { get; set; }
+        public double PanAmount { get; set; }
+        public double ZoomAmount { get; set; }
+        public int ZoomEasingFunction { get; set; }
+        public int PanEasingFunction { get; set; }
         #endregion
 
         #region About

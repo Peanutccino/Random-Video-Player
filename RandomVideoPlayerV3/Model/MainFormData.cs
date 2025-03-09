@@ -10,6 +10,7 @@ namespace RandomVideoPlayer.Model
     {
         public static readonly string VersionUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version.txt";
         public static readonly string VersionHistoryUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version_history.txt";
+        public static readonly string VSRFilter = "d3d11vpp=scale=2:nvidia-true-hdr:scaling-mode=nvidia";
 
         public static readonly int doubleClickDelay = 180; //Delay to wait for potential double click otherwise execute single click
 
@@ -34,8 +35,9 @@ namespace RandomVideoPlayer.Model
         public static Size backupSize { get; set; }
         public static bool foundUpdate { get; set; } = false;
         public static bool progressBufferActive { get; set; } = false;
-        public static int cumulativeSeek = 0;
-        public static int seekTimerDelay = 200;
+        public static int cumulativeSeek { get; set; } = 0;
+        public static int seekTimerDelay { get; set; } = 150;
+        public static bool isImage { get; set; } = false;
         public static bool cursorHidden { get; set; } = false;
         public static bool TouchEnabled { get; set; } = false;
 

@@ -33,7 +33,6 @@ namespace RandomVideoPlayer.Functions
             catch (Exception ex)
             {
                 Error.Log(ex, "Error fetching version history");
-                //UpdateProgress($"Error fetching version history: {ex.Message}");
             }
 
             return versionHistory;

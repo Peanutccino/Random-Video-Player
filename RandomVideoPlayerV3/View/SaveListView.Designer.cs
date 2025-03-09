@@ -38,12 +38,12 @@
             panelBottom = new Panel();
             btnDelete = new FontAwesome.Sharp.IconButton();
             tbListName = new TextBox();
-            panel1 = new Panel();
+            panelTop = new Panel();
             lblEntries = new Label();
             lblFiles = new Label();
             toolTipInfo = new ToolTip(components);
             panelBottom.SuspendLayout();
-            panel1.SuspendLayout();
+            panelTop.SuspendLayout();
             SuspendLayout();
             // 
             // lblTitle
@@ -154,7 +154,7 @@
             // 
             // tbListName
             // 
-            tbListName.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tbListName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbListName.BackColor = Color.MintCream;
             tbListName.Location = new Point(3, 6);
             tbListName.Name = "tbListName";
@@ -163,17 +163,17 @@
             tbListName.TabIndex = 4;
             tbListName.TextChanged += tbListName_TextChanged;
             // 
-            // panel1
+            // panelTop
             // 
-            panel1.BackColor = Color.Honeydew;
-            panel1.Controls.Add(lblEntries);
-            panel1.Controls.Add(lblFiles);
-            panel1.Controls.Add(lblTitle);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(359, 70);
-            panel1.TabIndex = 5;
+            panelTop.BackColor = Color.Honeydew;
+            panelTop.Controls.Add(lblEntries);
+            panelTop.Controls.Add(lblFiles);
+            panelTop.Controls.Add(lblTitle);
+            panelTop.Dock = DockStyle.Top;
+            panelTop.Location = new Point(0, 0);
+            panelTop.Name = "panelTop";
+            panelTop.Size = new Size(359, 70);
+            panelTop.TabIndex = 5;
             // 
             // lblEntries
             // 
@@ -202,7 +202,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(359, 381);
             Controls.Add(lvListSelect);
-            Controls.Add(panel1);
+            Controls.Add(panelTop);
             Controls.Add(panelBottom);
             KeyPreview = true;
             MinimumSize = new Size(375, 420);
@@ -213,7 +213,7 @@
             Resize += SaveListView_Resize;
             panelBottom.ResumeLayout(false);
             panelBottom.PerformLayout();
-            panel1.ResumeLayout(false);
+            panelTop.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -227,7 +227,7 @@
         private FontAwesome.Sharp.IconButton btnCancel;
         private Panel panelBottom;
         private TextBox tbListName;
-        private Panel panel1;
+        private Panel panelTop;
         private Label lblEntries;
         private Label lblFiles;
         private ToolTip toolTipInfo;
