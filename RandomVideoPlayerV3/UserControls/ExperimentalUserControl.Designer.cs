@@ -31,38 +31,43 @@
             lblHeader = new Label();
             panel1 = new Panel();
             flowLayoutPanel4 = new FlowLayoutPanel();
-            cbToggleZoomEffect = new Controls.CustomCheckBox();
-            cbToggleMoveHorizontalEffect = new Controls.CustomCheckBox();
-            cbToggleMoveVerticalEffect = new Controls.CustomCheckBox();
+            cbToggleZoomEffect = new RandomVideoPlayer.Controls.CustomCheckBox();
+            cbToggleMoveHorizontalEffect = new RandomVideoPlayer.Controls.CustomCheckBox();
+            cbToggleMoveVerticalEffect = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl7 = new Label();
             btnRestoreDefaults = new Button();
             flowLayoutPanel3 = new FlowLayoutPanel();
             lbl5 = new Label();
-            inputPanAmountValue = new Controls.CustomNumericUpDown();
+            inputPanAmountValue = new RandomVideoPlayer.Controls.CustomNumericUpDown();
             lbl6 = new Label();
-            comboPanEffects = new Controls.ButtonComboBox();
+            comboPanEffects = new RandomVideoPlayer.Controls.ButtonComboBox();
             flowLayoutPanel2 = new FlowLayoutPanel();
             lbl3 = new Label();
-            inputZoomAmountValue = new Controls.CustomNumericUpDown();
+            inputZoomAmountValue = new RandomVideoPlayer.Controls.CustomNumericUpDown();
             lbl4 = new Label();
-            comboZoomEffects = new Controls.ButtonComboBox();
+            comboZoomEffects = new RandomVideoPlayer.Controls.ButtonComboBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            cbKenBurnsEffect = new Controls.CustomCheckBox();
-            cbFadeEffect = new Controls.CustomCheckBox();
+            cbKenBurnsEffect = new RandomVideoPlayer.Controls.CustomCheckBox();
+            cbFadeEffect = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl2 = new Label();
             lbl1 = new Label();
+            panel2 = new Panel();
+            inputScalingFactors = new RandomVideoPlayer.Controls.ButtonComboBox();
+            cbEnableCustomScaling = new RandomVideoPlayer.Controls.CustomCheckBox();
+            lbl8 = new Label();
             panel1.SuspendLayout();
             flowLayoutPanel4.SuspendLayout();
             flowLayoutPanel3.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // lblHeader
             // 
             lblHeader.BackColor = Color.GhostWhite;
             lblHeader.Dock = DockStyle.Top;
-            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblHeader.ForeColor = Color.Indigo;
             lblHeader.Location = new Point(0, 0);
             lblHeader.Name = "lblHeader";
@@ -138,7 +143,7 @@
             // lbl7
             // 
             lbl7.Dock = DockStyle.Top;
-            lbl7.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl7.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbl7.Location = new Point(0, 189);
             lbl7.Name = "lbl7";
             lbl7.Padding = new Padding(6, 0, 0, 0);
@@ -210,7 +215,7 @@
             comboPanEffects.BackColor = Color.LightPink;
             comboPanEffects.DrawMode = DrawMode.OwnerDrawFixed;
             comboPanEffects.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboPanEffects.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            comboPanEffects.Font = new Font("Segoe UI", 8.25F);
             comboPanEffects.FormattingEnabled = true;
             comboPanEffects.ItemHeight = 16;
             comboPanEffects.Location = new Point(325, 6);
@@ -268,7 +273,7 @@
             comboZoomEffects.BackColor = Color.LightPink;
             comboZoomEffects.DrawMode = DrawMode.OwnerDrawFixed;
             comboZoomEffects.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboZoomEffects.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            comboZoomEffects.Font = new Font("Segoe UI", 8.25F);
             comboZoomEffects.FormattingEnabled = true;
             comboZoomEffects.ItemHeight = 16;
             comboZoomEffects.Location = new Point(325, 6);
@@ -314,7 +319,7 @@
             // lbl2
             // 
             lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl2.Font = new Font("Segoe UI", 9F);
             lbl2.Location = new Point(0, 24);
             lbl2.Name = "lbl2";
             lbl2.Padding = new Padding(6, 0, 0, 0);
@@ -325,7 +330,7 @@
             // lbl1
             // 
             lbl1.Dock = DockStyle.Top;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbl1.Location = new Point(0, 0);
             lbl1.Name = "lbl1";
             lbl1.Padding = new Padding(6, 0, 0, 0);
@@ -333,10 +338,58 @@
             lbl1.TabIndex = 0;
             lbl1.Text = "Ken Burns effect - for static images";
             // 
+            // panel2
+            // 
+            panel2.Controls.Add(inputScalingFactors);
+            panel2.Controls.Add(cbEnableCustomScaling);
+            panel2.Controls.Add(lbl8);
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(0, 349);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(507, 134);
+            panel2.TabIndex = 18;
+            panel2.Visible = false;
+            // 
+            // inputScalingFactors
+            // 
+            inputScalingFactors.BackColor = Color.Lavender;
+            inputScalingFactors.Dock = DockStyle.Top;
+            inputScalingFactors.DrawMode = DrawMode.OwnerDrawFixed;
+            inputScalingFactors.DropDownStyle = ComboBoxStyle.DropDownList;
+            inputScalingFactors.FormattingEnabled = true;
+            inputScalingFactors.Location = new Point(0, 64);
+            inputScalingFactors.Name = "inputScalingFactors";
+            inputScalingFactors.Size = new Size(507, 24);
+            inputScalingFactors.TabIndex = 2;
+            // 
+            // cbEnableCustomScaling
+            // 
+            cbEnableCustomScaling.BoxSize = 13;
+            cbEnableCustomScaling.Dock = DockStyle.Top;
+            cbEnableCustomScaling.HoverColor = Color.DeepSkyBlue;
+            cbEnableCustomScaling.Location = new Point(0, 24);
+            cbEnableCustomScaling.Name = "cbEnableCustomScaling";
+            cbEnableCustomScaling.PaddingLeft = 9;
+            cbEnableCustomScaling.Size = new Size(507, 40);
+            cbEnableCustomScaling.TabIndex = 1;
+            cbEnableCustomScaling.Text = "Enable custom scaling";
+            cbEnableCustomScaling.UseVisualStyleBackColor = true;
+            // 
+            // lbl8
+            // 
+            lbl8.Dock = DockStyle.Top;
+            lbl8.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl8.Location = new Point(0, 0);
+            lbl8.Name = "lbl8";
+            lbl8.Size = new Size(507, 24);
+            lbl8.TabIndex = 0;
+            lbl8.Text = "Enable and set custom scaling:";
+            // 
             // ExperimentalUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel2);
             Controls.Add(panel1);
             Controls.Add(lblHeader);
             Name = "ExperimentalUserControl";
@@ -346,6 +399,7 @@
             flowLayoutPanel3.ResumeLayout(false);
             flowLayoutPanel2.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -374,5 +428,9 @@
         private Controls.CustomCheckBox cbToggleZoomEffect;
         private Controls.CustomCheckBox cbToggleMoveHorizontalEffect;
         private Controls.CustomCheckBox cbToggleMoveVerticalEffect;
+        private Panel panel2;
+        private Controls.CustomCheckBox cbEnableCustomScaling;
+        private Label lbl8;
+        private Controls.ButtonComboBox inputScalingFactors;
     }
 }

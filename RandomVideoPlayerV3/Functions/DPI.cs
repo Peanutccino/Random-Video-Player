@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RandomVideoPlayer.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,10 +13,17 @@ namespace RandomVideoPlayer.Functions
 
         public static void SetScalingFactor()
         {
-            using (Graphics graphics = Graphics.FromHwnd(nint.Zero))
+            if (SettingsHandler.EnableCustomScaling)
             {
-                float dpiX = graphics.DpiX;
-                Scale = dpiX / 96.0f;
+                Scale = SettingsHandler.CustomScaling;
+            }
+            else
+            {
+                using (Graphics graphics = Graphics.FromHwnd(nint.Zero))
+                {
+                    float dpiX = graphics.DpiX;
+                    Scale = dpiX / 96.0f;
+                }
             }
         }
 

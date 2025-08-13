@@ -97,11 +97,13 @@ namespace RandomVideoPlayer.UserControls
 
         private void RadioButton_CheckedChanged(object? sender, EventArgs e)
         {
-            RadioButton radioButton = sender as RadioButton;
-
-            if (radioButton != null && radioButton.Checked)
+            if (sender is RadioButton selectedRadioButton && selectedRadioButton.Checked)
             {
-                switch (radioButton.Name)
+                rbRepeatVideo.Checked = selectedRadioButton == rbRepeatVideo;
+                rbAutoNext.Checked = selectedRadioButton == rbAutoNext;
+                rbAutoTimer.Checked = selectedRadioButton == rbAutoTimer;
+
+                switch (selectedRadioButton.Name)
                 {
                     case "rbRepeatVideo":
                         settings.AutoPlayMethod = AutoPlayMethod.LoopVideo;

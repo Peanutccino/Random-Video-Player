@@ -96,6 +96,8 @@ namespace RandomVideoPlayer.Model
         public double ZoomAmount { get; set; }
         public int ZoomEasingFunction { get; set; }
         public int PanEasingFunction { get; set; }
+        public bool EnableCustomScaling { get; set; }
+        public float CustomScaling { get; set; }
         #endregion
 
         #region About

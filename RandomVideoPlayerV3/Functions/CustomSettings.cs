@@ -97,6 +97,9 @@ namespace RandomVideoPlayer.Functions
         public string subtitleFontColor { get; set; } = "#FFFFFF";
         public bool rtxVSREnabled { get; set; } = false;
 
+        public bool enableCustomScaling { get; set; } = false;
+        public float customScaling { get; set; } = 1.0f;
+
         private static string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RVP-Config.json");
 
         private static CustomSettings _instance;

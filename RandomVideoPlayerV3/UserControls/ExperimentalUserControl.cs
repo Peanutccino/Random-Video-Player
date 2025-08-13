@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace RandomVideoPlayer.UserControls
     public partial class ExperimentalUserControl : UserControl
     {
         private SettingsModel settings;
+        private string[] scalingFactors = { "1.0", "1.25", "1.5", "1.75", "2.0", "3.0" };
         public ExperimentalUserControl(SettingsModel settings)
         {
             InitializeComponent();
@@ -40,8 +42,17 @@ namespace RandomVideoPlayer.UserControls
 
             comboPanEffects.DataSource = Enum.GetValues(typeof(EasingMethods));
             comboPanEffects.SelectedIndex = settings.PanEasingFunction;
-        }        
-        
+
+            cbEnableCustomScaling.Checked = settings.EnableCustomScaling;
+            inputScalingFactors.Items.AddRange(scalingFactors);
+
+            //var storedValue = settings.CustomScaling.ToString(CultureInfo.InvariantCulture);
+            //var testIndex = Array.IndexOf(scalingFactors, storedValue);
+
+            inputScalingFactors.SelectedIndex = Array.IndexOf(scalingFactors, settings.CustomScaling.ToString(CultureInfo.InvariantCulture));
+            //inputScalingFactors.SelectedItem = settings.CustomScaling.ToString();
+        }
+
         private void BindControls()
         {
             cbToggleZoomEffect.CheckedChanged += (s, e) =>
@@ -87,6 +98,16 @@ namespace RandomVideoPlayer.UserControls
             comboPanEffects.SelectedIndexChanged += (s, e) =>
             {
                 settings.PanEasingFunction = comboPanEffects.SelectedIndex;
+            };
+
+            cbEnableCustomScaling.CheckedChanged += (s, e) =>
+            {
+                settings.EnableCustomScaling = cbEnableCustomScaling.Checked;
+            };
+
+            inputScalingFactors.SelectedIndexChanged += (s, e) =>
+            {
+                settings.CustomScaling = float.Parse(inputScalingFactors.SelectedItem.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture);
             };
         }
         private void btnRestoreDefaults_Click(object sender, EventArgs e)

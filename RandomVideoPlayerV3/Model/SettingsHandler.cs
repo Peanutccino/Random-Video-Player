@@ -883,5 +883,34 @@ namespace RandomVideoPlayer.Model
             }
         }
 
+        public static bool EnableCustomScaling
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.enableCustomScaling;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.enableCustomScaling = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static float CustomScaling
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.customScaling;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.customScaling = value;
+                _settingsInstance.Save();
+            }
+        }
     }
 }

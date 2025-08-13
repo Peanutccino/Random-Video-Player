@@ -91,10 +91,9 @@
             panelBottom.Controls.Add(pbVolume);
             panelBottom.Controls.Add(pbPlayerProgress);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 510);
-            panelBottom.Margin = new Padding(4, 5, 4, 5);
+            panelBottom.Location = new Point(0, 306);
             panelBottom.Name = "panelBottom";
-            panelBottom.Size = new Size(1450, 125);
+            panelBottom.Size = new Size(1015, 75);
             panelBottom.TabIndex = 0;
             // 
             // panelExtraButtons
@@ -105,24 +104,23 @@
             panelExtraButtons.Controls.Add(btnStartFromFile);
             panelExtraButtons.Controls.Add(btnSettings);
             panelExtraButtons.Controls.Add(btnMuteToggle);
-            panelExtraButtons.Location = new Point(1060, 38);
-            panelExtraButtons.Margin = new Padding(4, 5, 4, 5);
+            panelExtraButtons.Location = new Point(742, 23);
             panelExtraButtons.Name = "panelExtraButtons";
-            panelExtraButtons.Size = new Size(227, 48);
+            panelExtraButtons.Size = new Size(159, 29);
             panelExtraButtons.TabIndex = 26;
             // 
             // btnAddToQueue
             // 
             btnAddToQueue.FlatAppearance.BorderSize = 0;
             btnAddToQueue.FlatStyle = FlatStyle.Flat;
-            btnAddToQueue.IconChar = FontAwesome.Sharp.IconChar.CirclePlus;
+            btnAddToQueue.IconChar = FontAwesome.Sharp.IconChar.PlusCircle;
             btnAddToQueue.IconColor = Color.Cyan;
             btnAddToQueue.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnAddToQueue.IconSize = 28;
             btnAddToQueue.Location = new Point(0, 0);
-            btnAddToQueue.Margin = new Padding(4, 5, 7, 5);
+            btnAddToQueue.Margin = new Padding(3, 3, 5, 3);
             btnAddToQueue.Name = "btnAddToQueue";
-            btnAddToQueue.Size = new Size(43, 50);
+            btnAddToQueue.Size = new Size(30, 30);
             btnAddToQueue.TabIndex = 22;
             btnAddToQueue.UseVisualStyleBackColor = true;
             btnAddToQueue.Visible = false;
@@ -132,14 +130,14 @@
             // 
             btnStartFromFile.FlatAppearance.BorderSize = 0;
             btnStartFromFile.FlatStyle = FlatStyle.Flat;
-            btnStartFromFile.IconChar = FontAwesome.Sharp.IconChar.PlayCircle;
+            btnStartFromFile.IconChar = FontAwesome.Sharp.IconChar.CirclePlay;
             btnStartFromFile.IconColor = Color.Cyan;
             btnStartFromFile.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnStartFromFile.IconSize = 28;
-            btnStartFromFile.Location = new Point(54, 0);
-            btnStartFromFile.Margin = new Padding(4, 5, 7, 5);
+            btnStartFromFile.Location = new Point(38, 0);
+            btnStartFromFile.Margin = new Padding(3, 3, 5, 3);
             btnStartFromFile.Name = "btnStartFromFile";
-            btnStartFromFile.Size = new Size(43, 50);
+            btnStartFromFile.Size = new Size(30, 30);
             btnStartFromFile.TabIndex = 23;
             btnStartFromFile.UseVisualStyleBackColor = true;
             btnStartFromFile.Visible = false;
@@ -149,14 +147,14 @@
             // 
             btnSettings.FlatAppearance.BorderSize = 0;
             btnSettings.FlatStyle = FlatStyle.Flat;
-            btnSettings.IconChar = FontAwesome.Sharp.IconChar.Gear;
+            btnSettings.IconChar = FontAwesome.Sharp.IconChar.Cog;
             btnSettings.IconColor = Color.Black;
             btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSettings.IconSize = 28;
-            btnSettings.Location = new Point(109, 0);
-            btnSettings.Margin = new Padding(4, 5, 14, 5);
+            btnSettings.Location = new Point(76, 0);
+            btnSettings.Margin = new Padding(3, 3, 10, 3);
             btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(43, 50);
+            btnSettings.Size = new Size(30, 30);
             btnSettings.TabIndex = 7;
             btnSettings.UseVisualStyleBackColor = true;
             btnSettings.Click += btnSettings_Click;
@@ -170,10 +168,10 @@
             btnMuteToggle.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnMuteToggle.IconSize = 21;
             btnMuteToggle.ImageAlign = ContentAlignment.MiddleLeft;
-            btnMuteToggle.Location = new Point(167, 7);
-            btnMuteToggle.Margin = new Padding(4, 5, 14, 5);
+            btnMuteToggle.Location = new Point(117, 4);
+            btnMuteToggle.Margin = new Padding(3, 3, 10, 3);
             btnMuteToggle.Name = "btnMuteToggle";
-            btnMuteToggle.Size = new Size(47, 38);
+            btnMuteToggle.Size = new Size(33, 23);
             btnMuteToggle.TabIndex = 12;
             btnMuteToggle.UseVisualStyleBackColor = true;
             btnMuteToggle.Click += btnMuteToggle_Click;
@@ -186,10 +184,9 @@
             panelMainButtons.Controls.Add(btnNext);
             panelMainButtons.Controls.Add(btnFileBrowse);
             panelMainButtons.Controls.Add(btnListBrowser);
-            panelMainButtons.Location = new Point(4, 28);
-            panelMainButtons.Margin = new Padding(4, 5, 4, 5);
+            panelMainButtons.Location = new Point(3, 17);
             panelMainButtons.Name = "panelMainButtons";
-            panelMainButtons.Size = new Size(350, 63);
+            panelMainButtons.Size = new Size(245, 38);
             panelMainButtons.TabIndex = 25;
             // 
             // btnPlay
@@ -200,10 +197,9 @@
             btnPlay.IconColor = Color.Black;
             btnPlay.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnPlay.IconSize = 30;
-            btnPlay.Location = new Point(0, 10);
-            btnPlay.Margin = new Padding(4, 5, 4, 5);
+            btnPlay.Location = new Point(0, 6);
             btnPlay.Name = "btnPlay";
-            btnPlay.Size = new Size(43, 50);
+            btnPlay.Size = new Size(30, 30);
             btnPlay.TabIndex = 1;
             btnPlay.UseVisualStyleBackColor = true;
             btnPlay.Click += btnPlay_Click;
@@ -217,10 +213,10 @@
             btnPrevious.IconColor = Color.Black;
             btnPrevious.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnPrevious.IconSize = 28;
-            btnPrevious.Location = new Point(79, 10);
-            btnPrevious.Margin = new Padding(14, 5, 14, 5);
+            btnPrevious.Location = new Point(55, 6);
+            btnPrevious.Margin = new Padding(10, 3, 10, 3);
             btnPrevious.Name = "btnPrevious";
-            btnPrevious.Size = new Size(43, 50);
+            btnPrevious.Size = new Size(30, 30);
             btnPrevious.TabIndex = 3;
             btnPrevious.UseVisualStyleBackColor = true;
             btnPrevious.Click += btnPrevious_Click;
@@ -230,14 +226,14 @@
             btnNext.Enabled = false;
             btnNext.FlatAppearance.BorderSize = 0;
             btnNext.FlatStyle = FlatStyle.Flat;
-            btnNext.IconChar = FontAwesome.Sharp.IconChar.ForwardStep;
+            btnNext.IconChar = FontAwesome.Sharp.IconChar.StepForward;
             btnNext.IconColor = Color.Black;
             btnNext.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnNext.IconSize = 28;
-            btnNext.Location = new Point(150, 10);
-            btnNext.Margin = new Padding(14, 5, 14, 5);
+            btnNext.Location = new Point(105, 6);
+            btnNext.Margin = new Padding(10, 3, 10, 3);
             btnNext.Name = "btnNext";
-            btnNext.Size = new Size(43, 50);
+            btnNext.Size = new Size(30, 30);
             btnNext.TabIndex = 4;
             btnNext.UseVisualStyleBackColor = true;
             btnNext.Click += btnNext_Click;
@@ -250,10 +246,10 @@
             btnFileBrowse.IconColor = Color.Black;
             btnFileBrowse.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnFileBrowse.IconSize = 28;
-            btnFileBrowse.Location = new Point(221, 10);
-            btnFileBrowse.Margin = new Padding(14, 5, 14, 5);
+            btnFileBrowse.Location = new Point(155, 6);
+            btnFileBrowse.Margin = new Padding(10, 3, 10, 3);
             btnFileBrowse.Name = "btnFileBrowse";
-            btnFileBrowse.Size = new Size(43, 50);
+            btnFileBrowse.Size = new Size(30, 30);
             btnFileBrowse.TabIndex = 16;
             btnFileBrowse.UseVisualStyleBackColor = true;
             btnFileBrowse.Click += btnFileBrowse_Click;
@@ -266,10 +262,10 @@
             btnListBrowser.IconColor = Color.Black;
             btnListBrowser.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnListBrowser.IconSize = 28;
-            btnListBrowser.Location = new Point(293, 10);
-            btnListBrowser.Margin = new Padding(14, 5, 14, 5);
+            btnListBrowser.Location = new Point(205, 6);
+            btnListBrowser.Margin = new Padding(10, 3, 10, 3);
             btnListBrowser.Name = "btnListBrowser";
-            btnListBrowser.Size = new Size(43, 50);
+            btnListBrowser.Size = new Size(30, 30);
             btnListBrowser.TabIndex = 6;
             btnListBrowser.UseVisualStyleBackColor = true;
             btnListBrowser.Click += btnListBrowser_Click;
@@ -280,10 +276,9 @@
             panel1.Controls.Add(lblSpeed);
             panel1.Controls.Add(lblDurationInfo);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 97);
-            panel1.Margin = new Padding(4, 5, 4, 5);
+            panel1.Location = new Point(0, 58);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1450, 28);
+            panel1.Size = new Size(1015, 17);
             panel1.TabIndex = 24;
             // 
             // lblCurrentInfo
@@ -291,11 +286,10 @@
             lblCurrentInfo.AutoEllipsis = true;
             lblCurrentInfo.Cursor = Cursors.Hand;
             lblCurrentInfo.Dock = DockStyle.Fill;
-            lblCurrentInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblCurrentInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lblCurrentInfo.Location = new Point(0, 0);
-            lblCurrentInfo.Margin = new Padding(4, 0, 4, 0);
             lblCurrentInfo.Name = "lblCurrentInfo";
-            lblCurrentInfo.Size = new Size(1287, 28);
+            lblCurrentInfo.Size = new Size(901, 17);
             lblCurrentInfo.TabIndex = 14;
             lblCurrentInfo.Text = "Current Folder";
             lblCurrentInfo.TextAlign = ContentAlignment.BottomLeft;
@@ -305,21 +299,19 @@
             // 
             lblSpeed.AutoSize = true;
             lblSpeed.Dock = DockStyle.Right;
-            lblSpeed.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblSpeed.Location = new Point(1287, 0);
-            lblSpeed.Margin = new Padding(4, 0, 4, 0);
+            lblSpeed.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblSpeed.Location = new Point(901, 0);
             lblSpeed.Name = "lblSpeed";
-            lblSpeed.Size = new Size(0, 25);
+            lblSpeed.Size = new Size(0, 15);
             lblSpeed.TabIndex = 15;
             // 
             // lblDurationInfo
             // 
             lblDurationInfo.Dock = DockStyle.Right;
-            lblDurationInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblDurationInfo.Location = new Point(1287, 0);
-            lblDurationInfo.Margin = new Padding(4, 0, 4, 0);
+            lblDurationInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblDurationInfo.Location = new Point(901, 0);
             lblDurationInfo.Name = "lblDurationInfo";
-            lblDurationInfo.Size = new Size(163, 28);
+            lblDurationInfo.Size = new Size(114, 17);
             lblDurationInfo.TabIndex = 13;
             lblDurationInfo.Text = "00:00:00 / 00:00:00";
             lblDurationInfo.TextAlign = ContentAlignment.BottomRight;
@@ -335,24 +327,23 @@
             panelControls.Controls.Add(btnShuffle);
             panelControls.Controls.Add(btnListAdd);
             panelControls.Controls.Add(btnAddToFav);
-            panelControls.Location = new Point(359, 38);
-            panelControls.Margin = new Padding(4, 5, 4, 5);
+            panelControls.Location = new Point(251, 23);
             panelControls.Name = "panelControls";
-            panelControls.Size = new Size(693, 48);
+            panelControls.Size = new Size(485, 29);
             panelControls.TabIndex = 21;
             // 
             // btnTouch
             // 
             btnTouch.FlatAppearance.BorderSize = 0;
             btnTouch.FlatStyle = FlatStyle.Flat;
-            btnTouch.IconChar = FontAwesome.Sharp.IconChar.Location;
+            btnTouch.IconChar = FontAwesome.Sharp.IconChar.LocationCrosshairs;
             btnTouch.IconColor = Color.Black;
             btnTouch.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnTouch.IconSize = 29;
-            btnTouch.Location = new Point(581, -2);
-            btnTouch.Margin = new Padding(14, 5, 14, 5);
+            btnTouch.Location = new Point(407, -1);
+            btnTouch.Margin = new Padding(10, 3, 10, 3);
             btnTouch.Name = "btnTouch";
-            btnTouch.Size = new Size(43, 50);
+            btnTouch.Size = new Size(30, 30);
             btnTouch.TabIndex = 25;
             btnTouch.UseVisualStyleBackColor = true;
             btnTouch.Click += btnTouch_Click;
@@ -365,10 +356,10 @@
             btnAutoSkip.IconColor = Color.Black;
             btnAutoSkip.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnAutoSkip.IconSize = 29;
-            btnAutoSkip.Location = new Point(510, -2);
-            btnAutoSkip.Margin = new Padding(14, 5, 14, 5);
+            btnAutoSkip.Location = new Point(357, -1);
+            btnAutoSkip.Margin = new Padding(10, 3, 10, 3);
             btnAutoSkip.Name = "btnAutoSkip";
-            btnAutoSkip.Size = new Size(43, 50);
+            btnAutoSkip.Size = new Size(30, 30);
             btnAutoSkip.TabIndex = 24;
             btnAutoSkip.UseVisualStyleBackColor = true;
             btnAutoSkip.Click += btnAutoSkip_Click;
@@ -378,10 +369,10 @@
             btnSourceSelector.FlatAppearance.BorderSize = 0;
             btnSourceSelector.FlatStyle = FlatStyle.Flat;
             btnSourceSelector.Image = (Image)resources.GetObject("btnSourceSelector.Image");
-            btnSourceSelector.Location = new Point(439, -2);
-            btnSourceSelector.Margin = new Padding(14, 5, 14, 5);
+            btnSourceSelector.Location = new Point(307, -1);
+            btnSourceSelector.Margin = new Padding(10, 3, 10, 3);
             btnSourceSelector.Name = "btnSourceSelector";
-            btnSourceSelector.Size = new Size(43, 48);
+            btnSourceSelector.Size = new Size(30, 29);
             btnSourceSelector.TabIndex = 23;
             btnSourceSelector.UseVisualStyleBackColor = true;
             btnSourceSelector.Click += btnSourceSelector_Click;
@@ -394,10 +385,10 @@
             btnRepeat.IconColor = Color.Black;
             btnRepeat.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnRepeat.IconSize = 29;
-            btnRepeat.Location = new Point(367, 0);
-            btnRepeat.Margin = new Padding(14, 5, 14, 5);
+            btnRepeat.Location = new Point(257, 0);
+            btnRepeat.Margin = new Padding(10, 3, 10, 3);
             btnRepeat.Name = "btnRepeat";
-            btnRepeat.Size = new Size(43, 50);
+            btnRepeat.Size = new Size(30, 30);
             btnRepeat.TabIndex = 22;
             btnRepeat.UseVisualStyleBackColor = true;
             btnRepeat.Click += btnRepeat_Click;
@@ -411,10 +402,10 @@
             btnMoveTo.IconColor = Color.Black;
             btnMoveTo.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnMoveTo.IconSize = 29;
-            btnMoveTo.Location = new Point(224, 0);
-            btnMoveTo.Margin = new Padding(14, 5, 14, 5);
+            btnMoveTo.Location = new Point(157, 0);
+            btnMoveTo.Margin = new Padding(10, 3, 10, 3);
             btnMoveTo.Name = "btnMoveTo";
-            btnMoveTo.Size = new Size(43, 50);
+            btnMoveTo.Size = new Size(30, 30);
             btnMoveTo.TabIndex = 21;
             btnMoveTo.UseVisualStyleBackColor = true;
             btnMoveTo.MouseDown += btnMoveTo_MouseDown;
@@ -428,10 +419,10 @@
             btnRemove.IconColor = Color.Black;
             btnRemove.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnRemove.IconSize = 24;
-            btnRemove.Location = new Point(10, 0);
-            btnRemove.Margin = new Padding(14, 5, 14, 5);
+            btnRemove.Location = new Point(7, 0);
+            btnRemove.Margin = new Padding(10, 3, 10, 3);
             btnRemove.Name = "btnRemove";
-            btnRemove.Size = new Size(43, 50);
+            btnRemove.Size = new Size(30, 30);
             btnRemove.TabIndex = 15;
             btnRemove.UseVisualStyleBackColor = true;
             btnRemove.Click += btnRemove_Click;
@@ -444,10 +435,10 @@
             btnShuffle.IconColor = Color.Black;
             btnShuffle.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnShuffle.IconSize = 29;
-            btnShuffle.Location = new Point(296, 0);
-            btnShuffle.Margin = new Padding(14, 5, 14, 5);
+            btnShuffle.Location = new Point(207, 0);
+            btnShuffle.Margin = new Padding(10, 3, 10, 3);
             btnShuffle.Name = "btnShuffle";
-            btnShuffle.Size = new Size(43, 50);
+            btnShuffle.Size = new Size(30, 30);
             btnShuffle.TabIndex = 18;
             btnShuffle.UseVisualStyleBackColor = true;
             btnShuffle.Click += btnShuffle_Click;
@@ -458,10 +449,10 @@
             btnListAdd.FlatAppearance.BorderSize = 0;
             btnListAdd.FlatStyle = FlatStyle.Flat;
             btnListAdd.Image = (Image)resources.GetObject("btnListAdd.Image");
-            btnListAdd.Location = new Point(81, 0);
-            btnListAdd.Margin = new Padding(14, 5, 14, 5);
+            btnListAdd.Location = new Point(57, 0);
+            btnListAdd.Margin = new Padding(10, 3, 10, 3);
             btnListAdd.Name = "btnListAdd";
-            btnListAdd.Size = new Size(43, 48);
+            btnListAdd.Size = new Size(30, 29);
             btnListAdd.TabIndex = 20;
             btnListAdd.UseVisualStyleBackColor = true;
             btnListAdd.Click += btnListAdd_Click;
@@ -475,10 +466,10 @@
             btnAddToFav.IconColor = Color.Black;
             btnAddToFav.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnAddToFav.IconSize = 29;
-            btnAddToFav.Location = new Point(153, 0);
-            btnAddToFav.Margin = new Padding(14, 5, 14, 5);
+            btnAddToFav.Location = new Point(107, 0);
+            btnAddToFav.Margin = new Padding(10, 3, 10, 3);
             btnAddToFav.Name = "btnAddToFav";
-            btnAddToFav.Size = new Size(43, 50);
+            btnAddToFav.Size = new Size(30, 30);
             btnAddToFav.TabIndex = 17;
             btnAddToFav.UseVisualStyleBackColor = true;
             btnAddToFav.Click += btnAddToFav_Click;
@@ -491,8 +482,7 @@
             pbVolume.CompletedBrush = Color.Black;
             pbVolume.CompletedGraphBrush = Color.White;
             pbVolume.GraphThickness = 1;
-            pbVolume.Location = new Point(1293, 43);
-            pbVolume.Margin = new Padding(4, 5, 4, 5);
+            pbVolume.Location = new Point(905, 26);
             pbVolume.Maximum = 100;
             pbVolume.Minimum = 0;
             pbVolume.MouseoverBrush = Color.Black;
@@ -500,7 +490,7 @@
             pbVolume.RemainingBrush = Color.FromArgb(253, 83, 146);
             pbVolume.RemainingGraphBrush = Color.Black;
             pbVolume.ShowBorder = true;
-            pbVolume.Size = new Size(154, 33);
+            pbVolume.Size = new Size(108, 20);
             pbVolume.TabIndex = 11;
             pbVolume.Text = "flatProgressBar1";
             pbVolume.Value = 50;
@@ -515,7 +505,6 @@
             pbPlayerProgress.Dock = DockStyle.Top;
             pbPlayerProgress.GraphThickness = 1;
             pbPlayerProgress.Location = new Point(0, 0);
-            pbPlayerProgress.Margin = new Padding(4, 5, 4, 5);
             pbPlayerProgress.Maximum = 60;
             pbPlayerProgress.Minimum = 0;
             pbPlayerProgress.MouseoverBrush = Color.FromArgb(250, 164, 158);
@@ -523,7 +512,7 @@
             pbPlayerProgress.RemainingBrush = Color.Black;
             pbPlayerProgress.RemainingGraphBrush = Color.MistyRose;
             pbPlayerProgress.ShowBorder = false;
-            pbPlayerProgress.Size = new Size(1450, 28);
+            pbPlayerProgress.Size = new Size(1015, 17);
             pbPlayerProgress.TabIndex = 0;
             pbPlayerProgress.Text = "flatProgressBar1";
             pbPlayerProgress.Value = 0;
@@ -543,9 +532,8 @@
             panelTop.Controls.Add(btnExitForm);
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
-            panelTop.Margin = new Padding(4, 5, 4, 5);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(1450, 33);
+            panelTop.Size = new Size(1015, 20);
             panelTop.TabIndex = 1;
             // 
             // btnScriptMenu
@@ -553,12 +541,11 @@
             btnScriptMenu.Dock = DockStyle.Left;
             btnScriptMenu.FlatAppearance.BorderSize = 0;
             btnScriptMenu.FlatStyle = FlatStyle.Flat;
-            btnScriptMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold, GraphicsUnit.Point);
+            btnScriptMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold);
             btnScriptMenu.ForeColor = Color.Indigo;
-            btnScriptMenu.Location = new Point(120, 0);
-            btnScriptMenu.Margin = new Padding(4, 5, 4, 5);
+            btnScriptMenu.Location = new Point(84, 0);
             btnScriptMenu.Name = "btnScriptMenu";
-            btnScriptMenu.Size = new Size(69, 33);
+            btnScriptMenu.Size = new Size(48, 20);
             btnScriptMenu.TabIndex = 6;
             btnScriptMenu.Text = "SCRIPT";
             btnScriptMenu.UseVisualStyleBackColor = true;
@@ -569,12 +556,11 @@
             btnAudioTrackMenu.Dock = DockStyle.Left;
             btnAudioTrackMenu.FlatAppearance.BorderSize = 0;
             btnAudioTrackMenu.FlatStyle = FlatStyle.Flat;
-            btnAudioTrackMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold, GraphicsUnit.Point);
+            btnAudioTrackMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold);
             btnAudioTrackMenu.ForeColor = Color.Indigo;
-            btnAudioTrackMenu.Location = new Point(60, 0);
-            btnAudioTrackMenu.Margin = new Padding(4, 5, 4, 5);
+            btnAudioTrackMenu.Location = new Point(42, 0);
             btnAudioTrackMenu.Name = "btnAudioTrackMenu";
-            btnAudioTrackMenu.Size = new Size(60, 33);
+            btnAudioTrackMenu.Size = new Size(42, 20);
             btnAudioTrackMenu.TabIndex = 5;
             btnAudioTrackMenu.Text = "AUD";
             btnAudioTrackMenu.UseVisualStyleBackColor = true;
@@ -585,12 +571,11 @@
             btnSubtitleMenu.Dock = DockStyle.Left;
             btnSubtitleMenu.FlatAppearance.BorderSize = 0;
             btnSubtitleMenu.FlatStyle = FlatStyle.Flat;
-            btnSubtitleMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold, GraphicsUnit.Point);
+            btnSubtitleMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold);
             btnSubtitleMenu.ForeColor = Color.Indigo;
             btnSubtitleMenu.Location = new Point(0, 0);
-            btnSubtitleMenu.Margin = new Padding(4, 5, 4, 5);
             btnSubtitleMenu.Name = "btnSubtitleMenu";
-            btnSubtitleMenu.Size = new Size(60, 33);
+            btnSubtitleMenu.Size = new Size(42, 20);
             btnSubtitleMenu.TabIndex = 4;
             btnSubtitleMenu.Text = "SUB";
             btnSubtitleMenu.UseVisualStyleBackColor = true;
@@ -600,11 +585,10 @@
             // 
             lblTitleBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lblTitleBar.AutoEllipsis = true;
-            lblTitleBar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lblTitleBar.Location = new Point(133, 0);
-            lblTitleBar.Margin = new Padding(4, 0, 4, 0);
+            lblTitleBar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lblTitleBar.Location = new Point(93, 0);
             lblTitleBar.Name = "lblTitleBar";
-            lblTitleBar.Size = new Size(1186, 33);
+            lblTitleBar.Size = new Size(830, 20);
             lblTitleBar.TabIndex = 3;
             lblTitleBar.Text = "Random Video Player ";
             lblTitleBar.TextAlign = ContentAlignment.MiddleCenter;
@@ -619,10 +603,9 @@
             btnMinimizeForm.IconColor = Color.Black;
             btnMinimizeForm.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnMinimizeForm.IconSize = 15;
-            btnMinimizeForm.Location = new Point(1321, 0);
-            btnMinimizeForm.Margin = new Padding(4, 5, 4, 5);
+            btnMinimizeForm.Location = new Point(925, 0);
             btnMinimizeForm.Name = "btnMinimizeForm";
-            btnMinimizeForm.Size = new Size(43, 33);
+            btnMinimizeForm.Size = new Size(30, 20);
             btnMinimizeForm.TabIndex = 2;
             btnMinimizeForm.UseVisualStyleBackColor = true;
             btnMinimizeForm.Click += btnMinimizeForm_Click;
@@ -636,10 +619,9 @@
             btnMaximizeForm.IconColor = Color.Black;
             btnMaximizeForm.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnMaximizeForm.IconSize = 15;
-            btnMaximizeForm.Location = new Point(1364, 0);
-            btnMaximizeForm.Margin = new Padding(4, 5, 4, 5);
+            btnMaximizeForm.Location = new Point(955, 0);
             btnMaximizeForm.Name = "btnMaximizeForm";
-            btnMaximizeForm.Size = new Size(43, 33);
+            btnMaximizeForm.Size = new Size(30, 20);
             btnMaximizeForm.TabIndex = 1;
             btnMaximizeForm.UseVisualStyleBackColor = true;
             btnMaximizeForm.Click += btnMaximizeForm_Click;
@@ -654,10 +636,9 @@
             btnExitForm.IconColor = Color.Black;
             btnExitForm.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnExitForm.IconSize = 15;
-            btnExitForm.Location = new Point(1407, 0);
-            btnExitForm.Margin = new Padding(4, 5, 4, 5);
+            btnExitForm.Location = new Point(985, 0);
             btnExitForm.Name = "btnExitForm";
-            btnExitForm.Size = new Size(43, 33);
+            btnExitForm.Size = new Size(30, 20);
             btnExitForm.TabIndex = 0;
             btnExitForm.UseVisualStyleBackColor = true;
             btnExitForm.Click += btnExitForm_Click;
@@ -666,10 +647,9 @@
             // 
             panelPlayerMPV.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panelPlayerMPV.BackColor = Color.Black;
-            panelPlayerMPV.Location = new Point(0, 33);
-            panelPlayerMPV.Margin = new Padding(4, 5, 4, 5);
+            panelPlayerMPV.Location = new Point(0, 20);
             panelPlayerMPV.Name = "panelPlayerMPV";
-            panelPlayerMPV.Size = new Size(1450, 478);
+            panelPlayerMPV.Size = new Size(1015, 287);
             panelPlayerMPV.TabIndex = 2;
             panelPlayerMPV.MouseDown += panelPlayerMPV_MouseDown;
             panelPlayerMPV.MouseMove += panelPlayerMPV_MouseMove;
@@ -693,16 +673,15 @@
             // MainForm
             // 
             AllowDrop = true;
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(1450, 635);
+            ClientSize = new Size(1015, 381);
             Controls.Add(panelTop);
             Controls.Add(panelBottom);
             Controls.Add(panelPlayerMPV);
             DoubleBuffered = true;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(4, 5, 4, 5);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "RVP";

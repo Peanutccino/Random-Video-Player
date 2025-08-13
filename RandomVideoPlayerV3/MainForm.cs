@@ -68,6 +68,7 @@ namespace RandomVideoPlayer
             InitializeContextMenus();
 
             UpdateDPIScaling();
+
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -2101,6 +2102,7 @@ namespace RandomVideoPlayer
 
             string updatedCurrentFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
 
+
             if (!string.IsNullOrWhiteSpace(updatedCurrentFile))
             {
                 MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(updatedCurrentFile, MainFormData.tempFavorites, btnAddToFav);
@@ -3083,8 +3085,7 @@ namespace RandomVideoPlayer
                 this.ClientSize = fR.FormSize;
             }
             this.Padding = new Padding(fR.BorderSize);
-            this.BackColor = Color.FromArgb(253, 83, 146);
-            
+            this.BackColor = Color.FromArgb(253, 83, 146);            
         }
         private void MainForm_Resize(object sender, EventArgs e)
         {
@@ -3096,7 +3097,7 @@ namespace RandomVideoPlayer
 
             if (this.WindowState == FormWindowState.Normal)
             {
-                fR.TempSize = this.Size;
+                fR.TempSize = DPI.GetSizeScaled(this.Size);
                 fR.FormSize = fR.TempSize;
             }
         }
