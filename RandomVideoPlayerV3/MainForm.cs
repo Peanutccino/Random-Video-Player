@@ -279,11 +279,20 @@ namespace RandomVideoPlayer
             if (fR.WindowExclusiveFullscreen)
             {
                 activityTimer.Enabled = true;
+                if (MainFormData.cursorHidden)
+                {
+                    Cursor.Show();
+                    MainFormData.cursorHidden = false;
+                }
             }
             else
             {
                 activityTimer.Enabled = false;
-                Cursor.Show();
+                if (MainFormData.cursorHidden)
+                {
+                    Cursor.Show();
+                    MainFormData.cursorHidden = false;
+                }
                 this.Size = MainFormData.backupSize;
             }
         }
@@ -440,7 +449,10 @@ namespace RandomVideoPlayer
                     await ScriptHandler.LoadMultiAxisScript(preferredMultiAxisScriptIndex, MainFormData.currentFile, multiAxis);
                 }
             }
-
+            if (SettingsHandler.EnableAutoSkip)
+            {
+                playerMPV.SetBrightness(-100);
+            }
 
             playerMPV.Load(videoFile, true);
 
@@ -593,8 +605,12 @@ namespace RandomVideoPlayer
 
             var playPauseHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "PlayPauseToggle");
 
-            playerMPV.Resume();
-            SettingsHandler.IsPlaying = true;
+
+            if (!SettingsHandler.EnableAutoSkip)
+            {
+                playerMPV.Resume();
+            }
+                SettingsHandler.IsPlaying = true;
             btnPlay.IconChar = FontAwesome.Sharp.IconChar.Pause;
             ThreadHelper.SetToolTipSafe(btnPlay, toolTipUI, $"{GetKeyCombination(playPauseHotkey)} | Pause playback");
             tcServer.State = 2;
@@ -1068,11 +1084,11 @@ namespace RandomVideoPlayer
 
             if (SettingsHandler.ShowButtonStayInCurrentFolder && !MainFormData.playingSingleFile && SettingsHandler.InitPlay)
             {
-                btnStartFromFile.Visible = true;
+                ThreadHelper.SetVisibility(this, btnStartFromFile, true);
             }
             else
             {
-                btnStartFromFile.Visible = false;
+                ThreadHelper.SetVisibility(this, btnStartFromFile, false);
             }
         }
 
@@ -2102,6 +2118,39 @@ namespace RandomVideoPlayer
 
             string updatedCurrentFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
 
+            if (SettingsHandler.EnableAutoSkip)
+            {
+                var nextActionToSkipTo = pbPlayerProgress.DetectGap(0, 5000);
+
+
+                if (nextActionToSkipTo > 0 && SettingsHandler.EnableRandomVideoStartPoint && SettingsHandler.RandomVideoStartPointIgnoreScripts == false)
+                {
+                    var startRange = (int)(nextActionToSkipTo / 1000);
+                    var maxRange = (int)(MainFormData.durationMS / 1000 * 0.8);
+                    var random = new Random();
+
+                    var randomStartPoint = random.Next(startRange, maxRange);
+
+                    playerMPV.SeekAsync(randomStartPoint);
+                }
+                else if (nextActionToSkipTo > 0 && SettingsHandler.SkipVideoStart)
+                {
+                    playerMPV.ShowText("Skipping to next action");
+                    playerMPV.SeekAsync(nextActionToSkipTo / 1000);
+                }
+                else if (SettingsHandler.EnableRandomVideoStartPoint && (SettingsHandler.RandomVideoStartPointIgnoreScripts && pbPlayerProgress.HasActionPoints) == false)
+                {
+                    var maxRange = (int)(MainFormData.durationMS / 1000 * 0.8);
+                    var random = new Random();
+
+                    var randomStartPoint = random.Next(0, maxRange);
+
+                    playerMPV.API.Command("seek", randomStartPoint.ToString(), "absolute");
+                }
+                playerMPV.SetBrightness(0);
+                playerMPV.Resume();
+            }
+
 
             if (!string.IsNullOrWhiteSpace(updatedCurrentFile))
             {
@@ -2132,37 +2181,6 @@ namespace RandomVideoPlayer
             }
             pbPlayerProgress.DeleteActionsPoints();
             UpdateFunscriptGraph();
-
-            if (SettingsHandler.EnableAutoSkip)
-            {
-                var nextActionToSkipTo = pbPlayerProgress.DetectGap(0, 5000);
-
-
-                if (nextActionToSkipTo > 0 && SettingsHandler.EnableRandomVideoStartPoint && SettingsHandler.RandomVideoStartPointIgnoreScripts == false)
-                {
-                    var startRange = (int)(nextActionToSkipTo / 1000);
-                    var maxRange = (int)(MainFormData.durationMS / 1000 * 0.8);
-                    var random = new Random();
-
-                    var randomStartPoint = random.Next(startRange, maxRange);
-
-                    playerMPV.SeekAsync(randomStartPoint);
-                }
-                else if (nextActionToSkipTo > 0 && SettingsHandler.SkipVideoStart)
-                {
-                    playerMPV.ShowText("Skipping to next action");
-                    playerMPV.SeekAsync(nextActionToSkipTo / 1000);
-                }
-                else if (SettingsHandler.EnableRandomVideoStartPoint && (SettingsHandler.RandomVideoStartPointIgnoreScripts && pbPlayerProgress.HasActionPoints) == false)
-                {
-                    var maxRange = (int)(MainFormData.durationMS / 1000 * 0.8);
-                    var random = new Random();
-
-                    var randomStartPoint = random.Next(0, maxRange);
-
-                    playerMPV.SeekAsync(randomStartPoint);
-                }
-            }
         }
         private void UpdateFunscriptGraph()
         {
@@ -3207,6 +3225,7 @@ namespace RandomVideoPlayer
         #endregion
 
         #region WndProc Code for clean style of the Form and regaining usability
+
         //Used for still being able to move the Form around with a mouse down event
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
         private extern static void ReleaseCapture();

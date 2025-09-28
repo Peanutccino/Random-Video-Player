@@ -1,4 +1,6 @@
-﻿namespace RandomVideoPlayer.Functions
+﻿using Mpv.NET.Player;
+
+namespace RandomVideoPlayer.Functions
 {
     public static class ThreadHelper
     {
