@@ -430,6 +430,7 @@ namespace RandomVideoPlayer
                 if (!string.IsNullOrWhiteSpace(preferredScript))
                 {
                     preferredScriptIndex = ScriptHandler.scriptFilesFound.FindIndex(file => file == preferredScript);
+                    preferredScriptIndex = preferredScriptIndex < 0 ? 0 : preferredScriptIndex;
                 }
 
 
@@ -605,12 +606,21 @@ namespace RandomVideoPlayer
 
             var playPauseHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "PlayPauseToggle");
 
+            if (SettingsHandler.EnableAutoSkip && SettingsHandler.SkipAlways)
+            {
+                timerAutoSkipCheck.Enabled = true;
+                playerMPV.Resume();
+            }
+            else
+            {
+                playerMPV.Resume();
+            }
 
             if (!SettingsHandler.EnableAutoSkip)
             {
                 playerMPV.Resume();
             }
-                SettingsHandler.IsPlaying = true;
+            SettingsHandler.IsPlaying = true;
             btnPlay.IconChar = FontAwesome.Sharp.IconChar.Pause;
             ThreadHelper.SetToolTipSafe(btnPlay, toolTipUI, $"{GetKeyCombination(playPauseHotkey)} | Pause playback");
             tcServer.State = 2;
@@ -654,6 +664,12 @@ namespace RandomVideoPlayer
 
             playerMPV.Pause();
             SettingsHandler.IsPlaying = false;
+
+            if (SettingsHandler.EnableAutoSkip && SettingsHandler.SkipAlways)
+            {
+                timerAutoSkipCheck.Enabled = false;
+            }
+
             btnPlay.IconChar = FontAwesome.Sharp.IconChar.Play;
             ThreadHelper.SetToolTipSafe(btnPlay, toolTipUI, $"{GetKeyCombination(playPauseHotkey)} | Start playing from selected source");
             tcServer.State = 1;
@@ -2118,6 +2134,37 @@ namespace RandomVideoPlayer
 
             string updatedCurrentFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
 
+
+            if (!string.IsNullOrWhiteSpace(updatedCurrentFile))
+            {
+                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(updatedCurrentFile, MainFormData.tempFavorites, btnAddToFav);
+                SetTimeServerFile(updatedCurrentFile);
+
+                var currentFileExtension = Path.GetExtension(updatedCurrentFile).TrimStart('.').ToLower();
+                if (ListHandler.ImageExtensions.Contains(currentFileExtension))
+                {
+                    pbPlayerProgress.DeleteActionsPoints();
+                    return;
+                }
+
+                TrackInfo.GrabTrackInfo(playerMPV);
+                UpdateSubtitleOptions();
+                UpdateAudioTracks();
+
+                UpdateScriptFiles();
+
+                ToggleSubtitles();
+                MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(updatedCurrentFile);
+                UpdateListEditIcon();
+            }
+            else
+            {
+                pbPlayerProgress.DeleteActionsPoints();
+                return;
+            }
+            pbPlayerProgress.DeleteActionsPoints();
+            UpdateFunscriptGraph();
+
             if (SettingsHandler.EnableAutoSkip)
             {
                 var nextActionToSkipTo = pbPlayerProgress.DetectGap(0, 5000);
@@ -2150,37 +2197,6 @@ namespace RandomVideoPlayer
                 playerMPV.SetBrightness(0);
                 playerMPV.Resume();
             }
-
-
-            if (!string.IsNullOrWhiteSpace(updatedCurrentFile))
-            {
-                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(updatedCurrentFile, MainFormData.tempFavorites, btnAddToFav);
-                SetTimeServerFile(updatedCurrentFile);
-
-                var currentFileExtension = Path.GetExtension(updatedCurrentFile).TrimStart('.').ToLower();
-                if (ListHandler.ImageExtensions.Contains(currentFileExtension))
-                {
-                    pbPlayerProgress.DeleteActionsPoints();
-                    return;
-                }
-
-                TrackInfo.GrabTrackInfo(playerMPV);
-                UpdateSubtitleOptions();
-                UpdateAudioTracks();
-
-                UpdateScriptFiles();
-
-                ToggleSubtitles();
-                MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(updatedCurrentFile);
-                UpdateListEditIcon();
-            }
-            else
-            {
-                pbPlayerProgress.DeleteActionsPoints();
-                return;
-            }
-            pbPlayerProgress.DeleteActionsPoints();
-            UpdateFunscriptGraph();
         }
         private void UpdateFunscriptGraph()
         {
