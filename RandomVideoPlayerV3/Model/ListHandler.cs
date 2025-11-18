@@ -195,6 +195,36 @@ namespace RandomVideoPlayer.Model
             }
         }
 
+        public static bool ListChanged
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.listChanged;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.listChanged = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static string ListNameTemp
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.listNameTemp;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.listNameTemp = value;
+                _settingsInstance.Save();
+            }
+        }
+
         public static IEnumerable<string> ExtensionFilterForList
         {
             get
@@ -211,50 +241,6 @@ namespace RandomVideoPlayer.Model
             }
         }
 
-        public static bool LbFilterImageEnabled
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.lbFilterImageEnabled;
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.lbFilterImageEnabled = value;
-                _settingsInstance.Save();
-            }
-        }
-
-        public static bool LbFilterVideoEnabled
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.lbFilterVideoEnabled;
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.lbFilterVideoEnabled = value;
-                _settingsInstance.Save();
-            }
-        }
-
-        public static bool LbFilterScriptEnabled
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.lbFilterScriptEnabled;
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.lbFilterScriptEnabled = value;
-                _settingsInstance.Save();
-            }
-        }
 
         /// <value>Stores added favorite folders for easier file browser navigation</value> 
         public static IEnumerable<string> FavoriteFolderList

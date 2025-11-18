@@ -2284,6 +2284,8 @@ namespace RandomVideoPlayer
                 MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(tempFile);
                 UpdateListEditIcon();
             }
+
+            ListHandler.ListChanged = true;
         }
         private async Task SetTimeServerFile(string fileName, bool reload = false)
         {

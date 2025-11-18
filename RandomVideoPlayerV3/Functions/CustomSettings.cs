@@ -61,9 +61,8 @@ namespace RandomVideoPlayer.Functions
         public bool filterVideoEnabled { get; set; } = true;
         public bool filterScriptEnabled { get; set; } = false;
 
-        public bool lbFilterImageEnabled { get; set; } = false;
-        public bool lbFilterVideoEnabled { get; set; } = true;
-        public bool lbFilterScriptEnabled { get; set; } = false;
+        public bool listChanged { get; set; } = false;
+        public string listNameTemp { get; set; } = "Unspecified";
 
         public StringCollection extensionFilterForList { get; set; } = new StringCollection();
         public StringCollection favoriteCollection { get; set; } = new StringCollection();

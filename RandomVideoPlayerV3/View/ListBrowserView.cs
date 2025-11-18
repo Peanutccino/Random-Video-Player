@@ -81,9 +81,9 @@ namespace RandomVideoPlayer.View
 
             cbShowIcons.Checked = _showIcons;
             cbFullPath.Checked = _showFullPath;
-            cbEnableImageFilter.Checked = ListHandler.LbFilterImageEnabled;
-            cbEnableVideoFilter.Checked = ListHandler.LbFilterVideoEnabled;
-            cbEnableScriptFilter.Checked = ListHandler.LbFilterScriptEnabled;
+            cbEnableImageFilter.Checked = ListHandler.FilterImageEnabled;
+            cbEnableVideoFilter.Checked = ListHandler.FilterVideoEnabled;
+            cbEnableScriptFilter.Checked = ListHandler.FilterScriptEnabled;
 
             PopulateSelected(tbPathView.Text);
 
@@ -108,11 +108,13 @@ namespace RandomVideoPlayer.View
                 PopulateCustomList(TempList);
             }
 
-            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            //lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
 
             PopulateFavoriteFolders();
 
             SetupTooltips();
+
+            UpdateListInfo();
         }
         private void ListBrowserView_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -145,7 +147,13 @@ namespace RandomVideoPlayer.View
             {
                 var filePath = item.Tag.ToString();
                 var fileType = item.SubItems[1].Text;
-                if (ListHandler.LbFilterScriptEnabled)
+                if (fileType == "Folder")
+                {
+                    GrabFromDirectory(filePath);
+                    continue;
+                }
+
+                if (ListHandler.FilterScriptEnabled)
                 {
                     foreach (var dir in ListHandler.ScriptDirectories)
                     {
@@ -194,14 +202,14 @@ namespace RandomVideoPlayer.View
                         filteredPaths.Add(filePath);
                     }
                 }
-                if (fileType == "Folder")
-                {
-                    GrabFromDirectory(filePath);
-                }
             }
             TempList.AddRange(filteredPaths);
             PopulateCustomList(TempList);
-            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            //lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+
+            ListHandler.ListChanged = true;
+
+            UpdateListInfo();
         }
         private void btnAddAll_Click(object sender, EventArgs e)
         {
@@ -210,7 +218,11 @@ namespace RandomVideoPlayer.View
                 GrabFromDirectory(tbPathView.Text);
                 PopulateCustomList(TempList);
             }
-            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            //lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+
+            ListHandler.ListChanged = true;
+
+            UpdateListInfo();
         }
         private void btnClearSelected_Click(object sender, EventArgs e)
         {
@@ -225,7 +237,11 @@ namespace RandomVideoPlayer.View
                 }
                 PopulateCustomList(TempList);
             }
-            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            //lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+
+            ListHandler.ListChanged = true;
+
+            UpdateListInfo();
         }
 
         private void btnClearList_Click(object sender, EventArgs e)
@@ -234,6 +250,11 @@ namespace RandomVideoPlayer.View
             TempList.Clear();
             ListHandler.ClearCustomList();
             lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+
+            ListHandler.ListNameTemp = "Unspecified";
+            ListHandler.ListChanged = false;
+
+            UpdateListInfo();
         }
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -276,7 +297,14 @@ namespace RandomVideoPlayer.View
                 TempList = strings;
                 PopulateCustomList(TempList);
 
-                lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+                string listName = Path.GetFileNameWithoutExtension(loadListView.ListToLoad);
+
+                ListHandler.ListNameTemp = listName;
+                ListHandler.ListChanged = false;
+
+                UpdateListInfo();
+
+                //lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()} Current list: {ListHandler.ListNameTemp}";
             }
         }
         private void btnSaveList_Click_1(object sender, EventArgs e)
@@ -291,6 +319,11 @@ namespace RandomVideoPlayer.View
                 {
                     var pathToList = PathHandler.PathToListFolder + @"\" + saveListView.ListToSave + ".txt";
                     File.WriteAllLines(pathToList, TempList, Encoding.UTF8);
+
+                    ListHandler.ListNameTemp = saveListView.ListToSave;
+                    ListHandler.ListChanged = false;
+
+                    UpdateListInfo();
                 }
                 catch (Exception ex)
                 {
@@ -335,6 +368,10 @@ namespace RandomVideoPlayer.View
             TempList = filteredList;
             PopulateCustomList(TempList);
             lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+
+            ListHandler.ListChanged = true;
+
+            UpdateListInfo();
         }
 
         private void btnAddFromPlaylist_Click(object sender, EventArgs e)
@@ -342,7 +379,11 @@ namespace RandomVideoPlayer.View
             TempList.AddRange(ListHandler.PlayList);
             PopulateCustomList(TempList);
 
-            lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+            //lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()}";
+
+            ListHandler.ListChanged = true;
+
+            UpdateListInfo();
         }
 
         private void btnMoveList_Click(object sender, EventArgs e)
@@ -487,7 +528,18 @@ namespace RandomVideoPlayer.View
             ChangeViewFileExplore("Grid");
         }
 
+        private void UpdateListInfo()
+        {
+            if (ListHandler.ListChanged)
+            {
+                lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()} - Current list: {ListHandler.ListNameTemp} (Unsaved changes)";
+            }
+            else
+            {
+                lblTitleBar.Text = $"RVP - ListBrowser - Entries: {lvCustomList.Items.Count.ToString()} - Current list: {ListHandler.ListNameTemp}";
+            }
 
+        }
         private void ChangeViewFileExplore(string viewState)
         {
             if (viewState == "Grid")
@@ -562,19 +614,19 @@ namespace RandomVideoPlayer.View
         }
         private void cbEnableVideoFilter_CheckedChanged(object sender, EventArgs e)
         {
-            ListHandler.LbFilterVideoEnabled = cbEnableVideoFilter.Checked;
+            ListHandler.FilterVideoEnabled = cbEnableVideoFilter.Checked;
             PopulateSelected(tbPathView.Text);
         }
 
         private void cbEnableImageFilter_CheckedChanged(object sender, EventArgs e)
         {
-            ListHandler.LbFilterImageEnabled = cbEnableImageFilter.Checked;
+            ListHandler.FilterImageEnabled = cbEnableImageFilter.Checked;
             PopulateSelected(tbPathView.Text);
         }
 
         private void cbEnableScriptFilter_CheckedChanged(object sender, EventArgs e)
         {
-            ListHandler.LbFilterScriptEnabled = cbEnableScriptFilter.Checked;
+            ListHandler.FilterScriptEnabled = cbEnableScriptFilter.Checked;
         }
         private void btnVideoExtensions_Click(object sender, EventArgs e)
         {
@@ -897,6 +949,10 @@ namespace RandomVideoPlayer.View
                     }
                     TempList.AddRange(filteredPaths);
                     PopulateCustomList(TempList);
+
+                    ListHandler.ListChanged = true;
+
+                    UpdateListInfo();
                 }
                 catch (Exception ex)
                 {
@@ -931,6 +987,10 @@ namespace RandomVideoPlayer.View
                     }
                     TempList.AddRange(filteredPaths);
                     PopulateCustomList(TempList);
+
+                    ListHandler.ListChanged = true;
+
+                    UpdateListInfo();
                 }
                 catch (Exception ex)
                 {
@@ -1018,7 +1078,7 @@ namespace RandomVideoPlayer.View
 
             try
             {
-                if (ListHandler.LbFilterScriptEnabled)
+                if (ListHandler.FilterScriptEnabled)
                 {
                     files.AddRange(ListHandler.GetFiles(folderPath, true));
                 }
@@ -1051,7 +1111,7 @@ namespace RandomVideoPlayer.View
             {
                 var newFilter = new List<string>();
 
-                if (ListHandler.LbFilterImageEnabled)
+                if (ListHandler.FilterImageEnabled)
                 {
                     foreach (var extension in extensionFilter)
                     {
@@ -1061,7 +1121,7 @@ namespace RandomVideoPlayer.View
                         }
                     }
                 }
-                if (ListHandler.LbFilterVideoEnabled)
+                if (ListHandler.FilterVideoEnabled)
                 {
                     foreach (var extension in extensionFilter)
                     {
