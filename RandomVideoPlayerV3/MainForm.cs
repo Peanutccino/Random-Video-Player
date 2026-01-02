@@ -68,8 +68,19 @@ namespace RandomVideoPlayer
             InitializeContextMenus();
 
             UpdateDPIScaling();
-
         }
+
+        private void InitializeScriptProfile()
+        {
+            if (string.IsNullOrWhiteSpace(SettingsHandler.SelectedProfile))
+            {
+                if (SettingsHandler.ScriptProfileList.Count > 0)
+                {
+                    SettingsHandler.SelectedProfile = SettingsHandler.ScriptProfileList[0];
+                }
+            }
+        }
+
         private void MainForm_Load(object sender, EventArgs e)
         {
             CheckForUpdates();
@@ -1174,6 +1185,7 @@ namespace RandomVideoPlayer
         private ContextMenuStrip contextMenuScriptFiles;
         private ToolStripMenuItem enableDisableTimeServerItem;
         private ToolStripMenuItem enableDisableShowGraphItem;
+        private ToolStripMenuItem selectScriptProfiles;
         private ToolStripMenuItem savePreferredScriptSetupItem;
 
         private bool tsmiAutoSize = true;
@@ -1211,7 +1223,8 @@ namespace RandomVideoPlayer
 
             //Script menu
             contextMenuScriptFiles = new ContextMenuStrip { Renderer = new CustomRenderer() };
-            //Create first context menu item for toggling time server
+
+            // 1:Create first context menu item for toggling time server
             enableDisableTimeServerItem = new ToolStripMenuItem("Enable Timecode Server") 
             {
                 AutoSize = tsmiAutoSize,
@@ -1221,7 +1234,8 @@ namespace RandomVideoPlayer
             };
             enableDisableTimeServerItem.CheckedChanged += EnableDisableTimeServerItem_CheckedChanged;
             contextMenuScriptFiles.Items.Add(enableDisableTimeServerItem);
-            //Create context menu item for toggling graph
+
+            // 2:Create context menu item for toggling graph
             enableDisableShowGraphItem = new ToolStripMenuItem("Show Graph")
             {
                 AutoSize = tsmiAutoSize,
@@ -1231,7 +1245,15 @@ namespace RandomVideoPlayer
             };
             enableDisableShowGraphItem.CheckedChanged += EnableDisableShowGraphItem_CheckedChanged;
             contextMenuScriptFiles.Items.Add(enableDisableShowGraphItem);
-            //Create context menu button to save preferred script config
+            // 3: Choose Script Profile
+            selectScriptProfiles = new ToolStripMenuItem("Select Script Profile")
+            {
+                AutoSize = tsmiAutoSize,
+                Font = new Font("Segoe UI", 9 / DPI.Scale),
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+            contextMenuScriptFiles.Items.Add(selectScriptProfiles);
+            // 4:Create context menu button to save preferred script config
             savePreferredScriptSetupItem = new ToolStripMenuItem("Save preferred script for this video")
             {
                 AutoSize = tsmiAutoSize,
@@ -1244,6 +1266,8 @@ namespace RandomVideoPlayer
             contextMenuScriptFiles.Items.Add(new ToolStripSeparator());
             if (SettingsHandler.TimeCodeServer) enableDisableTimeServerItem.Checked = true;
             if (SettingsHandler.GraphEnabled) enableDisableShowGraphItem.Checked = true;
+
+            UpdateScriptProfiles();
         }
 
 
@@ -1375,6 +1399,84 @@ namespace RandomVideoPlayer
             }
         }
 
+        private void UpdateScriptProfiles()
+        {
+            bool isFirstItem = true;
+            if (InvokeRequired)
+            {
+                Invoke(new Action(UpdateScriptProfiles));
+            }
+            else
+            {
+                for(int i = selectScriptProfiles.DropDownItems.Count - 1; i >= 0; i--)
+                {
+                    selectScriptProfiles.DropDownItems.RemoveAt(i);
+                }
+
+                bool anyScriptProfileFound = false;
+
+                string videoPath = MainFormData.currentFile;
+                string preferredScript = SettingsHandler.SelectedProfile;
+                int preferredScriptProfileIndex = 0;
+
+                if (!string.IsNullOrWhiteSpace(preferredScript))
+                {
+                    preferredScriptProfileIndex = SettingsHandler.ScriptProfileList.FindIndex(file => file == preferredScript);
+                }
+                int profileIndex = 0;
+                foreach (var scriptProfile in SettingsHandler.ScriptProfileList)
+                {
+                    var scriptProfileItem = new ToolStripMenuItem(scriptProfile)
+                    {
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Segoe UI", 9 / DPI.Scale),
+                        TextAlign = ContentAlignment.MiddleLeft
+                    };
+                    scriptProfileItem.Click += scriptProfileItem_Click;
+                    if (preferredScriptProfileIndex > 0)
+                    {
+                        if (preferredScriptProfileIndex == profileIndex)
+                        {
+                            scriptProfileItem.Checked = true;
+                            isFirstItem = false;
+                        }
+                    }
+                    else if (isFirstItem)
+                    {
+                        scriptProfileItem.Checked = true;
+                        isFirstItem = false;
+                    }
+                    if (!SettingsHandler.ShowScriptPath)
+                    {
+                        scriptProfileItem.Text = Path.GetFileName(scriptProfile);
+                    }
+                    selectScriptProfiles.DropDownItems.Add(scriptProfileItem);
+                    anyScriptProfileFound = true;
+                    profileIndex++;
+                }
+                if (anyScriptProfileFound == false)
+                {
+                    var placeholder = new ToolStripMenuItem("No script profiles found")
+                    {
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Segoe UI", 9 / DPI.Scale),
+                        TextAlign = ContentAlignment.MiddleLeft
+                    };
+                    placeholder.Enabled = false;
+                    selectScriptProfiles.DropDownItems.Add(placeholder);
+
+                    var createProfileItem = new ToolStripMenuItem("Create Script Profile")
+                    {
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Segoe UI", 9 / DPI.Scale),
+                        TextAlign = ContentAlignment.MiddleLeft
+                    };
+                    selectScriptProfiles.DropDownItems.Add(createProfileItem);
+                    createProfileItem.Click += CreateScriptProfileItem_Click;
+                }
+            }
+        }
+
         private void UpdateScriptFiles()
         {
             bool isFirstItem = true;
@@ -1384,7 +1486,7 @@ namespace RandomVideoPlayer
             }
             else
             {
-                for (int i = contextMenuScriptFiles.Items.Count - 1; i >= 4; i--)
+                for (int i = contextMenuScriptFiles.Items.Count - 1; i >= 5; i--)
                 {
                     contextMenuScriptFiles.Items.RemoveAt(i);
                 }
@@ -1567,11 +1669,7 @@ namespace RandomVideoPlayer
                         PlayerResume();
                     }
                 });
-
-
             }
-
-            //UpdateScriptFiles();
         }
 
         private void EnableDisableShowGraphItem_CheckedChanged(object sender, EventArgs e)
@@ -1607,12 +1705,65 @@ namespace RandomVideoPlayer
                 playerMPV.SetAudioTrack(index);
             }
         }
+
+        private void scriptProfileItem_Click(object sender, EventArgs e)
+        {
+            var clickedItem = sender as ToolStripMenuItem;
+            if (clickedItem != null)
+            {
+                foreach (ToolStripItem item in selectScriptProfiles.DropDownItems)
+                {
+                    if (item is ToolStripMenuItem menuItem)
+                    {
+                        menuItem.Checked = false;
+                    }
+                }
+                clickedItem.Checked = true;
+                SettingsHandler.SelectedProfile = clickedItem.Text;
+
+                PlayNext();
+            }
+        }
+        private void CreateScriptProfileItem_Click(object? sender, EventArgs e)
+        {
+            var newProfileName = "PreferredScripts_Profile-1";
+
+            try
+            {
+                File.Create(Path.Combine(PathHandler.PathToListFolder, newProfileName + ".json")).Close();
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex, $"Couldn't create new profile file: {ex}");
+            }
+
+            SettingsHandler.SelectedProfile = newProfileName;
+
+            UpdateScriptProfiles();
+            playerMPV.ShowText("Script config created");
+        }
         private void SavePreferredScriptSetup_Click(object sender, EventArgs e)
         {
             string videoPath = MainFormData.currentFile;
             string scriptPath = ScriptHandler.CurrentlySelectedScript;
 
             if (string.IsNullOrWhiteSpace(videoPath) || string.IsNullOrWhiteSpace(scriptPath)) return;
+
+            if(SettingsHandler.ScriptProfileList.Count <= 0)
+            {
+                var newProfileName = "PreferredScripts_Profile-1";
+
+                try
+                {
+                    File.Create(Path.Combine(PathHandler.PathToListFolder, newProfileName + ".json")).Close();
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, $"Couldn't create new profile file: {ex}");
+                }
+
+                SettingsHandler.SelectedProfile = newProfileName;
+            }
 
             ScriptConfigManager.SaveVideoConfig(videoPath, "script", scriptPath);
             foreach (var entry in ScriptHandler.CurrentlySelectedMultiAxisScript)
@@ -1642,7 +1793,7 @@ namespace RandomVideoPlayer
                 }
 
                 clickedItem.Checked = true;
-                var index = contextMenuScriptFiles.Items.IndexOf(clickedItem) - 4;
+                var index = contextMenuScriptFiles.Items.IndexOf(clickedItem) - 5;
                 Task.Run(async () =>
                 {
                     await ScriptHandler.RevertDefaultScript();
@@ -2070,6 +2221,11 @@ namespace RandomVideoPlayer
             {
                 Error.Log(ex, "Failed to read Favorites.txt");
             }
+
+            if(string.IsNullOrWhiteSpace(PathHandler.PathToListFolder) == false)
+            {
+                InitializeScriptProfile();
+            }
         }
         private void InitializePlayerEvents()
         {
@@ -2148,10 +2304,12 @@ namespace RandomVideoPlayer
                 }
 
                 TrackInfo.GrabTrackInfo(playerMPV);
+
                 UpdateSubtitleOptions();
                 UpdateAudioTracks();
 
                 UpdateScriptFiles();
+                UpdateScriptProfiles();
 
                 ToggleSubtitles();
                 MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(updatedCurrentFile);

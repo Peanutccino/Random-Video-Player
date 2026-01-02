@@ -1,4 +1,5 @@
 ﻿using RandomVideoPlayer.Functions;
+using System.Diagnostics;
 using System.Windows.Navigation;
 
 namespace RandomVideoPlayer.Model
@@ -226,6 +227,44 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static string SelectedProfile
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.selectedProfile;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.selectedProfile = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static List<string> ScriptProfileList
+        {
+            get
+            {
+                var _profiles = new List<string>();
+                var _pathToListDir = PathHandler.PathToListFolder;
+
+                if (string.IsNullOrWhiteSpace(_pathToListDir) || !Directory.Exists(_pathToListDir))
+                    return _profiles;
+
+                DirectoryInfo dir = new DirectoryInfo(_pathToListDir);
+                foreach (FileInfo file in dir.EnumerateFiles())
+                {
+                    string currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
+                    if (!currentFileExtension.Contains("json")) continue;
+
+                    _profiles.Add(Path.GetFileNameWithoutExtension(file.Name));
+                }
+                return _profiles;
+            }
+        }
+
         /// <value>Defines whether the timecode server should be started</value> 
         public static bool TimeCodeServer
         {

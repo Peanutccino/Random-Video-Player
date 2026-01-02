@@ -6,6 +6,11 @@ namespace RandomVideoPlayer.Model
 {
     public class SettingsModel
     {
+        #region Profiles
+        public List<string> ProfileList { get; set; } //Dynamic list of profiles
+        public string SelectedProfile { get; set; } //Permanent setting
+        #endregion
+
         #region Sync
         public bool IsTimeCodeServerEnabled { get; set; }
         public bool IsGraphEnabled { get; set; }

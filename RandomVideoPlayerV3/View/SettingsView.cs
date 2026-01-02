@@ -54,6 +54,9 @@ namespace RandomVideoPlayer.View
         }
         private void InitializeSettings()
         {
+            settingsModel.SelectedProfile = SettingsHandler.SelectedProfile;
+            settingsModel.ProfileList = SettingsHandler.ScriptProfileList;
+
             settingsModel.IsTimeCodeServerEnabled = SettingsHandler.TimeCodeServer;
             settingsModel.IsGraphEnabled = SettingsHandler.GraphEnabled;
             settingsModel.ScriptDirectories = ListHandler.ScriptDirectories.ToList();
@@ -135,6 +138,7 @@ namespace RandomVideoPlayer.View
             sbtnRemember.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new RememberUserControl(settingsModel)); };
             sbtnInputs.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InputsUserControl()); };
             sbtnSubtitles.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SubtitlesUserControl(settingsModel)); };
+            sbtnProfiles.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new ProfilesUserControl(settingsModel)); };
             sbtnSync.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SyncUserControl(settingsModel)); };
             sbtnSkip.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SkipUserControl(settingsModel)); };
             sbtnInterface.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InterfaceUserControl(settingsModel)); };
@@ -145,6 +149,8 @@ namespace RandomVideoPlayer.View
 
         private void SaveSettings()
         {
+            SettingsHandler.SelectedProfile = settingsModel.SelectedProfile;
+
             SettingsHandler.TimeCodeServer = settingsModel.IsTimeCodeServerEnabled;
             SettingsHandler.GraphEnabled = settingsModel.IsGraphEnabled;
             ListHandler.ScriptDirectories = settingsModel.ScriptDirectories;

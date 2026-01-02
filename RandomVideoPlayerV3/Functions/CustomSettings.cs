@@ -34,6 +34,8 @@ namespace RandomVideoPlayer.Functions
         public int autoPlayTimerValueEndPoint { get; set; } = 12;
         public bool autoPlayTimerRangeEnabled { get; set; } = false;
 
+
+        public string selectedProfile { get; set; } = "";
         public bool applyFilterToList { get; set; }
         public bool timeCodeServer { get; set; } = false;
         public bool graphEnabled { get; set; } = false;

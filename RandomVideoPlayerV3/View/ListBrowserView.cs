@@ -614,18 +614,31 @@ namespace RandomVideoPlayer.View
         }
         private void cbEnableVideoFilter_CheckedChanged(object sender, EventArgs e)
         {
+            if (cbEnableVideoFilter.Checked)
+            {
+                cbEnableScriptFilter.Checked = false;
+            }
             ListHandler.FilterVideoEnabled = cbEnableVideoFilter.Checked;
             PopulateSelected(tbPathView.Text);
         }
 
         private void cbEnableImageFilter_CheckedChanged(object sender, EventArgs e)
         {
+            if (cbEnableImageFilter.Checked)
+            {
+                cbEnableScriptFilter.Checked = false;
+            }
             ListHandler.FilterImageEnabled = cbEnableImageFilter.Checked;
             PopulateSelected(tbPathView.Text);
         }
 
         private void cbEnableScriptFilter_CheckedChanged(object sender, EventArgs e)
         {
+            if (cbEnableScriptFilter.Checked)
+            {
+                cbEnableVideoFilter.Checked = false;
+                cbEnableImageFilter.Checked = false;
+            }
             ListHandler.FilterScriptEnabled = cbEnableScriptFilter.Checked;
         }
         private void btnVideoExtensions_Click(object sender, EventArgs e)
@@ -1080,7 +1093,7 @@ namespace RandomVideoPlayer.View
             {
                 if (ListHandler.FilterScriptEnabled)
                 {
-                    files.AddRange(ListHandler.GetFiles(folderPath, true));
+                    files.AddRange(ListHandler.EnumerateEligibleVideos(folderPath, true));
                 }
                 else
                 {

@@ -159,7 +159,6 @@ namespace RandomVideoPlayer.View
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(string.Format("Error accessing folder: {0}\n\nError:\n{1}", itemPath, ex), "FB lvFE_ItemActivate");
                 return;
             }
         }

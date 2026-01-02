@@ -33,9 +33,9 @@
             panelPlaceholder = new Panel();
             btnCloseForm = new FontAwesome.Sharp.IconButton();
             panelBody = new Panel();
-            cbMoveFunscripts = new Controls.CustomCheckBox();
+            cbMoveFunscripts = new RandomVideoPlayer.Controls.CustomCheckBox();
             lblInfo = new Label();
-            comboScriptDirectories = new Controls.ButtonComboBox();
+            comboScriptDirectories = new RandomVideoPlayer.Controls.ButtonComboBox();
             btnFinish = new FontAwesome.Sharp.IconButton();
             btnStartCopyAction = new FontAwesome.Sharp.IconButton();
             pbMoveProgress = new FlatProgressBar();
@@ -63,7 +63,7 @@
             // lblTitle
             // 
             lblTitle.Dock = DockStyle.Fill;
-            lblTitle.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitle.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lblTitle.Location = new Point(26, 0);
             lblTitle.Name = "lblTitle";
             lblTitle.Size = new Size(508, 20);
@@ -134,7 +134,7 @@
             // lblInfo
             // 
             lblInfo.AutoSize = true;
-            lblInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblInfo.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lblInfo.Location = new Point(3, 108);
             lblInfo.Margin = new Padding(3, 6, 3, 0);
             lblInfo.Name = "lblInfo";
@@ -160,7 +160,7 @@
             btnFinish.BackColor = Color.GreenYellow;
             btnFinish.FlatAppearance.BorderSize = 0;
             btnFinish.FlatStyle = FlatStyle.Flat;
-            btnFinish.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnFinish.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnFinish.IconChar = FontAwesome.Sharp.IconChar.None;
             btnFinish.IconColor = Color.Black;
             btnFinish.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -177,7 +177,7 @@
             // 
             btnStartCopyAction.FlatAppearance.BorderSize = 0;
             btnStartCopyAction.FlatStyle = FlatStyle.Flat;
-            btnStartCopyAction.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnStartCopyAction.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnStartCopyAction.IconChar = FontAwesome.Sharp.IconChar.None;
             btnStartCopyAction.IconColor = Color.Black;
             btnStartCopyAction.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -215,7 +215,7 @@
             // 
             btnStartMoveAction.FlatAppearance.BorderSize = 0;
             btnStartMoveAction.FlatStyle = FlatStyle.Flat;
-            btnStartMoveAction.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnStartMoveAction.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnStartMoveAction.IconChar = FontAwesome.Sharp.IconChar.None;
             btnStartMoveAction.IconColor = Color.Black;
             btnStartMoveAction.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -232,7 +232,7 @@
             btnCancelMoveAction.BackColor = Color.MistyRose;
             btnCancelMoveAction.FlatAppearance.BorderSize = 0;
             btnCancelMoveAction.FlatStyle = FlatStyle.Flat;
-            btnCancelMoveAction.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCancelMoveAction.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnCancelMoveAction.IconChar = FontAwesome.Sharp.IconChar.None;
             btnCancelMoveAction.IconColor = Color.Black;
             btnCancelMoveAction.IconFont = FontAwesome.Sharp.IconFont.Auto;

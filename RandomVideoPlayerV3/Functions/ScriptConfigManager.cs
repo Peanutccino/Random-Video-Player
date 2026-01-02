@@ -11,8 +11,6 @@ namespace RandomVideoPlayer.Functions
 {
     public static class ScriptConfigManager
     {
-        private static string ConfigFilePath = PathHandler.PathToListFolder + @"\PreferredScriptConfig.json";
-
         public static void SaveVideoConfig(string videoPath, string configType, string configValue)
         {
             if (string.IsNullOrWhiteSpace(videoPath) || string.IsNullOrWhiteSpace(configType) || string.IsNullOrWhiteSpace(configValue)) return;
@@ -55,10 +53,14 @@ namespace RandomVideoPlayer.Functions
 
         private static List<VideoConfiguration> LoadConfigurations()
         {
-            if (!File.Exists(ConfigFilePath))
+            var configFilePath = PathHandler.PathToListFolder + @"\" + SettingsHandler.SelectedProfile + ".json";
+
+            if (!File.Exists(configFilePath))
                 return new List<VideoConfiguration>();
 
-            string jsonString = File.ReadAllText(ConfigFilePath);
+            string jsonString = File.ReadAllText(configFilePath);
+            if(string.IsNullOrWhiteSpace(jsonString))
+                return new List<VideoConfiguration>();
             return JsonSerializer.Deserialize<List<VideoConfiguration>>(jsonString,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                 ?? new List<VideoConfiguration>();
@@ -66,9 +68,11 @@ namespace RandomVideoPlayer.Functions
 
         private static void SaveConfigurations(List<VideoConfiguration> configs)
         {
+            var configFilePath = PathHandler.PathToListFolder +  @"\" + SettingsHandler.SelectedProfile + ".json";
+
             string jsonString = JsonSerializer.Serialize(configs,
                 new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(ConfigFilePath, jsonString);
+            File.WriteAllText(configFilePath, jsonString);
         }
 
         private static string NormalizePath(string path)

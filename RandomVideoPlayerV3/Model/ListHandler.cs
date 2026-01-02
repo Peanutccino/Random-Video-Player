@@ -1,4 +1,6 @@
-﻿using RandomVideoPlayer.Functions;
+﻿using Newtonsoft.Json.Linq;
+using RandomVideoPlayer.Functions;
+using System.Windows.Forms;
 
 namespace RandomVideoPlayer.Model
 {
@@ -378,31 +380,35 @@ namespace RandomVideoPlayer.Model
             return fileName.Substring(fileName.LastIndexOf('.') + 1);
         }
         /// <value>Grab all media files from set directory</value> 
-        public static void fillFolderList(string folderpath, bool includeSubfolders)
+        public static void fillFolderList(string folderpath, bool includeSubfolders, CancellationToken token = default)
         {
             try
             {
-                _tempfolderList = GetFiles(folderpath, includeSubfolders);
+                _tempfolderList = EnumerateEligibleVideos(folderpath, includeSubfolders, token).ToList();
 
                 if (_tempfolderList?.Any() ?? false)
                 {
                     _folderList = _tempfolderList;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                _folderList = Enumerable.Empty<string>();
+            }
             catch (Exception ex)
             {
                 _folderList = Enumerable.Empty<string>();
-                Error.Log(ex, "Couldn't access folder - fillFolderList");
+                Error.Log(ex, "Couldn't access folder - FillFolderList");
             }
         }
         /// <value>Grab only the latest (count) media files from defined directory</value> 
-        public static void latestFolderList(string folderpath, int count, bool includeSubfolders)
+        public static void latestFolderList(string folderpath, int count, bool includeSubfolders, CancellationToken token = default)
         {
             if (count <= 0) count = 10;
 
             try
             {
-                var allFiles = GetFiles(folderpath, includeSubfolders);
+                var allFiles = EnumerateEligibleVideos(folderpath, includeSubfolders, token).ToList();
 
                 if (SettingsHandler.CreationDate) //Set to sort by creation date
                 {
@@ -430,103 +436,148 @@ namespace RandomVideoPlayer.Model
                 Error.Log(ex, "Couldn't access folder - latestFolderList");
             }
         }
-        private static List<string> multiAxis = new List<string>
-        { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
-        public static IEnumerable<string> GetFiles(string folderpath, bool includeSubfolders)
+     
+
+
+        private static readonly HashSet<string> MultiAxis =
+            new(StringComparer.OrdinalIgnoreCase) { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
+
+        public static IEnumerable<string> EnumerateEligibleVideos( string root, bool includeSubfolders, CancellationToken token = default)
         {
-            List<string> files = new List<string>();
+            if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
+                yield break;
 
-            try
+            if (!FilterScriptEnabled)
             {
-                if (FilterScriptEnabled)
-                {
-                    List<string> foundScripts = Directory.EnumerateFiles(folderpath, "*.funscript")
-                        .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
-                        .ToList();
-
-                    if (includeSubfolders)
-                    {
-                        foreach (var directory in Directory.EnumerateDirectories(folderpath))
-                        {
-                            foundScripts.AddRange(GetFiles(directory, includeSubfolders));
-                        }
-                    }
-
-                    foreach(var dir in ListHandler.ScriptDirectories)
-                    {
-                        if (dir == "local")
-                        {
-                            continue;
-                        }
-
-                        if (!Directory.Exists(dir)) continue;
-
-                        var matchingfiles = Directory.GetFiles(dir, "*.funscript")
-                            .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
-                            .ToList();
-
-                        foreach(var subDir in Directory.EnumerateDirectories(dir))
-                        {
-                            matchingfiles.AddRange(Directory.GetFiles(subDir, "*.funscript")
-                                .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
-                                .ToList());
-                        }
-
-                        foundScripts.AddRange(matchingfiles);
-                    }
-
-                    List<string> filesToCheck = new List<string>();
-
-                    filesToCheck.AddRange(Directory.EnumerateFiles(folderpath)
-                        .Where(s => ListHandler.VideoExtensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant())));
-
-                    if (includeSubfolders)
-                    {
-                        foreach (var directory in Directory.EnumerateDirectories(folderpath))
-                        {
-                            filesToCheck.AddRange(GetFiles(directory, includeSubfolders));
-                        }
-                    }
-
-                    foreach (var video in filesToCheck)
-                    {
-                        if(foundScripts.Any(script => Path.GetFileNameWithoutExtension(script).StartsWith(Path.GetFileNameWithoutExtension(video), StringComparison.OrdinalIgnoreCase)))
-                        {
-                            if (!files.Contains(video))
-                            {
-                                if (File.Exists(video))
-                                {
-                                    files.Add(video);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    files.AddRange(Directory.EnumerateFiles(folderpath)
-                        .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant())));
-
-                    if (includeSubfolders)
-                    {
-                        foreach (var directory in Directory.EnumerateDirectories(folderpath))
-                        {
-                            files.AddRange(GetFiles(directory, includeSubfolders));
-                        }
-                    }
-                }
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                Error.Log(ex, $"Access denied to folder: {folderpath}");
-            }
-            catch (Exception ex)
-            {
-                Error.Log(ex, $"Error accessing folder: {folderpath}");
+                foreach (var video in EnumerateVideos(root, includeSubfolders, token))
+                    yield return video;
+                yield break;
             }
 
-            return files;
+            var scriptBaseNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            AddScriptsFromTree(root, includeSubfolders, scriptBaseNames, token);
+
+            foreach (var scriptDir in ListHandler.ScriptDirectories)
+            {
+                if (string.Equals(scriptDir, "local", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                AddScriptsFromTree(scriptDir, includeSubfolders: true, scriptBaseNames, token);
+            }
+
+            foreach (var video in EnumerateVideos(root, includeSubfolders, token))
+            {
+                var name = Path.GetFileNameWithoutExtension(video);
+                if (name != null && scriptBaseNames.Contains(name))
+                    yield return video;
+            }
         }
+
+        private static void AddScriptsFromTree(string root, bool includeSubfolders, ISet<string> target, CancellationToken token)
+        {
+            if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
+                return;
+
+            var stack = new Stack<string>();
+            stack.Push(root);
+
+            while (stack.Count > 0)
+            {
+                token.ThrowIfCancellationRequested();
+                var current = stack.Pop();
+
+                IEnumerable<string> scripts;
+                try
+                {
+                    scripts = Directory.EnumerateFiles(current, "*.funscript", SearchOption.TopDirectoryOnly);
+                }
+                catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
+                {
+                    Error.Log(ex, $"Script access failed: {current}");
+                    continue;
+                }
+
+                foreach (var script in scripts)
+                {
+                    var baseName = Path.GetFileNameWithoutExtension(script);
+                    if (string.IsNullOrEmpty(baseName) || IsMultiAxis(baseName))
+                        continue;
+
+                    target.Add(baseName);
+                }
+
+                if (!includeSubfolders)
+                    continue;
+
+                IEnumerable<string> subDirs;
+                try
+                {
+                    subDirs = Directory.EnumerateDirectories(current, "*", SearchOption.TopDirectoryOnly);
+                }
+                catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
+                {
+                    Error.Log(ex, $"Couldn't read script subDir: {current}");
+                    continue;
+                }
+
+                foreach (var dir in subDirs)
+                    stack.Push(dir);
+            }
+        }
+
+        private static IEnumerable<string> EnumerateVideos(string root, bool includeSubfolders, CancellationToken token)
+        {
+            var stack = new Stack<string>();
+            stack.Push(root);
+
+            while (stack.Count > 0)
+            {
+                token.ThrowIfCancellationRequested();
+                var current = stack.Pop();
+
+                IEnumerable<string> videos;
+                try
+                {
+                    videos = Directory.EnumerateFiles(current, "*", SearchOption.TopDirectoryOnly);
+                }
+                catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
+                {
+                    Error.Log(ex, $"Video access denied: {current}");
+                    continue;
+                }
+
+                foreach (var file in videos)
+                {
+                    var ext = Path.GetExtension(file).TrimStart('.').ToLowerInvariant();
+                    if (ListHandler.VideoExtensions.Contains(ext))
+                        yield return file;
+                }
+
+                if (!includeSubfolders)
+                    continue;
+
+                IEnumerable<string> subDirs;
+                try
+                {
+                    subDirs = Directory.EnumerateDirectories(current, "*", SearchOption.TopDirectoryOnly);
+                }
+                catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
+                {
+                    Error.Log(ex, $"Couldn't read video subDir: {current}");
+                    continue;
+                }
+
+                foreach (var dir in subDirs)
+                    stack.Push(dir);
+            }
+        }
+
+        private static bool IsMultiAxis(string baseName) =>
+            MultiAxis.Any(axis => baseName.EndsWith(axis, StringComparison.OrdinalIgnoreCase));
+
+
+
+
         /// <value>Delete current user defined list</value> 
         public static void ClearCustomList()
         {
