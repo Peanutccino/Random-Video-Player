@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Shell;
 
 namespace RandomVideoPlayer.Model
 {
@@ -50,54 +51,38 @@ namespace RandomVideoPlayer.Model
         {
             ResetScriptList();
 
-            string directory = Path.GetDirectoryName(videoPath);
+            string videoDirectory = Path.GetDirectoryName(videoPath) ?? string.Empty;
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(videoPath);
-            string scriptFilePath = Path.Combine(directory, fileNameWithoutExtension + ".funscript");
+
+            var visitedDirectories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var addedScripts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var addedMultiAxisScripts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            string scriptFilePath = Path.Combine(videoDirectory, fileNameWithoutExtension + ".funscript");
 
             foreach (var dir in ListHandler.ScriptDirectories)
             {
-                if (dir == "local")
-                {
-                    SearchOption searchOptionLocal = SettingsHandler.IncludeSubdirectoriesForScriptLoad ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                string searchRoot = dir.Equals("local", StringComparison.OrdinalIgnoreCase) ? videoDirectory : dir;
 
-                    var matchingfilesLocal = Directory.GetFiles(directory, "*.funscript", searchOptionLocal)
-                        .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
-                        .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
-                        .ToList();
+                if (string.IsNullOrWhiteSpace(searchRoot)) continue;
+                string normalizedRoot = Path.GetFullPath(searchRoot.Trim());
 
-                    foreach (var file in matchingfilesLocal)
-                    {
-                        scriptFilesFound.Add(file);
-                    }
+                if (!Directory.Exists(normalizedRoot)) continue;
+                if (!visitedDirectories.Add(normalizedRoot)) continue;
 
-                    foreach (var kvp in MultiAxisScriptsFound)
-                    {
-                        var multiScriptType = kvp.Key.ToLower();
-                        var multiScriptPath = Path.Combine(directory, fileNameWithoutExtension + "." + multiScriptType + ".funscript");
+                SearchOption searchOption = SettingsHandler.IncludeSubdirectoriesForScriptLoad 
+                    ? SearchOption.AllDirectories 
+                    : SearchOption.TopDirectoryOnly;
 
-                        if (File.Exists(multiScriptPath))
-                        {
-                            AddMultiAxisScriptEntry(kvp.Key, multiScriptPath);
-                        }
-                    }
-
-                    continue;
-                }
-
-                if (!Directory.Exists(dir)) continue;
-
-
-                SearchOption searchOption = SettingsHandler.IncludeSubdirectoriesForScriptLoad ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-
-                var matchingfiles = Directory.GetFiles(dir, "*.funscript", searchOption)
+                var matchingfiles = Directory.GetFiles(normalizedRoot, "*.funscript", searchOption)
                     .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase))
                     .Where(file => !multiAxis.Any(axis => Path.GetFileNameWithoutExtension(file).ToLower().Contains(axis)))
                     .ToList();
 
-
                 foreach (var file in matchingfiles)
                 {
-                    scriptFilesFound.Add(file);
+                    if (addedScripts.Add(file))
+                        scriptFilesFound.Add(file);
                 }
 
                 if (!SettingsHandler.HandleMultiAxisScripts) continue;
@@ -106,15 +91,15 @@ namespace RandomVideoPlayer.Model
                 {
                     var multiScriptType = kvp.Key.ToLower();
 
-                    var matchingFiles = Directory.GetFiles(dir, "*.funscript", searchOption)
+                    var matchingFiles = Directory.GetFiles(normalizedRoot, "*.funscript", searchOption)
                         .Where(file => Path.GetFileName(file).StartsWith(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase) &&
                         Path.GetFileName(file).EndsWith(multiScriptType + ".funscript", StringComparison.OrdinalIgnoreCase))
                         .ToList();
 
-
                     foreach (var file in matchingFiles)
                     {
-                        AddMultiAxisScriptEntry(kvp.Key, file);
+                        if (addedMultiAxisScripts.Add(file))
+                            AddMultiAxisScriptEntry(kvp.Key, file);
                     }
                 }
             }

@@ -101,6 +101,7 @@ namespace RandomVideoPlayer.View
             settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
             settingsModel.ReShuffle = ListHandler.ReShuffle;
             settingsModel.RTXVSREnabled = SettingsHandler.RTXVSREnabled;
+            settingsModel.SelectedTheme = SettingsHandler.SelectedTheme;
 
             settingsModel.EnableSubtitles = SettingsHandler.SubtitlesEnabled;
             settingsModel.SubtitleSize = SettingsHandler.SubtitleFontSize;
@@ -187,6 +188,7 @@ namespace RandomVideoPlayer.View
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
             ListHandler.ReShuffle = settingsModel.ReShuffle;
             SettingsHandler.RTXVSREnabled = settingsModel.RTXVSREnabled;
+            SettingsHandler.SelectedTheme = settingsModel.SelectedTheme;
 
             SettingsHandler.SubtitlesEnabled = settingsModel.EnableSubtitles;
             SettingsHandler.SubtitleFontSize = settingsModel.SubtitleSize;

@@ -30,6 +30,8 @@ namespace RandomVideoPlayer.View
 
             _tileSize = SettingsHandler.TileSizeFileBrowser;
             _viewStateFolderFileExplore = SettingsHandler.ViewStateFolderFileExplore;
+
+            ThemeManager.ApplyThemeFB(this);
         }
 
         private void FolderBrowserView_Load(object sender, EventArgs e)
@@ -463,18 +465,18 @@ namespace RandomVideoPlayer.View
         {
             if (viewState == "Grid")
             {
-                btnViewGrid.IconColor = Color.Gold;
-                btnViewTile.IconColor = Color.Black;
-                btnViewList.IconColor = Color.Black;
+                btnViewGrid.IconColor = ThemeManager.CurrentTheme.FbAccentColor;
+                btnViewTile.IconColor = ThemeManager.CurrentTheme.FbTextColor;
+                btnViewList.IconColor = ThemeManager.CurrentTheme.FbTextColor;
                 _viewStateFolderFileExplore = "Grid";
 
                 lvFileExplore.View = System.Windows.Forms.View.LargeIcon;
             }
             else if (viewState == "Tile")
             {
-                btnViewGrid.IconColor = Color.Black;
-                btnViewTile.IconColor = Color.Gold;
-                btnViewList.IconColor = Color.Black;
+                btnViewGrid.IconColor = ThemeManager.CurrentTheme.FbTextColor;
+                btnViewTile.IconColor = ThemeManager.CurrentTheme.FbAccentColor;
+                btnViewList.IconColor = ThemeManager.CurrentTheme.FbTextColor;
                 _viewStateFolderFileExplore = "Tile";
 
                 lvFileExplore.View = System.Windows.Forms.View.Tile;
@@ -482,9 +484,9 @@ namespace RandomVideoPlayer.View
             }
             else if (viewState == "List")
             {
-                btnViewGrid.IconColor = Color.Black;
-                btnViewTile.IconColor = Color.Black;
-                btnViewList.IconColor = Color.Gold;
+                btnViewGrid.IconColor = ThemeManager.CurrentTheme.FbTextColor;
+                btnViewTile.IconColor = ThemeManager.CurrentTheme.FbTextColor;
+                btnViewList.IconColor = ThemeManager.CurrentTheme.FbAccentColor;
                 _viewStateFolderFileExplore = "List";
 
                 lvFileExplore.View = System.Windows.Forms.View.Details;

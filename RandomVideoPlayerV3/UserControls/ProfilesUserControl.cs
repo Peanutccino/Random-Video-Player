@@ -148,11 +148,10 @@ namespace RandomVideoPlayer.UserControls
             }
         }
 
-        private void UpdateDPIScaling()
+        private void lbProfiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            ButtonStates();
         }
-
         private void ButtonStates()
         {
             if (lbProfiles.SelectedItem != null)
@@ -168,10 +167,33 @@ namespace RandomVideoPlayer.UserControls
                 btnSetProfile.Enabled = false;
             }
         }
-
-        private void lbProfiles_SelectedIndexChanged(object sender, EventArgs e)
+        private void UpdateDPIScaling()
         {
-            ButtonStates();
+            this.Size = DPI.GetSizeScaled(this.Size);
+
+            panel1.Size = DPI.GetSizeScaled(panel1.Size);
+            panel2.Size = DPI.GetSizeScaled(panel2.Size);
+
+            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
+            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
+
+            lbl1.Size = DPI.GetSizeScaled(lbl1.Size);
+            lbl1.Font = DPI.GetFontScaled(lbl1.Font);
+            lbl2.Size = DPI.GetSizeScaled(lbl2.Size);
+            lbl2.Font = DPI.GetFontScaled(lbl2.Font);
+            lblProfile.Size = DPI.GetSizeScaled(lblProfile.Size);
+            lblProfile.Font = DPI.GetFontScaled(lblProfile.Font);
+
+            lbProfiles.Font = DPI.GetFontScaled(lbProfiles.Font);
+
+            btnAdd.Size = DPI.GetSizeScaled(btnAdd.Size);
+            btnAdd.Font = DPI.GetFontScaled(btnAdd.Font);
+            btnDelete.Size = DPI.GetSizeScaled(btnDelete.Size);
+            btnDelete.Font = DPI.GetFontScaled(btnDelete.Font);
+            btnRename.Size = DPI.GetSizeScaled(btnRename.Size);
+            btnRename.Font = DPI.GetFontScaled(btnRename.Font);
+            btnSetProfile.Size = DPI.GetSizeScaled(btnSetProfile.Size);
+            btnSetProfile.Font = DPI.GetFontScaled(btnSetProfile.Font);
         }
     }
 }

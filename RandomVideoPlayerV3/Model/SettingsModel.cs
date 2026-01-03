@@ -57,6 +57,8 @@ namespace RandomVideoPlayer.Model
         public int AutoPlayTimerValueEndPoint { get; set; }
         public bool AutoPlayTimerRangeEnabled { get; set; }
         public bool RTXVSREnabled { get; set; }
+        public bool DarkModeEnabled { get; set; }
+        public string SelectedTheme { get; set; }
         #endregion
 
         #region FilterExtensions    

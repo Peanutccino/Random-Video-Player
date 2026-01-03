@@ -44,12 +44,12 @@
             sbtnSubtitles = new FontAwesome.Sharp.IconButton();
             sbtnInputs = new FontAwesome.Sharp.IconButton();
             sbtnSkip = new FontAwesome.Sharp.IconButton();
+            sbtnProfiles = new FontAwesome.Sharp.IconButton();
             sbtnSync = new FontAwesome.Sharp.IconButton();
             sbtnRemember = new FontAwesome.Sharp.IconButton();
             sbtnFilterExtensions = new FontAwesome.Sharp.IconButton();
             sbtnPlayer = new FontAwesome.Sharp.IconButton();
             sbtnPaths = new FontAwesome.Sharp.IconButton();
-            sbtnProfiles = new FontAwesome.Sharp.IconButton();
             panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitUI).BeginInit();
             splitUI.Panel1.SuspendLayout();
@@ -120,6 +120,7 @@
             // 
             // splitUI
             // 
+            splitUI.BackColor = Color.GhostWhite;
             splitUI.Dock = DockStyle.Fill;
             splitUI.Location = new Point(0, 20);
             splitUI.Name = "splitUI";
@@ -293,6 +294,26 @@
             sbtnSkip.TextAlign = ContentAlignment.TopLeft;
             sbtnSkip.UseVisualStyleBackColor = true;
             // 
+            // sbtnProfiles
+            // 
+            sbtnProfiles.Dock = DockStyle.Top;
+            sbtnProfiles.FlatAppearance.BorderSize = 0;
+            sbtnProfiles.FlatStyle = FlatStyle.Flat;
+            sbtnProfiles.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            sbtnProfiles.IconChar = FontAwesome.Sharp.IconChar.UserAlt;
+            sbtnProfiles.IconColor = Color.Black;
+            sbtnProfiles.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnProfiles.IconSize = 28;
+            sbtnProfiles.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnProfiles.Location = new Point(0, 200);
+            sbtnProfiles.Name = "sbtnProfiles";
+            sbtnProfiles.Padding = new Padding(0, 0, 1, 0);
+            sbtnProfiles.Size = new Size(172, 40);
+            sbtnProfiles.TabIndex = 12;
+            sbtnProfiles.Text = "Profiles";
+            sbtnProfiles.TextAlign = ContentAlignment.TopLeft;
+            sbtnProfiles.UseVisualStyleBackColor = true;
+            // 
             // sbtnSync
             // 
             sbtnSync.Dock = DockStyle.Top;
@@ -389,26 +410,6 @@
             sbtnPaths.Text = "Paths";
             sbtnPaths.TextAlign = ContentAlignment.TopLeft;
             sbtnPaths.UseVisualStyleBackColor = true;
-            // 
-            // sbtnProfiles
-            // 
-            sbtnProfiles.Dock = DockStyle.Top;
-            sbtnProfiles.FlatAppearance.BorderSize = 0;
-            sbtnProfiles.FlatStyle = FlatStyle.Flat;
-            sbtnProfiles.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            sbtnProfiles.IconChar = FontAwesome.Sharp.IconChar.UserAlt;
-            sbtnProfiles.IconColor = Color.Black;
-            sbtnProfiles.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            sbtnProfiles.IconSize = 28;
-            sbtnProfiles.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnProfiles.Location = new Point(0, 200);
-            sbtnProfiles.Name = "sbtnProfiles";
-            sbtnProfiles.Padding = new Padding(0, 0, 1, 0);
-            sbtnProfiles.Size = new Size(172, 40);
-            sbtnProfiles.TabIndex = 12;
-            sbtnProfiles.Text = "Profiles";
-            sbtnProfiles.TextAlign = ContentAlignment.TopLeft;
-            sbtnProfiles.UseVisualStyleBackColor = true;
             // 
             // SettingsView
             // 

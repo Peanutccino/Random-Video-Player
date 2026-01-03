@@ -51,12 +51,14 @@ namespace RandomVideoPlayer.View
 
             extensionFilter = new List<string>(ListHandler.ExtensionFilterForList);
 
-            CreateCheckBoxesForExtensions();
-
             // Initialize timer
             timer = new System.Windows.Forms.Timer();
             timer.Interval = 5;
             timer.Tick += Timer_Tick;
+
+            ThemeManager.ApplyThemeLB(this);
+
+            CreateCheckBoxesForExtensions();
         }
 
         private void ListBrowserView_Load(object sender, EventArgs e)
@@ -115,6 +117,8 @@ namespace RandomVideoPlayer.View
             SetupTooltips();
 
             UpdateListInfo();
+
+            splitContainerBody.Panel2.BackColor = ThemeManager.CurrentTheme.LbBackColorSide;
         }
         private void ListBrowserView_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -544,18 +548,18 @@ namespace RandomVideoPlayer.View
         {
             if (viewState == "Grid")
             {
-                btnViewGrid.IconColor = Color.Crimson;
-                btnViewTile.IconColor = Color.Black;
-                btnViewList.IconColor = Color.Black;
+                btnViewGrid.IconColor = ThemeManager.CurrentTheme.LbAccentColorMain;
+                btnViewTile.IconColor = ThemeManager.CurrentTheme.LbTextColor;
+                btnViewList.IconColor = ThemeManager.CurrentTheme.LbTextColor;
                 _viewStateListFileExplore = "Grid";
 
                 lvFileExplore.View = System.Windows.Forms.View.LargeIcon;
             }
             else if (viewState == "Tile")
             {
-                btnViewGrid.IconColor = Color.Black;
-                btnViewTile.IconColor = Color.Crimson;
-                btnViewList.IconColor = Color.Black;
+                btnViewGrid.IconColor = ThemeManager.CurrentTheme.LbTextColor;
+                btnViewTile.IconColor = ThemeManager.CurrentTheme.LbAccentColorMain;
+                btnViewList.IconColor = ThemeManager.CurrentTheme.LbTextColor;
                 _viewStateListFileExplore = "Tile";
 
                 lvFileExplore.View = System.Windows.Forms.View.Tile;
@@ -563,9 +567,9 @@ namespace RandomVideoPlayer.View
             }
             else if (viewState == "List")
             {
-                btnViewGrid.IconColor = Color.Black;
-                btnViewTile.IconColor = Color.Black;
-                btnViewList.IconColor = Color.Crimson;
+                btnViewGrid.IconColor = ThemeManager.CurrentTheme.LbTextColor;
+                btnViewTile.IconColor = ThemeManager.CurrentTheme.LbTextColor;
+                btnViewList.IconColor = ThemeManager.CurrentTheme.LbAccentColorMain;
                 _viewStateListFileExplore = "List";
 
                 lvFileExplore.View = System.Windows.Forms.View.Details;
@@ -1226,8 +1230,9 @@ namespace RandomVideoPlayer.View
                 checkBox.AutoSize = false;
                 checkBox.Margin = new Padding(8, 3, 3, 3);
                 checkBox.Size = new Size(44, 26);
-                checkBox.UncheckedBackColor = Color.MistyRose;
-                checkBox.CheckedBackColor = Color.LightCoral;
+                checkBox.UncheckedBackColor = ThemeManager.CurrentTheme.LbBackColorMain;
+                checkBox.CheckedBackColor = ThemeManager.CurrentTheme.LbAccentColorMain;
+                checkBox.ForeColor = ThemeManager.CurrentTheme.LbTextColor;
                 checkBox.Checked = extensionFilter.Contains(extension);
                 checkBox.CheckedChanged += CheckBox_CheckedChanged;
                 flowPanelVideoCheckboxes.Controls.Add(checkBox);
@@ -1241,8 +1246,9 @@ namespace RandomVideoPlayer.View
                 checkBox.AutoSize = false;
                 checkBox.Margin = new Padding(8, 3, 3, 3);
                 checkBox.Size = new Size(44, 26);
-                checkBox.UncheckedBackColor = Color.MistyRose;
-                checkBox.CheckedBackColor = Color.LightCoral;
+                checkBox.UncheckedBackColor = ThemeManager.CurrentTheme.LbBackColorMain;
+                checkBox.CheckedBackColor = ThemeManager.CurrentTheme.LbAccentColorMain;
+                checkBox.ForeColor = ThemeManager.CurrentTheme.LbTextColor;
                 checkBox.Checked = extensionFilter.Contains(extension);
                 checkBox.CheckedChanged += CheckBox_CheckedChanged;
                 flowPanelImageCheckboxes.Controls.Add(checkBox);

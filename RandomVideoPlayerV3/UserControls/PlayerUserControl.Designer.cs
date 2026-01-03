@@ -31,29 +31,31 @@
             lblHeader = new Label();
             lbl2 = new Label();
             panel2 = new Panel();
-            cbLeftMousePause = new Controls.CustomCheckBox();
+            cbLeftMousePause = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl1 = new Label();
             panel3 = new Panel();
-            cbEnableTimeRange = new Controls.CustomCheckBox();
+            cbEnableTimeRange = new RandomVideoPlayer.Controls.CustomCheckBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            rbAutoTimer = new Controls.CustomRadioButton();
-            inputTimerValueStartPoint = new Controls.CustomNumericUpDown();
+            rbAutoTimer = new RandomVideoPlayer.Controls.CustomRadioButton();
+            inputTimerValueStartPoint = new RandomVideoPlayer.Controls.CustomNumericUpDown();
             lblBetweenTime = new Label();
-            inputTimerValueEndPoint = new Controls.CustomNumericUpDown();
+            inputTimerValueEndPoint = new RandomVideoPlayer.Controls.CustomNumericUpDown();
             lblAfterTime = new Label();
-            rbAutoNext = new Controls.CustomRadioButton();
-            rbRepeatVideo = new Controls.CustomRadioButton();
+            rbAutoNext = new RandomVideoPlayer.Controls.CustomRadioButton();
+            rbRepeatVideo = new RandomVideoPlayer.Controls.CustomRadioButton();
             panel4 = new Panel();
             flowLayoutPanel2 = new FlowLayoutPanel();
-            cbShufflePlayer = new Controls.CustomCheckBox();
-            cbReshuffle = new Controls.CustomCheckBox();
+            cbShufflePlayer = new RandomVideoPlayer.Controls.CustomCheckBox();
+            cbReshuffle = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl3 = new Label();
             panel1 = new Panel();
             flowLayoutPanel3 = new FlowLayoutPanel();
             lbl5 = new Label();
             btnRTXHelp = new FontAwesome.Sharp.IconButton();
-            cbEnableRTXVSR = new Controls.CustomCheckBox();
+            cbEnableRTXVSR = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl4 = new Label();
+            lbl6 = new Label();
+            comboThemes = new ComboBox();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
@@ -66,7 +68,7 @@
             // lblHeader
             // 
             lblHeader.Dock = DockStyle.Top;
-            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblHeader.ForeColor = Color.Indigo;
             lblHeader.Location = new Point(0, 0);
             lblHeader.Name = "lblHeader";
@@ -77,7 +79,7 @@
             // lbl2
             // 
             lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbl2.Location = new Point(0, 0);
             lbl2.Name = "lbl2";
             lbl2.Padding = new Padding(6, 0, 0, 0);
@@ -112,7 +114,7 @@
             // lbl1
             // 
             lbl1.Dock = DockStyle.Top;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbl1.Location = new Point(0, 0);
             lbl1.Margin = new Padding(0);
             lbl1.Name = "lbl1";
@@ -296,7 +298,7 @@
             // lbl3
             // 
             lbl3.Dock = DockStyle.Top;
-            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbl3.Location = new Point(0, 0);
             lbl3.Name = "lbl3";
             lbl3.Padding = new Padding(6, 0, 0, 0);
@@ -367,7 +369,7 @@
             // lbl4
             // 
             lbl4.Dock = DockStyle.Top;
-            lbl4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbl4.Location = new Point(0, 0);
             lbl4.Name = "lbl4";
             lbl4.Padding = new Padding(6, 0, 0, 0);
@@ -375,11 +377,33 @@
             lbl4.TabIndex = 1;
             lbl4.Text = "Activate RTX VSR compatibility (Nvidia only)";
             // 
+            // lbl6
+            // 
+            lbl6.Dock = DockStyle.Top;
+            lbl6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl6.Location = new Point(0, 365);
+            lbl6.Name = "lbl6";
+            lbl6.Padding = new Padding(6, 0, 0, 0);
+            lbl6.Size = new Size(507, 23);
+            lbl6.TabIndex = 16;
+            lbl6.Text = "Select a theme for RVP (Applies after Saving):";
+            // 
+            // comboThemes
+            // 
+            comboThemes.Dock = DockStyle.Top;
+            comboThemes.FormattingEnabled = true;
+            comboThemes.Location = new Point(0, 388);
+            comboThemes.Name = "comboThemes";
+            comboThemes.Size = new Size(507, 23);
+            comboThemes.TabIndex = 25;
+            // 
             // PlayerUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.GhostWhite;
+            Controls.Add(comboThemes);
+            Controls.Add(lbl6);
             Controls.Add(panel1);
             Controls.Add(panel4);
             Controls.Add(panel3);
@@ -428,5 +452,7 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private FlowLayoutPanel flowLayoutPanel2;
         private FlowLayoutPanel flowLayoutPanel3;
+        private Label lbl6;
+        private ComboBox comboThemes;
     }
 }

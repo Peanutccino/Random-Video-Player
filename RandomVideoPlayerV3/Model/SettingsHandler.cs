@@ -922,6 +922,36 @@ namespace RandomVideoPlayer.Model
             }
         }
 
+        public static bool RTXHDREnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.rtxHDREnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.rtxHDREnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static string SelectedTheme
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.selectedTheme;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.selectedTheme = value;
+                _settingsInstance.Save();
+            }
+        }
+
         public static bool EnableCustomScaling
         {
             get

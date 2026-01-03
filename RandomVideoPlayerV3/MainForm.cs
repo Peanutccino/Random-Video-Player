@@ -1,14 +1,20 @@
-using System.Diagnostics;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Timers;
+using FontAwesome.Sharp;
 using Mpv.NET.Player;
 using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
 using RandomVideoPlayer.View;
-
+using Svg;
+using Svg.FilterEffects;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.Json;
+using System.Timers;
+using static System.Windows.Forms.Design.AxImporter;
 using Point = System.Drawing.Point;
 using Timer = System.Windows.Forms.Timer;
 
@@ -28,6 +34,8 @@ namespace RandomVideoPlayer
         public MainForm(string filePath)
         {
             InitializeComponent();
+
+            CreateDefaultThemes();
 
             DPI.SetScalingFactor();
 
@@ -68,7 +76,17 @@ namespace RandomVideoPlayer
             InitializeContextMenus();
 
             UpdateDPIScaling();
+
+            LoadThemeOption();
+
+            ThemeManager.ThemeChanged += (_, __) => ThemeManager.ApplyTheme(this);
+            ThemeManager.ThemeChanged += (_, __) => ApplyThemeToButtons();
+            ThemeManager.ApplyTheme(this);
+
+            ApplyControlTheme();
+            ApplyThemeToButtons();
         }
+
 
         private void InitializeScriptProfile()
         {
@@ -217,6 +235,197 @@ namespace RandomVideoPlayer
             if (File.Exists(filePath))
                 Process.Start("explorer.exe", $"/select, \"{filePath}\"");
         }
+
+        #region Themepark
+        public sealed record ThemeOption(string Name, Theme Theme);
+        private readonly Dictionary<IconButton, Color> idleColors = new();
+        private readonly Dictionary<Button, Color> idleColorsContext = new();
+        private readonly HashSet<IconButton> highlightedButtons = new();
+
+        private void LoadThemeOption()
+        {
+            IReadOnlyDictionary<string, Theme> themes = ThemeLoader.LoadThemes();
+
+            if (!themes.ContainsKey("Light"))
+            {
+                themes = themes.Concat(new[] {
+            new KeyValuePair<string, Theme>("Light", ThemeDefaults.Light)}).ToDictionary(k => k.Key, k => k.Value);
+            }
+
+            var options = themes
+                .Select(kvp => new ThemeOption(kvp.Key, kvp.Value))
+                .OrderBy(opt => opt.Name)
+                .ToList();
+
+            string savedThemeName = SettingsHandler.SelectedTheme;
+            var match = options.FirstOrDefault(o => o.Name == savedThemeName)
+                        ?? options.First(o => o.Name == "Light");
+
+            ThemeManager.SetTheme(match.Theme);
+        }
+        private void ApplyControlTheme()
+        {
+            WireIconButton(btnPlay);
+            WireIconButton(btnPrevious);
+            WireIconButton(btnNext);
+            WireIconButton(btnFileBrowse);
+            WireIconButton(btnListBrowser);
+            WireIconButton(btnRemove);
+            WireIconButton(btnSettings);
+            WireIconButton(btnAddToFav);
+            WireIconButton(btnMoveTo);
+            WireIconButton(btnAddToQueue);
+            WireIconButton(btnStartFromFile);
+            WireIconButton(btnTouch);
+            WireIconButton(btnMuteToggle);
+            WireIconButton(btnMinimizeForm);
+            WireIconButton(btnMaximizeForm);
+            WireIconButton(btnShuffle);
+            WireIconButton(btnRepeat);
+            WireIconButton(btnAutoSkip);
+            WireIconButton(btnAddToFav);
+
+            WireContextButton(btnAudioTrackMenu);
+            WireContextButton(btnSubtitleMenu);
+            WireContextButton(btnScriptMenu);
+        }
+
+        private void ApplyThemeToButtons()
+        {
+            foreach (var btn in idleColors.Keys.ToList())
+            {
+                idleColors[btn] = highlightedButtons.Contains(btn)
+                    ? GetHighlightColor(btn)
+                    : ThemeManager.CurrentTheme.ButtonIconColor;
+
+                btn.IconColor = idleColors[btn];
+            }
+
+
+            ConfigureSVGButton(btnListAdd, SVGTemplates.ListAddIcon, ThemeManager.CurrentTheme.ButtonIconColor, ThemeManager.CurrentTheme.ButtonHighlightColor);
+
+            ConfigureSVGButton(btnSourceSelector, SVGTemplates.SplitIconFolder, ThemeManager.CurrentTheme.ButtonIconColor, ThemeManager.CurrentTheme.ButtonHighlightColor);
+        }
+
+        private void WireIconButton(IconButton btn)
+        {
+            idleColors[btn] = ThemeManager.CurrentTheme.ButtonIconColor;
+            btn.IconColor = ThemeManager.CurrentTheme.ButtonIconColor;
+
+            btn.MouseEnter += (_, _) => btn.IconColor = HoverColor(btn);
+            btn.MouseLeave += (_, _) => btn.IconColor = idleColors[btn];
+            btn.MouseDown += (_, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                    btn.IconColor = PressedColor(btn);
+            };
+            btn.MouseUp += (_, _) =>
+            {
+                btn.IconColor = btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position))
+                    ? HoverColor(btn)
+                    : idleColors[btn];
+            };
+            btn.GotFocus += (_, _) => btn.IconColor = HoverColor(btn);
+            btn.LostFocus += (_, _) => btn.IconColor = idleColors[btn];
+        }
+        private void WireContextButton(Button btn)
+        {
+            idleColorsContext[btn] = ThemeManager.CurrentTheme.ButtonIconColor;
+            btn.ForeColor = ThemeManager.CurrentTheme.ButtonIconColor;
+
+            btn.MouseEnter += (_, _) => btn.ForeColor = Lighten(idleColorsContext[btn], 90);
+            btn.MouseLeave += (_, _) => btn.ForeColor = idleColorsContext[btn];
+            btn.MouseDown += (_, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                    btn.ForeColor = Lighten(idleColorsContext[btn], 40);
+            };
+            btn.MouseUp += (_, _) =>
+            {
+                btn.ForeColor = btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position))
+                    ? Lighten(idleColorsContext[btn], 90)
+                    : idleColorsContext[btn];
+            };
+            btn.GotFocus += (_, _) => btn.ForeColor = Lighten(idleColorsContext[btn], 90);
+            btn.LostFocus += (_, _) => btn.ForeColor = idleColorsContext[btn];
+        }
+
+        private Color HoverColor(IconButton btn) => Lighten(idleColors[btn], 140);
+        private Color PressedColor(IconButton btn) => Lighten(idleColors[btn], 60);
+        private Color GetHighlightColor(IconButton btn) => ThemeManager.CurrentTheme.ButtonHighlightColor;
+        private void ConfigureSVGButton(Button button, string svgTemplate, Color iconBack, Color iconAccent)
+        {
+            void Render(Color main, Color accent) =>
+                ApplyIcon(button, svgTemplate, main, accent);
+
+            button.Tag = (Action)(() => Render(iconBack, iconAccent));
+            button.HandleDestroyed += (_, __) => button.Image?.Dispose();
+
+            button.MouseEnter += (_, __) => Render(Lighten(iconBack, 90), Lighten(iconAccent, 90));
+            button.MouseLeave += (_, __) => Render(iconBack, iconAccent);
+            button.MouseDown += (_, __) => Render(Lighten(iconBack, 40), Lighten(iconAccent, 40));
+            button.MouseUp += (_, __) => Render(Lighten(iconBack, 90), Lighten(iconAccent, 90));
+
+            Render(iconBack, iconAccent);
+        }
+        private void ApplyIcon(Button target, string template, Color main, Color accent)
+        {
+            var svgMarkup = template
+                .Replace("{{main}}", ColorTranslator.ToHtml(main))
+                .Replace("{{accent}}", ColorTranslator.ToHtml(accent));
+
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(svgMarkup));
+            var svgDoc = SvgDocument.Open<SvgDocument>(stream); // SVG.NET
+            using var bmp = svgDoc.Draw(20, 20);
+
+            target.Image?.Dispose();
+            target.Image = (Bitmap)bmp.Clone();
+        }
+
+        private void SetHighlight(IconButton btn, bool highlight, Color? customColor = null)
+        {
+            if (highlight)
+                highlightedButtons.Add(btn);
+            else
+                highlightedButtons.Remove(btn);
+
+            var color = customColor ?? GetHighlightColor(btn);
+
+            idleColors[btn] = highlight ? color
+                                        : ThemeManager.CurrentTheme.ButtonIconColor;
+
+            btn.IconColor = idleColors[btn];
+        }
+
+        private static Color Lighten(Color baseColor, int delta)
+        {
+            var hColor = ThemeManager.CurrentTheme.ButtonHighlightColor;
+
+            return Color.FromArgb(baseColor.A,
+                Math.Clamp(baseColor.R + delta + (hColor.R / 2), 0, 255),
+                Math.Clamp(baseColor.G + delta + (hColor.G / 2), 0, 255),
+                Math.Clamp(baseColor.B + delta + (hColor.B / 2), 0, 255));
+        }
+
+        private void CreateDefaultThemes()
+        {
+            string themeDir = Path.Combine(AppContext.BaseDirectory, "Themes");
+            Directory.CreateDirectory(themeDir);
+
+            WriteThemeIfMissing(Path.Combine(themeDir, "Light.json"), "Light", ThemeDefaults.Light);
+            WriteThemeIfMissing(Path.Combine(themeDir, "Dark.json"), "Dark", ThemeDefaults.Dark);
+        }
+
+        private static void WriteThemeIfMissing(string path, string name, Theme defaults)
+        {
+            if (File.Exists(path)) return;
+
+            ThemeDto dto = ThemeDto.FromTheme(name, defaults);
+            JsonSerializerOptions options = new() { WriteIndented = true };
+            string json = JsonSerializer.Serialize(dto, options);
+            File.WriteAllText(path, json);
+        }
+        #endregion
 
         #region ExclusiveFullscreen
         private void panelPlayerMPV_MouseMove(object sender, MouseEventArgs e) //Used to determin Cursor position in exclusive Fullscreen mode to show or hide Panels
@@ -612,7 +821,7 @@ namespace RandomVideoPlayer
                 btnAddToFav.Enabled = true;
 
                 ThreadHelper.SetVisibility(this, btnAddToQueue, false);
-                ThreadHelper.SetVisibility(this, btnStartFromFile, false);
+                //ThreadHelper.SetVisibility(this, btnStartFromFile, false);
             }
 
             var playPauseHotkey = hkSettings.Hotkeys.FirstOrDefault(h => h.Action == "PlayPauseToggle");
@@ -947,8 +1156,6 @@ namespace RandomVideoPlayer
             DialogResult result = svForm.ShowDialog();
             if (result == DialogResult.OK)
             {
-                RepositionButtons();
-
                 if (SettingsHandler.TimeCodeServer)
                 {
                     tcServer.Start();
@@ -985,6 +1192,15 @@ namespace RandomVideoPlayer
                 {
                     playerMPV.API.Command("vf", "del", "d3d11vpp");
                 }
+            
+
+                LoadThemeOption();
+                ThemeManager.ApplyTheme(this);
+
+                UpdateListEditIcon();
+                UpdateSourceSelectorIcon();
+
+                RepositionButtons();
             }
 
             UpdateButtonStates();
@@ -1086,28 +1302,37 @@ namespace RandomVideoPlayer
             {
                 case AutoPlayMethod.LoopVideo:
                     btnRepeat.IconChar = FontAwesome.Sharp.IconChar.Repeat;
-                    btnRepeat.IconColor = Color.PaleGreen;
+                    //btnRepeat.IconColor = ThemeManager.CurrentTheme.ButtonHoverColor;
+                    SetHighlight(btnRepeat, true);
                     VideoManipulation.KenBurnsEffectStop();
                     playerMPV.SetBrightness(0);
                     VideoManipulation.ResetVideoManipulation(playerMPV);
                     break;
                 case AutoPlayMethod.AutoNext:
                     btnRepeat.IconChar = FontAwesome.Sharp.IconChar.Repeat;
-                    btnRepeat.IconColor = Color.Black;
+                    //btnRepeat.IconColor = ThemeManager.CurrentTheme.TextColor;
+                    SetHighlight(btnRepeat, false);
                     VideoManipulation.KenBurnsEffectStop();
                     playerMPV.SetBrightness(0);
                     VideoManipulation.ResetVideoManipulation(playerMPV);
                     break;
                 case AutoPlayMethod.AutoTimer:
                     btnRepeat.IconChar = FontAwesome.Sharp.IconChar.ClockRotateLeft;
-                    btnRepeat.IconColor = Color.PaleGreen;
+                    //btnRepeat.IconColor = ThemeManager.CurrentTheme.ButtonHoverColor;
+                    SetHighlight(btnRepeat, true);
                     if (SettingsHandler.BurnsEffectEnabled && SettingsHandler.InitPlay) PlayNext();
                     break;
             }
 
-            btnShuffle.IconColor = ListHandler.DoShuffle ? Color.PaleGreen : Color.Black;
+            SetHighlight(btnShuffle, ListHandler.DoShuffle);
 
-            btnAutoSkip.IconColor = SettingsHandler.EnableAutoSkip ? Color.PaleGreen : Color.Black;
+            SetHighlight(btnAutoSkip, SettingsHandler.EnableAutoSkip);
+
+            SetHighlight(btnAddToFav, MainFormData.favoriteMatch, Color.Red);
+
+            WireContextButton(btnAudioTrackMenu);
+            WireContextButton(btnSubtitleMenu);
+            WireContextButton(btnScriptMenu);
 
             if (SettingsHandler.ShowButtonStayInCurrentFolder && !MainFormData.playingSingleFile && SettingsHandler.InitPlay)
             {
@@ -1121,55 +1346,25 @@ namespace RandomVideoPlayer
 
         private void UpdateSourceSelectorIcon()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            var resourceName = SettingsHandler.SourceSelected ?
-                "RandomVideoPlayer.Resources.SplitIconListHighlight.png" :
-                "RandomVideoPlayer.Resources.SplitIconFolderHighlight.png";
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            if (SettingsHandler.SourceSelected)
             {
-                try
-                {
-                    if (stream != null)
-                    {
-                        var image = Image.FromStream(stream);
-                        btnSourceSelector.Image = image;
-                        btnSourceSelector.ImageAlign = ContentAlignment.MiddleCenter;
-                        btnSourceSelector.TextImageRelation = TextImageRelation.ImageAboveText;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex, "Failed to load SplitIcon");
-                }
+                ConfigureSVGButton(btnSourceSelector, SVGTemplates.SplitIconList, ThemeManager.CurrentTheme.ButtonIconColor, ThemeManager.CurrentTheme.ButtonHighlightColor);
+            }
+            else
+            {
+                ConfigureSVGButton(btnSourceSelector, SVGTemplates.SplitIconFolder, ThemeManager.CurrentTheme.ButtonIconColor, ThemeManager.CurrentTheme.ButtonHighlightColor);
             }
         }
 
         private void UpdateListEditIcon()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            var resourceName = MainFormData.presentInCustomList ?
-                "RandomVideoPlayer.Resources.list-colored-remove.png" :
-                "RandomVideoPlayer.Resources.list-colored-add.png";
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            if (MainFormData.presentInCustomList)
             {
-                try
-                {
-                    if (stream != null)
-                    {
-                        var image = Image.FromStream(stream);
-                        btnListAdd.Image = image;
-                        btnListAdd.ImageAlign = ContentAlignment.MiddleCenter;
-                        btnListAdd.TextImageRelation = TextImageRelation.ImageAboveText;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex, "Failed to load ListEdit icon");
-                }
+                ConfigureSVGButton(btnListAdd, SVGTemplates.ListRemoveIcon, ThemeManager.CurrentTheme.ButtonIconColor, Color.Red);
+            }
+            else
+            {
+                ConfigureSVGButton(btnListAdd, SVGTemplates.ListAddIcon, ThemeManager.CurrentTheme.ButtonIconColor, ThemeManager.CurrentTheme.ButtonHighlightColor);
             }
         }
         #endregion
@@ -1258,6 +1453,7 @@ namespace RandomVideoPlayer
             {
                 AutoSize = tsmiAutoSize,
                 Font = new Font("Segoe UI", 9 / DPI.Scale),
+                ForeColor = ThemeManager.CurrentTheme.TextColor,
                 TextAlign = ContentAlignment.MiddleLeft
             };
             savePreferredScriptSetupItem.Click += SavePreferredScriptSetup_Click;
@@ -2293,7 +2489,8 @@ namespace RandomVideoPlayer
 
             if (!string.IsNullOrWhiteSpace(updatedCurrentFile))
             {
-                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(updatedCurrentFile, MainFormData.tempFavorites, btnAddToFav);
+                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(updatedCurrentFile, MainFormData.tempFavorites);
+                SetHighlight(btnAddToFav, MainFormData.favoriteMatch, Color.Red);
                 SetTimeServerFile(updatedCurrentFile);
 
                 var currentFileExtension = Path.GetExtension(updatedCurrentFile).TrimStart('.').ToLower();
@@ -2415,12 +2612,14 @@ namespace RandomVideoPlayer
             if (!MainFormData.favoriteMatch)
             {
                 MainFormData.tempFavorites = FavFunctions.AddToFavoritesList(tempFile);
-                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, MainFormData.tempFavorites, btnAddToFav);
+                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, MainFormData.tempFavorites);
+                SetHighlight(btnAddToFav, MainFormData.favoriteMatch, Color.Red);
             }
             else
             {
                 MainFormData.tempFavorites = FavFunctions.DeleteFromFavorites(tempFile, MainFormData.tempFavorites);
-                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, MainFormData.tempFavorites, btnAddToFav);
+                MainFormData.favoriteMatch = FavFunctions.IsFavoriteMatched(tempFile, MainFormData.tempFavorites);
+                SetHighlight(btnAddToFav, MainFormData.favoriteMatch, Color.Red);
             }
         }
 
@@ -3265,6 +3464,76 @@ namespace RandomVideoPlayer
                 var versionHistory = UpdateFunctions.GetVersionHistory(MainFormData.VersionHistoryUrl);
 
                 return new Version(versionHistory.Last().Key);
+            }
+        }
+        #endregion
+
+        #region RTX
+        private void ActivateRTXFeatures(bool autoVSR = true, bool autoHDR = false)
+        {
+            var video_width = playerMPV.API.GetPropertyDouble("width");
+            var video_height = playerMPV.API.GetPropertyDouble("height");
+            var display_width = playerMPV.API.GetPropertyDouble("display-width");
+            var display_height = playerMPV.API.GetPropertyDouble("display-height");
+            var codec = playerMPV.API.GetPropertyString("video-codec");
+            var pixelformat = playerMPV.API.GetPropertyString("video-params/pixelformat");
+            var primaries = playerMPV.API.GetPropertyString("video-params/primaries");
+            var gamma = playerMPV.API.GetPropertyString("video-params/gamma");
+
+            bool HasMissingDouble(double value) => double.IsNaN(value) || double.IsInfinity(value);
+            bool HasMissingString(string value) => string.IsNullOrWhiteSpace(value);
+
+            if (HasMissingDouble(video_width) || HasMissingDouble(video_height) || HasMissingDouble(display_width) || HasMissingDouble(display_height) ||
+                                HasMissingString(codec) || HasMissingString(pixelformat))
+            {
+                Error.Log("Missing video properties for RTX");
+                return;
+            }
+
+            var scale = Math.Max(display_width / video_width, display_height / video_height);
+            scale = Math.Ceiling(scale * 10) / 10;
+
+            playerMPV.API.Command("vf", "remove", "@format-nv12");
+            playerMPV.API.Command("vf", "remove", "@rtx-vsr");
+            playerMPV.API.Command("vf", "remove", "@rtx-hdr");
+            playerMPV.API.Command("vf", "remove", "@rtx-combined");
+
+            var isSDR = true;
+            if (primaries == "bt.2020" || gamma == "pq" || gamma == "hlg")
+            {
+                isSDR = false;
+            }
+
+            if (codec.ToLowerInvariant().Contains("hevc") || codec.ToLowerInvariant().Contains("h.265"))
+            {
+                if (pixelformat.EndsWith("p101e") || pixelformat == "p010")
+                {
+                    playerMPV.API.Command("vf", "add", "@format-nv12:format=nv12");
+                }
+            }
+
+            if (isSDR && autoHDR)
+            {
+                playerMPV.API.Command("set", "d3d11-output-csp", "srgb");
+            }
+
+            if (scale > 1.0 && autoVSR && autoHDR)
+            {
+                string combined = "@rtx-combined:d3d11vpp=scaling-mode=nvidia:scale=" + scale.ToString("0.0", CultureInfo.InvariantCulture) + ":format=nv12:nvidia-true-hdr";
+
+                playerMPV.API.Command("vf", "append", combined);
+            }
+            else if (scale > 1.0 && autoVSR)
+            {
+                playerMPV.API.Command("vf", "append", "@rtx-vsr:d3d11vpp=scaling-mode=nvidia:scale=" + scale.ToString("0.0", CultureInfo.InvariantCulture));
+            }
+            else if (autoHDR)
+            {
+                playerMPV.API.Command("vf", "append", "@rtx-hdr:d3d11vpp=format=nv12:nvidia-true-hdr");
+            }
+            else if (autoHDR == false)
+            {
+                playerMPV.API.Command("set", "d3d11-output-csp", "auto");
             }
         }
         #endregion

@@ -39,15 +39,15 @@
             columnHeader1 = new ColumnHeader();
             imageListMedium = new ImageList(components);
             panelHeaderListView = new Panel();
-            panelToolbar = new Controls.CustomPanel();
-            cbEnableVideoFilter = new Controls.RoundedImageCheckBox();
-            cbEnableImageFilter = new Controls.RoundedImageCheckBox();
-            cbEnableScriptFilter = new Controls.RoundedImageCheckBox();
+            panelToolbar = new RandomVideoPlayer.Controls.CustomPanel();
+            cbEnableVideoFilter = new RandomVideoPlayer.Controls.RoundedImageCheckBox();
+            cbEnableImageFilter = new RandomVideoPlayer.Controls.RoundedImageCheckBox();
+            cbEnableScriptFilter = new RandomVideoPlayer.Controls.RoundedImageCheckBox();
             btnViewGrid = new FontAwesome.Sharp.IconButton();
             btnViewTile = new FontAwesome.Sharp.IconButton();
             btnViewList = new FontAwesome.Sharp.IconButton();
-            cbUseRecent = new Controls.RoundedCheckBox();
-            cbIncludeSubfolders = new Controls.RoundedCheckBox();
+            cbUseRecent = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbIncludeSubfolders = new RandomVideoPlayer.Controls.RoundedCheckBox();
             btnIncreaseSize = new FontAwesome.Sharp.IconButton();
             btnResetSize = new FontAwesome.Sharp.IconButton();
             btnDecreaseSize = new FontAwesome.Sharp.IconButton();
@@ -101,7 +101,6 @@
             // lblTitleBar
             // 
             lblTitleBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lblTitleBar.BackColor = Color.FromArgb(255, 221, 26);
             lblTitleBar.Location = new Point(40, 0);
             lblTitleBar.Name = "lblTitleBar";
             lblTitleBar.Size = new Size(958, 20);
@@ -131,6 +130,7 @@
             // panelMain
             // 
             panelMain.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panelMain.BackColor = Color.LightYellow;
             panelMain.Controls.Add(lvFileExplore);
             panelMain.Controls.Add(panelHeaderListView);
             panelMain.Location = new Point(126, 36);
@@ -262,8 +262,8 @@
             // 
             btnViewGrid.FlatAppearance.BorderSize = 0;
             btnViewGrid.FlatStyle = FlatStyle.Flat;
-            btnViewGrid.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            btnViewGrid.IconChar = FontAwesome.Sharp.IconChar.TableCellsLarge;
+            btnViewGrid.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnViewGrid.IconChar = FontAwesome.Sharp.IconChar.ThLarge;
             btnViewGrid.IconColor = Color.Black;
             btnViewGrid.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnViewGrid.IconSize = 30;
@@ -278,7 +278,7 @@
             // 
             btnViewTile.FlatAppearance.BorderSize = 0;
             btnViewTile.FlatStyle = FlatStyle.Flat;
-            btnViewTile.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnViewTile.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnViewTile.IconChar = FontAwesome.Sharp.IconChar.TableCells;
             btnViewTile.IconColor = Color.Black;
             btnViewTile.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -294,7 +294,7 @@
             // 
             btnViewList.FlatAppearance.BorderSize = 0;
             btnViewList.FlatStyle = FlatStyle.Flat;
-            btnViewList.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnViewList.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnViewList.IconChar = FontAwesome.Sharp.IconChar.TableList;
             btnViewList.IconColor = Color.Black;
             btnViewList.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -313,7 +313,7 @@
             cbUseRecent.CheckedBackColor = Color.Gold;
             cbUseRecent.FlatAppearance.BorderSize = 0;
             cbUseRecent.FlatStyle = FlatStyle.Flat;
-            cbUseRecent.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            cbUseRecent.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             cbUseRecent.Location = new Point(540, 5);
             cbUseRecent.Name = "cbUseRecent";
             cbUseRecent.Size = new Size(140, 25);
@@ -329,7 +329,7 @@
             cbIncludeSubfolders.CheckedBackColor = Color.Gold;
             cbIncludeSubfolders.FlatAppearance.BorderSize = 0;
             cbIncludeSubfolders.FlatStyle = FlatStyle.Flat;
-            cbIncludeSubfolders.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            cbIncludeSubfolders.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             cbIncludeSubfolders.Location = new Point(404, 6);
             cbIncludeSubfolders.Name = "cbIncludeSubfolders";
             cbIncludeSubfolders.Size = new Size(130, 25);
@@ -342,7 +342,7 @@
             // 
             btnIncreaseSize.FlatAppearance.BorderSize = 0;
             btnIncreaseSize.FlatStyle = FlatStyle.Flat;
-            btnIncreaseSize.IconChar = FontAwesome.Sharp.IconChar.SearchPlus;
+            btnIncreaseSize.IconChar = FontAwesome.Sharp.IconChar.MagnifyingGlassPlus;
             btnIncreaseSize.IconColor = Color.Black;
             btnIncreaseSize.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnIncreaseSize.IconSize = 26;
@@ -386,6 +386,7 @@
             // tbCount
             // 
             tbCount.BackColor = Color.LightYellow;
+            tbCount.BorderStyle = BorderStyle.FixedSingle;
             tbCount.Location = new Point(686, 7);
             tbCount.Name = "tbCount";
             tbCount.Size = new Size(32, 23);
@@ -400,7 +401,7 @@
             btnFolderSelect.Dock = DockStyle.Right;
             btnFolderSelect.FlatAppearance.BorderSize = 0;
             btnFolderSelect.FlatStyle = FlatStyle.Flat;
-            btnFolderSelect.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnFolderSelect.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnFolderSelect.IconChar = FontAwesome.Sharp.IconChar.Play;
             btnFolderSelect.IconColor = Color.Black;
             btnFolderSelect.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -416,7 +417,7 @@
             // 
             // lblFavorites
             // 
-            lblFavorites.Font = new Font("Segoe UI Semibold", 14F, FontStyle.Bold, GraphicsUnit.Point);
+            lblFavorites.Font = new Font("Segoe UI Semibold", 14F, FontStyle.Bold);
             lblFavorites.Location = new Point(0, 249);
             lblFavorites.Margin = new Padding(3);
             lblFavorites.Name = "lblFavorites";
@@ -427,7 +428,7 @@
             // 
             // lblNavigation
             // 
-            lblNavigation.Font = new Font("Segoe UI Semibold", 14F, FontStyle.Bold, GraphicsUnit.Point);
+            lblNavigation.Font = new Font("Segoe UI Semibold", 14F, FontStyle.Bold);
             lblNavigation.Location = new Point(0, 36);
             lblNavigation.Margin = new Padding(3);
             lblNavigation.Name = "lblNavigation";
@@ -441,7 +442,7 @@
             lbFavorites.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             lbFavorites.BackColor = Color.LightYellow;
             lbFavorites.BorderStyle = BorderStyle.None;
-            lbFavorites.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbFavorites.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbFavorites.FormattingEnabled = true;
             lbFavorites.ItemHeight = 15;
             lbFavorites.Location = new Point(0, 321);
@@ -455,7 +456,7 @@
             // 
             lbDriveFolders.BackColor = Color.LightYellow;
             lbDriveFolders.BorderStyle = BorderStyle.None;
-            lbDriveFolders.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbDriveFolders.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbDriveFolders.FormattingEnabled = true;
             lbDriveFolders.ItemHeight = 15;
             lbDriveFolders.Location = new Point(0, 78);
@@ -483,6 +484,7 @@
             // 
             tbPathView.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbPathView.BackColor = Color.LightYellow;
+            tbPathView.BorderStyle = BorderStyle.FixedSingle;
             tbPathView.Location = new Point(40, 6);
             tbPathView.Name = "tbPathView";
             tbPathView.ReadOnly = true;
@@ -493,7 +495,7 @@
             // 
             btnDeleteFav.FlatAppearance.BorderSize = 0;
             btnDeleteFav.FlatStyle = FlatStyle.Flat;
-            btnDeleteFav.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnDeleteFav.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnDeleteFav.IconChar = FontAwesome.Sharp.IconChar.FolderMinus;
             btnDeleteFav.IconColor = Color.Black;
             btnDeleteFav.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -510,7 +512,7 @@
             // 
             btnAddFav.FlatAppearance.BorderSize = 0;
             btnAddFav.FlatStyle = FlatStyle.Flat;
-            btnAddFav.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnAddFav.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnAddFav.IconChar = FontAwesome.Sharp.IconChar.FolderPlus;
             btnAddFav.IconColor = Color.Black;
             btnAddFav.IconFont = FontAwesome.Sharp.IconFont.Auto;

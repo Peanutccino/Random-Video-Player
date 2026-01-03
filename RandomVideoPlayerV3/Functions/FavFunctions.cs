@@ -33,16 +33,14 @@ namespace RandomVideoPlayer.Functions
             return tempFavorites;
         }
 
-        public static bool IsFavoriteMatched(string currentVideo, List<string> tempFavorites, FontAwesome.Sharp.IconButton ctrl)
+        public static bool IsFavoriteMatched(string currentVideo, List<string> tempFavorites)
         {
             if (tempFavorites.Contains(currentVideo))
             {
-                ctrl.IconColor = Color.Red;
                 return true;
             }
             else
             {
-                ctrl.IconColor = Color.Black;
                 return false;
             }
         }

@@ -97,6 +97,8 @@ namespace RandomVideoPlayer.Functions
         public string subtitleFontName { get; set; } = "Sans-Serif";
         public string subtitleFontColor { get; set; } = "#FFFFFF";
         public bool rtxVSREnabled { get; set; } = false;
+        public bool rtxHDREnabled { get; set; } = false;
+        public string selectedTheme { get; set; } = "Light";
 
         public bool enableCustomScaling { get; set; } = false;
         public float customScaling { get; set; } = 1.0f;

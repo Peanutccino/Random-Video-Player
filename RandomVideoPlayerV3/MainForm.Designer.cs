@@ -140,7 +140,6 @@
             btnStartFromFile.Size = new Size(30, 30);
             btnStartFromFile.TabIndex = 23;
             btnStartFromFile.UseVisualStyleBackColor = true;
-            btnStartFromFile.Visible = false;
             btnStartFromFile.Click += btnStartFromFile_Click;
             // 
             // btnSettings

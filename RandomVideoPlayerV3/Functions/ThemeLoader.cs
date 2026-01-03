@@ -1,0 +1,54 @@
+﻿using RandomVideoPlayer.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace RandomVideoPlayer.Functions
+{
+    public static class ThemeLoader
+    {
+        private static readonly string ThemeFolder =
+            Path.Combine(AppContext.BaseDirectory, "Themes");
+
+        public static IReadOnlyDictionary<string, Theme> LoadThemes()
+        {
+            Directory.CreateDirectory(ThemeFolder);
+            var themes = new Dictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (string file in Directory.GetFiles(ThemeFolder, "*.json"))
+            {
+                ThemeDto dto = JsonSerializer.Deserialize<ThemeDto>(File.ReadAllText(file));
+                if (dto?.Name == null) continue;
+                themes[dto.Name] = Map(dto);
+            }
+            return themes;
+        }
+
+        private static Theme Map(ThemeDto dto) => new Theme
+        {
+            FormBackColor = ColorTranslator.FromHtml(dto.FormBackColor),
+            TextColor = ColorTranslator.FromHtml(dto.TextColor),
+            ButtonBackColor = ColorTranslator.FromHtml(dto.ButtonBackColor),
+            ButtonHighlightColor = ColorTranslator.FromHtml(dto.ButtonHighlightColor),
+            ButtonIconColor = ColorTranslator.FromHtml(dto.ButtonIconColor),
+            ToolMenuBackColor = ColorTranslator.FromHtml(dto.ToolMenuBackColor),
+            ToolMenuHoverColor = ColorTranslator.FromHtml(dto.ToolMenuHoverColor),
+            ProgressColor = ColorTranslator.FromHtml(dto.ProgressColor),
+            ProgressHoverColor = ColorTranslator.FromHtml(dto.ProgressHoverColor),
+            FbTextColor = ColorTranslator.FromHtml(dto.FbTextColor),
+            FbTextColorAccent = ColorTranslator.FromHtml(dto.FbTextColorAccent),
+            FbBackColorLight = ColorTranslator.FromHtml(dto.FbBackColorLight),
+            FbBackColorDark = ColorTranslator.FromHtml(dto.FbBackColorDark),
+            FbAccentColor = ColorTranslator.FromHtml(dto.FbAccentColor),
+            LbTextColor = ColorTranslator.FromHtml(dto.LbTextColor),
+            LbTextColorSideAccent = ColorTranslator.FromHtml(dto.LbTextColorSideAccent),
+            LbBackColorMain = ColorTranslator.FromHtml(dto.LbBackColorMain),
+            LbAccentColorMain = ColorTranslator.FromHtml(dto.LbAccentColorMain),
+            LbBackColorSide = ColorTranslator.FromHtml(dto.LbBackColorSide),
+            LbAccentColorSide = ColorTranslator.FromHtml(dto.LbAccentColorSide)
+        };
+    }
+}

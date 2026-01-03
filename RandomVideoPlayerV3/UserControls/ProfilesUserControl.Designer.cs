@@ -31,8 +31,8 @@
             lblHeader = new Label();
             panel1 = new Panel();
             lblProfile = new Label();
-            label2 = new Label();
-            label1 = new Label();
+            lbl2 = new Label();
+            lbl1 = new Label();
             lbProfiles = new ListBox();
             panel2 = new Panel();
             btnAdd = new FontAwesome.Sharp.IconButton();
@@ -59,8 +59,8 @@
             // panel1
             // 
             panel1.Controls.Add(lblProfile);
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(label1);
+            panel1.Controls.Add(lbl2);
+            panel1.Controls.Add(lbl1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 55);
             panel1.Name = "panel1";
@@ -80,28 +80,28 @@
             lblProfile.Text = "Default 1";
             lblProfile.TextAlign = ContentAlignment.TopCenter;
             // 
-            // label2
+            // lbl2
             // 
-            label2.AutoSize = true;
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(0, 15);
-            label2.Name = "label2";
-            label2.Padding = new Padding(6, 10, 0, 0);
-            label2.Size = new Size(119, 25);
-            label2.TabIndex = 1;
-            label2.Text = "Currently set profile:";
+            lbl2.AutoSize = true;
+            lbl2.Dock = DockStyle.Top;
+            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl2.Location = new Point(0, 15);
+            lbl2.Name = "lbl2";
+            lbl2.Padding = new Padding(6, 10, 0, 0);
+            lbl2.Size = new Size(119, 25);
+            lbl2.TabIndex = 1;
+            lbl2.Text = "Currently set profile:";
             // 
-            // label1
+            // lbl1
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Top;
-            label1.Location = new Point(0, 0);
-            label1.Name = "label1";
-            label1.Padding = new Padding(6, 0, 0, 0);
-            label1.Size = new Size(328, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Add, delete or rename profiles used to save preferred scripts";
+            lbl1.AutoSize = true;
+            lbl1.Dock = DockStyle.Top;
+            lbl1.Location = new Point(0, 0);
+            lbl1.Name = "lbl1";
+            lbl1.Padding = new Padding(6, 0, 0, 0);
+            lbl1.Size = new Size(328, 15);
+            lbl1.TabIndex = 0;
+            lbl1.Text = "Add, delete or rename profiles used to save preferred scripts";
             // 
             // lbProfiles
             // 
@@ -249,8 +249,8 @@
         private ListBox lbProfiles;
         private Panel panel2;
         private Label lblProfile;
-        private Label label2;
-        private Label label1;
+        private Label lbl2;
+        private Label lbl1;
         private FontAwesome.Sharp.IconButton btnRename;
         private FontAwesome.Sharp.IconButton btnDelete;
         private FontAwesome.Sharp.IconButton btnAdd;

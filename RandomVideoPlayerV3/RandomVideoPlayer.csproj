@@ -27,25 +27,34 @@
 
   <ItemGroup>
     <None Remove="Resources\list-colored-add.png" />
+    <None Remove="Resources\list-colored-add_Dark.png" />
     <None Remove="Resources\list-colored-remove.png" />
+    <None Remove="Resources\list-colored-remove_Dark.png" />
     <None Remove="Resources\SplitIconFolderHighlight.png" />
+    <None Remove="Resources\SplitIconFolderHighlight_Dark.png" />
     <None Remove="Resources\SplitIconListHighlight.png" />
+    <None Remove="Resources\SplitIconListHighlight_Dark.png" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\list-colored-add.png" />
+    <EmbeddedResource Include="Resources\list-colored-add_Dark.png" />
     <EmbeddedResource Include="Resources\list-colored-remove.png" />
+    <EmbeddedResource Include="Resources\list-colored-remove_Dark.png" />
     <EmbeddedResource Include="Resources\RVP_IconSimple.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\SplitIconFolderHighlight.png" />
+    <EmbeddedResource Include="Resources\SplitIconFolderHighlight_Dark.png" />
     <EmbeddedResource Include="Resources\SplitIconListHighlight.png" />
+    <EmbeddedResource Include="Resources\SplitIconListHighlight_Dark.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FontAwesome.Sharp" Version="6.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Svg" Version="3.4.7" />
   </ItemGroup>
 
   <ItemGroup>

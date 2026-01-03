@@ -851,6 +851,7 @@
             // 
             tbPathView.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbPathView.BackColor = Color.FromArgb(254, 232, 231);
+            tbPathView.BorderStyle = BorderStyle.FixedSingle;
             tbPathView.Location = new Point(40, 6);
             tbPathView.Name = "tbPathView";
             tbPathView.ReadOnly = true;
