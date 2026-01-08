@@ -36,6 +36,8 @@ namespace RandomVideoPlayer.View
             this.BackColor = Color.FromArgb(152, 251, 152);//Border color
 
             filePathsForMoving = fileList;
+
+            ThemeManager.ApplyThemeLSView(this);
         }
 
         private void MoveListForm_Load(object sender, EventArgs e)

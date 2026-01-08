@@ -63,6 +63,9 @@ namespace RandomVideoPlayer.Functions
         public bool filterVideoEnabled { get; set; } = true;
         public bool filterScriptEnabled { get; set; } = false;
 
+        public bool viewIsTileFolderBrowser { get; set; } = true;
+        public int thumbSizeFactorFolderBrowser{ get; set; } = 10;
+
         public bool listChanged { get; set; } = false;
         public string listNameTemp { get; set; } = "Unspecified";
 
@@ -108,6 +111,8 @@ namespace RandomVideoPlayer.Functions
         private static CustomSettings _instance;
         private static readonly object _lock = new object();
 
+        public bool folderBrowserV2Enabled { get; set; } = false;
+        public bool thumbnailPreviewEnabled { get; set; } = false;
         private CustomSettings() 
         {
             buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };

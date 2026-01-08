@@ -10,12 +10,29 @@ namespace RandomVideoPlayer.Controls
 {
     public class CustomRenderer : ToolStripProfessionalRenderer
     {
-        public CustomRenderer()
-            : base(new ColorTable()) {}
+        private readonly ColorTable colorTable;
+        public Color TextColor { get; set; } = Color.Black;
+        public Color BackgroundColor { get; set; } = Color.White;
+        public Color HighlightColor { get; set; } = Color.Cyan;
 
+        //public CustomRenderer()
+        //    : base(new ColorTable()) {}
+
+        public CustomRenderer()
+            : this(Color.Black, Color.White) { }
+
+        public CustomRenderer(Color text, Color background)
+            : base(new ColorTable(text, background))
+        {
+            colorTable = (ColorTable)ColorTable;
+        }
+        public void ApplyColors()
+        {
+            colorTable.UpdateColors(TextColor, BackgroundColor);
+        }
         protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
         {
-            Pen pen = new Pen(ThemeManager.CurrentTheme.TextColor);
+            Pen pen = new Pen(TextColor);
 
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             var updatedArrowRectangleSize = new Size((int)(e.ArrowRectangle.Width / DPI.Scale), (int)(e.ArrowRectangle.Height / DPI.Scale));
@@ -30,7 +47,7 @@ namespace RandomVideoPlayer.Controls
 
         protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
         {
-            Pen pen = new Pen(ThemeManager.CurrentTheme.TextColor);
+            Pen pen = new Pen(TextColor);
 
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             var updatedImageRectangleSize = new Size((int)(e.ImageRectangle.Width / DPI.Scale), (int)(e.ImageRectangle.Height / DPI.Scale));
@@ -45,52 +62,74 @@ namespace RandomVideoPlayer.Controls
 
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
         {
-            e.TextColor = ThemeManager.CurrentTheme.TextColor;
+            e.TextColor = TextColor;
             base.OnRenderItemText(e);
         }
 
         protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
         {
             var color = e.Item.Selected
-                ? ThemeManager.CurrentTheme.ToolMenuHoverColor
-                : ThemeManager.CurrentTheme.ToolMenuBackColor;
+                ? HighlightColor
+                : BackgroundColor;
             e.Graphics.FillRectangle(new SolidBrush(color), e.Item.ContentRectangle);
         }
     }
 
     public class ColorTable : ProfessionalColorTable
     {
-        public override Color SeparatorDark
+        private Color textColor;
+        private Color backgroundColor;
+
+        public ColorTable(Color text, Color background)
         {
-            get { return ThemeManager.CurrentTheme.TextColor; }
+            UpdateColors(text, background);
         }
-        public override Color SeparatorLight
+        public override Color ToolStripDropDownBackground => backgroundColor;
+        public override Color ImageMarginGradientBegin => backgroundColor;
+        public override Color ImageMarginGradientMiddle => backgroundColor;
+        public override Color ImageMarginGradientEnd => backgroundColor;
+        public override Color MenuItemSelected => textColor;
+        public override Color MenuItemBorder => textColor;
+        public override Color SeparatorDark => textColor;
+        public override Color SeparatorLight => textColor;
+
+        //public override Color SeparatorDark
+        //{
+        //    get { return ThemeManager.CurrentTheme.TextColor; }
+        //}
+        //public override Color SeparatorLight
+        //{
+        //    get { return ThemeManager.CurrentTheme.TextColor; }
+        //}
+        //public override Color MenuItemBorder
+        //{
+        //    get { return ThemeManager.CurrentTheme.TextColor; }
+        //}
+        //public override Color MenuItemSelected
+        //{
+        //    get { return ThemeManager.CurrentTheme.TextColor; }
+        //}
+        //public override Color ToolStripDropDownBackground
+        //{
+        //    get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
+        //}
+        //public override Color ImageMarginGradientBegin
+        //{
+        //    get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
+        //}
+        //public override Color ImageMarginGradientMiddle
+        //{
+        //    get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
+        //}
+        //public override Color ImageMarginGradientEnd
+        //{
+        //    get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
+        //}
+
+        public void UpdateColors(Color text, Color background)
         {
-            get { return ThemeManager.CurrentTheme.TextColor; }
-        }
-        public override Color MenuItemBorder
-        {
-            get { return ThemeManager.CurrentTheme.TextColor; }
-        }
-        public override Color MenuItemSelected
-        {
-            get { return ThemeManager.CurrentTheme.TextColor; }
-        }
-        public override Color ToolStripDropDownBackground
-        {
-            get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
-        }
-        public override Color ImageMarginGradientBegin
-        {
-            get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
-        }
-        public override Color ImageMarginGradientMiddle
-        {
-            get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
-        }
-        public override Color ImageMarginGradientEnd
-        {
-            get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
+            textColor = text;
+            backgroundColor = background;
         }
     }
 }

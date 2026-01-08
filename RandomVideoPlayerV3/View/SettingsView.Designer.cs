@@ -120,7 +120,7 @@
             // 
             // splitUI
             // 
-            splitUI.BackColor = Color.GhostWhite;
+            splitUI.BackColor = Color.FromArgb(179, 179, 255);
             splitUI.Dock = DockStyle.Fill;
             splitUI.Location = new Point(0, 20);
             splitUI.Name = "splitUI";

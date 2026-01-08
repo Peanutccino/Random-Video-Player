@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using FontAwesome.Sharp;
+using Microsoft.VisualBasic;
 using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
@@ -118,7 +119,7 @@ namespace RandomVideoPlayer.View
 
             UpdateListInfo();
 
-            splitContainerBody.Panel2.BackColor = ThemeManager.CurrentTheme.LbBackColorSide;
+            splitContainerBody.Panel2.BackColor = ThemeManager.CurrentTheme.LbBackColorSideLight;
         }
         private void ListBrowserView_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -930,7 +931,7 @@ namespace RandomVideoPlayer.View
         {
             if (e.Data.GetDataPresent(typeof(List<ListViewItem>)) || e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                lvCustomList.BackColor = Color.Honeydew;
+                lvCustomList.BackColor = Lighten(ThemeManager.CurrentTheme.LbBackColorSideLight, 40);
                 e.Effect = DragDropEffects.Move;
             }
             else
@@ -1015,12 +1016,29 @@ namespace RandomVideoPlayer.View
                     MessageBox.Show($"Failed to load dropped files: \n\n {ex}");
                 }
             }
-            lvCustomList.BackColor = Color.MintCream;
+            lvCustomList.BackColor = ThemeManager.CurrentTheme.LbBackColorSideLight;
         }
 
         private void lvCustomList_DragLeave(object sender, EventArgs e)
         {
-            lvCustomList.BackColor = Color.MintCream;
+            lvCustomList.BackColor = ThemeManager.CurrentTheme.LbBackColorSideLight;
+        }
+        #endregion
+
+        #region CustomTheme Adjustments
+        private static Color Lighten(Color baseColor, int delta, double emphasisFactor = 2)
+        {
+            int dominant = Math.Max(Math.Max(baseColor.R, baseColor.G), baseColor.B);
+            int[] channels = { baseColor.R, baseColor.G, baseColor.B };
+
+            for (int i = 0; i < channels.Length; i++)
+            {
+                double weight = channels[i] == dominant ? emphasisFactor : 1d;
+                int boosted = channels[i] + (int)Math.Round(delta * weight);
+                channels[i] = Math.Clamp(boosted, 0, 255);
+            }
+
+            return Color.FromArgb(baseColor.A, channels[0], channels[1], channels[2]);
         }
         #endregion
 
@@ -1052,7 +1070,7 @@ namespace RandomVideoPlayer.View
                     item.Text = file.Name;
                     if (extensionToImageIndex.TryGetValue(currentFileExtension, out int imageIndex))
                     {
-                        item.ImageIndex = imageIndex;
+                        item.ImageIndex = imageIndex;                        
                     }
                     item.SubItems.Add(file.Extension.ToLower());
                     item.Tag = file.FullName;
@@ -1230,7 +1248,7 @@ namespace RandomVideoPlayer.View
                 checkBox.AutoSize = false;
                 checkBox.Margin = new Padding(8, 3, 3, 3);
                 checkBox.Size = new Size(44, 26);
-                checkBox.UncheckedBackColor = ThemeManager.CurrentTheme.LbBackColorMain;
+                checkBox.UncheckedBackColor = ThemeManager.CurrentTheme.LbBackColorMainLight;
                 checkBox.CheckedBackColor = ThemeManager.CurrentTheme.LbAccentColorMain;
                 checkBox.ForeColor = ThemeManager.CurrentTheme.LbTextColor;
                 checkBox.Checked = extensionFilter.Contains(extension);
@@ -1246,7 +1264,7 @@ namespace RandomVideoPlayer.View
                 checkBox.AutoSize = false;
                 checkBox.Margin = new Padding(8, 3, 3, 3);
                 checkBox.Size = new Size(44, 26);
-                checkBox.UncheckedBackColor = ThemeManager.CurrentTheme.LbBackColorMain;
+                checkBox.UncheckedBackColor = ThemeManager.CurrentTheme.LbBackColorMainLight;
                 checkBox.CheckedBackColor = ThemeManager.CurrentTheme.LbAccentColorMain;
                 checkBox.ForeColor = ThemeManager.CurrentTheme.LbTextColor;
                 checkBox.Checked = extensionFilter.Contains(extension);

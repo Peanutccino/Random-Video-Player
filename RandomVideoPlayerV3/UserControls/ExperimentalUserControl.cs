@@ -51,6 +51,9 @@ namespace RandomVideoPlayer.UserControls
 
             inputScalingFactors.SelectedIndex = Array.IndexOf(scalingFactors, settings.CustomScaling.ToString(CultureInfo.InvariantCulture));
             //inputScalingFactors.SelectedItem = settings.CustomScaling.ToString();
+
+            cbEnableFileBrowserV2.Checked = settings.FolderBrowserV2Enabled;
+            cbEnableThumbPreview.Checked = settings.ThumbnailPreviewEnabled;
         }
 
         private void BindControls()
@@ -108,6 +111,16 @@ namespace RandomVideoPlayer.UserControls
             inputScalingFactors.SelectedIndexChanged += (s, e) =>
             {
                 settings.CustomScaling = float.Parse(inputScalingFactors.SelectedItem.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture);
+            };
+
+            cbEnableFileBrowserV2.CheckedChanged += (s, e) =>
+            {
+                settings.FolderBrowserV2Enabled = cbEnableFileBrowserV2.Checked;
+            };
+
+            cbEnableThumbPreview.CheckedChanged += (s, e) =>
+            {
+                settings.ThumbnailPreviewEnabled = cbEnableThumbPreview.Checked;
             };
         }
         private void btnRestoreDefaults_Click(object sender, EventArgs e)

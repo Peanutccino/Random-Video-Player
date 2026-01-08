@@ -454,7 +454,7 @@
             btnListAdd.Size = new Size(30, 29);
             btnListAdd.TabIndex = 20;
             btnListAdd.UseVisualStyleBackColor = true;
-            btnListAdd.Click += btnListAdd_Click;
+            btnListAdd.MouseDown += btnListAdd_MouseDown;
             // 
             // btnAddToFav
             // 

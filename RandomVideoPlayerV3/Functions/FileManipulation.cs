@@ -114,5 +114,18 @@ namespace RandomVideoPlayer.Functions
 
             return false;
         }
+        public static string GetFirstExistingPath(params Func<string>[] pathSuppliers)
+        {
+            foreach (var supplier in pathSuppliers)
+            {
+                var candidate = supplier?.Invoke();
+                if (!string.IsNullOrWhiteSpace(candidate) && Directory.Exists(candidate))
+                {
+                    return candidate;
+                }
+            }
+
+            return string.Empty;
+        }
     }
 }

@@ -262,6 +262,7 @@
             // 
             // tbDestinationPath
             // 
+            tbDestinationPath.BorderStyle = BorderStyle.FixedSingle;
             tbDestinationPath.Location = new Point(3, 24);
             tbDestinationPath.Name = "tbDestinationPath";
             tbDestinationPath.ReadOnly = true;

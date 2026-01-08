@@ -55,12 +55,17 @@
             inputScalingFactors = new RandomVideoPlayer.Controls.ButtonComboBox();
             cbEnableCustomScaling = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl8 = new Label();
+            panel3 = new Panel();
+            cbEnableThumbPreview = new RandomVideoPlayer.Controls.CustomCheckBox();
+            cbEnableFileBrowserV2 = new RandomVideoPlayer.Controls.CustomCheckBox();
+            lbl9 = new Label();
             panel1.SuspendLayout();
             flowLayoutPanel4.SuspendLayout();
             flowLayoutPanel3.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             panel2.SuspendLayout();
+            panel3.SuspendLayout();
             SuspendLayout();
             // 
             // lblHeader
@@ -346,7 +351,7 @@
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 349);
             panel2.Name = "panel2";
-            panel2.Size = new Size(507, 134);
+            panel2.Size = new Size(507, 106);
             panel2.TabIndex = 18;
             panel2.Visible = false;
             // 
@@ -385,10 +390,58 @@
             lbl8.TabIndex = 0;
             lbl8.Text = "Enable and set custom scaling:";
             // 
+            // panel3
+            // 
+            panel3.Controls.Add(cbEnableThumbPreview);
+            panel3.Controls.Add(cbEnableFileBrowserV2);
+            panel3.Controls.Add(lbl9);
+            panel3.Dock = DockStyle.Top;
+            panel3.Location = new Point(0, 455);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(507, 127);
+            panel3.TabIndex = 19;
+            // 
+            // cbEnableThumbPreview
+            // 
+            cbEnableThumbPreview.BoxSize = 13;
+            cbEnableThumbPreview.Dock = DockStyle.Top;
+            cbEnableThumbPreview.HoverColor = Color.DeepSkyBlue;
+            cbEnableThumbPreview.Location = new Point(0, 64);
+            cbEnableThumbPreview.Name = "cbEnableThumbPreview";
+            cbEnableThumbPreview.PaddingLeft = 9;
+            cbEnableThumbPreview.Size = new Size(507, 40);
+            cbEnableThumbPreview.TabIndex = 3;
+            cbEnableThumbPreview.Text = "Enable thumbnail preview";
+            cbEnableThumbPreview.UseVisualStyleBackColor = true;
+            // 
+            // cbEnableFileBrowserV2
+            // 
+            cbEnableFileBrowserV2.BoxSize = 13;
+            cbEnableFileBrowserV2.Dock = DockStyle.Top;
+            cbEnableFileBrowserV2.HoverColor = Color.DeepSkyBlue;
+            cbEnableFileBrowserV2.Location = new Point(0, 24);
+            cbEnableFileBrowserV2.Name = "cbEnableFileBrowserV2";
+            cbEnableFileBrowserV2.PaddingLeft = 9;
+            cbEnableFileBrowserV2.Size = new Size(507, 40);
+            cbEnableFileBrowserV2.TabIndex = 2;
+            cbEnableFileBrowserV2.Text = "Enable new FolderBrowser";
+            cbEnableFileBrowserV2.UseVisualStyleBackColor = true;
+            // 
+            // lbl9
+            // 
+            lbl9.Dock = DockStyle.Top;
+            lbl9.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl9.Location = new Point(0, 0);
+            lbl9.Name = "lbl9";
+            lbl9.Size = new Size(507, 24);
+            lbl9.TabIndex = 1;
+            lbl9.Text = "Enable new version of FolderBrowser:";
+            // 
             // ExperimentalUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Controls.Add(lblHeader);
@@ -400,6 +453,7 @@
             flowLayoutPanel2.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
+            panel3.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -432,5 +486,9 @@
         private Controls.CustomCheckBox cbEnableCustomScaling;
         private Label lbl8;
         private Controls.ButtonComboBox inputScalingFactors;
+        private Panel panel3;
+        private Controls.CustomCheckBox cbEnableFileBrowserV2;
+        private Label lbl9;
+        private Controls.CustomCheckBox cbEnableThumbPreview;
     }
 }

@@ -50,7 +50,7 @@
             // 
             lblTitle.BackColor = Color.Honeydew;
             lblTitle.Dock = DockStyle.Top;
-            lblTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblTitle.ForeColor = Color.DarkOliveGreen;
             lblTitle.Location = new Point(0, 0);
             lblTitle.Name = "lblTitle";
@@ -93,7 +93,7 @@
             btnSaveList.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnSaveList.FlatAppearance.BorderSize = 0;
             btnSaveList.FlatStyle = FlatStyle.Flat;
-            btnSaveList.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold, GraphicsUnit.Point);
+            btnSaveList.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnSaveList.IconChar = FontAwesome.Sharp.IconChar.None;
             btnSaveList.IconColor = Color.Black;
             btnSaveList.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -110,7 +110,7 @@
             btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCancel.FlatAppearance.BorderSize = 0;
             btnCancel.FlatStyle = FlatStyle.Flat;
-            btnCancel.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCancel.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             btnCancel.IconChar = FontAwesome.Sharp.IconChar.None;
             btnCancel.IconColor = Color.Black;
             btnCancel.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -140,8 +140,8 @@
             btnDelete.Anchor = AnchorStyles.Bottom;
             btnDelete.FlatAppearance.BorderSize = 0;
             btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold, GraphicsUnit.Point);
-            btnDelete.IconChar = FontAwesome.Sharp.IconChar.TrashAlt;
+            btnDelete.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            btnDelete.IconChar = FontAwesome.Sharp.IconChar.TrashCan;
             btnDelete.IconColor = Color.Black;
             btnDelete.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnDelete.IconSize = 26;
@@ -156,6 +156,7 @@
             // 
             tbListName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbListName.BackColor = Color.MintCream;
+            tbListName.BorderStyle = BorderStyle.FixedSingle;
             tbListName.Location = new Point(3, 6);
             tbListName.Name = "tbListName";
             tbListName.PlaceholderText = "Enter a name for your list";
@@ -178,7 +179,7 @@
             // lblEntries
             // 
             lblEntries.Anchor = AnchorStyles.Right;
-            lblEntries.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold, GraphicsUnit.Point);
+            lblEntries.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
             lblEntries.Location = new Point(285, 40);
             lblEntries.Name = "lblEntries";
             lblEntries.Size = new Size(69, 30);
@@ -188,8 +189,8 @@
             // 
             // lblFiles
             // 
-            lblFiles.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold, GraphicsUnit.Point);
-            lblFiles.Location = new Point(3, 40);
+            lblFiles.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
+            lblFiles.Location = new Point(2, 40);
             lblFiles.Name = "lblFiles";
             lblFiles.Size = new Size(97, 30);
             lblFiles.TabIndex = 1;

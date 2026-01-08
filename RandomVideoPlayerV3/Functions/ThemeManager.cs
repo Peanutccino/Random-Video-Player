@@ -65,7 +65,94 @@ namespace RandomVideoPlayer.Functions
                 ApplyTheme(child);
             }
         }
+        public static void ApplyThemeFBV2(Control root)
+        {
+            root.BackColor = CurrentTheme.FbAccentColor;
+            root.ForeColor = CurrentTheme.FbTextColor;
 
+            switch (root)
+            {
+                case IconButton btnExit when btnExit.Name == "btnClose":
+                    btnExit.BackColor = CurrentTheme.FbAccentColor;
+                    btnExit.ForeColor = CurrentTheme.FbTextColorAccent;
+                    btnExit.IconColor = CurrentTheme.FbTextColorAccent;
+                    btnExit.FlatAppearance.MouseOverBackColor = Color.Red;
+                    break;
+                case IconButton iconBtn when iconBtn.Name == "btnAddFav":
+                    iconBtn.BackColor = CurrentTheme.FbBackColorLight;
+                    iconBtn.IconColor = CurrentTheme.FbTextColor;
+                    break;
+                case IconButton iconBtn when iconBtn.Name == "btnDeleteFav":
+                    iconBtn.BackColor = CurrentTheme.FbBackColorLight;
+                    iconBtn.IconColor = CurrentTheme.FbTextColor;
+                    break;
+                case IconButton iconBtn:
+                    iconBtn.BackColor = CurrentTheme.FbBackColorLight;
+                    iconBtn.ForeColor = CurrentTheme.FbTextColor;
+                    iconBtn.IconColor = CurrentTheme.FbTextColor;
+                    break;
+                case FlowLayoutPanel flowp when flowp.Name == "flowPanelPath":
+                    flowp.BackColor = CurrentTheme.FbBackColorDark;
+                    break;
+                case FlowLayoutPanel flowp:
+                    flowp.BackColor = CurrentTheme.FbBackColorLight;
+                    break;
+                case RoundedButton rbtn when rbtn.Name == "btnStart":
+                    rbtn.BackColor = CurrentTheme.FbAccentColor;
+                    rbtn.ForeColor = CurrentTheme.FbTextColorAccent;
+                    rbtn.BackgroundColor = CurrentTheme.FbBackColorDark;                    
+                    break;
+                case RoundedButton rbtn when rbtn.Name == "btnBack":
+                    rbtn.BackColor = CurrentTheme.FbAccentColor;
+                    rbtn.ForeColor = CurrentTheme.FbTextColor;
+                    rbtn.BackgroundColor = CurrentTheme.FbBackColorDark;
+                    break;
+                case Button btn:
+                    btn.BackColor = CurrentTheme.FbBackColorLight;
+                    btn.ForeColor = CurrentTheme.FbTextColor;
+                    break;
+                case RoundedPanel rpnl:
+                    rpnl.BackColor = CurrentTheme.FbBackColorLight;
+                    rpnl.FillColor = CurrentTheme.FbBackColorDark;
+                    break;
+                case Panel pnlTop when pnlTop.Name == "panelTop":
+                    pnlTop.BackColor = CurrentTheme.FbAccentColor;
+                    break;
+                case Panel pnl:
+                    pnl.BackColor = CurrentTheme.FbBackColorLight;
+                    break;
+                case RoundedCheckBox cb:
+                    cb.BackColor = CurrentTheme.FbBackColorDark;
+                    cb.ForeColor = CurrentTheme.FbTextColorAccent;
+                    cb.UncheckedBackColor = CurrentTheme.FbBackColorDark;
+                    cb.CheckedBackColor = CurrentTheme.FbAccentColor;
+                    cb.UncheckedForeColor = CurrentTheme.FbTextColor;
+                    break;
+                case ListView lv:
+                    lv.BackColor = CurrentTheme.FbBackColorDark;
+                    break;
+                case Label lbl when lbl.Name == "lblTitleBar":
+                    lbl.BackColor = CurrentTheme.FbAccentColor;
+                    lbl.ForeColor = CurrentTheme.FbTextColorAccent;
+                    break;
+                case Label lbl:
+                    lbl.BackColor = CurrentTheme.FbBackColorLight;
+                    lbl.ForeColor = CurrentTheme.FbTextColor;
+                    break;
+                case FlatSlider slider:
+                    slider.BackColor = CurrentTheme.FbBackColorLight;
+                    slider.ElapsedColor = CurrentTheme.FbAccentColor;
+                    slider.ThumbColor = CurrentTheme.FbAccentColor;
+                    slider.RemainingColor = CurrentTheme.FbTextColor;
+                    slider.HighlightColor = CurrentTheme.FbHighlightColor;
+                    break;
+            }
+
+            foreach (Control child in root.Controls)
+            {
+                ApplyThemeFBV2(child);
+            }
+        }
         public static void ApplyThemeFB(Control root)
         {
             root.BackColor = CurrentTheme.FbAccentColor;
@@ -162,79 +249,80 @@ namespace RandomVideoPlayer.Functions
                     btnUseList.IconColor = CurrentTheme.LbTextColorSideAccent;
                     break;
                 case IconButton iconBtn when iconBtn.Name == "btnClearList":
-                    iconBtn.BackColor = CurrentTheme.LbBackColorSide;
+                    iconBtn.BackColor = CurrentTheme.LbBackColorSideLight;
                     iconBtn.ForeColor = CurrentTheme.LbTextColorSideAccent;
                     iconBtn.IconColor = CurrentTheme.LbTextColorSideAccent;        
                     break;
                 case IconButton iconBtn when iconBtn.Name == "btnClearSelected":
-                    iconBtn.BackColor = CurrentTheme.LbBackColorSide;
+                    iconBtn.BackColor = CurrentTheme.LbBackColorSideLight;
                     iconBtn.ForeColor = CurrentTheme.LbTextColorSideAccent;
                     iconBtn.IconColor = CurrentTheme.LbTextColorSideAccent;
                     break;
                 case IconButton iconBtn when iconBtn.Name == "btnDelDuplicates":
-                    iconBtn.BackColor = CurrentTheme.LbBackColorSide;
+                    iconBtn.BackColor = CurrentTheme.LbBackColorSideLight;
                     iconBtn.ForeColor = CurrentTheme.LbTextColorSideAccent;
                     iconBtn.IconColor = CurrentTheme.LbTextColorSideAccent;
                     break;
                 case IconButton iconBtn when iconBtn.Name == "btnLoadList":
-                    iconBtn.BackColor = CurrentTheme.LbBackColorSide;
+                    iconBtn.BackColor = CurrentTheme.LbBackColorSideLight;
                     iconBtn.ForeColor = CurrentTheme.LbTextColorSideAccent;
                     iconBtn.IconColor = CurrentTheme.LbTextColorSideAccent;
                     break;
                 case IconButton iconBtn when iconBtn.Name == "btnSaveList":
-                    iconBtn.BackColor = CurrentTheme.LbBackColorSide;
+                    iconBtn.BackColor = CurrentTheme.LbBackColorSideLight;
                     iconBtn.ForeColor = CurrentTheme.LbTextColorSideAccent;
                     iconBtn.IconColor = CurrentTheme.LbTextColorSideAccent;
                     break;
                 case IconButton iconBtn when iconBtn.Name == "btnAddFromPlaylist":
-                    iconBtn.BackColor = CurrentTheme.LbBackColorSide;
+                    iconBtn.BackColor = CurrentTheme.LbBackColorSideLight;
                     iconBtn.ForeColor = CurrentTheme.LbTextColorSideAccent;
                     iconBtn.IconColor = CurrentTheme.LbTextColorSideAccent;
                     break;
                 case IconButton iconBtn when iconBtn.Name == "btnMoveList":
-                    iconBtn.BackColor = CurrentTheme.LbBackColorSide;
+                    iconBtn.BackColor = CurrentTheme.LbBackColorSideLight;
                     iconBtn.ForeColor = CurrentTheme.LbTextColorSideAccent;
                     iconBtn.IconColor = CurrentTheme.LbTextColorSideAccent;
                     break;
                 case IconButton iconBtn:
-                    iconBtn.BackColor = CurrentTheme.LbBackColorMain;
+                    iconBtn.BackColor = CurrentTheme.LbBackColorMainLight;
                     iconBtn.ForeColor = CurrentTheme.LbTextColor;
                     iconBtn.IconColor = CurrentTheme.LbTextColor;
                     break;
                 case Panel pnlCustomList when pnlCustomList.Name == "panelCustomListToolbar":
-                    pnlCustomList.BackColor = CurrentTheme.LbBackColorSide;
+                    pnlCustomList.BackColor = CurrentTheme.LbBackColorSideLight;
                     break;
                 case Panel pnlTop when pnlTop.Name == "panelTop":
                     pnlTop.BackColor = CurrentTheme.LbAccentColorMain;
                     break;
                 case Panel pnl:
-                    pnl.BackColor = CurrentTheme.LbBackColorMain;
+                    pnl.BackColor = CurrentTheme.LbBackColorMainLight;
                     break;
                 case ListView lv when lv.Name == "lvFileExplore":
-                    lv.BackColor = CurrentTheme.LbBackColorMain;
+                    lv.BackColor = CurrentTheme.LbBackColorMainLight;
                     break;
                 case ListView lv:
-                    lv.BackColor = CurrentTheme.LbBackColorSide;
+                    lv.BackColor = CurrentTheme.LbBackColorSideLight;
                     lv.ForeColor = CurrentTheme.LbTextColorSideAccent;
                     break;
                 case TextBox tb:
-                    tb.BackColor = CurrentTheme.LbBackColorMain;
+                    tb.BackColor = CurrentTheme.LbBackColorMainLight;
                     tb.ForeColor = CurrentTheme.LbTextColor;
                     break;
                 case Label lbl when lbl.Name != "lblTitleBar":
-                    lbl.BackColor = CurrentTheme.LbBackColorMain;
+                    lbl.BackColor = CurrentTheme.LbBackColorMainLight;
                     lbl.ForeColor = CurrentTheme.LbTextColor;
                     break;
                 case ListBox lb:
-                    lb.BackColor = CurrentTheme.LbBackColorMain;
+                    lb.BackColor = CurrentTheme.LbBackColorMainLight;
                     break;
                 case SplitContainer sc:
-                    sc.BackColor = CurrentTheme.LbBackColorMain;
+                    sc.BackColor = CurrentTheme.LbBackColorMainLight;
                     break;
                 case RoundedCheckBox rcb:
                     rcb.ForeColor = CurrentTheme.LbTextColorSideAccent;
-                    rcb.BackColor = CurrentTheme.LbBackColorSide;
-                    rcb.UncheckedBackColor = CurrentTheme.LbBackColorSide;
+                    rcb.UncheckedForeColor = CurrentTheme.LbTextColor;
+                    rcb.BackColor = CurrentTheme.LbBackColorSideLight;
+                    rcb.UncheckedBackColor = CurrentTheme.LbBackColorSideLight;
                     rcb.CheckedBackColor = CurrentTheme.LbAccentColorSide;
                     break;
             }
@@ -242,6 +330,55 @@ namespace RandomVideoPlayer.Functions
             foreach (Control child in root.Controls)
             {
                 ApplyThemeLB(child);
+            }
+        }
+
+        public static void ApplyThemeLSView(Control root)
+        {
+            root.BackColor = CurrentTheme.LbAccentColorSide;
+            root.ForeColor = CurrentTheme.LbTextColor;
+
+            switch (root)
+            {
+                case Panel pnl:
+                    pnl.BackColor = CurrentTheme.LbBackColorSideDark;
+                    break;
+                case ListView lv:
+                    lv.BackColor = CurrentTheme.LbBackColorSideLight;
+                    lv.ForeColor = CurrentTheme.LbTextColor;
+                    break;
+                case TextBox tb:
+                    tb.BackColor = CurrentTheme.LbBackColorSideLight;
+                    tb.ForeColor = CurrentTheme.LbTextColor;
+                    break;
+                case Label lbl:
+                    lbl.BackColor = CurrentTheme.LbBackColorSideDark;
+                    lbl.ForeColor = CurrentTheme.LbTextColor;
+                    break;
+                case CheckBox cb:
+                    cb.BackColor = CurrentTheme.LbBackColorSideDark;
+                    cb.ForeColor = CurrentTheme.LbTextColor;
+                    break;
+                case IconButton iconBtn:
+                    iconBtn.BackColor = CurrentTheme.LbBackColorSideDark;
+                    iconBtn.ForeColor = CurrentTheme.LbTextColor;
+                    iconBtn.IconColor = CurrentTheme.LbTextColor;
+                    break;
+                case ComboBox comboBox:
+                    comboBox.BackColor = CurrentTheme.LbBackColorSideLight;
+                    comboBox.ForeColor = CurrentTheme.LbTextColor;
+                    break;
+                case FlatProgressBar pb:
+                    pb.BackColor = CurrentTheme.LbBackColorSideDark;
+                    pb.CompletedBrush = CurrentTheme.LbAccentColorSide;
+                    pb.RemainingBrush = CurrentTheme.LbBackColorMainLight;
+                    pb.BorderColor = CurrentTheme.LbBackColorMainDark;
+                    break;
+            }
+
+            foreach (Control child in root.Controls)
+            {
+                ApplyThemeLSView(child);
             }
         }
     }

@@ -557,6 +557,7 @@
             cbShowIcons.TabIndex = 28;
             cbShowIcons.Text = "Show icons";
             cbShowIcons.UncheckedBackColor = Color.MintCream;
+            cbShowIcons.UncheckedForeColor = Color.Black;
             cbShowIcons.UseVisualStyleBackColor = false;
             cbShowIcons.CheckedChanged += cbShowIcons_CheckedChanged;
             // 
@@ -574,6 +575,7 @@
             cbFullPath.TabIndex = 27;
             cbFullPath.Text = "Show full path";
             cbFullPath.UncheckedBackColor = Color.MintCream;
+            cbFullPath.UncheckedForeColor = Color.Black;
             cbFullPath.UseVisualStyleBackColor = false;
             cbFullPath.CheckedChanged += cbFullPath_CheckedChanged;
             // 

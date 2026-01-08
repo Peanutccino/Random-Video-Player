@@ -383,6 +383,35 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool ViewIsTileFolderBrowser
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.viewIsTileFolderBrowser;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.viewIsTileFolderBrowser = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int ThumbSizeFactorFolderBrowser
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.thumbSizeFactorFolderBrowser;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.thumbSizeFactorFolderBrowser = value;
+                _settingsInstance.Save();
+            }
+        }
         public static bool FileCopy
         {
             get
@@ -978,6 +1007,36 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.customScaling = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool FolderBrowserV2Enabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.folderBrowserV2Enabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.folderBrowserV2Enabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static bool ThumbnailPreviewEnabled
+        {
+            get
+            {
+                var settingsInstance = CustomSettings.Instance;
+                return settingsInstance.thumbnailPreviewEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.thumbnailPreviewEnabled = value;
                 _settingsInstance.Save();
             }
         }

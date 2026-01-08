@@ -7,6 +7,7 @@ using RandomVideoPlayer.View;
 using Svg;
 using Svg.FilterEffects;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -14,6 +15,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Timers;
+using System.Windows.Navigation;
+using System.Windows.Shell;
 using static System.Windows.Forms.Design.AxImporter;
 using Point = System.Drawing.Point;
 using Timer = System.Windows.Forms.Timer;
@@ -111,7 +114,9 @@ namespace RandomVideoPlayer
                 playerMPV.Load(img, true);
             }
             else
+            {
                 initStartUp(MainFormData.directoryFromStartupFile);
+            }
 
             RepositionButtons();
             SetupTooltips();
@@ -120,6 +125,9 @@ namespace RandomVideoPlayer
             InitializeTimeOverlay();
             timerProgressUpdate.Enabled = true;
             AutoSkipHandler();
+
+            UpdateAddToListContext();
+            UpdateScriptProfiles();
 
             if (MainFormData.startedByFile) PlayerResume();
         }
@@ -147,9 +155,17 @@ namespace RandomVideoPlayer
         {
             DeleteCurrent();
         }
-        private void btnListAdd_Click(object sender, EventArgs e)
+  
+        private void btnListAdd_MouseDown(object sender, MouseEventArgs e)
         {
-            MatchCustomList();
+            if(e.Button == MouseButtons.Left)
+            {
+                MatchCustomList();
+            }
+            else if(e.Button == MouseButtons.Right)
+            {
+                contextMenuAddToList.Show(btnListAdd, new Point(0, 0), ToolStripDropDownDirection.AboveRight);
+            }
         }
         private void btnSettings_Click(object sender, EventArgs e)
         {
@@ -1079,39 +1095,50 @@ namespace RandomVideoPlayer
         #region Browser Dialogues
         private void OpenFileBrowser()
         {
+            SetHighlight(btnFileBrowse, true);
+            string _selectedPath = "";
 
-            FolderBrowserView fbForm = new FolderBrowserView();
-            fbForm.StartPosition = FormStartPosition.CenterParent;
-
-            btnFileBrowse.IconColor = Color.PaleGreen;
-            DialogResult result = fbForm.ShowDialog();
-            btnFileBrowse.IconColor = Color.Black;
-
-            if (result != DialogResult.OK) return;
-
-
-            if (SettingsHandler.RecentCheckedTemp)
+            if (SettingsHandler.FolderBrowserV2Enabled)
             {
-                ListHandler.latestFolderList(fbForm.selectedPath, SettingsHandler.RecentCount, ListHandler.IncludeSubfolders);
+                FolderBrowserV2View fbForm = new FolderBrowserV2View();
+                fbForm.StartPosition = FormStartPosition.CenterParent;
+                DialogResult result = fbForm.ShowDialog();
+                _selectedPath = fbForm.SelectedPath;
+                SetHighlight(btnFileBrowse, false);
+                if (result != DialogResult.OK) return;
             }
             else
             {
-                ListHandler.fillFolderList(fbForm.selectedPath, ListHandler.IncludeSubfolders);
+                FolderBrowserView fbForm = new FolderBrowserView();
+                fbForm.StartPosition = FormStartPosition.CenterParent;
+                DialogResult result = fbForm.ShowDialog();
+                _selectedPath = fbForm.SelectedPath;
+                SetHighlight(btnFileBrowse, false);
+                if (result != DialogResult.OK) return;
+            }
+
+            if (SettingsHandler.RecentCheckedTemp)
+            {
+                ListHandler.latestFolderList(_selectedPath, SettingsHandler.RecentCount, ListHandler.IncludeSubfolders);
+            }
+            else
+            {
+                ListHandler.fillFolderList(_selectedPath, ListHandler.IncludeSubfolders);
             }
 
             if (!(ListHandler.TempFolderList?.Any() ?? false))
             {
                 if (!(ListHandler.FolderList?.Any() ?? false))
                 {
-                    MessageBox.Show($"Your chosen folder has no valid files to play from and there is no valid path to fall back to!\n\nThe Path was:\n{fbForm.selectedPath}");
+                    MessageBox.Show($"Your chosen folder has no valid files to play from and there is no valid path to fall back to!\n\nThe Path was:\n{_selectedPath}");
                     return;
                 }
-                MessageBox.Show($"Your chosen folder has no valid files to play from; No action taken!\n\nThe Path was:\n{fbForm.selectedPath}");
+                MessageBox.Show($"Your chosen folder has no valid files to play from; No action taken!\n\nThe Path was:\n{_selectedPath}");
                 return;
             }
             else
             {
-                PathHandler.FolderPath = fbForm.selectedPath;
+                PathHandler.FolderPath = _selectedPath;
                 ListHandler.TempFolderList = Enumerable.Empty<string>();
             }
 
@@ -1148,6 +1175,7 @@ namespace RandomVideoPlayer
 
             MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(tempFile);
             UpdateListEditIcon();
+            UpdateAddToListContext();
         }
         private void OpenSettingsMenu()
         {
@@ -1192,13 +1220,19 @@ namespace RandomVideoPlayer
                 {
                     playerMPV.API.Command("vf", "del", "d3d11vpp");
                 }
-            
+
 
                 LoadThemeOption();
                 ThemeManager.ApplyTheme(this);
 
+                renderer.BackgroundColor = ThemeManager.CurrentTheme.ToolMenuBackColor;
+                renderer.TextColor = ThemeManager.CurrentTheme.TextColor;
+                renderer.HighlightColor = ThemeManager.CurrentTheme.ToolMenuHoverColor;
+                renderer.ApplyColors();
+
                 UpdateListEditIcon();
                 UpdateSourceSelectorIcon();
+                UpdateAddToListContext();
 
                 RepositionButtons();
             }
@@ -1286,7 +1320,7 @@ namespace RandomVideoPlayer
             {
                 if (extraButtonCount == 4) extraY = 3; //Volume button
 
-                button.Location = new Point(extraX,extraY);
+                button.Location = new Point(extraX, extraY);
                 extraX += button.Width + extraMargin;
                 extraButtonCount++;
             }
@@ -1370,6 +1404,11 @@ namespace RandomVideoPlayer
         #endregion
 
         #region ContextMenu
+
+        private CustomRenderer renderer;
+
+        //Add to list menu
+        private ContextMenuStrip contextMenuAddToList;
         //Subtitle menu
         private ContextMenuStrip contextMenuSubtitles;
         private ToolStripMenuItem enableDisableSubtitlesItem;
@@ -1387,8 +1426,26 @@ namespace RandomVideoPlayer
 
         private void InitializeContextMenus()
         {
+            renderer = new CustomRenderer()
+            {
+                BackgroundColor = ThemeManager.CurrentTheme.ToolMenuBackColor,
+                TextColor = ThemeManager.CurrentTheme.TextColor,
+                HighlightColor = ThemeManager.CurrentTheme.ToolMenuHoverColor,
+            };
+            renderer.ApplyColors();
+
+
+            //Add to list menu
+            contextMenuAddToList = new ContextMenuStrip 
+            {
+                ShowImageMargin = false,
+                ShowCheckMargin = false,
+                Renderer = renderer 
+            };
+
             //Subtitle menu
-            contextMenuSubtitles = new ContextMenuStrip { Renderer = new CustomRenderer() };
+            contextMenuSubtitles = new ContextMenuStrip { Renderer = renderer };
+
             //Create first context menu item for toggling subtitles
             enableDisableSubtitlesItem = new ToolStripMenuItem("Enable")
             {
@@ -1414,18 +1471,18 @@ namespace RandomVideoPlayer
             SubFunctions.UpdateSubtitleParameters(playerMPV);
 
             //Audio menu
-            contextMenuAudioTracks = new ContextMenuStrip { Renderer = new CustomRenderer() };
+            contextMenuAudioTracks = new ContextMenuStrip { Renderer = renderer };
 
             //Script menu
-            contextMenuScriptFiles = new ContextMenuStrip { Renderer = new CustomRenderer() };
+            contextMenuScriptFiles = new ContextMenuStrip { Renderer = renderer };
 
             // 1:Create first context menu item for toggling time server
-            enableDisableTimeServerItem = new ToolStripMenuItem("Enable Timecode Server") 
+            enableDisableTimeServerItem = new ToolStripMenuItem("Enable Timecode Server")
             {
                 AutoSize = tsmiAutoSize,
                 Font = new Font("Segoe UI", 9 / DPI.Scale),
                 TextAlign = ContentAlignment.MiddleLeft,
-                CheckOnClick = true 
+                CheckOnClick = true
             };
             enableDisableTimeServerItem.CheckedChanged += EnableDisableTimeServerItem_CheckedChanged;
             contextMenuScriptFiles.Items.Add(enableDisableTimeServerItem);
@@ -1462,8 +1519,6 @@ namespace RandomVideoPlayer
             contextMenuScriptFiles.Items.Add(new ToolStripSeparator());
             if (SettingsHandler.TimeCodeServer) enableDisableTimeServerItem.Checked = true;
             if (SettingsHandler.GraphEnabled) enableDisableShowGraphItem.Checked = true;
-
-            UpdateScriptProfiles();
         }
 
 
@@ -1604,7 +1659,7 @@ namespace RandomVideoPlayer
             }
             else
             {
-                for(int i = selectScriptProfiles.DropDownItems.Count - 1; i >= 0; i--)
+                for (int i = selectScriptProfiles.DropDownItems.Count - 1; i >= 0; i--)
                 {
                     selectScriptProfiles.DropDownItems.RemoveAt(i);
                 }
@@ -1825,6 +1880,106 @@ namespace RandomVideoPlayer
             }
         }
 
+        private void UpdateAddToListContext()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(UpdateAddToListContext));
+            }
+            else
+            {
+                for (int i = contextMenuAddToList.Items.Count - 1; i >= 0; i--)
+                {
+                    contextMenuAddToList.Items.RemoveAt(i);
+                }
+
+                var listItens = new List<ToolStripMenuItem>();
+
+                var pathToListDir = PathHandler.PathToListFolder;
+                if (string.IsNullOrWhiteSpace(pathToListDir)) return;
+
+                DirectoryInfo dir = new DirectoryInfo(pathToListDir);
+                try
+                {
+                    foreach (FileInfo file in dir.EnumerateFiles())
+                    {
+                        string currentFileExtension = Path.GetExtension(file.Name).TrimStart('.').ToLower();
+                        if (!currentFileExtension.Contains("txt")) continue;
+                        if (file.Name == "Favorites.txt") continue; //Handled by favorite button
+
+                        var item = new ToolStripMenuItem()
+                        {
+                            AutoSize = tsmiAutoSize,
+                            Font = new Font("Inter Regular", 9 / DPI.Scale, FontStyle.Regular, GraphicsUnit.Point, 0),
+                            Text = file.Name.Replace(".txt", ""),
+                            Tag = file.FullName
+                        };
+                        item.Click += AddToListItem_Click;
+
+                        listItens.Add(item);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, "Failed to access list files");
+                    return;
+                }
+
+
+                if (listItens.Count <= 0)
+                {
+                    var placeholder = new ToolStripMenuItem("No list found")
+                    {
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Inter Regular", 9 / DPI.Scale, FontStyle.Regular, GraphicsUnit.Point, 0),
+                    };
+                    contextMenuAddToList.Items.Add(placeholder);
+                    return;
+                }
+                else
+                {
+                    var placeholder = new ToolStripMenuItem("Save to list:")
+                    {
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Inter SemiBold", 12 / DPI.Scale, FontStyle.Bold, GraphicsUnit.Point, 0)
+                    };
+                    contextMenuAddToList.Items.Add(placeholder);
+                }
+
+                foreach (var listItem in listItens)
+                {
+                    contextMenuAddToList.Items.Add(listItem);
+                }
+            }
+        }
+        
+        private void AddToListItem_Click(object sender, EventArgs e)
+        {
+            //Add currently played file to specified list
+            var clickedItem = sender as ToolStripMenuItem;
+            var selectedList = clickedItem.Text;
+            var currentFile = MainFormData.currentFile;
+
+            if (string.IsNullOrWhiteSpace(selectedList) || string.IsNullOrWhiteSpace(currentFile)) return;
+
+            if(selectedList == ListHandler.ListNameTemp) 
+            {
+                var tempList = new List<string>();
+                tempList.AddRange(ListHandler.CustomList);
+                tempList.Add(currentFile);
+                ListHandler.CustomList = tempList;
+                ListHandler.ListChanged = true;
+                string tempFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
+                MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(tempFile);
+                UpdateListEditIcon();
+            }
+            else
+            {
+                var selectedListFulPath = clickedItem.Tag.ToString();
+                File.AppendAllText(selectedListFulPath, currentFile + Environment.NewLine);
+            }
+        }
+
         private void EnableDisableSubtitlesItem_CheckedChanged(object sender, EventArgs e)
         {
             ToggleSubtitles();
@@ -1945,7 +2100,7 @@ namespace RandomVideoPlayer
 
             if (string.IsNullOrWhiteSpace(videoPath) || string.IsNullOrWhiteSpace(scriptPath)) return;
 
-            if(SettingsHandler.ScriptProfileList.Count <= 0)
+            if (SettingsHandler.ScriptProfileList.Count <= 0)
             {
                 var newProfileName = "PreferredScripts_Profile-1";
 
@@ -2418,7 +2573,7 @@ namespace RandomVideoPlayer
                 Error.Log(ex, "Failed to read Favorites.txt");
             }
 
-            if(string.IsNullOrWhiteSpace(PathHandler.PathToListFolder) == false)
+            if (string.IsNullOrWhiteSpace(PathHandler.PathToListFolder) == false)
             {
                 InitializeScriptProfile();
             }
@@ -2476,7 +2631,7 @@ namespace RandomVideoPlayer
 
         private void SetMediaInfo(object sender, EventArgs e)
         {
-            MainFormData.durationMS = (int)playerMPV.Duration.TotalMilliseconds;
+            MainFormData.durationMS = (int)(playerMPV?.Duration.TotalMilliseconds ?? 0);
 
             SettingsHandler.VideoDuration = MainFormData.durationMS / 1000; //seconds
 
@@ -2738,7 +2893,7 @@ namespace RandomVideoPlayer
             timeOverlayLabel.Padding = new Padding(0, 0, 0, 1);
             timeOverlayLabel.Font = new Font("Arial", 8 / DPI.Scale, FontStyle.Bold);
             timeOverlayLabel.ForeColor = Color.Black;
-            
+
             this.Controls.Add(timeOverlayLabel);
             timeOverlayLabel.BringToFront();
         }
@@ -2870,7 +3025,7 @@ namespace RandomVideoPlayer
             toolTipUI.SetToolTip(btnNext, $"{GetKeyCombination(nextHotkey)} | Next track");
             toolTipUI.SetToolTip(btnFileBrowse, "Choose folder to play from");
             toolTipUI.SetToolTip(btnListBrowser, "Create your own lists with selected videos");
-            toolTipUI.SetToolTip(btnListAdd, $"{GetKeyCombination(addToCurrentListHotkey)} | Add/Remove currently played videofile to/from custom List and Playlist");
+            toolTipUI.SetToolTip(btnListAdd, $"{GetKeyCombination(addToCurrentListHotkey)} | Add/Remove currently played videofile to/from custom List and Playlist | Right-click to save directly to list");
             toolTipUI.SetToolTip(btnSettings, "Open settings menu");
             toolTipUI.SetToolTip(btnAddToFav, $"{GetKeyCombination(addToFavHotkey)} | Add current to favorite list");
             toolTipUI.SetToolTip(btnShuffle, $"{GetKeyCombination(shuffleHotkey)} | Toggle shuffle / Parse order");
@@ -2887,11 +3042,11 @@ namespace RandomVideoPlayer
 
             if (SettingsHandler.FileCopy)
             {
-                toolTipUI.SetToolTip(btnMoveTo, $"{GetKeyCombination(moveOrCopyFileHotkey)} | Copy file to: {PathHandler.FileMoveFolderPath}");
+                toolTipUI.SetToolTip(btnMoveTo, $"{GetKeyCombination(moveOrCopyFileHotkey)} | Copy file to: {PathHandler.FileMoveFolderPath} | Right-click to choose target");
             }
             else
             {
-                toolTipUI.SetToolTip(btnMoveTo, $"{GetKeyCombination(moveOrCopyFileHotkey)} | Move file to: {PathHandler.FileMoveFolderPath}");
+                toolTipUI.SetToolTip(btnMoveTo, $"{GetKeyCombination(moveOrCopyFileHotkey)} | Move file to: {PathHandler.FileMoveFolderPath} | Right-click to choose target");
             }
 
             if (!SettingsHandler.DeleteFull)
@@ -3469,6 +3624,8 @@ namespace RandomVideoPlayer
         #endregion
 
         #region RTX
+
+        //Still not working
         private void ActivateRTXFeatures(bool autoVSR = true, bool autoHDR = false)
         {
             var video_width = playerMPV.API.GetPropertyDouble("width");
@@ -3548,7 +3705,7 @@ namespace RandomVideoPlayer
                 this.ClientSize = fR.FormSize;
             }
             this.Padding = new Padding(fR.BorderSize);
-            this.BackColor = Color.FromArgb(253, 83, 146);            
+            this.BackColor = Color.FromArgb(253, 83, 146);
         }
         private void MainForm_Resize(object sender, EventArgs e)
         {
@@ -3614,10 +3771,10 @@ namespace RandomVideoPlayer
             lblCurrentInfo.Font = new Font(lblCurrentInfo.Font.FontFamily, lblCurrentInfo.Font.Size / DPI.Scale, lblCurrentInfo.Font.Style);
 
             lblDurationInfo.Height = (int)(lblDurationInfo.Height / DPI.Scale);
-            lblDurationInfo.Font = new Font(lblDurationInfo.Font.FontFamily, lblDurationInfo.Font.Size / DPI.Scale,lblDurationInfo.Font.Style);
+            lblDurationInfo.Font = new Font(lblDurationInfo.Font.FontFamily, lblDurationInfo.Font.Size / DPI.Scale, lblDurationInfo.Font.Style);
 
             lblTitleBar.Height = (int)(lblTitleBar.Height / DPI.Scale);
-            lblTitleBar.Font = new Font(lblTitleBar.Font.FontFamily, lblTitleBar.Font.Size / DPI.Scale,lblTitleBar.Font.Style);
+            lblTitleBar.Font = new Font(lblTitleBar.Font.FontFamily, lblTitleBar.Font.Size / DPI.Scale, lblTitleBar.Font.Style);
 
             btnAudioTrackMenu.Size = DPI.GetSizeScaled(btnAudioTrackMenu.Size);
             btnAudioTrackMenu.Font = new Font(btnAudioTrackMenu.Font.FontFamily, btnAudioTrackMenu.Font.Size / DPI.Scale, btnAudioTrackMenu.Font.Style);
@@ -3626,7 +3783,7 @@ namespace RandomVideoPlayer
             btnSubtitleMenu.Font = new Font(btnSubtitleMenu.Font.FontFamily, btnSubtitleMenu.Font.Size / DPI.Scale, btnSubtitleMenu.Font.Style);
 
             btnScriptMenu.Size = DPI.GetSizeScaled(btnScriptMenu.Size);
-            btnScriptMenu.Font = new Font(btnScriptMenu.Font.FontFamily, btnScriptMenu.Font.Size / DPI.Scale,btnScriptMenu.Font.Style);
+            btnScriptMenu.Font = new Font(btnScriptMenu.Font.FontFamily, btnScriptMenu.Font.Size / DPI.Scale, btnScriptMenu.Font.Style);
 
             btnMinimizeForm.Size = DPI.GetSizeScaled(btnMinimizeForm.Size);
             btnMaximizeForm.Size = DPI.GetSizeScaled(btnMaximizeForm.Size);
@@ -3635,17 +3792,17 @@ namespace RandomVideoPlayer
             fR.PlayerIsWindowSize(this, panelTop, panelBottom, panelPlayerMPV);
 
 
-            
 
-            foreach(Button button in panelMainButtons.Controls)
-            {
-                button.Size = new Size(DPI.GetDivided(button.Width), DPI.GetDivided(button.Height));              
-            }
-            foreach(Button button in panelControls.Controls)
+
+            foreach (Button button in panelMainButtons.Controls)
             {
                 button.Size = new Size(DPI.GetDivided(button.Width), DPI.GetDivided(button.Height));
             }
-            foreach(Button button in panelExtraButtons.Controls)
+            foreach (Button button in panelControls.Controls)
+            {
+                button.Size = new Size(DPI.GetDivided(button.Width), DPI.GetDivided(button.Height));
+            }
+            foreach (Button button in panelExtraButtons.Controls)
             {
                 button.Size = new Size(DPI.GetDivided(button.Width), DPI.GetDivided(button.Height));
             }
@@ -3799,5 +3956,6 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
+
     }
 }

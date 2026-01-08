@@ -10,7 +10,6 @@ namespace RandomVideoPlayer.Model
     {
         public string Name { get; set; }
         public string FormBackColor { get; set; }
-        public string FormBackColorLight { get; set; }
         public string TextColor { get; set; }
         public string ButtonBackColor { get; set; }
         public string ButtonHighlightColor { get; set; }
@@ -19,16 +18,22 @@ namespace RandomVideoPlayer.Model
         public string ToolMenuHoverColor { get; set; }
         public string ProgressColor { get; set; }
         public string ProgressHoverColor { get; set; }
+
         public string FbTextColor { get; set; }
         public string FbTextColorAccent { get; set; }
         public string FbBackColorLight { get; set; }
         public string FbBackColorDark { get; set; }
         public string FbAccentColor { get; set; }
+        public string FbHightlightColor { get; set; }
+
         public string LbTextColor { get; set; }
+        public string LbTextColorMainAccent { get; set; }
         public string LbTextColorSideAccent { get; set; }
-        public string LbBackColorMain { get; set; }
+        public string LbBackColorMainLight { get; set; }
+        public string LbBackColorMainDark { get; set; }
         public string LbAccentColorMain { get; set; }
-        public string LbBackColorSide { get; set; }
+        public string LbBackColorSideLight { get; set; }
+        public string LbBackColorSideDark { get; set; }
         public string LbAccentColorSide { get; set; }
 
         public static ThemeDto FromTheme(string name, Theme theme) => new()
@@ -43,15 +48,22 @@ namespace RandomVideoPlayer.Model
             ToolMenuHoverColor = ToHex(theme.ToolMenuHoverColor),
             ProgressColor = ToHex(theme.ProgressColor),
             ProgressHoverColor = ToHex(theme.ProgressHoverColor),
+
             FbTextColor = ToHex(theme.FbTextColor),
+            FbTextColorAccent = ToHex(theme.FbTextColorAccent),
             FbBackColorLight = ToHex(theme.FbBackColorLight),
             FbBackColorDark = ToHex(theme.FbBackColorDark),
             FbAccentColor = ToHex(theme.FbAccentColor),
+            FbHightlightColor = ToHex(theme.FbHighlightColor),
             LbTextColor = ToHex(theme.LbTextColor),
+
+            LbTextColorMainAccent = ToHex(theme.LbTextColorMainAccent),
             LbTextColorSideAccent = ToHex(theme.LbTextColorSideAccent),
-            LbBackColorMain = ToHex(theme.LbBackColorMain),
+            LbBackColorMainLight = ToHex(theme.LbBackColorMainLight),
+            LbBackColorMainDark = ToHex(theme.LbBackColorMainDark),
             LbAccentColorMain = ToHex(theme.LbAccentColorMain),
-            LbBackColorSide = ToHex(theme.LbBackColorSide),
+            LbBackColorSideLight = ToHex(theme.LbBackColorSideLight),
+            LbBackColorSideDark = ToHex(theme.LbBackColorSideDark),
             LbAccentColorSide = ToHex(theme.LbAccentColorSide)
         };
 

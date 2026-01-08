@@ -19,6 +19,8 @@ namespace RandomVideoPlayer.View
 
             this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
             this.Size = DPI.GetSizeScaled(this.Size);
+
+            ThemeManager.ApplyThemeLSView(this);
         }
 
         private void LoadListView_Load(object sender, EventArgs e)

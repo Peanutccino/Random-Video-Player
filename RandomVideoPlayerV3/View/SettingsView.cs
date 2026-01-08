@@ -119,6 +119,8 @@ namespace RandomVideoPlayer.View
             settingsModel.PanEasingFunction = SettingsHandler.PanEasingFunction;
             settingsModel.EnableCustomScaling = SettingsHandler.EnableCustomScaling;
             settingsModel.CustomScaling = SettingsHandler.CustomScaling;
+            settingsModel.FolderBrowserV2Enabled = SettingsHandler.FolderBrowserV2Enabled;
+            settingsModel.ThumbnailPreviewEnabled = SettingsHandler.ThumbnailPreviewEnabled;
 
             settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
             settingsModel.AlwaysAddFilesToQueue = SettingsHandler.AlwaysAddFilesToQueue;
@@ -206,6 +208,8 @@ namespace RandomVideoPlayer.View
             SettingsHandler.PanEasingFunction = settingsModel.PanEasingFunction;
             SettingsHandler.EnableCustomScaling = settingsModel.EnableCustomScaling;
             SettingsHandler.CustomScaling = settingsModel.CustomScaling;
+            SettingsHandler.FolderBrowserV2Enabled = settingsModel.FolderBrowserV2Enabled;
+            SettingsHandler.ThumbnailPreviewEnabled = settingsModel.ThumbnailPreviewEnabled;
 
             SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;
             SettingsHandler.AlwaysAddFilesToQueue = settingsModel.AlwaysAddFilesToQueue;

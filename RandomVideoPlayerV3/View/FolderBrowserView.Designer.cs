@@ -320,6 +320,7 @@
             cbUseRecent.TabIndex = 26;
             cbUseRecent.Text = "Only latest X files";
             cbUseRecent.UncheckedBackColor = Color.LightGoldenrodYellow;
+            cbUseRecent.UncheckedForeColor = Color.Black;
             cbUseRecent.UseVisualStyleBackColor = false;
             // 
             // cbIncludeSubfolders
@@ -336,6 +337,7 @@
             cbIncludeSubfolders.TabIndex = 25;
             cbIncludeSubfolders.Text = "Include Subfolders";
             cbIncludeSubfolders.UncheckedBackColor = Color.LightGoldenrodYellow;
+            cbIncludeSubfolders.UncheckedForeColor = Color.Black;
             cbIncludeSubfolders.UseVisualStyleBackColor = false;
             // 
             // btnIncreaseSize

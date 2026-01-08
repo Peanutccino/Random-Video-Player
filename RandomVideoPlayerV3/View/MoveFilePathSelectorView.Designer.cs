@@ -55,7 +55,7 @@
             // lblTitle
             // 
             lblTitle.Dock = DockStyle.Fill;
-            lblTitle.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitle.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lblTitle.Location = new Point(0, 0);
             lblTitle.Name = "lblTitle";
             lblTitle.Size = new Size(458, 20);
@@ -100,7 +100,7 @@
             btnCancel.BackColor = Color.MistyRose;
             btnCancel.FlatAppearance.BorderSize = 0;
             btnCancel.FlatStyle = FlatStyle.Flat;
-            btnCancel.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnCancel.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnCancel.IconChar = FontAwesome.Sharp.IconChar.None;
             btnCancel.IconColor = Color.Black;
             btnCancel.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -118,7 +118,7 @@
             btnSavePath.BackColor = Color.PaleGreen;
             btnSavePath.FlatAppearance.BorderSize = 0;
             btnSavePath.FlatStyle = FlatStyle.Flat;
-            btnSavePath.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            btnSavePath.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             btnSavePath.IconChar = FontAwesome.Sharp.IconChar.None;
             btnSavePath.IconColor = Color.Black;
             btnSavePath.IconFont = FontAwesome.Sharp.IconFont.Auto;
@@ -133,6 +133,7 @@
             // tbDestinationPath
             // 
             tbDestinationPath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbDestinationPath.BorderStyle = BorderStyle.FixedSingle;
             tbDestinationPath.Location = new Point(3, 26);
             tbDestinationPath.Name = "tbDestinationPath";
             tbDestinationPath.ReadOnly = true;

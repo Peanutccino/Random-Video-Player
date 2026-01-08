@@ -11,6 +11,7 @@ namespace RandomVideoPlayer.Controls
     {
         public Color CheckedBackColor { get; set; } = Color.LightGreen;
         public Color UncheckedBackColor { get; set; } = Color.LightGray;
+        public Color UncheckedForeColor { get; set; } = Color.Black;
 
         private bool isHovered = false;
         private bool isPressed = false;
@@ -63,6 +64,7 @@ namespace RandomVideoPlayer.Controls
 
             Color baseColor = this.Checked ? CheckedBackColor : UncheckedBackColor;
             Color backColor = baseColor;
+            Color foreColor = this.Checked ? this.ForeColor : UncheckedForeColor;
 
             if (isPressed)
             {
@@ -78,7 +80,7 @@ namespace RandomVideoPlayer.Controls
                 g.FillPath(brush, path);
             }
 
-            TextRenderer.DrawText(g, this.Text, this.Font, rect, this.ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            TextRenderer.DrawText(g, this.Text, this.Font, rect, foreColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
     }
 }

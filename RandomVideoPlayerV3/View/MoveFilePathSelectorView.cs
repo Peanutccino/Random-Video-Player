@@ -26,6 +26,8 @@ namespace RandomVideoPlayer.View
 
             this.Padding = new Padding(fR.BorderSize);//Border size
             this.BackColor = Color.FromArgb(152, 251, 152);//Border color
+
+            ThemeManager.ApplyThemeLSView(this);
         }
 
         private void MoveFilePathSelectorView_Load(object sender, EventArgs e)

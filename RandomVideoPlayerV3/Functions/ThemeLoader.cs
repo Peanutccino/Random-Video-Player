@@ -38,16 +38,24 @@ namespace RandomVideoPlayer.Functions
             ToolMenuHoverColor = ColorTranslator.FromHtml(dto.ToolMenuHoverColor),
             ProgressColor = ColorTranslator.FromHtml(dto.ProgressColor),
             ProgressHoverColor = ColorTranslator.FromHtml(dto.ProgressHoverColor),
+
             FbTextColor = ColorTranslator.FromHtml(dto.FbTextColor),
             FbTextColorAccent = ColorTranslator.FromHtml(dto.FbTextColorAccent),
             FbBackColorLight = ColorTranslator.FromHtml(dto.FbBackColorLight),
             FbBackColorDark = ColorTranslator.FromHtml(dto.FbBackColorDark),
             FbAccentColor = ColorTranslator.FromHtml(dto.FbAccentColor),
+            FbHighlightColor = ColorTranslator.FromHtml(dto.FbHightlightColor),
+
             LbTextColor = ColorTranslator.FromHtml(dto.LbTextColor),
+            LbTextColorMainAccent = ColorTranslator.FromHtml(dto.LbTextColorMainAccent),
             LbTextColorSideAccent = ColorTranslator.FromHtml(dto.LbTextColorSideAccent),
-            LbBackColorMain = ColorTranslator.FromHtml(dto.LbBackColorMain),
+
+            LbBackColorMainLight = ColorTranslator.FromHtml(dto.LbBackColorMainLight),
+            LbBackColorMainDark = ColorTranslator.FromHtml(dto.LbBackColorMainDark),
             LbAccentColorMain = ColorTranslator.FromHtml(dto.LbAccentColorMain),
-            LbBackColorSide = ColorTranslator.FromHtml(dto.LbBackColorSide),
+
+            LbBackColorSideLight = ColorTranslator.FromHtml(dto.LbBackColorSideLight),
+            LbBackColorSideDark = ColorTranslator.FromHtml(dto.LbBackColorSideDark),
             LbAccentColorSide = ColorTranslator.FromHtml(dto.LbAccentColorSide)
         };
     }

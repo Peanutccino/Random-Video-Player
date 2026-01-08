@@ -13,7 +13,7 @@ namespace RandomVideoPlayer.View
         private Size _tileSize;
 
         private string _viewStateFolderFileExplore;
-        public string selectedPath { get; set; }
+        public string SelectedPath { get; set; }
 
         public FolderBrowserView()
         {
@@ -105,7 +105,7 @@ namespace RandomVideoPlayer.View
         }
         private void btnFolderSelect_Click(object sender, EventArgs e)
         {
-            this.selectedPath = tbPathView.Text;
+            this.SelectedPath = tbPathView.Text;
             this.DialogResult = DialogResult.OK;
 
             SaveSettings();

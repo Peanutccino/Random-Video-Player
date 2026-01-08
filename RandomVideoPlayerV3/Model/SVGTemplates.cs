@@ -86,5 +86,49 @@ namespace RandomVideoPlayer.Model
         <path id=""path8413-0"" d=""M220.486,44.098L45.752,218.831"" style=""fill:none;fill-rule:nonzero;stroke:{{main}};stroke-width:18.52px;stroke-linecap:round;stroke-miterlimit:4;""/>
     </g>
 </svg>";
+
+        public static readonly string Foldericon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 480 480"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <g transform=""matrix(10,0,0,10,0,0)"">
+        <path d=""M40,12L22,12L18,8L8,8C5.8,8 4,9.8 4,12L4,20L44,20L44,16C44,13.8 42.2,12 40,12Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+    </g>
+    <g transform=""matrix(10,0,0,10,0,0)"">
+        <path d=""M40,12L8,12C5.8,12 4,13.8 4,16L4,36C4,38.2 5.8,40 8,40L40,40C42.2,40 44,38.2 44,36L44,16C44,13.8 42.2,12 40,12Z"" style=""fill:{{accent}};fill-rule:nonzero;""/>
+    </g>
+</svg>";
+
+        public static readonly string FileIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 640 640"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <path d=""M581.7,188.1C575.5,164.4 556.9,145.8 533.4,139.5C490.9,128 320.1,128 320.1,128C320.1,128 149.3,128 106.7,139.5C83.2,145.8 64.7,164.4 58.4,188.1C47.002,230.991 47,320.365 47,320.4C47,320.435 47.002,409.809 58.4,452.7C64.7,476.3 83.2,494.2 106.7,500.5C149.3,512 320.1,512 320.1,512C320.1,512 490.9,512 533.5,500.5C557,494.2 575.5,476.3 581.8,452.7C593.2,409.8 593.2,320.4 593.2,320.4C593.2,320.4 593.2,231 581.8,188.1L581.7,188.1ZM264.2,401.6L264.2,239.2L406.9,320.4L264.2,401.6Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+</svg>
+";
+
+        public static readonly string PlayIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 640 640"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <path d=""M187.2,100.9C174.8,94.1 159.8,94.4 147.6,101.6C135.4,108.8 128,121.9 128,136L128,504C128,518.1 135.5,531.2 147.6,538.4C159.7,545.6 174.8,545.9 187.2,539.1L523.2,355.1C536,348.1 544,334.6 544,320C544,305.4 536,291.9 523.2,284.9L187.2,100.9Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+</svg>
+";
+
+        public static readonly string BackIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 640 640"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <path d=""M201.4,297.4C188.9,309.9 188.9,330.2 201.4,342.7L361.4,502.7C373.9,515.2 394.2,515.2 406.7,502.7C419.2,490.2 419.2,469.9 406.7,457.4L269.3,320L406.6,182.6C419.1,170.1 419.1,149.8 406.6,137.3C394.1,124.8 373.8,124.8 361.3,137.3L201.3,297.3L201.4,297.4Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+</svg>
+";
+
+        public static readonly string VideoIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 640 640"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <g id=""Video"">
+        <path d=""M96,160C96,124.7 124.7,96 160,96L480,96C515.3,96 544,124.7 544,160L544,480C544,515.3 515.3,544 480,544L160,544C124.7,544 96,515.3 96,480L96,160Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+        <path d=""M160,144C151.2,144 144,151.2 144,160L144,480C144,488.8 151.2,496 160,496L480,496C488.8,496 496,488.8 496,480L496,160C496,151.2 488.8,144 480,144L160,144Z"" style=""fill:{{accent}};fill-rule:nonzero;""/>
+        <g transform=""matrix(0.491072,0,0,0.491072,155.007,162.86)"">
+            <path d=""M187.2,100.9C174.8,94.1 159.8,94.4 147.6,101.6C135.4,108.8 128,121.9 128,136L128,504C128,518.1 135.5,531.2 147.6,538.4C159.7,545.6 174.8,545.9 187.2,539.1L523.2,355.1C536,348.1 544,334.6 544,320C544,305.4 536,291.9 523.2,284.9L187.2,100.9Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+        </g>
+    </g>
+</svg>";
+
+        public static readonly string ImageIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 640 640"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <g id=""Image"">
+        <path d=""M96,160C96,124.7 124.7,96 160,96L480,96C515.3,96 544,124.7 544,160L544,480C544,515.3 515.3,544 480,544L160,544C124.7,544 96,515.3 96,480L96,160Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+        <path d=""M160,144C151.2,144 144,151.2 144,160L144,480C144,488.8 151.2,496 160,496L480,496C488.8,496 496,488.8 496,480L496,160C496,151.2 488.8,144 480,144L160,144Z"" style=""fill:{{accent}};fill-rule:nonzero;""/>
+        <path d=""M224,192C241.7,192 256,206.3 256,224C256,241.7 241.7,256 224,256C206.3,256 192,241.7 192,224C192,206.3 206.3,192 224,192Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+        <path d=""M360,264C368.5,264 376.4,268.5 380.7,275.8L460.7,411.8C465.1,419.2 465.1,428.4 460.8,435.9C456.5,443.4 448.6,448 440,448L200,448C191.1,448 182.8,443 178.7,435.1C174.6,427.2 175.2,417.6 180.3,410.3L236.3,330.3C240.8,323.9 248.1,320.1 256,320.1C263.9,320.1 271.2,323.9 275.7,330.3L292.9,354.9L339.4,275.9C343.7,268.6 351.6,264.1 360.1,264.1L360,264Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+    </g>
+</svg>
+";
     }
 }

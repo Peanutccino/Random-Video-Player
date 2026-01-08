@@ -1,6 +1,7 @@
 ﻿
 
 using RandomVideoPlayer.Functions;
+using System.Security.Permissions;
 
 namespace RandomVideoPlayer.Model
 {
@@ -105,6 +106,8 @@ namespace RandomVideoPlayer.Model
         public int PanEasingFunction { get; set; }
         public bool EnableCustomScaling { get; set; }
         public float CustomScaling { get; set; }
+        public bool FolderBrowserV2Enabled { get; set; }
+        public bool ThumbnailPreviewEnabled { get; set; }
         #endregion
 
         #region About
