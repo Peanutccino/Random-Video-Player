@@ -22,38 +22,66 @@ namespace RandomVideoPlayer.Functions
             return themes;
         }
 
-        private static Theme Map(ThemeDto dto) => new Theme
+        private static Theme Map(ThemeDto dto)
         {
-            FormBackColor = ColorTranslator.FromHtml(dto.FormBackColor),
-            TextColor = ColorTranslator.FromHtml(dto.TextColor),
-            ButtonBackColor = ColorTranslator.FromHtml(dto.ButtonBackColor),
-            ButtonHighlightColor = ColorTranslator.FromHtml(dto.ButtonHighlightColor),
-            ButtonIconColor = ColorTranslator.FromHtml(dto.ButtonIconColor),
-            ToolMenuBackColor = ColorTranslator.FromHtml(dto.ToolMenuBackColor),
-            ToolMenuHoverColor = ColorTranslator.FromHtml(dto.ToolMenuHoverColor),
-            ProgressColor = ColorTranslator.FromHtml(dto.ProgressColor),
-            ProgressHoverColor = ColorTranslator.FromHtml(dto.ProgressHoverColor),
+            Theme defaults = GetFallbackTheme(dto.Name);
 
-            FbTextColor = ColorTranslator.FromHtml(dto.FbTextColor),
-            FbTextColorAccent = ColorTranslator.FromHtml(dto.FbTextColorAccent),
-            FbBackColorLight = ColorTranslator.FromHtml(dto.FbBackColorLight),
-            FbBackColorDark = ColorTranslator.FromHtml(dto.FbBackColorDark),
-            FbAccentColor = ColorTranslator.FromHtml(dto.FbAccentColor),
-            FbHighlightColor = ColorTranslator.FromHtml(dto.FbHightlightColor),
+            return new Theme
+            {
+                FormBackColor = ParseColorOrDefault(dto.FormBackColor, defaults.FormBackColor),
+                TextColor = ParseColorOrDefault(dto.TextColor, defaults.TextColor),
+                ButtonBackColor = ParseColorOrDefault(dto.ButtonBackColor, defaults.ButtonBackColor),
+                ButtonHighlightColor = ParseColorOrDefault(dto.ButtonHighlightColor, defaults.ButtonHighlightColor),
+                ButtonIconColor = ParseColorOrDefault(dto.ButtonIconColor, defaults.ButtonIconColor),
+                ToolMenuBackColor = ParseColorOrDefault(dto.ToolMenuBackColor, defaults.ToolMenuBackColor),
+                ToolMenuHoverColor = ParseColorOrDefault(dto.ToolMenuHoverColor, defaults.ToolMenuHoverColor),
+                ProgressColor = ParseColorOrDefault(dto.ProgressColor, defaults.ProgressColor),
+                ProgressHoverColor = ParseColorOrDefault(dto.ProgressHoverColor, defaults.ProgressHoverColor),
 
-            LbTextColor = ColorTranslator.FromHtml(dto.LbTextColor),
-            LbTextColorMainAccent = ColorTranslator.FromHtml(dto.LbTextColorMainAccent),
-            LbTextColorSideAccent = ColorTranslator.FromHtml(dto.LbTextColorSideAccent),
+                FbTextColor = ParseColorOrDefault(dto.FbTextColor, defaults.FbTextColor),
+                FbTextColorAccent = ParseColorOrDefault(dto.FbTextColorAccent, defaults.FbTextColorAccent),
+                FbBackColorLight = ParseColorOrDefault(dto.FbBackColorLight, defaults.FbBackColorLight),
+                FbBackColorDark = ParseColorOrDefault(dto.FbBackColorDark, defaults.FbBackColorDark),
+                FbAccentColor = ParseColorOrDefault(dto.FbAccentColor, defaults.FbAccentColor),
+                FbHighlightColor = ParseColorOrDefault(dto.FbHighlightColor, defaults.FbHighlightColor),
 
-            LbBackColorMainLight = ColorTranslator.FromHtml(dto.LbBackColorMainLight),
-            LbBackColorMainDark = ColorTranslator.FromHtml(dto.LbBackColorMainDark),
-            LbAccentColorMain = ColorTranslator.FromHtml(dto.LbAccentColorMain),
+                LbTextColor = ParseColorOrDefault(dto.LbTextColor, defaults.LbTextColor),
+                LbTextColorMainAccent = ParseColorOrDefault(dto.LbTextColorMainAccent, defaults.LbTextColorMainAccent),
+                LbTextColorSideAccent = ParseColorOrDefault(dto.LbTextColorSideAccent, defaults.LbTextColorSideAccent),
 
-            LbBackColorSideLight = ColorTranslator.FromHtml(dto.LbBackColorSideLight),
-            LbBackColorSideDark = ColorTranslator.FromHtml(dto.LbBackColorSideDark),
-            LbAccentColorSide = ColorTranslator.FromHtml(dto.LbAccentColorSide),
-            LbHighlightColorMain = ColorTranslator.FromHtml(dto.LbHighlightColorMain),
-            LbHighlightColorSide = ColorTranslator.FromHtml(dto.LbHighlightColorSide)
-        };
+                LbBackColorMainLight = ParseColorOrDefault(dto.LbBackColorMainLight, defaults.LbBackColorMainLight),
+                LbBackColorMainDark = ParseColorOrDefault(dto.LbBackColorMainDark, defaults.LbBackColorMainDark),
+                LbAccentColorMain = ParseColorOrDefault(dto.LbAccentColorMain, defaults.LbAccentColorMain),
+
+                LbBackColorSideLight = ParseColorOrDefault(dto.LbBackColorSideLight, defaults.LbBackColorSideLight),
+                LbBackColorSideDark = ParseColorOrDefault(dto.LbBackColorSideDark, defaults.LbBackColorSideDark),
+                LbAccentColorSide = ParseColorOrDefault(dto.LbAccentColorSide, defaults.LbAccentColorSide),
+                LbHighlightColorMain = ParseColorOrDefault(dto.LbHighlightColorMain, defaults.LbHighlightColorMain),
+                LbHighlightColorSide = ParseColorOrDefault(dto.LbHighlightColorSide, defaults.LbHighlightColorSide)
+            };
+        }
+
+        private static Theme GetFallbackTheme(string name) =>
+            name?.Equals("Dark", StringComparison.OrdinalIgnoreCase) == true
+                ? ThemeDefaults.Dark
+                : ThemeDefaults.Light;
+        private static Color ParseColorOrDefault(string hex, Color fallback)
+        {
+            if (string.IsNullOrWhiteSpace(hex))
+            {
+                return fallback;
+            }
+            try
+            {
+                return ColorTranslator.FromHtml(hex);
+            }
+            catch (Exception ex) when (
+                ex is ArgumentException ||
+                ex is FormatException ||
+                ex is NotSupportedException)
+            {
+                return fallback;
+            }
+        }
     }
 }

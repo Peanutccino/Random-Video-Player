@@ -130,7 +130,7 @@
             tableLayoutMain.RowCount = 2;
             tableLayoutMain.RowStyles.Add(new RowStyle());
             tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutMain.Size = new Size(1339, 668);
+            tableLayoutMain.Size = new Size(1404, 661);
             tableLayoutMain.TabIndex = 0;
             // 
             // panelMainRow1
@@ -142,7 +142,7 @@
             panelMainRow1.Margin = new Padding(0);
             panelMainRow1.Name = "panelMainRow1";
             panelMainRow1.Padding = new Padding(10, 5, 10, 0);
-            panelMainRow1.Size = new Size(1339, 44);
+            panelMainRow1.Size = new Size(1404, 44);
             panelMainRow1.TabIndex = 1;
             // 
             // panelPathContainer
@@ -155,12 +155,12 @@
             panelPathContainer.Location = new Point(10, 5);
             panelPathContainer.Margin = new Padding(3, 2, 3, 3);
             panelPathContainer.Name = "panelPathContainer";
-            panelPathContainer.Padding = new Padding(3, 2, 6, 4);
+            panelPathContainer.Padding = new Padding(3, 2, 5, 4);
             panelPathContainer.RadiusBottomLeft = 17;
             panelPathContainer.RadiusBottomRight = 17;
             panelPathContainer.RadiusTopLeft = 17;
             panelPathContainer.RadiusTopRight = 17;
-            panelPathContainer.Size = new Size(1319, 34);
+            panelPathContainer.Size = new Size(1384, 34);
             panelPathContainer.TabIndex = 1;
             // 
             // flowPanelPath
@@ -171,7 +171,7 @@
             flowPanelPath.Location = new Point(31, 2);
             flowPanelPath.Name = "flowPanelPath";
             flowPanelPath.Padding = new Padding(5, 5, 0, 0);
-            flowPanelPath.Size = new Size(1166, 28);
+            flowPanelPath.Size = new Size(1232, 28);
             flowPanelPath.TabIndex = 4;
             flowPanelPath.WrapContents = false;
             // 
@@ -188,7 +188,7 @@
             btnStart.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnStart.ForeColor = Color.Black;
             btnStart.ImageAlign = ContentAlignment.MiddleRight;
-            btnStart.Location = new Point(1197, 2);
+            btnStart.Location = new Point(1263, 2);
             btnStart.Name = "btnStart";
             btnStart.Padding = new Padding(12, 0, 8, 0);
             btnStart.Size = new Size(116, 28);
@@ -228,12 +228,14 @@
             // splitContainerMain.Panel1
             // 
             splitContainerMain.Panel1.Controls.Add(tableLayouMainSub1);
+            splitContainerMain.Panel1MinSize = 600;
             // 
             // splitContainerMain.Panel2
             // 
             splitContainerMain.Panel2.Controls.Add(tableLayoutCustomPanel);
-            splitContainerMain.Size = new Size(1333, 618);
-            splitContainerMain.SplitterDistance = 716;
+            splitContainerMain.Panel2MinSize = 450;
+            splitContainerMain.Size = new Size(1398, 611);
+            splitContainerMain.SplitterDistance = 797;
             splitContainerMain.TabIndex = 2;
             // 
             // tableLayouMainSub1
@@ -253,7 +255,7 @@
             tableLayouMainSub1.RowCount = 2;
             tableLayouMainSub1.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
             tableLayouMainSub1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayouMainSub1.Size = new Size(716, 618);
+            tableLayouMainSub1.Size = new Size(797, 611);
             tableLayouMainSub1.TabIndex = 2;
             // 
             // tableLayoutSideBar
@@ -275,7 +277,7 @@
             tableLayoutSideBar.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutSideBar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutSideBar.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutSideBar.Size = new Size(140, 587);
+            tableLayoutSideBar.Size = new Size(140, 580);
             tableLayoutSideBar.TabIndex = 4;
             // 
             // label2
@@ -311,7 +313,7 @@
             flowPanelFav.Location = new Point(0, 178);
             flowPanelFav.Margin = new Padding(0);
             flowPanelFav.Name = "flowPanelFav";
-            flowPanelFav.Size = new Size(140, 409);
+            flowPanelFav.Size = new Size(140, 402);
             flowPanelFav.TabIndex = 3;
             // 
             // tableLayoutFavButtons
@@ -386,12 +388,12 @@
             panelFileExplore.Location = new Point(140, 34);
             panelFileExplore.Margin = new Padding(0, 3, 0, 0);
             panelFileExplore.Name = "panelFileExplore";
-            panelFileExplore.Padding = new Padding(6, 6, 2, 2);
+            panelFileExplore.Padding = new Padding(7, 7, 0, 0);
             panelFileExplore.RadiusBottomLeft = 0;
             panelFileExplore.RadiusBottomRight = 0;
             panelFileExplore.RadiusTopLeft = 16;
-            panelFileExplore.RadiusTopRight = 0;
-            panelFileExplore.Size = new Size(576, 584);
+            panelFileExplore.RadiusTopRight = 8;
+            panelFileExplore.Size = new Size(657, 577);
             panelFileExplore.TabIndex = 5;
             // 
             // lvFileExplore
@@ -402,10 +404,10 @@
             lvFileExplore.Dock = DockStyle.Fill;
             lvFileExplore.FullRowSelect = true;
             lvFileExplore.HeaderStyle = ColumnHeaderStyle.None;
-            lvFileExplore.Location = new Point(6, 6);
+            lvFileExplore.Location = new Point(7, 7);
             lvFileExplore.Name = "lvFileExplore";
             lvFileExplore.ShowItemToolTips = true;
-            lvFileExplore.Size = new Size(568, 576);
+            lvFileExplore.Size = new Size(650, 570);
             lvFileExplore.TabIndex = 0;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.VirtualMode = true;
@@ -437,7 +439,7 @@
             tableToolBar.Name = "tableToolBar";
             tableToolBar.RowCount = 1;
             tableToolBar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableToolBar.Size = new Size(576, 31);
+            tableToolBar.Size = new Size(657, 31);
             tableToolBar.TabIndex = 6;
             // 
             // panelToolbar3
@@ -447,10 +449,10 @@
             panelToolbar3.Controls.Add(btnFilterImage);
             panelToolbar3.Controls.Add(btnFilterVideo);
             panelToolbar3.Dock = DockStyle.Fill;
-            panelToolbar3.Location = new Point(431, 0);
+            panelToolbar3.Location = new Point(491, 0);
             panelToolbar3.Margin = new Padding(0);
             panelToolbar3.Name = "panelToolbar3";
-            panelToolbar3.Size = new Size(145, 31);
+            panelToolbar3.Size = new Size(166, 31);
             panelToolbar3.TabIndex = 0;
             // 
             // btnFilterScript
@@ -514,7 +516,7 @@
             panelToolbar1.Margin = new Padding(0);
             panelToolbar1.Name = "panelToolbar1";
             panelToolbar1.Padding = new Padding(10, 0, 0, 0);
-            panelToolbar1.Size = new Size(230, 31);
+            panelToolbar1.Size = new Size(262, 31);
             panelToolbar1.TabIndex = 0;
             // 
             // lblZoomFactor
@@ -570,10 +572,10 @@
             panelToolbar2.Controls.Add(btnViewSmallGrid);
             panelToolbar2.Controls.Add(btnViewList);
             panelToolbar2.Dock = DockStyle.Fill;
-            panelToolbar2.Location = new Point(230, 0);
+            panelToolbar2.Location = new Point(262, 0);
             panelToolbar2.Margin = new Padding(0);
             panelToolbar2.Name = "panelToolbar2";
-            panelToolbar2.Size = new Size(201, 31);
+            panelToolbar2.Size = new Size(229, 31);
             panelToolbar2.TabIndex = 1;
             // 
             // btnViewLargeGrid
@@ -641,7 +643,7 @@
             tableLayoutCustomPanel.Name = "tableLayoutCustomPanel";
             tableLayoutCustomPanel.RowCount = 1;
             tableLayoutCustomPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutCustomPanel.Size = new Size(613, 618);
+            tableLayoutCustomPanel.Size = new Size(597, 611);
             tableLayoutCustomPanel.TabIndex = 0;
             // 
             // roundedPanelCustomList
@@ -659,7 +661,7 @@
             roundedPanelCustomList.RadiusBottomRight = 16;
             roundedPanelCustomList.RadiusTopLeft = 16;
             roundedPanelCustomList.RadiusTopRight = 16;
-            roundedPanelCustomList.Size = new Size(483, 618);
+            roundedPanelCustomList.Size = new Size(467, 611);
             roundedPanelCustomList.TabIndex = 0;
             // 
             // lvCustomList
@@ -674,7 +676,7 @@
             lvCustomList.Location = new Point(6, 32);
             lvCustomList.Name = "lvCustomList";
             lvCustomList.ShowItemToolTips = true;
-            lvCustomList.Size = new Size(471, 554);
+            lvCustomList.Size = new Size(455, 547);
             lvCustomList.TabIndex = 20;
             lvCustomList.UseCompatibleStateImageBehavior = false;
             lvCustomList.View = View.Details;
@@ -692,14 +694,14 @@
             roundedPanelCustomListBottom.Controls.Add(panelCustomListBottom);
             roundedPanelCustomListBottom.Dock = DockStyle.Bottom;
             roundedPanelCustomListBottom.FillColor = Color.LightYellow;
-            roundedPanelCustomListBottom.Location = new Point(6, 586);
+            roundedPanelCustomListBottom.Location = new Point(6, 579);
             roundedPanelCustomListBottom.Name = "roundedPanelCustomListBottom";
             roundedPanelCustomListBottom.Padding = new Padding(8, 2, 6, 3);
             roundedPanelCustomListBottom.RadiusBottomLeft = 14;
             roundedPanelCustomListBottom.RadiusBottomRight = 14;
             roundedPanelCustomListBottom.RadiusTopLeft = 14;
             roundedPanelCustomListBottom.RadiusTopRight = 14;
-            roundedPanelCustomListBottom.Size = new Size(471, 26);
+            roundedPanelCustomListBottom.Size = new Size(455, 26);
             roundedPanelCustomListBottom.TabIndex = 1;
             // 
             // panelCustomListBottom
@@ -712,7 +714,7 @@
             panelCustomListBottom.Location = new Point(8, 2);
             panelCustomListBottom.Margin = new Padding(0);
             panelCustomListBottom.Name = "panelCustomListBottom";
-            panelCustomListBottom.Size = new Size(457, 21);
+            panelCustomListBottom.Size = new Size(441, 21);
             panelCustomListBottom.TabIndex = 0;
             // 
             // lblEntries
@@ -723,7 +725,7 @@
             lblEntries.Location = new Point(59, 0);
             lblEntries.Name = "lblEntries";
             lblEntries.Padding = new Padding(0, 3, 0, 0);
-            lblEntries.Size = new Size(294, 21);
+            lblEntries.Size = new Size(278, 21);
             lblEntries.TabIndex = 22;
             lblEntries.Text = "100";
             // 
@@ -747,7 +749,7 @@
             cbFullPath.Dock = DockStyle.Right;
             cbFullPath.FlatAppearance.BorderSize = 0;
             cbFullPath.FlatStyle = FlatStyle.Flat;
-            cbFullPath.Location = new Point(353, 0);
+            cbFullPath.Location = new Point(337, 0);
             cbFullPath.Name = "cbFullPath";
             cbFullPath.Size = new Size(104, 21);
             cbFullPath.TabIndex = 23;
@@ -783,7 +785,7 @@
             roundedPanelCustomListTop.RadiusBottomRight = 14;
             roundedPanelCustomListTop.RadiusTopLeft = 14;
             roundedPanelCustomListTop.RadiusTopRight = 14;
-            roundedPanelCustomListTop.Size = new Size(471, 26);
+            roundedPanelCustomListTop.Size = new Size(455, 26);
             roundedPanelCustomListTop.TabIndex = 0;
             // 
             // lblLoadedList
@@ -794,7 +796,7 @@
             lblLoadedList.Location = new Point(88, 3);
             lblLoadedList.Name = "lblLoadedList";
             lblLoadedList.Padding = new Padding(0, 2, 0, 0);
-            lblLoadedList.Size = new Size(375, 20);
+            lblLoadedList.Size = new Size(359, 20);
             lblLoadedList.TabIndex = 21;
             lblLoadedList.Text = "List Name";
             // 
@@ -832,7 +834,7 @@
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(130, 618);
+            panel1.Size = new Size(130, 611);
             panel1.TabIndex = 1;
             // 
             // roundedPanelSideBottom
@@ -845,7 +847,7 @@
             roundedPanelSideBottom.RadiusBottomRight = 0;
             roundedPanelSideBottom.RadiusTopLeft = 0;
             roundedPanelSideBottom.RadiusTopRight = 16;
-            roundedPanelSideBottom.Size = new Size(130, 267);
+            roundedPanelSideBottom.Size = new Size(130, 260);
             roundedPanelSideBottom.TabIndex = 2;
             // 
             // roundedPanelSideCenter
@@ -1085,7 +1087,7 @@
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(1339, 20);
+            panelTop.Size = new Size(1404, 20);
             panelTop.TabIndex = 1;
             // 
             // lblTitleBar
@@ -1094,7 +1096,7 @@
             lblTitleBar.Location = new Point(0, 0);
             lblTitleBar.Name = "lblTitleBar";
             lblTitleBar.Padding = new Padding(30, 0, 0, 0);
-            lblTitleBar.Size = new Size(1309, 20);
+            lblTitleBar.Size = new Size(1374, 20);
             lblTitleBar.TabIndex = 3;
             lblTitleBar.Text = "RVP - List Browser";
             lblTitleBar.TextAlign = ContentAlignment.MiddleCenter;
@@ -1110,7 +1112,7 @@
             btnClose.IconColor = Color.Black;
             btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 15;
-            btnClose.Location = new Point(1309, 0);
+            btnClose.Location = new Point(1374, 0);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(30, 20);
             btnClose.TabIndex = 2;
@@ -1121,9 +1123,10 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1339, 688);
+            ClientSize = new Size(1404, 681);
             Controls.Add(tableLayoutMain);
             Controls.Add(panelTop);
+            MinimumSize = new Size(1200, 720);
             Name = "ListBrowserV2View";
             Text = "ListBrowserV2View";
             Load += ListBrowserV2View_Load;

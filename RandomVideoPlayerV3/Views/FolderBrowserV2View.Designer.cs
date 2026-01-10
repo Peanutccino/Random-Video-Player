@@ -90,7 +90,7 @@
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(1079, 20);
+            panelTop.Size = new Size(1094, 20);
             panelTop.TabIndex = 0;
             // 
             // lblTitleBar
@@ -99,7 +99,7 @@
             lblTitleBar.Location = new Point(0, 0);
             lblTitleBar.Name = "lblTitleBar";
             lblTitleBar.Padding = new Padding(30, 0, 0, 0);
-            lblTitleBar.Size = new Size(1049, 20);
+            lblTitleBar.Size = new Size(1064, 20);
             lblTitleBar.TabIndex = 3;
             lblTitleBar.Text = "RVP - Folder Browser";
             lblTitleBar.TextAlign = ContentAlignment.MiddleCenter;
@@ -115,7 +115,7 @@
             btnClose.IconColor = Color.Black;
             btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 15;
-            btnClose.Location = new Point(1049, 0);
+            btnClose.Location = new Point(1064, 0);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(30, 20);
             btnClose.TabIndex = 2;
@@ -132,12 +132,12 @@
             panelPathContainer.Location = new Point(10, 5);
             panelPathContainer.Margin = new Padding(3, 2, 3, 3);
             panelPathContainer.Name = "panelPathContainer";
-            panelPathContainer.Padding = new Padding(3, 2, 6, 5);
+            panelPathContainer.Padding = new Padding(3, 2, 5, 4);
             panelPathContainer.RadiusBottomLeft = 17;
             panelPathContainer.RadiusBottomRight = 17;
             panelPathContainer.RadiusTopLeft = 17;
             panelPathContainer.RadiusTopRight = 17;
-            panelPathContainer.Size = new Size(1059, 34);
+            panelPathContainer.Size = new Size(1074, 34);
             panelPathContainer.TabIndex = 1;
             // 
             // flowPanelPath
@@ -148,7 +148,7 @@
             flowPanelPath.Location = new Point(31, 2);
             flowPanelPath.Name = "flowPanelPath";
             flowPanelPath.Padding = new Padding(5, 5, 0, 0);
-            flowPanelPath.Size = new Size(876, 27);
+            flowPanelPath.Size = new Size(892, 28);
             flowPanelPath.TabIndex = 4;
             flowPanelPath.WrapContents = false;
             // 
@@ -165,10 +165,10 @@
             btnStart.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnStart.ForeColor = Color.Black;
             btnStart.ImageAlign = ContentAlignment.MiddleRight;
-            btnStart.Location = new Point(907, 2);
+            btnStart.Location = new Point(923, 2);
             btnStart.Name = "btnStart";
             btnStart.Padding = new Padding(8, 0, 8, 0);
-            btnStart.Size = new Size(146, 27);
+            btnStart.Size = new Size(146, 28);
             btnStart.TabIndex = 3;
             btnStart.Text = "Play selected";
             btnStart.TextAlign = ContentAlignment.MiddleLeft;
@@ -189,7 +189,7 @@
             btnBack.ForeColor = Color.White;
             btnBack.Location = new Point(3, 2);
             btnBack.Name = "btnBack";
-            btnBack.Size = new Size(28, 27);
+            btnBack.Size = new Size(28, 28);
             btnBack.TabIndex = 2;
             btnBack.TextColor = Color.White;
             btnBack.UseVisualStyleBackColor = false;
@@ -330,7 +330,7 @@
             tableLayoutMain.RowCount = 2;
             tableLayoutMain.RowStyles.Add(new RowStyle());
             tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutMain.Size = new Size(1079, 541);
+            tableLayoutMain.Size = new Size(1094, 541);
             tableLayoutMain.TabIndex = 7;
             // 
             // panelMainRow1
@@ -342,7 +342,7 @@
             panelMainRow1.Margin = new Padding(0);
             panelMainRow1.Name = "panelMainRow1";
             panelMainRow1.Padding = new Padding(10, 5, 10, 0);
-            panelMainRow1.Size = new Size(1079, 44);
+            panelMainRow1.Size = new Size(1094, 44);
             panelMainRow1.TabIndex = 0;
             // 
             // tableLayouMainSub1
@@ -362,7 +362,7 @@
             tableLayouMainSub1.RowCount = 2;
             tableLayouMainSub1.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
             tableLayouMainSub1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayouMainSub1.Size = new Size(1079, 497);
+            tableLayouMainSub1.Size = new Size(1094, 497);
             tableLayouMainSub1.TabIndex = 1;
             // 
             // panelFileExplore
@@ -379,7 +379,7 @@
             panelFileExplore.RadiusBottomRight = 0;
             panelFileExplore.RadiusTopLeft = 16;
             panelFileExplore.RadiusTopRight = 0;
-            panelFileExplore.Size = new Size(939, 463);
+            panelFileExplore.Size = new Size(954, 463);
             panelFileExplore.TabIndex = 5;
             // 
             // lvFileExplore
@@ -393,7 +393,7 @@
             lvFileExplore.Location = new Point(6, 6);
             lvFileExplore.Name = "lvFileExplore";
             lvFileExplore.ShowItemToolTips = true;
-            lvFileExplore.Size = new Size(931, 455);
+            lvFileExplore.Size = new Size(946, 455);
             lvFileExplore.TabIndex = 0;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.VirtualMode = true;
@@ -424,7 +424,7 @@
             tableToolBar.Name = "tableToolBar";
             tableToolBar.RowCount = 1;
             tableToolBar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableToolBar.Size = new Size(939, 31);
+            tableToolBar.Size = new Size(954, 31);
             tableToolBar.TabIndex = 6;
             // 
             // panelToolbar3
@@ -434,10 +434,10 @@
             panelToolbar3.Controls.Add(btnFilterImage);
             panelToolbar3.Controls.Add(btnFilterScript);
             panelToolbar3.Dock = DockStyle.Fill;
-            panelToolbar3.Location = new Point(346, 0);
+            panelToolbar3.Location = new Point(352, 0);
             panelToolbar3.Margin = new Padding(0);
             panelToolbar3.Name = "panelToolbar3";
-            panelToolbar3.Size = new Size(140, 31);
+            panelToolbar3.Size = new Size(143, 31);
             panelToolbar3.TabIndex = 0;
             // 
             // btnFilterVideo
@@ -450,7 +450,7 @@
             btnFilterVideo.IconColor = Color.Black;
             btnFilterVideo.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnFilterVideo.IconSize = 24;
-            btnFilterVideo.Location = new Point(20, 0);
+            btnFilterVideo.Location = new Point(23, 0);
             btnFilterVideo.Name = "btnFilterVideo";
             btnFilterVideo.Size = new Size(40, 31);
             btnFilterVideo.TabIndex = 25;
@@ -467,7 +467,7 @@
             btnFilterImage.IconColor = Color.Black;
             btnFilterImage.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnFilterImage.IconSize = 24;
-            btnFilterImage.Location = new Point(60, 0);
+            btnFilterImage.Location = new Point(63, 0);
             btnFilterImage.Name = "btnFilterImage";
             btnFilterImage.Size = new Size(40, 31);
             btnFilterImage.TabIndex = 26;
@@ -484,7 +484,7 @@
             btnFilterScript.IconColor = Color.Black;
             btnFilterScript.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnFilterScript.IconSize = 24;
-            btnFilterScript.Location = new Point(100, 0);
+            btnFilterScript.Location = new Point(103, 0);
             btnFilterScript.Name = "btnFilterScript";
             btnFilterScript.Size = new Size(40, 31);
             btnFilterScript.TabIndex = 27;
@@ -501,7 +501,7 @@
             panelToolbar1.Margin = new Padding(0);
             panelToolbar1.Name = "panelToolbar1";
             panelToolbar1.Padding = new Padding(10, 0, 0, 0);
-            panelToolbar1.Size = new Size(215, 31);
+            panelToolbar1.Size = new Size(219, 31);
             panelToolbar1.TabIndex = 0;
             // 
             // lblZoomFactor
@@ -557,10 +557,10 @@
             panelToolbar2.Controls.Add(btnViewSmallGrid);
             panelToolbar2.Controls.Add(btnViewList);
             panelToolbar2.Dock = DockStyle.Fill;
-            panelToolbar2.Location = new Point(215, 0);
+            panelToolbar2.Location = new Point(219, 0);
             panelToolbar2.Margin = new Padding(0);
             panelToolbar2.Name = "panelToolbar2";
-            panelToolbar2.Size = new Size(131, 31);
+            panelToolbar2.Size = new Size(133, 31);
             panelToolbar2.TabIndex = 1;
             // 
             // btnViewLargeGrid
@@ -622,10 +622,10 @@
             panelToolbar4.Controls.Add(cbUseRecent);
             panelToolbar4.Controls.Add(sliderLatestCount);
             panelToolbar4.Dock = DockStyle.Fill;
-            panelToolbar4.Location = new Point(486, 2);
+            panelToolbar4.Location = new Point(495, 2);
             panelToolbar4.Margin = new Padding(0, 2, 0, 2);
             panelToolbar4.Name = "panelToolbar4";
-            panelToolbar4.Size = new Size(453, 27);
+            panelToolbar4.Size = new Size(459, 27);
             panelToolbar4.TabIndex = 2;
             // 
             // cbIncludeSubfolders
@@ -639,7 +639,7 @@
             cbIncludeSubfolders.FlatAppearance.BorderSize = 0;
             cbIncludeSubfolders.FlatStyle = FlatStyle.Flat;
             cbIncludeSubfolders.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            cbIncludeSubfolders.Location = new Point(87, 0);
+            cbIncludeSubfolders.Location = new Point(93, 0);
             cbIncludeSubfolders.Name = "cbIncludeSubfolders";
             cbIncludeSubfolders.Size = new Size(124, 27);
             cbIncludeSubfolders.TabIndex = 29;
@@ -651,7 +651,7 @@
             // labelPlacerholder1
             // 
             labelPlacerholder1.Dock = DockStyle.Right;
-            labelPlacerholder1.Location = new Point(211, 0);
+            labelPlacerholder1.Location = new Point(217, 0);
             labelPlacerholder1.Name = "labelPlacerholder1";
             labelPlacerholder1.Size = new Size(12, 27);
             labelPlacerholder1.TabIndex = 33;
@@ -665,7 +665,7 @@
             cbUseRecent.FlatAppearance.BorderSize = 0;
             cbUseRecent.FlatStyle = FlatStyle.Flat;
             cbUseRecent.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            cbUseRecent.Location = new Point(223, 0);
+            cbUseRecent.Location = new Point(229, 0);
             cbUseRecent.Name = "cbUseRecent";
             cbUseRecent.Size = new Size(130, 27);
             cbUseRecent.TabIndex = 31;
@@ -679,7 +679,7 @@
             sliderLatestCount.Dock = DockStyle.Right;
             sliderLatestCount.ElapsedColor = Color.FromArgb(247, 110, 100);
             sliderLatestCount.HighlightColor = Color.PaleGreen;
-            sliderLatestCount.Location = new Point(353, 0);
+            sliderLatestCount.Location = new Point(359, 0);
             sliderLatestCount.Maximum = 100;
             sliderLatestCount.Minimum = 10;
             sliderLatestCount.Name = "sliderLatestCount";
@@ -698,10 +698,10 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(195, 129, 125);
-            ClientSize = new Size(1079, 561);
+            ClientSize = new Size(1094, 561);
             Controls.Add(tableLayoutMain);
             Controls.Add(panelTop);
-            MinimumSize = new Size(1090, 600);
+            MinimumSize = new Size(1000, 600);
             Name = "FolderBrowserV2View";
             Text = "FolderBrowserV2View";
             Load += FolderBrowserV2View_Load;

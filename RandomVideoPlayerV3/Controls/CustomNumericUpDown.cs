@@ -17,16 +17,17 @@ namespace RandomVideoPlayer.Controls
             get => _value;
             set
             {
-                if (value < _minimum || value > _maximum)
-                    throw new ArgumentOutOfRangeException();
+                var clamped = Math.Clamp(value, _minimum, _maximum);
 
-                if (_value != value)
-                {
-                    _value = value;
-                    textBox.Text = _value.ToString();
-                    Invalidate(); 
-                    OnValueChanged(EventArgs.Empty); 
-                }
+                if (_value == clamped)
+                    return;
+
+
+                _value = clamped;
+                textBox.Text = _value.ToString();
+                Invalidate();
+                OnValueChanged(EventArgs.Empty);
+
             }
         }
 

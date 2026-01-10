@@ -53,6 +53,7 @@ namespace RandomVideoPlayer.UserControls
             //inputScalingFactors.SelectedItem = settings.CustomScaling.ToString();
 
             cbEnableFileBrowserV2.Checked = settings.FolderBrowserV2Enabled;
+            cbEnableListBrowserV2.Checked = settings.ListBrowserV2Enabled;
             cbEnableThumbPreview.Checked = settings.ThumbnailPreviewEnabled;
         }
 
@@ -116,6 +117,11 @@ namespace RandomVideoPlayer.UserControls
             cbEnableFileBrowserV2.CheckedChanged += (s, e) =>
             {
                 settings.FolderBrowserV2Enabled = cbEnableFileBrowserV2.Checked;
+            };
+
+            cbEnableListBrowserV2.CheckedChanged += (s, e) =>
+            {
+                settings.ListBrowserV2Enabled = cbEnableListBrowserV2.Checked;
             };
 
             cbEnableThumbPreview.CheckedChanged += (s, e) =>

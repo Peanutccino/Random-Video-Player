@@ -378,6 +378,7 @@ namespace RandomVideoPlayer.Functions
                     cb.ForeColor = CurrentTheme.FbTextColorAccent;
                     cb.UncheckedBackColor = CurrentTheme.FbBackColorDark;
                     cb.CheckedBackColor = CurrentTheme.FbAccentColor;
+                    cb.UncheckedForeColor = CurrentTheme.FbTextColor;
                     break;
                 case ListView lv:
                     lv.BackColor = CurrentTheme.FbBackColorDark;
@@ -493,10 +494,9 @@ namespace RandomVideoPlayer.Functions
                     break;
                 case RoundedCheckBox rcb:
                     rcb.ForeColor = CurrentTheme.LbTextColorSideAccent;
-                    rcb.UncheckedForeColor = CurrentTheme.LbTextColor;
-                    rcb.BackColor = CurrentTheme.LbBackColorSideLight;
-                    rcb.UncheckedBackColor = CurrentTheme.LbBackColorSideLight;
+                    rcb.UncheckedBackColor = CurrentTheme.LbBackColorSideDark;
                     rcb.CheckedBackColor = CurrentTheme.LbAccentColorSide;
+                    rcb.UncheckedForeColor = CurrentTheme.LbTextColor;
                     break;
             }
 

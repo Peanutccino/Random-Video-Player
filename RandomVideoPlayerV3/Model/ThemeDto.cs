@@ -24,7 +24,7 @@ namespace RandomVideoPlayer.Model
         public string FbBackColorLight { get; set; }
         public string FbBackColorDark { get; set; }
         public string FbAccentColor { get; set; }
-        public string FbHightlightColor { get; set; }
+        public string FbHighlightColor { get; set; }
 
         public string LbTextColor { get; set; }
         public string LbTextColorMainAccent { get; set; }
@@ -56,7 +56,7 @@ namespace RandomVideoPlayer.Model
             FbBackColorLight = ToHex(theme.FbBackColorLight),
             FbBackColorDark = ToHex(theme.FbBackColorDark),
             FbAccentColor = ToHex(theme.FbAccentColor),
-            FbHightlightColor = ToHex(theme.FbHighlightColor),
+            FbHighlightColor = ToHex(theme.FbHighlightColor),
             LbTextColor = ToHex(theme.LbTextColor),
 
             LbTextColorMainAccent = ToHex(theme.LbTextColorMainAccent),

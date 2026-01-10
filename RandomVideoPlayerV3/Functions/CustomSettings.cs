@@ -116,10 +116,10 @@ namespace RandomVideoPlayer.Functions
         public bool folderBrowserV2Enabled { get; set; } = false;
         public bool listBrowserV2Enabled { get; set; } = false;
         public bool thumbnailPreviewEnabled { get; set; } = false;
-        public int thumbSizeFactorFolderBrowser { get; set; } = 10;
+        public int thumbSizeFactorFolderBrowser { get; set; } = 5;
         public int thumbSizeFactorListBrowser { get; set; } = 10;
         public View fileBrowserViewState { get; set; } = View.SmallIcon;
-        public View listBrowserViewState { get; set; } = View.SmallIcon;
+        public View listBrowserViewState { get; set; } = View.LargeIcon;
         private CustomSettings() 
         {
             buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };

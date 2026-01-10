@@ -155,14 +155,14 @@ namespace RandomVideoPlayer
         {
             DeleteCurrent();
         }
-  
+
         private void btnListAdd_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
                 MatchCustomList();
             }
-            else if(e.Button == MouseButtons.Right)
+            else if (e.Button == MouseButtons.Right)
             {
                 contextMenuAddToList.Show(btnListAdd, new Point(0, 0), ToolStripDropDownDirection.AboveRight);
             }
@@ -244,8 +244,7 @@ namespace RandomVideoPlayer
         {
             contextMenuScriptFiles.Show(btnScriptMenu, new Point(0, btnScriptMenu.Height));
         }
-
-        private void lblCurrentInfo_Click(object sender, EventArgs e)
+        private void lblCurrentInfo_DoubleClick(object sender, EventArgs e)
         {
             var filePath = lblCurrentInfo.Text;
             if (File.Exists(filePath))
@@ -927,6 +926,8 @@ namespace RandomVideoPlayer
 
         private void panelPlayerMPV_MouseWheel(object sender, MouseEventArgs e) //Move through video by Scrolling
         {
+            MainFormData.progressBufferActive = true;
+
             if (e.Delta > 0)
             {
                 SeekForward();
@@ -978,7 +979,7 @@ namespace RandomVideoPlayer
                 {
                     MainFormData.cumulativeSeek += isNearEnd ? 1 : customSmallSeekForwardValue;
                 }
-                else if(isExtraLongVideo)
+                else if (isExtraLongVideo)
                 {
                     MainFormData.cumulativeSeek += isNearEnd ? 1 : customLargeSeekForwardValue;
                 }
@@ -987,8 +988,8 @@ namespace RandomVideoPlayer
                     MainFormData.cumulativeSeek += isNearEnd ? 1 : 3; //Sub 60 second videos
                 }
 
-                var positionMS = (int)playerMPV.Position.TotalSeconds;
-                pbPlayerProgress.Value = positionMS + (MainFormData.cumulativeSeek);
+                var positionMS = (int)playerMPV.Position.TotalMilliseconds;
+                pbPlayerProgress.Value = (positionMS + (MainFormData.cumulativeSeek * 1000) - MainFormData.seekTimerDelay);
 
                 seekTimer.Stop();
                 seekTimer.Start();
@@ -1009,8 +1010,8 @@ namespace RandomVideoPlayer
                 var customSmallSeekBackwardValue = SettingsHandler.CustomSeekBackwardValueSmall;
                 var customLargeSeekBackwardValue = SettingsHandler.CustomSeekBackwardValueLarge;
 
-                bool isShortVideo = videoDuration <= 60; 
-                bool isLongVideo = videoDuration <= videoSizeThreshold; 
+                bool isShortVideo = videoDuration <= 60;
+                bool isLongVideo = videoDuration <= videoSizeThreshold;
                 bool isExtraLongVideo = videoDuration > videoSizeThreshold;
 
                 if (isShortVideo)
@@ -1183,14 +1184,24 @@ namespace RandomVideoPlayer
 
         private void OpenListBrowser()
         {
-            //ListBrowserView lbForm = new ListBrowserView();
-            ListBrowserV2View lbForm = new ListBrowserV2View();
+            SetHighlight(btnListBrowser, true);
+            DialogResult result;
 
-            lbForm.StartPosition = FormStartPosition.CenterParent;
+            if (SettingsHandler.ListBrowserV2Enabled)
+            {
+                ListBrowserV2View lbForm = new ListBrowserV2View();
+                lbForm.StartPosition = FormStartPosition.CenterParent;
+                result = lbForm.ShowDialog();
+                SetHighlight(btnListBrowser, false);
+            }
+            else
+            {
+                ListBrowserView lbForm = new ListBrowserView();
+                lbForm.StartPosition = FormStartPosition.CenterParent;
+                result = lbForm.ShowDialog();
+                SetHighlight(btnListBrowser, false);
+            }
 
-            btnListBrowser.IconColor = Color.PaleGreen;
-            DialogResult result = lbForm.ShowDialog();
-            btnListBrowser.IconColor = Color.Black;
             if (result == DialogResult.OK)
             {
                 if (!(ListHandler.CustomList?.Any() ?? false))
@@ -1469,11 +1480,11 @@ namespace RandomVideoPlayer
 
 
             //Add to list menu
-            contextMenuAddToList = new ContextMenuStrip 
+            contextMenuAddToList = new ContextMenuStrip
             {
                 ShowImageMargin = false,
                 ShowCheckMargin = false,
-                Renderer = renderer 
+                Renderer = renderer
             };
 
             //Subtitle menu
@@ -1974,7 +1985,7 @@ namespace RandomVideoPlayer
                     var placeholder = new ToolStripMenuItem("Save to list:")
                     {
                         AutoSize = tsmiAutoSize,
-                        Font = new Font("Segoe UI Bold", 12 / DPI.Scale, FontStyle.Bold)
+                        Font = new Font("Segoe UI", 10 / DPI.Scale, FontStyle.Bold)
                     };
                     contextMenuAddToList.Items.Add(placeholder);
                     contextMenuAddToList.Items.Add(new ToolStripSeparator());
@@ -1986,7 +1997,7 @@ namespace RandomVideoPlayer
                 }
             }
         }
-        
+
         private void AddToListItem_Click(object sender, EventArgs e)
         {
             //Add currently played file to specified list
@@ -1996,7 +2007,7 @@ namespace RandomVideoPlayer
 
             if (string.IsNullOrWhiteSpace(selectedList) || string.IsNullOrWhiteSpace(currentFile)) return;
 
-            if(selectedList == ListHandler.ListNameTemp) 
+            if (selectedList == ListHandler.ListNameTemp)
             {
                 AddCurrentToList();
                 MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(currentFile);
@@ -3988,6 +3999,7 @@ namespace RandomVideoPlayer
             base.WndProc(ref m);
         }
         #endregion
+
 
     }
 }

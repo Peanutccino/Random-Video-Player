@@ -91,9 +91,9 @@
             panelBottom.Controls.Add(pbVolume);
             panelBottom.Controls.Add(pbPlayerProgress);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 306);
+            panelBottom.Location = new Point(0, 311);
             panelBottom.Name = "panelBottom";
-            panelBottom.Size = new Size(1015, 75);
+            panelBottom.Size = new Size(1015, 80);
             panelBottom.TabIndex = 0;
             // 
             // panelExtraButtons
@@ -275,7 +275,7 @@
             panel1.Controls.Add(lblSpeed);
             panel1.Controls.Add(lblDurationInfo);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 58);
+            panel1.Location = new Point(0, 63);
             panel1.Name = "panel1";
             panel1.Size = new Size(1015, 17);
             panel1.TabIndex = 24;
@@ -292,7 +292,7 @@
             lblCurrentInfo.TabIndex = 14;
             lblCurrentInfo.Text = "Current Folder";
             lblCurrentInfo.TextAlign = ContentAlignment.BottomLeft;
-            lblCurrentInfo.Click += lblCurrentInfo_Click;
+            lblCurrentInfo.DoubleClick += lblCurrentInfo_DoubleClick;
             // 
             // lblSpeed
             // 
@@ -481,7 +481,7 @@
             pbVolume.CompletedBrush = Color.Black;
             pbVolume.CompletedGraphBrush = Color.White;
             pbVolume.GraphThickness = 1;
-            pbVolume.Location = new Point(905, 26);
+            pbVolume.Location = new Point(905, 27);
             pbVolume.Maximum = 100;
             pbVolume.Minimum = 0;
             pbVolume.MouseoverBrush = Color.Black;
@@ -648,7 +648,7 @@
             panelPlayerMPV.BackColor = Color.Black;
             panelPlayerMPV.Location = new Point(0, 20);
             panelPlayerMPV.Name = "panelPlayerMPV";
-            panelPlayerMPV.Size = new Size(1015, 287);
+            panelPlayerMPV.Size = new Size(1015, 297);
             panelPlayerMPV.TabIndex = 2;
             panelPlayerMPV.MouseDown += panelPlayerMPV_MouseDown;
             panelPlayerMPV.MouseMove += panelPlayerMPV_MouseMove;
@@ -675,7 +675,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(1015, 381);
+            ClientSize = new Size(1015, 391);
             Controls.Add(panelTop);
             Controls.Add(panelBottom);
             Controls.Add(panelPlayerMPV);

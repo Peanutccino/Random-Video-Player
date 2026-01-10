@@ -6,11 +6,11 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>Resources\RVP_IconSimple.ico</ApplicationIcon>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     <AssemblyVersion>1.62</AssemblyVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Authors>Peanutccino</Authors>
+    <ApplicationIcon>Resources\RVP-Circle-Multi.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -37,11 +37,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\RVP-Circle-Multi.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Resources\list-colored-add.png" />
     <EmbeddedResource Include="Resources\list-colored-add_Dark.png" />
     <EmbeddedResource Include="Resources\list-colored-remove.png" />
     <EmbeddedResource Include="Resources\list-colored-remove_Dark.png" />
-    <EmbeddedResource Include="Resources\RVP_IconSimple.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -84,9 +87,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\RVP_BlackBG.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\RVP_IconSimple.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

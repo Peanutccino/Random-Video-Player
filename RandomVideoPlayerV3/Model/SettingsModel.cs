@@ -57,6 +57,11 @@ namespace RandomVideoPlayer.Model
         public int AutoPlayTimerValueStartPoint { get; set; }
         public int AutoPlayTimerValueEndPoint { get; set; }
         public bool AutoPlayTimerRangeEnabled { get; set; }
+        public int CustomSeekForwardValueSmall { get; set; }
+        public int CustomSeekBackwardValueSmall { get; set; }
+        public int CustomSeekForwardValueLarge { get; set; }
+        public int CustomSeekBackwardValueLarge { get; set; }
+        public int VideoSizeThreshold { get; set; }
         public bool RTXVSREnabled { get; set; }
         public bool DarkModeEnabled { get; set; }
         public string SelectedTheme { get; set; }
@@ -107,6 +112,7 @@ namespace RandomVideoPlayer.Model
         public bool EnableCustomScaling { get; set; }
         public float CustomScaling { get; set; }
         public bool FolderBrowserV2Enabled { get; set; }
+        public bool ListBrowserV2Enabled { get; set; }
         public bool ThumbnailPreviewEnabled { get; set; }
         #endregion
 

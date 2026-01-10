@@ -25,7 +25,7 @@ namespace RandomVideoPlayer.Views
         readonly float aspectRatio = 110f / 82f;
         private const int ThumbMin = 48;
         private const int ThumbMax = 256;
-        private const int SliderDefault = 10;
+        private const int SliderDefault = 5;
 
         private ContextMenuStrip contextHiddenPath;
 
@@ -427,7 +427,6 @@ namespace RandomVideoPlayer.Views
             int newHeight = (int)Math.Round(newWidth / aspectRatio);
             lblZoomFactor.Text = $"{sliderValue}%";
             if (_viewState == View.SmallIcon) lvFileExplore.Columns[0].Width = (newWidth * 3);
-            
             ApplyThumbnailSize(newWidth, newHeight);
         }
         private void ToggleFilter(IconButton? btn)

@@ -25,22 +25,22 @@ namespace RandomVideoPlayer.Model
             FbBackColorLight = ColorTranslator.FromHtml("#FFFFB3"),
             FbBackColorDark = ColorTranslator.FromHtml("#F2F2AE"),
             FbAccentColor = ColorTranslator.FromHtml("#FFD700"),
-            FbHighlightColor = ColorTranslator.FromHtml("#E1A71C"),
+            FbHighlightColor = ColorTranslator.FromHtml("#D47919"),
 
             LbTextColor = ColorTranslator.FromHtml("#000000"),
             LbTextColorMainAccent = ColorTranslator.FromHtml("#000000"),
             LbTextColorSideAccent = ColorTranslator.FromHtml("#000000"),
 
             LbBackColorMainLight = ColorTranslator.FromHtml("#FFE4E1"),
-            LbBackColorMainDark = ColorTranslator.FromHtml("#FFE4E1"),
-            LbAccentColorMain = ColorTranslator.FromHtml("#F08080"),
+            LbBackColorMainDark = ColorTranslator.FromHtml("#E5CDCA"),
+            LbAccentColorMain = ColorTranslator.FromHtml("#ED5151"),
 
-            LbBackColorSideLight = ColorTranslator.FromHtml("#F5FFFA"),
-            LbBackColorSideDark = ColorTranslator.FromHtml("#F0FFF0"),
+            LbBackColorSideLight = ColorTranslator.FromHtml("#F0FFF0"),
+            LbBackColorSideDark = ColorTranslator.FromHtml("#D8E5D8"),
             LbAccentColorSide = ColorTranslator.FromHtml("#98FB98"),
 
-            LbHighlightColorMain = ColorTranslator.FromHtml("#FF9000"),
-            LbHighlightColorSide = ColorTranslator.FromHtml("#FF9000")
+            LbHighlightColorMain = ColorTranslator.FromHtml("#BA5A30"),
+            LbHighlightColorSide = ColorTranslator.FromHtml("#4C916C")
         };
 
         public static Theme Dark { get; } = new Theme
@@ -60,22 +60,22 @@ namespace RandomVideoPlayer.Model
             FbBackColorLight = ColorTranslator.FromHtml("#252525"),
             FbBackColorDark = ColorTranslator.FromHtml("#191919"),
             FbAccentColor = ColorTranslator.FromHtml("#FF9000"),
-            FbHighlightColor = ColorTranslator.FromHtml("#FABA1A"),
+            FbHighlightColor = ColorTranslator.FromHtml("#EDBF18"),
 
-            LbTextColor = ColorTranslator.FromHtml("#F4EEE0"),
-            LbTextColorMainAccent = ColorTranslator.FromHtml("#F4EEE0"),
-            LbTextColorSideAccent = ColorTranslator.FromHtml("#F4EEE0"),
+            LbTextColor = ColorTranslator.FromHtml("#FFFFFF"),
+            LbTextColorMainAccent = ColorTranslator.FromHtml("#191919"),
+            LbTextColorSideAccent = ColorTranslator.FromHtml("#191919"),
 
-            LbBackColorMainLight = ColorTranslator.FromHtml("#4F4557"),
-            LbBackColorMainDark = ColorTranslator.FromHtml("#4F4557"),
-            LbAccentColorMain = ColorTranslator.FromHtml("#433D8B"),
+            LbBackColorMainLight = ColorTranslator.FromHtml("#252525"),
+            LbBackColorMainDark = ColorTranslator.FromHtml("#191919"),
+            LbAccentColorMain = ColorTranslator.FromHtml("#00D176"),
 
-            LbBackColorSideLight = ColorTranslator.FromHtml("#6D5D6E"),
-            LbBackColorSideDark = ColorTranslator.FromHtml("#4F4557"),
-            LbAccentColorSide = ColorTranslator.FromHtml("#2E236C"),
+            LbBackColorSideLight = ColorTranslator.FromHtml("#453D4D"),
+            LbBackColorSideDark = ColorTranslator.FromHtml("#38323D"),
+            LbAccentColorSide = ColorTranslator.FromHtml("#D464D9"),
 
-            LbHighlightColorMain = ColorTranslator.FromHtml("#FF9000"),
-            LbHighlightColorSide = ColorTranslator.FromHtml("#FF9000")
+            LbHighlightColorMain = ColorTranslator.FromHtml("#00CCA0"),
+            LbHighlightColorSide = ColorTranslator.FromHtml("#D1005B")
         };
     }
 }

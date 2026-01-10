@@ -46,6 +46,12 @@ namespace RandomVideoPlayer.UserControls
             inputTimerValueEndPoint.Value = settings.AutoPlayTimerValueEndPoint;
             cbEnableTimeRange.Checked = settings.AutoPlayTimerRangeEnabled;
 
+            inputSFS.Value = settings.CustomSeekForwardValueSmall;
+            inputSBS.Value = settings.CustomSeekBackwardValueSmall;
+            inputSFL.Value = settings.CustomSeekForwardValueLarge;
+            inputSBL.Value = settings.CustomSeekBackwardValueLarge;
+            inputVideoThreshold.Value = settings.VideoSizeThreshold / 60; //convert to minutes
+
             IReadOnlyDictionary<string, Theme> themes = ThemeLoader.LoadThemes();
 
             if (!themes.ContainsKey("Light"))
@@ -115,6 +121,27 @@ namespace RandomVideoPlayer.UserControls
             {
                 settings.AutoPlayTimerRangeEnabled = cbEnableTimeRange.Checked;
                 UpdateRangeIndicator();
+            };
+
+            inputSFS.ValueChanged += (s, e) =>
+            {
+                settings.CustomSeekForwardValueSmall = (int)inputSFS.Value;
+            };
+            inputSBS.ValueChanged += (s, e) =>
+            {
+                settings.CustomSeekBackwardValueSmall = (int)inputSBS.Value;
+            };
+            inputSFL.ValueChanged += (s, e) =>
+            {
+                settings.CustomSeekForwardValueLarge = (int)inputSFL.Value;
+            };
+            inputSBL.ValueChanged += (s, e) =>
+            {
+                settings.CustomSeekBackwardValueLarge = (int)inputSBL.Value;
+            };
+            inputVideoThreshold.ValueChanged += (s, e) =>
+            {
+                settings.VideoSizeThreshold = (int)inputVideoThreshold.Value;
             };
 
             comboThemes.SelectedIndexChanged += (s, e) =>

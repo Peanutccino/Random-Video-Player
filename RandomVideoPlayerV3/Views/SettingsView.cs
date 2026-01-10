@@ -98,6 +98,11 @@ namespace RandomVideoPlayer.Views
             settingsModel.AutoPlayTimerValueStartPoint = SettingsHandler.AutoPlayTimerValueStartPoint(false);
             settingsModel.AutoPlayTimerValueEndPoint = SettingsHandler.AutoPlayTimerValueEndPoint;
             settingsModel.AutoPlayTimerRangeEnabled = SettingsHandler.AutoPlayTimerRangeEnabled;
+            settingsModel.CustomSeekForwardValueSmall = SettingsHandler.CustomSeekForwardValueSmall;
+            settingsModel.CustomSeekBackwardValueSmall = SettingsHandler.CustomSeekBackwardValueSmall;
+            settingsModel.CustomSeekForwardValueLarge = SettingsHandler.CustomSeekForwardValueLarge;
+            settingsModel.CustomSeekBackwardValueLarge = SettingsHandler.CustomSeekBackwardValueLarge;
+            settingsModel.VideoSizeThreshold = SettingsHandler.VideoSizeThreshold;
             settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
             settingsModel.ReShuffle = ListHandler.ReShuffle;
             settingsModel.RTXVSREnabled = SettingsHandler.RTXVSREnabled;
@@ -120,6 +125,7 @@ namespace RandomVideoPlayer.Views
             settingsModel.EnableCustomScaling = SettingsHandler.EnableCustomScaling;
             settingsModel.CustomScaling = SettingsHandler.CustomScaling;
             settingsModel.FolderBrowserV2Enabled = SettingsHandler.FolderBrowserV2Enabled;
+            settingsModel.ListBrowserV2Enabled = SettingsHandler.ListBrowserV2Enabled;
             settingsModel.ThumbnailPreviewEnabled = SettingsHandler.ThumbnailPreviewEnabled;
 
             settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
@@ -187,6 +193,11 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.SetAutoPlayTimerValueStartPoint(settingsModel.AutoPlayTimerValueStartPoint);
             SettingsHandler.AutoPlayTimerValueEndPoint = settingsModel.AutoPlayTimerValueEndPoint;
             SettingsHandler.AutoPlayTimerRangeEnabled = settingsModel.AutoPlayTimerRangeEnabled;
+            SettingsHandler.CustomSeekForwardValueSmall = settingsModel.CustomSeekForwardValueSmall;
+            SettingsHandler.CustomSeekBackwardValueSmall = settingsModel.CustomSeekBackwardValueSmall;
+            SettingsHandler.CustomSeekForwardValueLarge = settingsModel.CustomSeekForwardValueLarge;
+            SettingsHandler.CustomSeekBackwardValueLarge = settingsModel.CustomSeekBackwardValueLarge;
+            SettingsHandler.VideoSizeThreshold = settingsModel.VideoSizeThreshold * 60; //Convert minutes to seconds
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
             ListHandler.ReShuffle = settingsModel.ReShuffle;
             SettingsHandler.RTXVSREnabled = settingsModel.RTXVSREnabled;
@@ -209,6 +220,7 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.EnableCustomScaling = settingsModel.EnableCustomScaling;
             SettingsHandler.CustomScaling = settingsModel.CustomScaling;
             SettingsHandler.FolderBrowserV2Enabled = settingsModel.FolderBrowserV2Enabled;
+            SettingsHandler.ListBrowserV2Enabled = settingsModel.ListBrowserV2Enabled;
             SettingsHandler.ThumbnailPreviewEnabled = settingsModel.ThumbnailPreviewEnabled;
 
             SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;

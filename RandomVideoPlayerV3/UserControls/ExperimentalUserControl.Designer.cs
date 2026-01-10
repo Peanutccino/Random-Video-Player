@@ -59,6 +59,7 @@
             cbEnableThumbPreview = new RandomVideoPlayer.Controls.CustomCheckBox();
             cbEnableFileBrowserV2 = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl9 = new Label();
+            cbEnableListBrowserV2 = new RandomVideoPlayer.Controls.CustomCheckBox();
             panel1.SuspendLayout();
             flowLayoutPanel4.SuspendLayout();
             flowLayoutPanel3.SuspendLayout();
@@ -393,6 +394,7 @@
             // panel3
             // 
             panel3.Controls.Add(cbEnableThumbPreview);
+            panel3.Controls.Add(cbEnableListBrowserV2);
             panel3.Controls.Add(cbEnableFileBrowserV2);
             panel3.Controls.Add(lbl9);
             panel3.Dock = DockStyle.Top;
@@ -406,10 +408,10 @@
             cbEnableThumbPreview.BoxSize = 13;
             cbEnableThumbPreview.Dock = DockStyle.Top;
             cbEnableThumbPreview.HoverColor = Color.DeepSkyBlue;
-            cbEnableThumbPreview.Location = new Point(0, 64);
+            cbEnableThumbPreview.Location = new Point(0, 78);
             cbEnableThumbPreview.Name = "cbEnableThumbPreview";
             cbEnableThumbPreview.PaddingLeft = 9;
-            cbEnableThumbPreview.Size = new Size(507, 40);
+            cbEnableThumbPreview.Size = new Size(507, 27);
             cbEnableThumbPreview.TabIndex = 3;
             cbEnableThumbPreview.Text = "Enable thumbnail preview";
             cbEnableThumbPreview.UseVisualStyleBackColor = true;
@@ -422,7 +424,7 @@
             cbEnableFileBrowserV2.Location = new Point(0, 24);
             cbEnableFileBrowserV2.Name = "cbEnableFileBrowserV2";
             cbEnableFileBrowserV2.PaddingLeft = 9;
-            cbEnableFileBrowserV2.Size = new Size(507, 40);
+            cbEnableFileBrowserV2.Size = new Size(507, 27);
             cbEnableFileBrowserV2.TabIndex = 2;
             cbEnableFileBrowserV2.Text = "Enable new FolderBrowser";
             cbEnableFileBrowserV2.UseVisualStyleBackColor = true;
@@ -435,7 +437,20 @@
             lbl9.Name = "lbl9";
             lbl9.Size = new Size(507, 24);
             lbl9.TabIndex = 1;
-            lbl9.Text = "Enable new version of FolderBrowser:";
+            lbl9.Text = "Enable new versions:";
+            // 
+            // cbEnableListBrowserV2
+            // 
+            cbEnableListBrowserV2.BoxSize = 13;
+            cbEnableListBrowserV2.Dock = DockStyle.Top;
+            cbEnableListBrowserV2.HoverColor = Color.DeepSkyBlue;
+            cbEnableListBrowserV2.Location = new Point(0, 51);
+            cbEnableListBrowserV2.Name = "cbEnableListBrowserV2";
+            cbEnableListBrowserV2.PaddingLeft = 9;
+            cbEnableListBrowserV2.Size = new Size(507, 27);
+            cbEnableListBrowserV2.TabIndex = 4;
+            cbEnableListBrowserV2.Text = "Enable new ListBrowser";
+            cbEnableListBrowserV2.UseVisualStyleBackColor = true;
             // 
             // ExperimentalUserControl
             // 
@@ -490,5 +505,6 @@
         private Controls.CustomCheckBox cbEnableFileBrowserV2;
         private Label lbl9;
         private Controls.CustomCheckBox cbEnableThumbPreview;
+        private Controls.CustomCheckBox cbEnableListBrowserV2;
     }
 }
