@@ -2,7 +2,7 @@
 using RandomVideoPlayer.Functions;
 using System.Runtime.InteropServices;
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class CustomMessageBoxView : Form
     {

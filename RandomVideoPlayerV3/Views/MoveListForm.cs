@@ -4,7 +4,7 @@ using RandomVideoPlayer.Model;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class MoveListForm : Form
     {

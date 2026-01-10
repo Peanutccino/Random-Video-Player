@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class HotkeyEditForm : Form
     {

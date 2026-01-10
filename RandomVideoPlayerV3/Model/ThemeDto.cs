@@ -35,6 +35,8 @@ namespace RandomVideoPlayer.Model
         public string LbBackColorSideLight { get; set; }
         public string LbBackColorSideDark { get; set; }
         public string LbAccentColorSide { get; set; }
+        public string LbHighlightColorMain { get; set; }
+        public string LbHighlightColorSide { get; set; }
 
         public static ThemeDto FromTheme(string name, Theme theme) => new()
         {
@@ -64,7 +66,9 @@ namespace RandomVideoPlayer.Model
             LbAccentColorMain = ToHex(theme.LbAccentColorMain),
             LbBackColorSideLight = ToHex(theme.LbBackColorSideLight),
             LbBackColorSideDark = ToHex(theme.LbBackColorSideDark),
-            LbAccentColorSide = ToHex(theme.LbAccentColorSide)
+            LbAccentColorSide = ToHex(theme.LbAccentColorSide),
+            LbHighlightColorMain = ToHex(theme.LbHighlightColorMain),
+            LbHighlightColorSide = ToHex(theme.LbHighlightColorSide)
         };
 
         private static string ToHex(Color color) => ColorTranslator.ToHtml(color);

@@ -384,7 +384,7 @@ namespace RandomVideoPlayer.Model
         {
             try
             {
-                _tempfolderList = EnumerateEligibleVideos(folderpath, includeSubfolders, token).ToList();
+                _tempfolderList = EnumerateEligibleVideosFromDirectory(folderpath, includeSubfolders, token).ToList();
 
                 if (_tempfolderList?.Any() ?? false)
                 {
@@ -408,7 +408,7 @@ namespace RandomVideoPlayer.Model
 
             try
             {
-                var allFiles = EnumerateEligibleVideos(folderpath, includeSubfolders, token).ToList();
+                var allFiles = EnumerateEligibleVideosFromDirectory(folderpath, includeSubfolders, token).ToList();
 
                 if (SettingsHandler.CreationDate) //Set to sort by creation date
                 {
@@ -442,7 +442,7 @@ namespace RandomVideoPlayer.Model
         private static readonly HashSet<string> MultiAxis =
             new(StringComparer.OrdinalIgnoreCase) { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
 
-        public static IEnumerable<string> EnumerateEligibleVideos( string root, bool includeSubfolders, CancellationToken token = default)
+        public static IEnumerable<string> EnumerateEligibleVideosFromDirectory(string root, bool includeSubfolders, CancellationToken token = default)
         {
             if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
                 yield break;
@@ -457,12 +457,12 @@ namespace RandomVideoPlayer.Model
             var scriptBaseNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             AddScriptsFromTree(root, includeSubfolders, scriptBaseNames, token);
 
-            foreach (var scriptDir in ListHandler.ScriptDirectories)
+            foreach (var scriptDir in ScriptDirectories)
             {
                 if (string.Equals(scriptDir, "local", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                AddScriptsFromTree(scriptDir, includeSubfolders: true, scriptBaseNames, token);
+                AddScriptsFromTree(scriptDir, SettingsHandler.IncludeSubdirectoriesForScriptLoad, scriptBaseNames, token);
             }
 
             foreach (var video in EnumerateVideos(root, includeSubfolders, token))
@@ -471,6 +471,37 @@ namespace RandomVideoPlayer.Model
                 if (name != null && scriptBaseNames.Contains(name))
                     yield return video;
             }
+        }
+
+        public static IEnumerable<string> EnumerateEligibleVideo(string video, CancellationToken token = default)
+        {
+            if (string.IsNullOrWhiteSpace(video) || !File.Exists(video))
+                yield break;
+
+            if (!FilterScriptEnabled)
+            {
+                    yield return video;
+                yield break;
+            }
+
+            var scriptBaseNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            var parent = Directory.GetParent(Path.GetDirectoryName(video)).ToString();
+            AddScriptsFromTree(parent, false, scriptBaseNames, token);
+
+
+            foreach (var scriptDir in ScriptDirectories)
+            {
+                if (string.Equals(scriptDir, "local", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                AddScriptsFromTree(scriptDir, SettingsHandler.IncludeSubdirectoriesForScriptLoad, scriptBaseNames, token);
+            }
+
+            var name = Path.GetFileNameWithoutExtension(video);
+            if (name != null && scriptBaseNames.Contains(name))
+                yield return video;
+
         }
 
         private static void AddScriptsFromTree(string root, bool includeSubfolders, ISet<string> target, CancellationToken token)

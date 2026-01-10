@@ -33,7 +33,11 @@ namespace RandomVideoPlayer.Functions
         public int autoPlayTimerValueStartPoint { get; set; } = 8;
         public int autoPlayTimerValueEndPoint { get; set; } = 12;
         public bool autoPlayTimerRangeEnabled { get; set; } = false;
-
+        public int customSeekForwardValueSmall { get; set; } = 15;
+        public int customSeekBackwardValueSmall { get; set; } = 5;
+        public int customSeekForwardValueLarge { get; set; } = 30;
+        public int customSeekBackwardValueLarge { get; set; } = 10;
+        public int videoSizeThreshold { get; set; } = 1800; //30 minutes in seconds
 
         public string selectedProfile { get; set; } = "";
         public bool applyFilterToList { get; set; }
@@ -63,8 +67,6 @@ namespace RandomVideoPlayer.Functions
         public bool filterVideoEnabled { get; set; } = true;
         public bool filterScriptEnabled { get; set; } = false;
 
-        public bool viewIsTileFolderBrowser { get; set; } = true;
-        public int thumbSizeFactorFolderBrowser{ get; set; } = 10;
 
         public bool listChanged { get; set; } = false;
         public string listNameTemp { get; set; } = "Unspecified";
@@ -112,7 +114,12 @@ namespace RandomVideoPlayer.Functions
         private static readonly object _lock = new object();
 
         public bool folderBrowserV2Enabled { get; set; } = false;
+        public bool listBrowserV2Enabled { get; set; } = false;
         public bool thumbnailPreviewEnabled { get; set; } = false;
+        public int thumbSizeFactorFolderBrowser { get; set; } = 10;
+        public int thumbSizeFactorListBrowser { get; set; } = 10;
+        public View fileBrowserViewState { get; set; } = View.SmallIcon;
+        public View listBrowserViewState { get; set; } = View.SmallIcon;
         private CustomSettings() 
         {
             buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };

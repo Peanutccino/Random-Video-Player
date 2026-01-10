@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class SettingsView : Form
     {

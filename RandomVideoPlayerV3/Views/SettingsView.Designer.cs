@@ -1,4 +1,4 @@
-﻿namespace RandomVideoPlayer.View
+﻿namespace RandomVideoPlayer.Views
 {
     partial class SettingsView
     {

@@ -3,7 +3,7 @@ using RandomVideoPlayer.Model;
 using System.Runtime.InteropServices;
 using ListViewItem = System.Windows.Forms.ListViewItem;
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class FolderBrowserView : Form
     {

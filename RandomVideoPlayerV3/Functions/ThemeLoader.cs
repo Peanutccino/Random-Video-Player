@@ -1,10 +1,5 @@
 ﻿using RandomVideoPlayer.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace RandomVideoPlayer.Functions
 {
@@ -56,7 +51,9 @@ namespace RandomVideoPlayer.Functions
 
             LbBackColorSideLight = ColorTranslator.FromHtml(dto.LbBackColorSideLight),
             LbBackColorSideDark = ColorTranslator.FromHtml(dto.LbBackColorSideDark),
-            LbAccentColorSide = ColorTranslator.FromHtml(dto.LbAccentColorSide)
+            LbAccentColorSide = ColorTranslator.FromHtml(dto.LbAccentColorSide),
+            LbHighlightColorMain = ColorTranslator.FromHtml(dto.LbHighlightColorMain),
+            LbHighlightColorSide = ColorTranslator.FromHtml(dto.LbHighlightColorSide)
         };
     }
 }

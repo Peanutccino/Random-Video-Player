@@ -9,7 +9,7 @@ using System.Text;
 using System.Windows.Documents;
 using ListViewItem = System.Windows.Forms.ListViewItem;
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class ListBrowserView : Form
     {
@@ -1115,7 +1115,7 @@ namespace RandomVideoPlayer.View
             {
                 if (ListHandler.FilterScriptEnabled)
                 {
-                    files.AddRange(ListHandler.EnumerateEligibleVideos(folderPath, true));
+                    files.AddRange(ListHandler.EnumerateEligibleVideosFromDirectory(folderPath, true));
                 }
                 else
                 {

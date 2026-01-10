@@ -3,7 +3,7 @@ using Mpv.NET.Player;
 using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
-using RandomVideoPlayer.View;
+using RandomVideoPlayer.Views;
 using Svg;
 using Svg.FilterEffects;
 using System.Diagnostics;
@@ -927,13 +927,48 @@ namespace RandomVideoPlayer
 
         private void panelPlayerMPV_MouseWheel(object sender, MouseEventArgs e) //Move through video by Scrolling
         {
-            MainFormData.progressBufferActive = true;
-
             if (e.Delta > 0)
             {
-                bool isShortVideo = SettingsHandler.VideoDuration <= 60; //Smaller seek increments in short videos
-                bool isLongVideo = SettingsHandler.VideoDuration >= 1800; //Bigger seek increments in long video (30 minutes+)
-                bool isNearEnd = SettingsHandler.VideoRemaining > 0 && SettingsHandler.VideoRemaining < 15; //Decrease seek increments at the end to trigger next etc.
+                SeekForward();
+            }
+            else if (e.Delta < 0)
+            {
+                SeekBackward();
+            }
+        }
+        private void SeekForward()
+        {
+            try
+            {
+                if (!playerMPV.IsMediaLoaded) return;
+                MainFormData.progressBufferActive = true;
+
+                var videoDuration = SettingsHandler.VideoDuration;
+                var videoRemaining = SettingsHandler.VideoRemaining;
+                var videoSizeThreshold = SettingsHandler.VideoSizeThreshold;
+
+                var customSmallSeekForwardValue = SettingsHandler.CustomSeekForwardValueSmall;
+                var customLargeSeekForwardValue = SettingsHandler.CustomSeekForwardValueLarge;
+
+                bool isShortVideo = videoDuration <= 60; //Smaller seek increments in short videos
+                bool isLongVideo = videoDuration <= videoSizeThreshold; //Bigger seek increments in long video (30 minutes)
+                bool isExtraLongVideo = videoDuration > videoSizeThreshold; //Even Bigger seek increments in extra long video 
+                //bool isNearEnd = SettingsHandler.VideoRemaining > 0 && SettingsHandler.VideoRemaining < (customSmallSeekValue + 2); //Decrease seek increments at the end to trigger next etc.                
+
+                bool isNearEnd = false;
+                if (videoRemaining > 0 && isLongVideo)
+                {
+                    isNearEnd = videoRemaining < (customSmallSeekForwardValue + 2);
+                }
+                else if (videoRemaining > 0 && isExtraLongVideo)
+                {
+                    isNearEnd = videoRemaining < (customLargeSeekForwardValue + 2);
+                }
+                else
+                {
+                    isNearEnd = videoRemaining > 0 && videoRemaining < 7;
+                }
+
 
                 if (isShortVideo)
                 {
@@ -941,52 +976,22 @@ namespace RandomVideoPlayer
                 }
                 else if (isLongVideo)
                 {
-                    MainFormData.cumulativeSeek += isNearEnd ? 1 : 15;
+                    MainFormData.cumulativeSeek += isNearEnd ? 1 : customSmallSeekForwardValue;
+                }
+                else if(isExtraLongVideo)
+                {
+                    MainFormData.cumulativeSeek += isNearEnd ? 1 : customLargeSeekForwardValue;
                 }
                 else
                 {
-                    MainFormData.cumulativeSeek += isNearEnd ? 1 : 5;
-                }
-            }
-            else if (e.Delta < 0)
-            {
-                MainFormData.cumulativeSeek -= 5;
-            }
-            var positionMS = (int)playerMPV.Position.TotalMilliseconds;
-            pbPlayerProgress.Value = positionMS + (MainFormData.cumulativeSeek * 1000);
-
-            seekTimer.Stop();
-            seekTimer.Start();
-        }
-        private void SeekForward()
-        {
-            try
-            {
-                if (!playerMPV.IsMediaLoaded) return;
-
-                int seekValue = 0;
-
-                bool isShortVideo = SettingsHandler.VideoDuration <= 60; //Smaller seek increments in short videos
-                bool isLongVideo = SettingsHandler.VideoDuration >= 1800; //Bigger seek increments in long video (30 minutes+)
-                bool isNearEnd = SettingsHandler.VideoRemaining > 0 && SettingsHandler.VideoRemaining < 15; //Decrease seek increments at the end to trigger next etc.
-
-                if (isShortVideo)
-                {
-                    seekValue = isNearEnd ? 1 : 2;
-                }
-                else if (isLongVideo)
-                {
-                    seekValue = isNearEnd ? 1 : 15;
-                }
-                else
-                {
-                    seekValue = isNearEnd ? 1 : 5;
+                    MainFormData.cumulativeSeek += isNearEnd ? 1 : 3; //Sub 60 second videos
                 }
 
-                if (seekValue != 0)
-                {
-                    playerMPV.SeekAsync(seekValue, true);
-                }
+                var positionMS = (int)playerMPV.Position.TotalSeconds;
+                pbPlayerProgress.Value = positionMS + (MainFormData.cumulativeSeek);
+
+                seekTimer.Stop();
+                seekTimer.Start();
             }
             catch (Exception) { } //Player busy
         }
@@ -995,15 +1000,41 @@ namespace RandomVideoPlayer
             try
             {
                 if (!playerMPV.IsMediaLoaded) return;
+                MainFormData.progressBufferActive = true;
 
-                int seekValue = 0;
+                var videoDuration = SettingsHandler.VideoDuration;
+                var videoRemaining = SettingsHandler.VideoRemaining;
+                var videoSizeThreshold = SettingsHandler.VideoSizeThreshold;
 
-                seekValue = -2;
+                var customSmallSeekBackwardValue = SettingsHandler.CustomSeekBackwardValueSmall;
+                var customLargeSeekBackwardValue = SettingsHandler.CustomSeekBackwardValueLarge;
 
-                if (seekValue != 0)
+                bool isShortVideo = videoDuration <= 60; 
+                bool isLongVideo = videoDuration <= videoSizeThreshold; 
+                bool isExtraLongVideo = videoDuration > videoSizeThreshold;
+
+                if (isShortVideo)
                 {
-                    playerMPV.SeekAsync(seekValue, true);
+                    MainFormData.cumulativeSeek -= 2;
                 }
+                else if (isLongVideo)
+                {
+                    MainFormData.cumulativeSeek -= customSmallSeekBackwardValue;
+                }
+                else if (isExtraLongVideo)
+                {
+                    MainFormData.cumulativeSeek -= customLargeSeekBackwardValue;
+                }
+                else
+                {
+                    MainFormData.cumulativeSeek -= 5;
+                }
+
+                var positionMS = (int)playerMPV.Position.TotalMilliseconds;
+                pbPlayerProgress.Value = positionMS + (MainFormData.cumulativeSeek * 1000);
+
+                seekTimer.Stop();
+                seekTimer.Start();
             }
             catch (Exception) { } //Player busy
         }
@@ -1152,7 +1183,9 @@ namespace RandomVideoPlayer
 
         private void OpenListBrowser()
         {
-            ListBrowserView lbForm = new ListBrowserView();
+            //ListBrowserView lbForm = new ListBrowserView();
+            ListBrowserV2View lbForm = new ListBrowserV2View();
+
             lbForm.StartPosition = FormStartPosition.CenterParent;
 
             btnListBrowser.IconColor = Color.PaleGreen;
@@ -1910,7 +1943,7 @@ namespace RandomVideoPlayer
                         var item = new ToolStripMenuItem()
                         {
                             AutoSize = tsmiAutoSize,
-                            Font = new Font("Inter Regular", 9 / DPI.Scale, FontStyle.Regular, GraphicsUnit.Point, 0),
+                            Font = new Font("Segoe UI", 9 / DPI.Scale),
                             Text = file.Name.Replace(".txt", ""),
                             Tag = file.FullName
                         };
@@ -1931,7 +1964,7 @@ namespace RandomVideoPlayer
                     var placeholder = new ToolStripMenuItem("No list found")
                     {
                         AutoSize = tsmiAutoSize,
-                        Font = new Font("Inter Regular", 9 / DPI.Scale, FontStyle.Regular, GraphicsUnit.Point, 0),
+                        Font = new Font("Segoe UI", 9 / DPI.Scale),
                     };
                     contextMenuAddToList.Items.Add(placeholder);
                     return;
@@ -1941,9 +1974,10 @@ namespace RandomVideoPlayer
                     var placeholder = new ToolStripMenuItem("Save to list:")
                     {
                         AutoSize = tsmiAutoSize,
-                        Font = new Font("Inter SemiBold", 12 / DPI.Scale, FontStyle.Bold, GraphicsUnit.Point, 0)
+                        Font = new Font("Segoe UI Bold", 12 / DPI.Scale, FontStyle.Bold)
                     };
                     contextMenuAddToList.Items.Add(placeholder);
+                    contextMenuAddToList.Items.Add(new ToolStripSeparator());
                 }
 
                 foreach (var listItem in listItens)
@@ -1958,26 +1992,24 @@ namespace RandomVideoPlayer
             //Add currently played file to specified list
             var clickedItem = sender as ToolStripMenuItem;
             var selectedList = clickedItem.Text;
-            var currentFile = MainFormData.currentFile;
+            var currentFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
 
             if (string.IsNullOrWhiteSpace(selectedList) || string.IsNullOrWhiteSpace(currentFile)) return;
 
             if(selectedList == ListHandler.ListNameTemp) 
             {
-                var tempList = new List<string>();
-                tempList.AddRange(ListHandler.CustomList);
-                tempList.Add(currentFile);
-                ListHandler.CustomList = tempList;
-                ListHandler.ListChanged = true;
-                string tempFile = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
-                MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(tempFile);
+                AddCurrentToList();
+                MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(currentFile);
                 UpdateListEditIcon();
+                ListHandler.ListChanged = true;
             }
             else
             {
                 var selectedListFulPath = clickedItem.Tag.ToString();
                 File.AppendAllText(selectedListFulPath, currentFile + Environment.NewLine);
+                playerMPV.ShowText($"Added to list: {selectedList}");
             }
+
         }
 
         private void EnableDisableSubtitlesItem_CheckedChanged(object sender, EventArgs e)

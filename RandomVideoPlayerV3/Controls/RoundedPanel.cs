@@ -44,8 +44,8 @@ namespace RandomVideoPlayer.Controls
             var path = new GraphicsPath();
             int x = bounds.X - 1;
             int y = bounds.Y - 1;
-            int w = bounds.Width;
-            int h = bounds.Height;
+            int w = bounds.Width + 2;
+            int h = bounds.Height + 2;
 
             // Clamp radii so they fit inside the side lengths
             tl = Math.Min(tl, Math.Min(w, h));

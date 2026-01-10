@@ -1,6 +1,6 @@
 ﻿using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
-using RandomVideoPlayer.View;
+using RandomVideoPlayer.Views;
 using System.Timers;
 using System.Windows.Forms;
 

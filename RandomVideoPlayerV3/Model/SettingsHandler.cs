@@ -384,20 +384,6 @@ namespace RandomVideoPlayer.Model
             }
         }
 
-        public static bool ViewIsTileFolderBrowser
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.viewIsTileFolderBrowser;
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.viewIsTileFolderBrowser = value;
-                _settingsInstance.Save();
-            }
-        }
         public static int ThumbSizeFactorFolderBrowser
         {
             get
@@ -409,6 +395,20 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.thumbSizeFactorFolderBrowser = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int ThumbSizeFactorListBrowser
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.thumbSizeFactorListBrowser;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.thumbSizeFactorListBrowser = value;
                 _settingsInstance.Save();
             }
         }
@@ -696,7 +696,76 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
+        public static int CustomSeekForwardValueSmall
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.customSeekForwardValueSmall;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.customSeekForwardValueSmall = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int CustomSeekBackwardValueSmall
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.customSeekBackwardValueSmall;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.customSeekBackwardValueSmall = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int CustomSeekForwardValueLarge
+            {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.customSeekForwardValueLarge;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.customSeekForwardValueLarge = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int CustomSeekBackwardValueLarge
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.customSeekBackwardValueLarge;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.customSeekBackwardValueLarge = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int VideoSizeThreshold
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.videoSizeThreshold;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.videoSizeThreshold = value;
+                _settingsInstance.Save();
+            }
+        }
         public static bool SubtitlesEnabled
         {
             get
@@ -1025,6 +1094,20 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+        public static bool ListBrowserV2Enabled
+        {
+            get
+            {
+                var settingsInstance = CustomSettings.Instance;
+                return settingsInstance.listBrowserV2Enabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.listBrowserV2Enabled = value;
+                _settingsInstance.Save();
+            }
+        }
 
         public static bool ThumbnailPreviewEnabled
         {
@@ -1037,6 +1120,36 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.thumbnailPreviewEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static View FileBrowserViewState
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fileBrowserViewState;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fileBrowserViewState = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public static View ListBrowserViewState
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.listBrowserViewState;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.listBrowserViewState = value;
                 _settingsInstance.Save();
             }
         }

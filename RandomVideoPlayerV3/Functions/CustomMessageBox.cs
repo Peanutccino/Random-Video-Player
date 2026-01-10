@@ -1,4 +1,4 @@
-﻿using RandomVideoPlayer.View;
+﻿using RandomVideoPlayer.Views;
 
 namespace RandomVideoPlayer.Functions
 {

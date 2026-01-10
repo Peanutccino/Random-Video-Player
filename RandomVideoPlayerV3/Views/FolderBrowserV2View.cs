@@ -7,14 +7,14 @@ using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class FolderBrowserV2View : Form
     {
         #region Variables
         FormResize formResize = new FormResize();
 
-        private readonly List<FileSystemInfo> _entries = new();
+        private readonly List<FileSystemInfo> _listItemEntries = new();
 
         private readonly Dictionary<string, int> _imageIndexCache = new(StringComparer.OrdinalIgnoreCase);
         private readonly ConcurrentDictionary<string, byte> _pendingThumbs = new();
@@ -28,8 +28,6 @@ namespace RandomVideoPlayer.View
         private const int SliderDefault = 10;
 
         private ContextMenuStrip contextHiddenPath;
-        private ContextMenuStrip contextVideoExtensions;
-        private ContextMenuStrip contextImageExtensions;
 
         private Color _textColor = Color.Black;
         private Color _textColorAccent = Color.Black;
@@ -52,10 +50,10 @@ namespace RandomVideoPlayer.View
         private List<Label> _favLabels = new List<Label>();
         public string SelectedPath { get; set; }
         private string _selectedPath { get; set; }
-        private bool _viewIsTile { get; set; } = true;
-        private List<string> _tempFavoritesList = new List<string>();
+        private View _viewState { get; set; } = View.SmallIcon;
+        private List<string> _tempFavoritesList = new();
         private string _favoriteSelected;
-        private Dictionary<IconButton, bool> _filterButtons = new Dictionary<IconButton, bool>();
+        private Dictionary<IconButton, bool> _filterButtons = new();
 
         private ToolTip toolTipInfo;
         #endregion
@@ -69,19 +67,11 @@ namespace RandomVideoPlayer.View
 
             InitializeUI();
             LoadSettings();
-
-            _selectedPath = FileManipulation.GetFirstExistingPath(
-                          () => PathHandler.TempRecentFolder,
-                          () => PathHandler.DefaultFolder,
-                          () => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
-
-            _thumbs.ColorDepth = ColorDepth.Depth32Bit;
-            _thumbs.ImageSize = _thumbSize;
         }
 
         private void FolderBrowserV2View_Load(object sender, EventArgs e)
         {
-            SwitchView();
+            SwitchView(_viewState);
             RenderDirectoryBreadcrumbs();
             RenderFavoriteBreadcrumbs();
             LoadFolder(_selectedPath);
@@ -174,20 +164,23 @@ namespace RandomVideoPlayer.View
             if (lvFileExplore.SelectedIndices.Count == 0)
                 return;
 
-            var fsi = _entries[lvFileExplore.SelectedIndices[0]];
+            var fsi = _listItemEntries[lvFileExplore.SelectedIndices[0]];
             if (fsi is DirectoryInfo dir)
                 LoadFolder(dir.FullName);
         }
 
         private void btnViewList_Click(object sender, EventArgs e)
         {
-            _viewIsTile = false;
-            SwitchView();
+            SwitchView(View.Details);
         }
-        private void btnViewTile_Click(object sender, EventArgs e)
+        private void btnViewSmallGrid_Click(object sender, EventArgs e)
         {
-            _viewIsTile = true;
-            SwitchView();
+            SwitchView(View.SmallIcon);
+        }
+
+        private void btnViewLargeGrid_Click(object sender, EventArgs e)
+        {
+            SwitchView(View.LargeIcon);
         }
 
         private void BreadcrumbPath_Click(object sender, EventArgs e)
@@ -228,12 +221,18 @@ namespace RandomVideoPlayer.View
             {
                 RenderBreadcrumbPath(_selectedPath);
             }
-            lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
+            if(_viewState == View.Details)
+                lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
         }
 
         #region Settings
         private void LoadSettings()
         {
+            _selectedPath = FileManipulation.GetFirstExistingPath(
+                          () => PathHandler.TempRecentFolder,
+                          () => PathHandler.DefaultFolder,
+                          () => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+
             _tempFavoritesList.AddRange(ListHandler.FavoriteFolderList);
 
             cbUseRecent.Checked = SettingsHandler.TempTriggered
@@ -266,7 +265,7 @@ namespace RandomVideoPlayer.View
             ListHandler.IncludeSubfolders = cbIncludeSubfolders.Checked;
 
             SettingsHandler.ThumbSizeFactorFolderBrowser = sliderZoom.Value;
-            SettingsHandler.ViewIsTileFolderBrowser = _viewIsTile;
+            SettingsHandler.FileBrowserViewState = _viewState;
 
             PathHandler.TempRecentFolder = _selectedPath;
         }
@@ -276,6 +275,9 @@ namespace RandomVideoPlayer.View
         private void InitializeUI()
         {
             ThemeManager.ApplyThemeFBV2(this);
+
+            _thumbs.ColorDepth = ColorDepth.Depth32Bit;
+            _thumbs.ImageSize = _thumbSize;
 
             lvFileExplore.LargeImageList = _thumbs;
             lvFileExplore.SmallImageList = _thumbs;
@@ -287,7 +289,7 @@ namespace RandomVideoPlayer.View
             _highlightColor = ThemeManager.CurrentTheme.FbHighlightColor;
 
             sliderZoom.Value = SettingsHandler.ThumbSizeFactorFolderBrowser;
-            _viewIsTile = SettingsHandler.ViewIsTileFolderBrowser;
+            _viewState = SettingsHandler.FileBrowserViewState;
 
             var renderer = new CustomRenderer()
             {
@@ -307,7 +309,8 @@ namespace RandomVideoPlayer.View
             EnsureBaselineIcons();
             WireIconButton(btnResetSize);
             WireIconButton(btnViewList);
-            WireIconButton(btnViewTile);
+            WireIconButton(btnViewSmallGrid);
+            WireIconButton(btnViewLargeGrid);
             WireIconButton(btnFilterVideo);
             WireIconButton(btnFilterImage);
             WireIconButton(btnFilterScript);
@@ -321,10 +324,10 @@ namespace RandomVideoPlayer.View
             ApplyIcon(btnStart, SVGTemplates.PlayIcon, _textColorAccent, _hoverColor);
             ApplyIcon(btnBack, SVGTemplates.BackIcon, _textColorAccent, _hoverColor, 24, 24);
 
-            toolTipInfo = new ToolTip() 
-            { 
+            toolTipInfo = new ToolTip()
+            {
                 BackColor = _backColorLight,
-                ForeColor= _textColor,
+                ForeColor = _textColor,
             };
             SetupTooltips();
             UpdateDPIScaling(this);
@@ -346,24 +349,33 @@ namespace RandomVideoPlayer.View
             }
         }
 
-        private void SwitchView()
+        private void SwitchView(View targetView)
         {
             lvFileExplore.BeginUpdate();
-            lvFileExplore.View = _viewIsTile ? System.Windows.Forms.View.LargeIcon : System.Windows.Forms.View.Details;
-            lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
-            if (_viewIsTile)
-            {
-                SetHighlight(btnViewTile, true);
-                SetHighlight(btnViewList, false);
+            lvFileExplore.View = targetView;     
+            _viewState = targetView;
 
-                LoadFolder(_selectedPath);
-            }
-            else
+            switch (targetView)
             {
-                SetHighlight(btnViewList, true);
-                SetHighlight(btnViewTile, false);
-
-                LoadFolder(_selectedPath);
+                case View.Details:
+                    lvFileExplore.Columns[0].Width = lvFileExplore.ClientSize.Width - 30;
+                    SetHighlight(btnViewList, true);
+                    SetHighlight(btnViewSmallGrid, false);
+                    SetHighlight(btnViewLargeGrid, false);
+                    LoadFolder(_selectedPath);
+                    break;
+                case View.SmallIcon:                    
+                    SetHighlight(btnViewList, false);
+                    SetHighlight(btnViewSmallGrid, true);
+                    SetHighlight(btnViewLargeGrid, false);
+                    LoadFolder(_selectedPath);
+                    break;
+                case View.LargeIcon:
+                    SetHighlight(btnViewList, false);
+                    SetHighlight(btnViewSmallGrid, false);
+                    SetHighlight(btnViewLargeGrid, true);
+                    LoadFolder(_selectedPath);
+                    break;
             }
 
             lvFileExplore.EndUpdate();
@@ -414,6 +426,8 @@ namespace RandomVideoPlayer.View
             int newWidth = ThumbMin + (sliderValue * (ThumbMax - ThumbMin)) / 100;
             int newHeight = (int)Math.Round(newWidth / aspectRatio);
             lblZoomFactor.Text = $"{sliderValue}%";
+            if (_viewState == View.SmallIcon) lvFileExplore.Columns[0].Width = (newWidth * 3);
+            
             ApplyThumbnailSize(newWidth, newHeight);
         }
         private void ToggleFilter(IconButton? btn)
@@ -453,7 +467,8 @@ namespace RandomVideoPlayer.View
             toolTipInfo.SetToolTip(sliderZoom, "Change tile size");
 
             toolTipInfo.SetToolTip(btnViewList, "Change view to list");
-            toolTipInfo.SetToolTip(btnViewTile, "Change view to tile");
+            toolTipInfo.SetToolTip(btnViewSmallGrid, "Change view to grid");
+            toolTipInfo.SetToolTip(btnViewLargeGrid, "Change view to tile");
 
             toolTipInfo.SetToolTip(btnBack, "MB4 | Go back one folder");
             toolTipInfo.SetToolTip(btnStart, "Use current folder to play from");
@@ -580,15 +595,15 @@ namespace RandomVideoPlayer.View
 
             _selectedPath = path;
             RenderBreadcrumbPath(path);
-            _entries.Clear();
+            _listItemEntries.Clear();
 
             var dir = new DirectoryInfo(path);
-            _entries.AddRange(dir.EnumerateDirectories());
+            _listItemEntries.AddRange(dir.EnumerateDirectories());
 
-            _entries.AddRange(dir.EnumerateFiles()
+            _listItemEntries.AddRange(dir.EnumerateFiles()
                                  .Where(f => IsAllowed(f.Extension)));
 
-            ApplyVirtualListSize(_entries.Count);
+            ApplyVirtualListSize(_listItemEntries.Count);
             _cachedRange = (-1, -1);
             HighLightDrive(path);
             lvFileExplore.EndUpdate();
@@ -602,7 +617,7 @@ namespace RandomVideoPlayer.View
             if (extension.StartsWith(".", StringComparison.Ordinal))
                 extension = extension[1..]; // remove leading dot
 
-            if(allowedExtensions == null || allowedExtensions.Length == 0)
+            if (allowedExtensions == null || allowedExtensions.Length == 0)
             {
                 return ListHandler.CombinedExtensions.Contains(extension);
             }
@@ -767,6 +782,7 @@ namespace RandomVideoPlayer.View
                 Text = text,
                 AutoSize = false,
                 Width = flowPanelDir.Width,
+                AutoEllipsis = true,
                 Height = 18,
                 ForeColor = _textColor,
                 Font = new Font("Segoe UI Semibold", 9 / DPI.Scale, FontStyle.Bold),
@@ -820,6 +836,7 @@ namespace RandomVideoPlayer.View
                 Text = text,
                 AutoSize = false,
                 Width = flowPanelDir.Width,
+                AutoEllipsis = true,
                 Height = 18,
                 ForeColor = _textColor,
                 Font = new Font("Segoe UI Semibold", 9 / DPI.Scale, FontStyle.Bold),
@@ -835,6 +852,8 @@ namespace RandomVideoPlayer.View
             lbl.MouseLeave += (s, e) => ((Label)s).ForeColor = _textColor;
             lbl.MouseDown += (s, e) => { if (e.Button == MouseButtons.Left) ((Label)s).ForeColor = _pressedColor; };
             lbl.MouseUp += (s, e) => { if (e.Button == MouseButtons.Left) ((Label)s).ForeColor = _highlightColor; };
+
+            toolTipInfo.SetToolTip(lbl, absolutePath);            
 
             _favLabels.Add(lbl);
 
@@ -870,7 +889,7 @@ namespace RandomVideoPlayer.View
         #region Image handling
         private void lvFileExplore_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            var fsi = _entries[e.ItemIndex];
+            var fsi = _listItemEntries[e.ItemIndex];
             var item = new ListViewItem(fsi.Name) { Tag = fsi };
 
             if (_imageIndexCache.TryGetValue(fsi.FullName, out int index))
@@ -893,7 +912,6 @@ namespace RandomVideoPlayer.View
                     imageIndex = 2;
                 }
                 item.ImageIndex = imageIndex;
-                //item.ImageIndex = fsi is DirectoryInfo ? 0 : 1;
                 QueueThumbnailLoad(fsi);
             }
 
@@ -906,9 +924,9 @@ namespace RandomVideoPlayer.View
 
             _cachedRange = (e.StartIndex, e.EndIndex);
 
-            for (int i = e.StartIndex; i <= e.EndIndex && i < _entries.Count; i++)
+            for (int i = e.StartIndex; i <= e.EndIndex && i < _listItemEntries.Count; i++)
             {
-                var fsi = _entries[i];
+                var fsi = _listItemEntries[i];
                 if (!_imageIndexCache.ContainsKey(fsi.FullName))
                     QueueThumbnailLoad(fsi);
             }
@@ -942,22 +960,20 @@ namespace RandomVideoPlayer.View
                         {
                             imageIndex = 2;
                         }
-
-                        //int imageIndex = fsi is DirectoryInfo ? 0 : _thumbs.Images.Count;
-
                         using var fitted = FitThumbnail(raw, _thumbSize, _backColorDark);
                         _thumbs.Images.Add((Image)fitted.Clone());
                         _imageIndexCache[fsi.FullName] = imageIndex;
 
-                        int idx = _entries.FindIndex(info => info.FullName == fsi.FullName);
+                        int idx = _listItemEntries.FindIndex(info => info.FullName == fsi.FullName);
                         if (idx >= 0)
                         {
                             lvFileExplore.RedrawItems(idx, idx, false);
                         }
                     }));
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Error.Log(ex, "Failed to create thumbnail");
                     // ignore bad thumbnails, keep fallback
                 }
                 finally
@@ -1068,7 +1084,7 @@ namespace RandomVideoPlayer.View
             _thumbs.Images.Add("folder", SVGIcon(SVGTemplates.Foldericon, Color.FromArgb(249, 185, 27), Color.FromArgb(255, 222, 126))); // index 0
             _thumbs.Images.Add("video", SVGIcon(SVGTemplates.VideoIcon, _textColor, _backColorDark)); // index 1
             _thumbs.Images.Add("image", SVGIcon(SVGTemplates.ImageIcon, _textColor, _backColorDark)); // index 2
-        } 
+        }
 
         private void ApplyIcon(Button target, string template, Color main, Color accent, int width = 20, int height = 20)
         {
@@ -1111,9 +1127,9 @@ namespace RandomVideoPlayer.View
             var hColor = _highlightColor;
 
             return Color.FromArgb(baseColor.A,
-                Math.Clamp(delta + hColor.R , 0, 255),
-                Math.Clamp(delta + hColor.G , 0, 255),
-                Math.Clamp(delta + hColor.B , 0, 255));
+                Math.Clamp(delta + hColor.R, 0, 255),
+                Math.Clamp(delta + hColor.G, 0, 255),
+                Math.Clamp(delta + hColor.B, 0, 255));
         }
 
         #region Shell sequence
@@ -1157,7 +1173,6 @@ namespace RandomVideoPlayer.View
 
         #endregion
         #endregion
-
 
     }
 }

@@ -42,6 +42,8 @@ namespace RandomVideoPlayer.Model
         public Color LbBackColorSideLight { get; init; }
         public Color LbBackColorSideDark { get; init; }
         public Color LbAccentColorSide { get; init; }
+        public Color LbHighlightColorMain { get; init; }
+        public Color LbHighlightColorSide { get; init; }
         #endregion
     }
 }

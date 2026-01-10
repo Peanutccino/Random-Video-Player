@@ -3,7 +3,7 @@ using RandomVideoPlayer.Model;
 using System.Data;
 using System.Runtime.InteropServices;
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class SaveListView : Form
     {

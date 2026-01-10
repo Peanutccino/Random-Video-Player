@@ -1,4 +1,4 @@
-﻿namespace RandomVideoPlayer.View
+﻿namespace RandomVideoPlayer.Views
 {
     partial class FolderBrowserV2View
     {
@@ -59,7 +59,8 @@
             sliderZoom = new RandomVideoPlayer.Controls.FlatSlider();
             btnResetSize = new FontAwesome.Sharp.IconButton();
             panelToolbar2 = new Panel();
-            btnViewTile = new FontAwesome.Sharp.IconButton();
+            btnViewLargeGrid = new FontAwesome.Sharp.IconButton();
+            btnViewSmallGrid = new FontAwesome.Sharp.IconButton();
             btnViewList = new FontAwesome.Sharp.IconButton();
             panelToolbar4 = new Panel();
             cbIncludeSubfolders = new RandomVideoPlayer.Controls.RoundedCheckBox();
@@ -143,7 +144,7 @@
             // 
             flowPanelPath.BackColor = Color.FromArgb(192, 64, 0);
             flowPanelPath.Dock = DockStyle.Fill;
-            flowPanelPath.Font = new Font("Inter", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            flowPanelPath.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             flowPanelPath.Location = new Point(31, 2);
             flowPanelPath.Name = "flowPanelPath";
             flowPanelPath.Padding = new Padding(5, 5, 0, 0);
@@ -373,7 +374,7 @@
             panelFileExplore.Location = new Point(140, 34);
             panelFileExplore.Margin = new Padding(0, 3, 0, 0);
             panelFileExplore.Name = "panelFileExplore";
-            panelFileExplore.Padding = new Padding(5, 8, 3, 3);
+            panelFileExplore.Padding = new Padding(6, 6, 2, 2);
             panelFileExplore.RadiusBottomLeft = 0;
             panelFileExplore.RadiusBottomRight = 0;
             panelFileExplore.RadiusTopLeft = 16;
@@ -389,9 +390,10 @@
             lvFileExplore.Dock = DockStyle.Fill;
             lvFileExplore.FullRowSelect = true;
             lvFileExplore.HeaderStyle = ColumnHeaderStyle.None;
-            lvFileExplore.Location = new Point(5, 8);
+            lvFileExplore.Location = new Point(6, 6);
             lvFileExplore.Name = "lvFileExplore";
-            lvFileExplore.Size = new Size(931, 452);
+            lvFileExplore.ShowItemToolTips = true;
+            lvFileExplore.Size = new Size(931, 455);
             lvFileExplore.TabIndex = 0;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.VirtualMode = true;
@@ -551,7 +553,8 @@
             // panelToolbar2
             // 
             panelToolbar2.BackColor = Color.LimeGreen;
-            panelToolbar2.Controls.Add(btnViewTile);
+            panelToolbar2.Controls.Add(btnViewLargeGrid);
+            panelToolbar2.Controls.Add(btnViewSmallGrid);
             panelToolbar2.Controls.Add(btnViewList);
             panelToolbar2.Dock = DockStyle.Fill;
             panelToolbar2.Location = new Point(215, 0);
@@ -560,22 +563,39 @@
             panelToolbar2.Size = new Size(131, 31);
             panelToolbar2.TabIndex = 1;
             // 
-            // btnViewTile
+            // btnViewLargeGrid
             // 
-            btnViewTile.Dock = DockStyle.Left;
-            btnViewTile.FlatAppearance.BorderSize = 0;
-            btnViewTile.FlatStyle = FlatStyle.Flat;
-            btnViewTile.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            btnViewTile.IconChar = FontAwesome.Sharp.IconChar.TableCells;
-            btnViewTile.IconColor = Color.Black;
-            btnViewTile.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnViewTile.IconSize = 30;
-            btnViewTile.Location = new Point(40, 0);
-            btnViewTile.Name = "btnViewTile";
-            btnViewTile.Size = new Size(40, 31);
-            btnViewTile.TabIndex = 21;
-            btnViewTile.UseVisualStyleBackColor = true;
-            btnViewTile.Click += btnViewTile_Click;
+            btnViewLargeGrid.Dock = DockStyle.Left;
+            btnViewLargeGrid.FlatAppearance.BorderSize = 0;
+            btnViewLargeGrid.FlatStyle = FlatStyle.Flat;
+            btnViewLargeGrid.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnViewLargeGrid.IconChar = FontAwesome.Sharp.IconChar.ThLarge;
+            btnViewLargeGrid.IconColor = Color.Black;
+            btnViewLargeGrid.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnViewLargeGrid.IconSize = 30;
+            btnViewLargeGrid.Location = new Point(80, 0);
+            btnViewLargeGrid.Name = "btnViewLargeGrid";
+            btnViewLargeGrid.Size = new Size(40, 31);
+            btnViewLargeGrid.TabIndex = 22;
+            btnViewLargeGrid.UseVisualStyleBackColor = true;
+            btnViewLargeGrid.Click += btnViewLargeGrid_Click;
+            // 
+            // btnViewSmallGrid
+            // 
+            btnViewSmallGrid.Dock = DockStyle.Left;
+            btnViewSmallGrid.FlatAppearance.BorderSize = 0;
+            btnViewSmallGrid.FlatStyle = FlatStyle.Flat;
+            btnViewSmallGrid.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            btnViewSmallGrid.IconChar = FontAwesome.Sharp.IconChar.TableCells;
+            btnViewSmallGrid.IconColor = Color.Black;
+            btnViewSmallGrid.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnViewSmallGrid.IconSize = 30;
+            btnViewSmallGrid.Location = new Point(40, 0);
+            btnViewSmallGrid.Name = "btnViewSmallGrid";
+            btnViewSmallGrid.Size = new Size(40, 31);
+            btnViewSmallGrid.TabIndex = 21;
+            btnViewSmallGrid.UseVisualStyleBackColor = true;
+            btnViewSmallGrid.Click += btnViewSmallGrid_Click;
             // 
             // btnViewList
             // 
@@ -728,7 +748,7 @@
         private Controls.FlatSlider sliderZoom;
         private FontAwesome.Sharp.IconButton btnResetSize;
         private FontAwesome.Sharp.IconButton btnViewList;
-        private FontAwesome.Sharp.IconButton btnViewTile;
+        private FontAwesome.Sharp.IconButton btnViewSmallGrid;
         private Label lblZoomFactor;
         private FontAwesome.Sharp.IconButton btnFilterVideo;
         private Label labelPlaceholder3;
@@ -747,5 +767,6 @@
         private Panel panelToolbar1;
         private Panel panelToolbar2;
         private Panel panelToolbar4;
+        private FontAwesome.Sharp.IconButton btnViewLargeGrid;
     }
 }

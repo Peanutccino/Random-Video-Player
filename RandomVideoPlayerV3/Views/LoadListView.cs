@@ -2,7 +2,7 @@
 using RandomVideoPlayer.Model;
 using System.Runtime.InteropServices;
 
-namespace RandomVideoPlayer.View
+namespace RandomVideoPlayer.Views
 {
     public partial class LoadListView : Form
     {

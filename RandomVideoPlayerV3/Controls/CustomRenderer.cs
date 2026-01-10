@@ -15,9 +15,6 @@ namespace RandomVideoPlayer.Controls
         public Color BackgroundColor { get; set; } = Color.White;
         public Color HighlightColor { get; set; } = Color.Cyan;
 
-        //public CustomRenderer()
-        //    : base(new ColorTable()) {}
-
         public CustomRenderer()
             : this(Color.Black, Color.White) { }
 
@@ -92,39 +89,6 @@ namespace RandomVideoPlayer.Controls
         public override Color MenuItemBorder => textColor;
         public override Color SeparatorDark => textColor;
         public override Color SeparatorLight => textColor;
-
-        //public override Color SeparatorDark
-        //{
-        //    get { return ThemeManager.CurrentTheme.TextColor; }
-        //}
-        //public override Color SeparatorLight
-        //{
-        //    get { return ThemeManager.CurrentTheme.TextColor; }
-        //}
-        //public override Color MenuItemBorder
-        //{
-        //    get { return ThemeManager.CurrentTheme.TextColor; }
-        //}
-        //public override Color MenuItemSelected
-        //{
-        //    get { return ThemeManager.CurrentTheme.TextColor; }
-        //}
-        //public override Color ToolStripDropDownBackground
-        //{
-        //    get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
-        //}
-        //public override Color ImageMarginGradientBegin
-        //{
-        //    get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
-        //}
-        //public override Color ImageMarginGradientMiddle
-        //{
-        //    get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
-        //}
-        //public override Color ImageMarginGradientEnd
-        //{
-        //    get { return ThemeManager.CurrentTheme.ToolMenuBackColor; }
-        //}
 
         public void UpdateColors(Color text, Color background)
         {
