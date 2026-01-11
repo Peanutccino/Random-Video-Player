@@ -61,10 +61,6 @@ namespace RandomVideoPlayer.Views
         public FolderBrowserV2View()
         {
             InitializeComponent();
-
-            this.Padding = new Padding(formResize.BorderSize);
-            this.BackColor = Color.FromArgb(255, 221, 26);
-
             InitializeUI();
             LoadSettings();
         }
@@ -82,6 +78,7 @@ namespace RandomVideoPlayer.Views
 
             this.Close();
         }
+
         private void btnBack_Click(object sender, EventArgs e)
         {
             GoBack();
@@ -173,6 +170,7 @@ namespace RandomVideoPlayer.Views
         {
             SwitchView(View.Details);
         }
+
         private void btnViewSmallGrid_Click(object sender, EventArgs e)
         {
             SwitchView(View.SmallIcon);
@@ -205,15 +203,21 @@ namespace RandomVideoPlayer.Views
             var targetPath = (string)((Label)sender).Tag;
             LoadFolder(targetPath);
         }
+
         private void lblTitleBar_MouseDown(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
-
         private void FolderBrowserV2View_Resize(object sender, EventArgs e)
         {
             formResize.AdjustForm(this);
+
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                formResize.TempSizeFb = DPI.GetSizeScaled(this.Size);
+                formResize.FormSizeFbSaved = formResize.TempSizeFb;
+            }
         }
         private void FolderBrowserV2View_ResizeEnd(object sender, EventArgs e)
         {
@@ -221,7 +225,7 @@ namespace RandomVideoPlayer.Views
             {
                 RenderBreadcrumbPath(_selectedPath);
             }
-            if(_viewState == View.Details)
+            if (_viewState == View.Details)
                 lvFileExplore.Columns[0].Width = lvFileExplore.Width - 30;
         }
 
@@ -236,16 +240,25 @@ namespace RandomVideoPlayer.Views
             _tempFavoritesList.AddRange(ListHandler.FavoriteFolderList);
 
             cbUseRecent.Checked = SettingsHandler.TempTriggered
-                                ? SettingsHandler.RecentChecked
+                                ? SettingsHandler.RecentCheckedTemp
                                 : (SettingsHandler.RecentCheckedSaved ? SettingsHandler.RecentChecked : cbUseRecent.Checked);
 
             sliderLatestCount.Value = SettingsHandler.TempTriggered
                                     ? SettingsHandler.RecentCountSavedTemp
                                     : (SettingsHandler.RecentCountSaved ? SettingsHandler.RecentCount : sliderLatestCount.Value);
+
             cbUseRecent.Text = $"Latest {sliderLatestCount.Value} files";
             cbIncludeSubfolders.Checked = ListHandler.IncludeSubfolders;
 
             _thumbPreviewEnabled = SettingsHandler.ThumbnailPreviewEnabled;
+
+            if (formResize.SaveLastSizeFb)
+            {
+                formResize.FormSizeFbSaved = new Size(formResize.FormSizeFbSaved.Width - 16, formResize.FormSizeFbSaved.Height - 39);
+                this.ClientSize = formResize.FormSizeFbSaved;
+            }
+
+            this.Padding = new Padding(formResize.BorderSize);
         }
 
         private void SaveSettings()
@@ -268,6 +281,8 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.FileBrowserViewState = _viewState;
 
             PathHandler.TempRecentFolder = _selectedPath;
+
+            formResize.FormSizeFbSaved = formResize.TempSizeFb;
         }
         #endregion
 
@@ -352,7 +367,7 @@ namespace RandomVideoPlayer.Views
         private void SwitchView(View targetView)
         {
             lvFileExplore.BeginUpdate();
-            lvFileExplore.View = targetView;     
+            lvFileExplore.View = targetView;
             _viewState = targetView;
 
             switch (targetView)
@@ -364,7 +379,7 @@ namespace RandomVideoPlayer.Views
                     SetHighlight(btnViewLargeGrid, false);
                     LoadFolder(_selectedPath);
                     break;
-                case View.SmallIcon:                    
+                case View.SmallIcon:
                     SetHighlight(btnViewList, false);
                     SetHighlight(btnViewSmallGrid, true);
                     SetHighlight(btnViewLargeGrid, false);
@@ -852,7 +867,7 @@ namespace RandomVideoPlayer.Views
             lbl.MouseDown += (s, e) => { if (e.Button == MouseButtons.Left) ((Label)s).ForeColor = _pressedColor; };
             lbl.MouseUp += (s, e) => { if (e.Button == MouseButtons.Left) ((Label)s).ForeColor = _highlightColor; };
 
-            toolTipInfo.SetToolTip(lbl, absolutePath);            
+            toolTipInfo.SetToolTip(lbl, absolutePath);
 
             _favLabels.Add(lbl);
 
@@ -970,7 +985,7 @@ namespace RandomVideoPlayer.Views
                         }
                     }));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Error.Log(ex, "Failed to create thumbnail");
                     // ignore bad thumbnails, keep fallback
@@ -1172,6 +1187,7 @@ namespace RandomVideoPlayer.Views
 
         #endregion
         #endregion
+
 
     }
 }

@@ -25,6 +25,11 @@ namespace RandomVideoPlayer.Views
             this.Size = DPI.GetSizeScaled(this.Size);
 
             lblAction.Text = hotkeySetting.Action;
+
+            ThemeManager.ApplyThemeLSView(this);
+
+            lblAction.ForeColor = ThemeManager.CurrentTheme.LbHighlightColorSide;
+            lblSelectedKey.ForeColor = ThemeManager.CurrentTheme.LbHighlightColorSide;
         }
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)

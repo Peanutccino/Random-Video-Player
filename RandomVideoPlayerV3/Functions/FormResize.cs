@@ -7,42 +7,96 @@ namespace RandomVideoPlayer.Functions
     {
         private int _borderSize = 2;
         private bool _windowExclusiveFullscreen = false;
-        private Size _tempSize;
 
-
-        public Size FormSize
+        public Size FormSizeSaved
         {
             get 
             {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.FormSize; 
+                return _settingsInstance.formSizeMainSaved; 
             }
             set 
             {
                 var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.FormSize = value;
+                _settingsInstance.formSizeMainSaved = value;
                 _settingsInstance.Save();
             }
         }
 
-        public Size TempSize
-        {
-            get { return _tempSize; }
-            set { _tempSize = value; }
-        }
-
-
-        public bool SaveLastSize
+        public Size FormSizeFbSaved
         {
             get 
-            {
+            {                 
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.lastSize; 
+                return _settingsInstance.formSizeFbSaved;
             }
             set
             {
                 var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.lastSize = value;
+                _settingsInstance.formSizeFbSaved = value;
+                _settingsInstance.Save();
+            }
+        }
+        public Size FormSizeLbSaved
+        {
+            get 
+            {                 
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.formSizeLbSaved;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.formSizeLbSaved = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public Size TempSizeMain { get; set; }
+        public Size TempSizeFb { get; set; }
+        public Size TempSizeLb { get; set; }
+
+        public bool SaveLastSizeMain
+        {
+            get 
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.saveLastSizeMain; 
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.saveLastSizeMain = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public bool SaveLastSizeFb
+        {
+            get 
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.saveLastSizeFb; 
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.saveLastSizeFb = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        public bool SaveLastSizeLb
+        {
+            get 
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.saveLastSizeLb; 
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.saveLastSizeLb = value;
                 _settingsInstance.Save();
             }
         }

@@ -37,7 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\RVP-Circle-Multi.ico" />
+    <Content Include="Resources\RVP-Circle-Multi.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -62,7 +64,7 @@
 
   <ItemGroup>
     <Reference Include="Mpv.NET">
-      <HintPath>..\..\..\Visual Studio Libraries\Mpv.NET - Modified\bin\Release\netstandard2.0\Mpv.NET.dll</HintPath>
+      <HintPath>..\..\..\Visual Studio Libraries\Mpv.NET - Modified\bin\Release\net6.0\Mpv.NET.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -86,7 +88,7 @@
     <None Update="lib\libmpv-2.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\RVP_BlackBG.png">
+    <None Update="Resources\RVP-Splash.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

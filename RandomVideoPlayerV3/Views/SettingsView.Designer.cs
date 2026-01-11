@@ -223,10 +223,10 @@
             sbtnInterface.FlatAppearance.BorderSize = 0;
             sbtnInterface.FlatStyle = FlatStyle.Flat;
             sbtnInterface.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            sbtnInterface.IconChar = FontAwesome.Sharp.IconChar.Uikit;
+            sbtnInterface.IconChar = FontAwesome.Sharp.IconChar.Brush;
             sbtnInterface.IconColor = Color.Black;
             sbtnInterface.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            sbtnInterface.IconSize = 30;
+            sbtnInterface.IconSize = 28;
             sbtnInterface.ImageAlign = ContentAlignment.MiddleRight;
             sbtnInterface.Location = new Point(0, 360);
             sbtnInterface.Name = "sbtnInterface";

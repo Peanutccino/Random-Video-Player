@@ -83,10 +83,6 @@ namespace RandomVideoPlayer.Views
         public ListBrowserV2View()
         {
             InitializeComponent();
-
-            this.Padding = new Padding(formResize.BorderSize);
-            this.BackColor = Color.FromArgb(255, 221, 26);
-
             InitializeUI();
             LoadSettings();
         }
@@ -378,6 +374,14 @@ namespace RandomVideoPlayer.Views
             DisplayCustomList();
             UpdateListInfo();
             InitializeFilterContextMenus();
+
+            if (formResize.SaveLastSizeLb)
+            {
+                formResize.FormSizeLbSaved = new Size(formResize.FormSizeLbSaved.Width - 16, formResize.FormSizeLbSaved.Height - 39);
+                this.ClientSize = formResize.FormSizeLbSaved;
+            }
+
+            this.Padding = new Padding(formResize.BorderSize);
         }
         private void SaveSettings()
         {
@@ -397,8 +401,9 @@ namespace RandomVideoPlayer.Views
             ListHandler.ExtensionFilterForList = _extensionFilter;
             SettingsHandler.ShowFullPathCustomList = _showFullPathCustomList;
 
-
             PathHandler.TempRecentFolder = _selectedPath;
+
+            formResize.FormSizeLbSaved = formResize.TempSizeLb;
         }
         #endregion
 
@@ -707,8 +712,8 @@ namespace RandomVideoPlayer.Views
             toolTipInfo.SetToolTip(btnAddFav, "Add current folder to your list of favorites");
             toolTipInfo.SetToolTip(btnDeleteFav, "Delete selected folder from your list of favorites");
 
-            toolTipInfo.SetToolTip(btnFilterVideo, "Use selected video extensions");
-            toolTipInfo.SetToolTip(btnFilterImage, "Use selected image extensions");
+            toolTipInfo.SetToolTip(btnFilterVideo, "Use selected video extensions | Right-click to select extensions");
+            toolTipInfo.SetToolTip(btnFilterImage, "Use selected image extensions | Right-click to select extensions");
             toolTipInfo.SetToolTip(btnFilterScript, "Play only videos that have a funscript available");
 
             toolTipInfo.SetToolTip(btnAddSelected, "Add all files and files from subfolders within selected items on the left");
@@ -1303,7 +1308,7 @@ namespace RandomVideoPlayer.Views
                 Text = text,
                 AutoSize = false,
                 Width = flowPanelDir.Width,
-                AutoEllipsis = true,                
+                AutoEllipsis = true,
                 Height = 18,
                 ForeColor = _textColor,
                 Font = new Font("Segoe UI Semibold", 9 / DPI.Scale, FontStyle.Bold),
@@ -1654,6 +1659,12 @@ namespace RandomVideoPlayer.Views
         private void ListBrowserV2View_Resize(object sender, EventArgs e)
         {
             formResize.AdjustForm(this);
+
+            if (this.WindowState == FormWindowState.Normal)
+            {
+                formResize.TempSizeLb = DPI.GetSizeScaled(this.Size);
+                formResize.FormSizeLbSaved = formResize.TempSizeLb;
+            }
         }
 
         private void ListBrowserV2View_ResizeEnd(object sender, EventArgs e)
@@ -1708,7 +1719,7 @@ namespace RandomVideoPlayer.Views
         #region Drag Drop
         private void lvCustomList_DragEnter(object sender, DragEventArgs e)
         {
-            if(e.Data.GetDataPresent(DummyPayload) == true || e.Data.GetDataPresent(DataFormats.FileDrop) == true)
+            if (e.Data.GetDataPresent(DummyPayload) == true || e.Data.GetDataPresent(DataFormats.FileDrop) == true)
             {
                 e.Effect = DragDropEffects.Copy;
             }
@@ -1720,22 +1731,22 @@ namespace RandomVideoPlayer.Views
 
         private void lvCustomList_DragDrop(object sender, DragEventArgs e)
         {
-            if(e.Data?.GetDataPresent(DummyPayload) == true)
+            if (e.Data?.GetDataPresent(DummyPayload) == true)
             {
                 FillCustomListFromSelection();
                 ListHandler.ListChanged = true;
             }
-            else if(e.Data?.GetDataPresent(DataFormats.FileDrop) == true)
+            else if (e.Data?.GetDataPresent(DataFormats.FileDrop) == true)
             {
                 var droppedExternalFiles = ((string[])e.Data.GetData(DataFormats.FileDrop));
 
-                foreach(var path in droppedExternalFiles)
+                foreach (var path in droppedExternalFiles)
                 {
                     if (Directory.Exists(path))
                     {
                         FillCustomListFromDirectory(path);
                     }
-                    else if(File.Exists(path))
+                    else if (File.Exists(path))
                     {
                         _localCustomList.AddRange(ListHandler.EnumerateEligibleVideo(path));
                     }
@@ -1783,6 +1794,7 @@ namespace RandomVideoPlayer.Views
             return dragRect.Contains(current);
         }
         #endregion
+
 
 
 

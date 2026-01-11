@@ -14,6 +14,7 @@ using UserControl = System.Windows.Forms.UserControl;
 
 namespace RandomVideoPlayer.UserControls
 {
+    public sealed record ThemeOption(string Name, Theme Theme);
     public partial class InterfaceUserControl : UserControl
     {
         private SettingsModel settings;
@@ -134,6 +135,29 @@ namespace RandomVideoPlayer.UserControls
             UpdateListEditIcon();
             UpdateMoveFileIcon();
             RepositionButtons();
+
+            IReadOnlyDictionary<string, Theme> themes = ThemeLoader.LoadThemes();
+
+            if (!themes.ContainsKey("Light"))
+            {
+                themes = themes.Concat(new[] {
+            new KeyValuePair<string, Theme>("Light", ThemeDefaults.Light)}).ToDictionary(k => k.Key, k => k.Value);
+            }
+
+            var options = themes
+                .Select(kvp => new ThemeOption(kvp.Key, kvp.Value))
+                .OrderBy(opt => opt.Name)
+                .ToList();
+
+            comboThemes.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboThemes.DisplayMember = nameof(ThemeOption.Name);
+            comboThemes.ValueMember = nameof(ThemeOption.Theme);
+            comboThemes.DataSource = options;
+
+            string savedThemeName = settings.SelectedTheme;
+            var match = options.FirstOrDefault(o => o.Name == savedThemeName)
+                        ?? options.First(o => o.Name == "Light");
+            comboThemes.SelectedItem = match;
         }
         private void BindControls()
         {
@@ -150,6 +174,14 @@ namespace RandomVideoPlayer.UserControls
             cbShowButtonToPlayFromCurrentFolder.CheckedChanged += (s, e) =>
             {
                 settings.ShowButtonToPlayFromCurrentFolder = cbShowButtonToPlayFromCurrentFolder.Checked;
+            };
+
+            comboThemes.SelectedIndexChanged += (s, e) =>
+            {
+                if (comboThemes.SelectedItem is ThemeOption selectedOption)
+                {
+                    settings.SelectedTheme = selectedOption.Name;
+                }
             };
         }
         private bool suppressCheckedChanged = false;

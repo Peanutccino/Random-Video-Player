@@ -325,7 +325,6 @@ namespace RandomVideoPlayer.Functions
                 ApplyThemeLBV2(child);
             }
         }
-
         public static void ApplyThemeFB(Control root)
         {
             root.BackColor = CurrentTheme.FbAccentColor;
@@ -403,7 +402,6 @@ namespace RandomVideoPlayer.Functions
                 ApplyThemeFB(child);
             }
         }
-
         public static void ApplyThemeLB(Control root)
         {
             root.BackColor = CurrentTheme.LbAccentColorMain;
@@ -505,7 +503,6 @@ namespace RandomVideoPlayer.Functions
                 ApplyThemeLB(child);
             }
         }
-
         public static void ApplyThemeLSView(Control root)
         {
             root.BackColor = CurrentTheme.LbAccentColorSide;

@@ -57,7 +57,9 @@ namespace RandomVideoPlayer.Functions
                     new HotkeySetting { Action = "RotateClockwise", Key = Keys.NumPad3, Modifiers = Keys.Alt },
                     new HotkeySetting { Action = "Rotate180", Key = Keys.NumPad2, Modifiers = Keys.Alt },
                     new HotkeySetting { Action = "RotateCounterClockwise", Key = Keys.NumPad1, Modifiers = Keys.Alt },
-                    new HotkeySetting { Action = "ResetVideoManipulation", Key = Keys.NumPad5, Modifiers = Keys.None }
+                    new HotkeySetting { Action = "ResetVideoManipulation", Key = Keys.NumPad5, Modifiers = Keys.None },
+                    new HotkeySetting { Action = "Toggle_VSR", Key = Keys.R, Modifiers = Keys.Control | Keys.Shift },
+                    new HotkeySetting { Action = "RTX_Status", Key = Keys.S, Modifiers = Keys.Control | Keys.Shift }
                 }
             };
         }

@@ -66,7 +66,7 @@ namespace RandomVideoPlayer
             RegisterHotKeys();
 
             if (ListHandler.SelectedExtensions.Count<string>() <= 0)
-                ListHandler.SelectedExtensions = ListHandler.VideoExtensions;
+                ListHandler.SelectedExtensions = ListHandler.CombinedExtensions;
 
             if (ListHandler.ExtensionFilterForList.Count<string>() <= 0)
                 ListHandler.ExtensionFilterForList = ListHandler.CombinedExtensions;
@@ -110,7 +110,7 @@ namespace RandomVideoPlayer
             {
                 initStartUp(""); //Load default folder if set and fill playlist
 
-                string img = Path.Combine(MainFormData.startupPath, @"Resources\RVP_BlackBG.png");
+                string img = Path.Combine(MainFormData.startupPath, @"Resources\RVP-Splash.png");
                 playerMPV.Load(img, true);
             }
             else
@@ -167,6 +167,7 @@ namespace RandomVideoPlayer
                 contextMenuAddToList.Show(btnListAdd, new Point(0, 0), ToolStripDropDownDirection.AboveRight);
             }
         }
+
         private void btnSettings_Click(object sender, EventArgs e)
         {
             OpenSettingsMenu();
@@ -503,7 +504,7 @@ namespace RandomVideoPlayer
         }
         private void ToggleExclusiveFullscreen()
         {
-            MainFormData.backupSize = fR.TempSize;
+            MainFormData.backupSize = fR.TempSizeMain;
             if (this.WindowState == FormWindowState.Maximized) //Switch to normal state, because windows doesn't like switch to exclusive fullscreen from maximized
             {
                 fR.MaximizeForm(this);
@@ -1256,14 +1257,14 @@ namespace RandomVideoPlayer
 
                 AutoSkipHandler();
 
-                if (SettingsHandler.RTXVSREnabled)
-                {
-                    playerMPV.API.Command("vf", "add", MainFormData.VSRFilter);
-                }
-                else
-                {
-                    playerMPV.API.Command("vf", "del", "d3d11vpp");
-                }
+                //if (SettingsHandler.RTXVSREnabled)
+                //{
+                //    playerMPV.API.Command("vf", "add", MainFormData.VSRFilter);
+                //}
+                //else
+                //{
+                //    playerMPV.API.Command("vf", "del", "d3d11vpp");
+                //}
 
 
                 LoadThemeOption();
@@ -2627,6 +2628,7 @@ namespace RandomVideoPlayer
             pbVolume.MouseWheel += new MouseEventHandler(pbVolume_MouseWheel);
             playerMPV.MediaLoaded += new EventHandler(SetMediaInfo);
             playerMPV.MediaFinished += new EventHandler(MediaFinished);
+            
         }
 
         private void InitializePlayer()
@@ -2636,17 +2638,6 @@ namespace RandomVideoPlayer
             pbVolume.Value = initVolume;
             string libMpv = MainFormData.startupPath + "lib\\libmpv-2.dll";
             playerMPV = new MpvPlayer(panelPlayerMPV.Handle, libMpv) { Loop = (!(SettingsHandler.AutoPlayMethod == AutoPlayMethod.AutoNext)), Volume = initVolume, KeepOpen = KeepOpen.Yes };
-            if (SettingsHandler.RTXVSREnabled)
-            {
-                try
-                {
-                    playerMPV.API.Command("vf", "append", MainFormData.VSRFilter);
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex, "Failed to load RTX VSR");
-                }
-            }
         }
         #endregion
 
@@ -2749,6 +2740,20 @@ namespace RandomVideoPlayer
                 }
                 playerMPV.SetBrightness(0);
                 playerMPV.Resume();
+            }
+
+            if(SettingsHandler.RTXVSREnabled)
+            {
+                Thread.Sleep(100);
+                try
+                {
+                    ApplyRTXFeatures();
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex,"Failed to apply RTX settings");
+                }
+
             }
         }
         private void UpdateFunscriptGraph()
@@ -3237,6 +3242,12 @@ namespace RandomVideoPlayer
                     case "RotateCounterClockwise":
                         VideoManipulation.RotateVideo(playerMPV, -90, false);
                         return true;
+                    case "Toggle_VSR":
+                        Toggle_VSR();                        
+                        return true;
+                    case "RTX_Status":
+                        Show_Status();                       
+                        return true;
                 }
             }
             return base.ProcessCmdKey(ref msg, keyData);
@@ -3667,9 +3678,137 @@ namespace RandomVideoPlayer
         #endregion
 
         #region RTX
+        private bool autoVSR = false;
 
-        //Still not working
-        private void ActivateRTXFeatures(bool autoVSR = true, bool autoHDR = false)
+        private void Toggle_VSR()
+        {
+            SettingsHandler.RTXVSREnabled = !SettingsHandler.RTXVSREnabled;
+            autoVSR = SettingsHandler.RTXVSREnabled;
+
+            if (autoVSR)
+            {
+                ApplyRTXFeatures();
+                playerMPV.ShowText($"RTX VSR ON");
+            }
+            else
+            {
+                playerMPV.API.Command("vf", "remove", "@format-nv12");
+                playerMPV.API.Command("vf", "remove", "@vsr");
+                playerMPV.ShowText($"RTX VSR OFF");
+            }
+        }
+
+        private void Show_Status()
+        {
+            var vsr_status = autoVSR ? "ON" : "OFF";
+            //var hdr_status = autoHDR ? "ON" : "OFF";
+            var vf_chain = playerMPV.API.GetPropertyString("vf");
+            var output_csp = playerMPV.API.GetPropertyString("d3d11-output-csp");
+            var vo = playerMPV.API.GetPropertyString("vo");
+            var gpu_api = playerMPV.API.GetPropertyString("gpu-api");
+            var hwdec = playerMPV.API.GetPropertyString("hwdec-current");
+
+            var active_filters = "";
+
+            if (vf_chain.Contains("scaling-mode=nvidia"))
+            {
+                active_filters += "VSR ";
+            }
+            //if (vf_chain.Contains("nvidia-true-hdr"))
+            //{
+            //    active_filters += "RTX-HDR ";
+            //}
+            if (string.IsNullOrWhiteSpace(active_filters))
+            {
+                active_filters = "None";
+            }
+
+            //var primaries = playerMPV.API.GetPropertyString("video-params/primaries");
+            //var gamma = playerMPV.API.GetPropertyString("video-params/gamma");
+            //var content_type = "SDR";
+            //if (primaries == "bt.2020" || gamma == "pq" || gamma == "hlg")
+            //{
+            //    content_type = "HDR";
+            //}
+
+            var video_width = playerMPV.API.GetPropertyDouble("width");
+            var video_height = playerMPV.API.GetPropertyDouble("height");
+            var display_width = playerMPV.API.GetPropertyDouble("display-width");
+            var display_height = playerMPV.API.GetPropertyDouble("display-height");
+            var scale = 1d;
+
+            if (video_width > 0 && video_height > 0)
+            {
+                scale = Math.Max(display_width / video_width, display_height / video_height);
+                scale = Math.Ceiling(scale * 10) / 10;
+            }
+            var peak = playerMPV.API.GetPropertyString("video-params/sig-peak");
+            var avg_luma = playerMPV.API.GetPropertyString("video-params/light");
+
+            //var statusMsg = 
+            //    $"RTX Status:\n" +
+            //    $"VSR: {vsr_status} (scale: {scale}x)\n" +
+            //    $"RTX HDR: {hdr_status}\n" +
+            //    $"Active: {active_filters}\n" +
+            //    $"Output CSP: {output_csp}\n" +
+            //    $"VO: {vo} / API: {gpu_api} / HWDec: {hwdec}\n" +
+            //    $"Filter chain: {(vf_chain = string.IsNullOrWhiteSpace(vf_chain) ? vf_chain : "none")}\n" +
+            //    $"Peak: {peak} / Avg luma: {avg_luma}";
+            var statusMsg =
+                  $"RTX Status:\n" +
+                  $"VSR: {vsr_status} (scale: {scale}x)\n" +
+                  $"Active: {active_filters}\n";
+
+            playerMPV.ShowText(statusMsg, 5000);            
+        }
+        private void ApplyRTXFeatures()
+        {
+            var video_width = playerMPV.API.GetPropertyDouble("width");
+            var video_height = playerMPV.API.GetPropertyDouble("height");
+            var display_width = playerMPV.API.GetPropertyDouble("display-width");
+            var display_height = playerMPV.API.GetPropertyDouble("display-height");
+            var codec = playerMPV.API.GetPropertyString("video-codec");
+            var pixelformat = playerMPV.API.GetPropertyString("video-params/pixelformat");
+
+            bool HasMissingDouble(double value) => double.IsNaN(value) || double.IsInfinity(value);
+            bool HasMissingString(string value) => string.IsNullOrWhiteSpace(value);
+
+            if (HasMissingDouble(video_width) || HasMissingDouble(video_height) || HasMissingDouble(display_width) || HasMissingDouble(display_height) ||
+                                HasMissingString(codec) || HasMissingString(pixelformat))
+            {
+                Error.Log("RTX VSR: Missing video properties");
+                return;
+            }
+
+            var scale = Math.Max(display_width / video_width, display_height / video_height);
+            scale = Math.Ceiling(scale * 10) / 10;
+
+            var vf_chain = playerMPV.API.GetPropertyString("vf");
+            if (vf_chain.Contains("@format-nv12"))
+            {
+                playerMPV.API.Command("vf", "remove", "@format-nv12");
+            }
+            if (vf_chain.Contains("@vsr"))
+            {
+                playerMPV.API.Command("vf", "remove", "@vsr");
+            }
+
+            if(scale > 1)
+            {
+                if (codec.ToLowerInvariant().Contains("hevc") || codec.ToLowerInvariant().Contains("h.265"))
+                {
+                    if (pixelformat.EndsWith("p101e") || pixelformat == "p010")
+                    {
+                        playerMPV.API.Command("vf", "append", "@format-nv12:format=nv12");
+                    }
+                }
+                playerMPV.API.Command("vf", "append", "@vsr:d3d11vpp=scaling-mode=nvidia:scale=" + scale.ToString("0.0", CultureInfo.InvariantCulture));
+            }
+        }
+
+        //HDR still not working
+        private bool autoHDR = true;
+        private void ApplyRTXFeaturesOld()
         {
             var video_width = playerMPV.API.GetPropertyDouble("width");
             var video_height = playerMPV.API.GetPropertyDouble("height");
@@ -3712,28 +3851,37 @@ namespace RandomVideoPlayer
                 }
             }
 
+            var statusMsg = "";
+
             if (isSDR && autoHDR)
             {
-                playerMPV.API.Command("set", "d3d11-output-csp", "srgb");
+                playerMPV.API.Command("set", "d3d11-output-csp", "pq");
+                playerMPV.API.Command("set", "d3d11-output-format", "rgb10_a2");
+                playerMPV.API.Command("set", "target-trc", "pq");
+                playerMPV.API.Command("set", "target-prim", "bt.2020");
             }
 
-            if (scale > 1.0 && autoVSR && autoHDR)
+            if ((scale > 1.0 && autoVSR) && (autoHDR && isSDR))
             {
                 string combined = "@rtx-combined:d3d11vpp=scaling-mode=nvidia:scale=" + scale.ToString("0.0", CultureInfo.InvariantCulture) + ":format=nv12:nvidia-true-hdr";
 
                 playerMPV.API.Command("vf", "append", combined);
+                statusMsg = $"VSR ('{scale}'x) + RTX HDR";
             }
             else if (scale > 1.0 && autoVSR)
             {
                 playerMPV.API.Command("vf", "append", "@rtx-vsr:d3d11vpp=scaling-mode=nvidia:scale=" + scale.ToString("0.0", CultureInfo.InvariantCulture));
+                statusMsg = $"VSR ('{scale}'x)";
             }
-            else if (autoHDR)
+            else if (autoHDR && isSDR)
             {
                 playerMPV.API.Command("vf", "append", "@rtx-hdr:d3d11vpp=format=nv12:nvidia-true-hdr");
+                statusMsg = $"RTX HDR";
             }
-            else if (autoHDR == false)
+
+            if(!string.IsNullOrWhiteSpace(statusMsg))
             {
-                playerMPV.API.Command("set", "d3d11-output-csp", "auto");
+                playerMPV.ShowText($"{statusMsg} ON");
             }
         }
         #endregion
@@ -3742,10 +3890,10 @@ namespace RandomVideoPlayer
 
         private void InitializeFormFunctions()
         {
-            if (fR.SaveLastSize == true)
+            if (fR.SaveLastSizeMain == true)
             {
-                fR.FormSize = new Size(fR.FormSize.Width - 16, fR.FormSize.Height - 39);
-                this.ClientSize = fR.FormSize;
+                fR.FormSizeSaved = new Size(fR.FormSizeSaved.Width - 16, fR.FormSizeSaved.Height - 39);
+                this.ClientSize = fR.FormSizeSaved;
             }
             this.Padding = new Padding(fR.BorderSize);
             this.BackColor = Color.FromArgb(253, 83, 146);
@@ -3760,8 +3908,8 @@ namespace RandomVideoPlayer
 
             if (this.WindowState == FormWindowState.Normal)
             {
-                fR.TempSize = DPI.GetSizeScaled(this.Size);
-                fR.FormSize = fR.TempSize;
+                fR.TempSizeMain = DPI.GetSizeScaled(this.Size);
+                fR.FormSizeSaved = fR.TempSizeMain;
             }
         }
         private async void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -3783,7 +3931,7 @@ namespace RandomVideoPlayer
             tcServer.Stop();
             await ScriptHandler.RevertDefaultScript();
             await ScriptHandler.RevertDefaultMultiAxisScript();
-            fR.FormSize = fR.TempSize; //Save last known form size to property
+            fR.FormSizeSaved = fR.TempSizeMain; //Save last known form size to property
             PathHandler.TempRecentFolder = string.Empty;
 
             if (SettingsHandler.VolumeMember)

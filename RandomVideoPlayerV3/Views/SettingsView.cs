@@ -80,7 +80,9 @@ namespace RandomVideoPlayer.Views
             settingsModel.FileMovePath = PathHandler.FileMoveFolderPath;
             settingsModel.FileCopy = SettingsHandler.FileCopy;
 
-            settingsModel.MemberWindowSize = fR.SaveLastSize;
+            settingsModel.MemberWindowSize = fR.SaveLastSizeMain;
+            settingsModel.MemeberFbWindowSize = fR.SaveLastSizeFb;
+            settingsModel.MemberLbWindowSize = fR.SaveLastSizeLb;
             settingsModel.MemberPlayRecent = SettingsHandler.RecentCheckedSaved;
             settingsModel.MemberRecentCount = SettingsHandler.RecentCountSaved;
             settingsModel.MemberVolume = SettingsHandler.VolumeMember;
@@ -106,7 +108,6 @@ namespace RandomVideoPlayer.Views
             settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
             settingsModel.ReShuffle = ListHandler.ReShuffle;
             settingsModel.RTXVSREnabled = SettingsHandler.RTXVSREnabled;
-            settingsModel.SelectedTheme = SettingsHandler.SelectedTheme;
 
             settingsModel.EnableSubtitles = SettingsHandler.SubtitlesEnabled;
             settingsModel.SubtitleSize = SettingsHandler.SubtitleFontSize;
@@ -136,6 +137,7 @@ namespace RandomVideoPlayer.Views
             settingsModel.ButtonStates = SettingsHandler.ButtonStates;
             settingsModel.ButtonOrder = SettingsHandler.ButtonOrder;
             settingsModel.ShowButtonToPlayFromCurrentFolder = SettingsHandler.ShowButtonStayInCurrentFolder;
+            settingsModel.SelectedTheme = SettingsHandler.SelectedTheme;
 
             settingsModel.AlwaysCheckUpdate = SettingsHandler.AlwaysCheckUpdate;
         }
@@ -182,7 +184,9 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.DeleteFull = settingsModel.DeleteFull;
             SettingsHandler.IncludeScripts = settingsModel.IncludeScript;
 
-            fR.SaveLastSize = settingsModel.MemberWindowSize;
+            fR.SaveLastSizeMain = settingsModel.MemberWindowSize;
+            fR.SaveLastSizeFb = settingsModel.MemeberFbWindowSize;
+            fR.SaveLastSizeLb = settingsModel.MemberLbWindowSize;
             SettingsHandler.RecentCheckedSaved = settingsModel.MemberPlayRecent;
             SettingsHandler.RecentCountSaved = settingsModel.MemberRecentCount;
             SettingsHandler.VolumeMember = settingsModel.MemberVolume;
@@ -201,7 +205,6 @@ namespace RandomVideoPlayer.Views
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
             ListHandler.ReShuffle = settingsModel.ReShuffle;
             SettingsHandler.RTXVSREnabled = settingsModel.RTXVSREnabled;
-            SettingsHandler.SelectedTheme = settingsModel.SelectedTheme;
 
             SettingsHandler.SubtitlesEnabled = settingsModel.EnableSubtitles;
             SettingsHandler.SubtitleFontSize = settingsModel.SubtitleSize;
@@ -247,6 +250,7 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.ButtonStates = settingsModel.ButtonStates;
             SettingsHandler.ButtonOrder = settingsModel.ButtonOrder;
             SettingsHandler.ShowButtonStayInCurrentFolder = settingsModel.ShowButtonToPlayFromCurrentFolder;
+            SettingsHandler.SelectedTheme = settingsModel.SelectedTheme;
 
             SettingsHandler.AlwaysCheckUpdate = settingsModel.AlwaysCheckUpdate;
         }

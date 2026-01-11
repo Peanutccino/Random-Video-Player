@@ -19,6 +19,8 @@ namespace RandomVideoPlayer.UserControls
         private void LoadSettings()
         {
             cbWindowSize.Checked = settings.MemberWindowSize;
+            cbFbWindowSize.Checked = settings.MemeberFbWindowSize;
+            cbLbWindowSize.Checked = settings.MemberLbWindowSize;
             cbPlayRecent.Checked = settings.MemberPlayRecent;
             cbRecentCount.Checked = settings.MemberRecentCount;
             cbVolume.Checked = settings.MemberVolume;
@@ -40,6 +42,16 @@ namespace RandomVideoPlayer.UserControls
             cbWindowSize.CheckedChanged += (s, e) =>
             {
                 settings.MemberWindowSize = cbWindowSize.Checked;
+            };
+
+            cbFbWindowSize.CheckedChanged += (s, e) =>
+            {
+                settings.MemeberFbWindowSize = cbFbWindowSize.Checked;
+            };
+
+            cbLbWindowSize.CheckedChanged += (s, e) =>
+            {
+                settings.MemberLbWindowSize = cbLbWindowSize.Checked;
             };
 
             cbPlayRecent.CheckedChanged += (s, e) =>

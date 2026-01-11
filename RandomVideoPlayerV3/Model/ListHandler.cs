@@ -441,13 +441,15 @@ namespace RandomVideoPlayer.Model
 
         private static readonly HashSet<string> MultiAxis =
             new(StringComparer.OrdinalIgnoreCase) { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
+        private static bool IsMultiAxis(string baseName) =>
+            MultiAxis.Any(axis => baseName.EndsWith(axis, StringComparison.OrdinalIgnoreCase));
 
         public static IEnumerable<string> EnumerateEligibleVideosFromDirectory(string root, bool includeSubfolders, CancellationToken token = default)
         {
             if (string.IsNullOrWhiteSpace(root) || !Directory.Exists(root))
                 yield break;
 
-            if (!FilterScriptEnabled)
+            if (FilterScriptEnabled == false)
             {
                 foreach (var video in EnumerateVideos(root, includeSubfolders, token))
                     yield return video;
@@ -478,9 +480,9 @@ namespace RandomVideoPlayer.Model
             if (string.IsNullOrWhiteSpace(video) || !File.Exists(video))
                 yield break;
 
-            if (!FilterScriptEnabled)
+            if (FilterScriptEnabled == false)
             {
-                    yield return video;
+                yield return video;
                 yield break;
             }
 
@@ -580,7 +582,7 @@ namespace RandomVideoPlayer.Model
                 foreach (var file in videos)
                 {
                     var ext = Path.GetExtension(file).TrimStart('.').ToLowerInvariant();
-                    if (ListHandler.VideoExtensions.Contains(ext))
+                    if (Extensions.Contains(ext))
                         yield return file;
                 }
 
@@ -602,10 +604,6 @@ namespace RandomVideoPlayer.Model
                     stack.Push(dir);
             }
         }
-
-        private static bool IsMultiAxis(string baseName) =>
-            MultiAxis.Any(axis => baseName.EndsWith(axis, StringComparison.OrdinalIgnoreCase));
-
 
 
 

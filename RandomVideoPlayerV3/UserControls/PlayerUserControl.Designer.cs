@@ -77,8 +77,6 @@
             btnRTXHelp = new FontAwesome.Sharp.IconButton();
             cbEnableRTXVSR = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl4 = new Label();
-            lbl6 = new Label();
-            comboThemes = new ComboBox();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -621,7 +619,7 @@
             panel1.Location = new Point(0, 454);
             panel1.Margin = new Padding(3, 6, 3, 3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(507, 75);
+            panel1.Size = new Size(507, 87);
             panel1.TabIndex = 14;
             // 
             // flowLayoutPanel3
@@ -683,33 +681,11 @@
             lbl4.TabIndex = 1;
             lbl4.Text = "Activate RTX VSR compatibility (Nvidia only)";
             // 
-            // lbl6
-            // 
-            lbl6.Dock = DockStyle.Top;
-            lbl6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            lbl6.Location = new Point(0, 529);
-            lbl6.Name = "lbl6";
-            lbl6.Padding = new Padding(6, 0, 0, 0);
-            lbl6.Size = new Size(507, 23);
-            lbl6.TabIndex = 16;
-            lbl6.Text = "Select a theme for RVP (Applies after Saving):";
-            // 
-            // comboThemes
-            // 
-            comboThemes.Dock = DockStyle.Top;
-            comboThemes.FormattingEnabled = true;
-            comboThemes.Location = new Point(0, 552);
-            comboThemes.Name = "comboThemes";
-            comboThemes.Size = new Size(507, 23);
-            comboThemes.TabIndex = 25;
-            // 
             // PlayerUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.GhostWhite;
-            Controls.Add(comboThemes);
-            Controls.Add(lbl6);
             Controls.Add(panel1);
             Controls.Add(panel4);
             Controls.Add(panel3);
@@ -764,8 +740,6 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private FlowLayoutPanel flowLayoutPanel2;
         private FlowLayoutPanel flowLayoutPanel3;
-        private Label lbl6;
-        private ComboBox comboThemes;
         private Label lbl7;
         private TableLayoutPanel tableLayoutPanel1;
         private Label label1;

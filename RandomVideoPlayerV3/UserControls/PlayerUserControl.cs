@@ -52,29 +52,6 @@ namespace RandomVideoPlayer.UserControls
             inputSBL.Value = settings.CustomSeekBackwardValueLarge;
             inputVideoThreshold.Value = settings.VideoSizeThreshold / 60; //convert to minutes
 
-            IReadOnlyDictionary<string, Theme> themes = ThemeLoader.LoadThemes();
-
-            if (!themes.ContainsKey("Light"))
-            {
-                themes = themes.Concat(new[] {
-            new KeyValuePair<string, Theme>("Light", ThemeDefaults.Light)}).ToDictionary(k => k.Key, k => k.Value);
-            }
-
-            var options = themes
-                .Select(kvp => new ThemeOption(kvp.Key, kvp.Value))
-                .OrderBy(opt => opt.Name)
-                .ToList();
-
-            comboThemes.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboThemes.DisplayMember = nameof(ThemeOption.Name);
-            comboThemes.ValueMember = nameof(ThemeOption.Theme);
-            comboThemes.DataSource = options;
-
-            string savedThemeName = settings.SelectedTheme;
-            var match = options.FirstOrDefault(o => o.Name == savedThemeName)
-                        ?? options.First(o => o.Name == "Light");
-            comboThemes.SelectedItem = match;
-
             UpdateRangeIndicator();
         }
 
@@ -143,16 +120,7 @@ namespace RandomVideoPlayer.UserControls
             {
                 settings.VideoSizeThreshold = (int)inputVideoThreshold.Value;
             };
-
-            comboThemes.SelectedIndexChanged += (s, e) =>
-            {
-                if (comboThemes.SelectedItem is ThemeOption selectedOption)
-                {
-                    settings.SelectedTheme = selectedOption.Name;                    
-                }
-            };
         }
-        public sealed record ThemeOption(string Name, Theme Theme);
         private void RadioButton_CheckedChanged(object? sender, EventArgs e)
         {
             if (sender is RadioButton selectedRadioButton && selectedRadioButton.Checked)

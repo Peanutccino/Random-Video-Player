@@ -6,8 +6,13 @@ namespace RandomVideoPlayer.Functions
     public class CustomSettings
     {
         public string defaultFolder { get; set; }
-        public Size FormSize { get; set; } = new Size(0, 0);
-        public bool lastSize { get; set; } = false;
+        public Size formSizeMainSaved { get; set; } = new Size(0, 0);
+        public Size formSizeFbSaved { get; set; } = new Size(0, 0);
+        public Size formSizeLbSaved { get; set; } = new Size(0, 0);
+        public int splitterLbSaved { get; set; }
+        public bool saveLastSizeMain { get; set; } = true;
+        public bool saveLastSizeFb { get; set; } = false;
+        public bool saveLastSizeLb { get; set; } = false;
         public string removeFolder { get; set; } = "";
         public bool deleteFull { get; set; } = true;
         public bool includeScripts { get; set; } = true;

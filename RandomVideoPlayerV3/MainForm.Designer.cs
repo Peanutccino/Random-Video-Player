@@ -91,9 +91,9 @@
             panelBottom.Controls.Add(pbVolume);
             panelBottom.Controls.Add(pbPlayerProgress);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 311);
+            panelBottom.Location = new Point(0, 316);
             panelBottom.Name = "panelBottom";
-            panelBottom.Size = new Size(1015, 80);
+            panelBottom.Size = new Size(1015, 75);
             panelBottom.TabIndex = 0;
             // 
             // panelExtraButtons
@@ -275,7 +275,7 @@
             panel1.Controls.Add(lblSpeed);
             panel1.Controls.Add(lblDurationInfo);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 63);
+            panel1.Location = new Point(0, 58);
             panel1.Name = "panel1";
             panel1.Size = new Size(1015, 17);
             panel1.TabIndex = 24;

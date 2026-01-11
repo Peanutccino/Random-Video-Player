@@ -41,6 +41,8 @@ namespace RandomVideoPlayer.Model
 
         #region Remember
         public bool MemberWindowSize { get; set; }
+        public bool MemeberFbWindowSize { get; set; }
+        public bool MemberLbWindowSize { get; set; }
         public bool MemberPlayRecent { get; set; }
         public bool MemberRecentCount { get; set; }
         public bool MemberVolume { get; set; }
@@ -63,8 +65,7 @@ namespace RandomVideoPlayer.Model
         public int CustomSeekBackwardValueLarge { get; set; }
         public int VideoSizeThreshold { get; set; }
         public bool RTXVSREnabled { get; set; }
-        public bool DarkModeEnabled { get; set; }
-        public string SelectedTheme { get; set; }
+        public bool DarkModeEnabled { get; set; }        
         #endregion
 
         #region FilterExtensions    
@@ -99,6 +100,7 @@ namespace RandomVideoPlayer.Model
         public bool[] ButtonStates { get; set; }
         public List<int> ButtonOrder { get; set; }
         public bool ShowButtonToPlayFromCurrentFolder { get; set; }
+        public string SelectedTheme { get; set; }
         #endregion
 
         #region Experimental

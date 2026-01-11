@@ -33,17 +33,17 @@
             panel1 = new Panel();
             lbl2 = new Label();
             label3 = new Label();
-            cbTouchButton = new Controls.RoundedCheckBox();
-            cbSkipButton = new Controls.RoundedCheckBox();
-            cbSourceSelector = new Controls.RoundedCheckBox();
-            cbListAddButton = new Controls.RoundedCheckBox();
-            cbMoveToButton = new Controls.RoundedCheckBox();
-            cbLoopButton = new Controls.RoundedCheckBox();
-            cbShuffleButton = new Controls.RoundedCheckBox();
-            cbAddToFavButton = new Controls.RoundedCheckBox();
-            cbDeleteButton = new Controls.RoundedCheckBox();
+            cbTouchButton = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbSkipButton = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbSourceSelector = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbListAddButton = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbMoveToButton = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbLoopButton = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbShuffleButton = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbAddToFavButton = new RandomVideoPlayer.Controls.RoundedCheckBox();
+            cbDeleteButton = new RandomVideoPlayer.Controls.RoundedCheckBox();
             panelButtonPreview = new Panel();
-            cbShowButtonToPlayFromCurrentFolder = new Controls.CustomCheckBox();
+            cbShowButtonToPlayFromCurrentFolder = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl3 = new Label();
             btnRestore = new FontAwesome.Sharp.IconButton();
             panelIcons = new Panel();
@@ -59,6 +59,9 @@
             panelVisibilityToggles = new Panel();
             panel3 = new Panel();
             flowPanel = new FlowLayoutPanel();
+            panel2 = new Panel();
+            lbl6 = new Label();
+            comboThemes = new ComboBox();
             panel1.SuspendLayout();
             panelButtonPreview.SuspendLayout();
             panelIcons.SuspendLayout();
@@ -73,13 +76,14 @@
             ((System.ComponentModel.ISupportInitialize)iconDelete).BeginInit();
             panelVisibilityToggles.SuspendLayout();
             panel3.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // lblHeader
             // 
             lblHeader.BackColor = SystemColors.Control;
             lblHeader.Dock = DockStyle.Top;
-            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblHeader.ForeColor = Color.Indigo;
             lblHeader.Location = new Point(0, 0);
             lblHeader.Name = "lblHeader";
@@ -91,7 +95,7 @@
             // lbl1
             // 
             lbl1.Dock = DockStyle.Top;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbl1.Location = new Point(0, 55);
             lbl1.Name = "lbl1";
             lbl1.Padding = new Padding(6, 0, 0, 0);
@@ -113,7 +117,7 @@
             // lbl2
             // 
             lbl2.Dock = DockStyle.Bottom;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             lbl2.Location = new Point(0, 16);
             lbl2.Name = "lbl2";
             lbl2.Padding = new Padding(6, 0, 0, 0);
@@ -124,7 +128,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             label3.Location = new Point(3, 364);
             label3.Name = "label3";
             label3.Size = new Size(51, 15);
@@ -144,6 +148,7 @@
             cbTouchButton.Size = new Size(32, 22);
             cbTouchButton.TabIndex = 11;
             cbTouchButton.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbTouchButton.UncheckedForeColor = Color.Black;
             cbTouchButton.UseVisualStyleBackColor = false;
             // 
             // cbSkipButton
@@ -159,6 +164,7 @@
             cbSkipButton.Size = new Size(32, 22);
             cbSkipButton.TabIndex = 10;
             cbSkipButton.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbSkipButton.UncheckedForeColor = Color.Black;
             cbSkipButton.UseVisualStyleBackColor = false;
             // 
             // cbSourceSelector
@@ -174,6 +180,7 @@
             cbSourceSelector.Size = new Size(32, 22);
             cbSourceSelector.TabIndex = 9;
             cbSourceSelector.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbSourceSelector.UncheckedForeColor = Color.Black;
             cbSourceSelector.UseVisualStyleBackColor = false;
             // 
             // cbListAddButton
@@ -189,6 +196,7 @@
             cbListAddButton.Size = new Size(32, 22);
             cbListAddButton.TabIndex = 6;
             cbListAddButton.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbListAddButton.UncheckedForeColor = Color.Black;
             cbListAddButton.UseVisualStyleBackColor = false;
             // 
             // cbMoveToButton
@@ -204,6 +212,7 @@
             cbMoveToButton.Size = new Size(32, 22);
             cbMoveToButton.TabIndex = 5;
             cbMoveToButton.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbMoveToButton.UncheckedForeColor = Color.Black;
             cbMoveToButton.UseVisualStyleBackColor = false;
             // 
             // cbLoopButton
@@ -219,6 +228,7 @@
             cbLoopButton.Size = new Size(32, 22);
             cbLoopButton.TabIndex = 4;
             cbLoopButton.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbLoopButton.UncheckedForeColor = Color.Black;
             cbLoopButton.UseVisualStyleBackColor = false;
             // 
             // cbShuffleButton
@@ -234,6 +244,7 @@
             cbShuffleButton.Size = new Size(32, 22);
             cbShuffleButton.TabIndex = 3;
             cbShuffleButton.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbShuffleButton.UncheckedForeColor = Color.Black;
             cbShuffleButton.UseVisualStyleBackColor = false;
             // 
             // cbAddToFavButton
@@ -249,6 +260,7 @@
             cbAddToFavButton.Size = new Size(32, 22);
             cbAddToFavButton.TabIndex = 2;
             cbAddToFavButton.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbAddToFavButton.UncheckedForeColor = Color.Black;
             cbAddToFavButton.UseVisualStyleBackColor = false;
             // 
             // cbDeleteButton
@@ -264,6 +276,7 @@
             cbDeleteButton.Size = new Size(32, 22);
             cbDeleteButton.TabIndex = 0;
             cbDeleteButton.UncheckedBackColor = Color.FromArgb(255, 128, 128);
+            cbDeleteButton.UncheckedForeColor = Color.Black;
             cbDeleteButton.UseVisualStyleBackColor = false;
             // 
             // panelButtonPreview
@@ -271,10 +284,11 @@
             panelButtonPreview.Controls.Add(cbShowButtonToPlayFromCurrentFolder);
             panelButtonPreview.Controls.Add(lbl3);
             panelButtonPreview.Controls.Add(btnRestore);
-            panelButtonPreview.Dock = DockStyle.Bottom;
-            panelButtonPreview.Location = new Point(0, 470);
+            panelButtonPreview.Dock = DockStyle.Top;
+            panelButtonPreview.Location = new Point(0, 309);
             panelButtonPreview.Name = "panelButtonPreview";
-            panelButtonPreview.Size = new Size(500, 130);
+            panelButtonPreview.Padding = new Padding(6, 0, 6, 0);
+            panelButtonPreview.Size = new Size(500, 87);
             panelButtonPreview.TabIndex = 5;
             // 
             // cbShowButtonToPlayFromCurrentFolder
@@ -283,22 +297,22 @@
             cbShowButtonToPlayFromCurrentFolder.BoxSize = 13;
             cbShowButtonToPlayFromCurrentFolder.Dock = DockStyle.Top;
             cbShowButtonToPlayFromCurrentFolder.HoverColor = Color.DeepSkyBlue;
-            cbShowButtonToPlayFromCurrentFolder.Location = new Point(0, 30);
+            cbShowButtonToPlayFromCurrentFolder.Location = new Point(6, 30);
             cbShowButtonToPlayFromCurrentFolder.Name = "cbShowButtonToPlayFromCurrentFolder";
             cbShowButtonToPlayFromCurrentFolder.PaddingLeft = 9;
-            cbShowButtonToPlayFromCurrentFolder.Size = new Size(500, 19);
+            cbShowButtonToPlayFromCurrentFolder.Size = new Size(488, 19);
             cbShowButtonToPlayFromCurrentFolder.TabIndex = 8;
-            cbShowButtonToPlayFromCurrentFolder.Text = "Play from current folder";
+            cbShowButtonToPlayFromCurrentFolder.Text = "Enable \"Play from current folder\" button";
             cbShowButtonToPlayFromCurrentFolder.UseVisualStyleBackColor = true;
             // 
             // lbl3
             // 
             lbl3.Dock = DockStyle.Top;
-            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            lbl3.Location = new Point(0, 0);
+            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl3.Location = new Point(6, 0);
             lbl3.Name = "lbl3";
-            lbl3.Padding = new Padding(6, 6, 0, 0);
-            lbl3.Size = new Size(500, 30);
+            lbl3.Padding = new Padding(0, 6, 0, 0);
+            lbl3.Size = new Size(488, 30);
             lbl3.TabIndex = 7;
             lbl3.Text = "Show button to play from current folder while playing random files:";
             // 
@@ -311,7 +325,7 @@
             btnRestore.IconChar = FontAwesome.Sharp.IconChar.None;
             btnRestore.IconColor = Color.Black;
             btnRestore.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnRestore.Location = new Point(351, 100);
+            btnRestore.Location = new Point(345, 57);
             btnRestore.Name = "btnRestore";
             btnRestore.Size = new Size(146, 27);
             btnRestore.TabIndex = 5;
@@ -369,7 +383,7 @@
             // 
             iconTouch.BackColor = Color.FromArgb(253, 83, 146);
             iconTouch.ForeColor = SystemColors.ControlText;
-            iconTouch.IconChar = FontAwesome.Sharp.IconChar.Location;
+            iconTouch.IconChar = FontAwesome.Sharp.IconChar.LocationCrosshairs;
             iconTouch.IconColor = SystemColors.ControlText;
             iconTouch.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconTouch.IconSize = 28;
@@ -445,7 +459,7 @@
             // 
             iconMoveTo.BackColor = Color.FromArgb(253, 83, 146);
             iconMoveTo.ForeColor = SystemColors.ControlText;
-            iconMoveTo.IconChar = FontAwesome.Sharp.IconChar.FileExport;
+            iconMoveTo.IconChar = FontAwesome.Sharp.IconChar.ArrowRightFromFile;
             iconMoveTo.IconColor = SystemColors.ControlText;
             iconMoveTo.IconFont = FontAwesome.Sharp.IconFont.Solid;
             iconMoveTo.IconSize = 28;
@@ -522,25 +536,57 @@
             panel3.Dock = DockStyle.Top;
             panel3.Location = new Point(0, 226);
             panel3.Name = "panel3";
-            panel3.Size = new Size(500, 143);
+            panel3.Size = new Size(500, 83);
             panel3.TabIndex = 9;
             // 
             // flowPanel
             // 
+            flowPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             flowPanel.FlowDirection = FlowDirection.TopDown;
-            flowPanel.Location = new Point(3, 122);
+            flowPanel.Location = new Point(3, 61);
             flowPanel.Name = "flowPanel";
             flowPanel.Size = new Size(70, 18);
             flowPanel.TabIndex = 8;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(comboThemes);
+            panel2.Controls.Add(lbl6);
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(0, 396);
+            panel2.Name = "panel2";
+            panel2.Padding = new Padding(6, 0, 6, 0);
+            panel2.Size = new Size(500, 100);
+            panel2.TabIndex = 10;
+            // 
+            // lbl6
+            // 
+            lbl6.Dock = DockStyle.Top;
+            lbl6.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl6.Location = new Point(6, 0);
+            lbl6.Name = "lbl6";
+            lbl6.Size = new Size(488, 23);
+            lbl6.TabIndex = 17;
+            lbl6.Text = "Select a theme for RVP (Applies after Saving):";
+            // 
+            // comboThemes
+            // 
+            comboThemes.Dock = DockStyle.Top;
+            comboThemes.FormattingEnabled = true;
+            comboThemes.Location = new Point(6, 23);
+            comboThemes.Name = "comboThemes";
+            comboThemes.Size = new Size(488, 23);
+            comboThemes.TabIndex = 26;
             // 
             // InterfaceUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
+            Controls.Add(panel2);
+            Controls.Add(panelButtonPreview);
             Controls.Add(panel3);
             Controls.Add(panelVisibilityToggles);
-            Controls.Add(panelButtonPreview);
             Controls.Add(panelIcons);
             Controls.Add(panel1);
             Controls.Add(lbl1);
@@ -563,6 +609,7 @@
             ((System.ComponentModel.ISupportInitialize)iconDelete).EndInit();
             panelVisibilityToggles.ResumeLayout(false);
             panel3.ResumeLayout(false);
+            panel2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -599,5 +646,8 @@
         private Panel panel3;
         private FlowLayoutPanel flowPanel;
         private Controls.CustomCheckBox cbShowButtonToPlayFromCurrentFolder;
+        private Panel panel2;
+        private Label lbl6;
+        private ComboBox comboThemes;
     }
 }

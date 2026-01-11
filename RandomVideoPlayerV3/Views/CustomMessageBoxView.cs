@@ -23,6 +23,8 @@ namespace RandomVideoPlayer.Views
             lblInfoText.Text = message;
             cbOption.Text = checkboxText;
             cbOption.Checked = checkboxDefaultState;
+
+            ThemeManager.ApplyThemeLSView(this);
         }
 
         private void btnYes_Click(object sender, EventArgs e)
