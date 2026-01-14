@@ -28,31 +28,44 @@ namespace RandomVideoPlayer.Functions
 
             switch (root)
             {
-                case IconButton btnExit when btnExit.Name == "btnExitForm":
-                    btnExit.BackColor = CurrentTheme.FormBackColor;
-                    btnExit.ForeColor = CurrentTheme.TextColor;
-                    btnExit.IconColor = CurrentTheme.ButtonIconColor;
-                    btnExit.FlatAppearance.MouseOverBackColor = Color.Red;
+                case IconButton iconBtn when iconBtn.Name == "btnExitForm":
+                    iconBtn.BackColor = CurrentTheme.FormBackColor;
+                    iconBtn.ForeColor = CurrentTheme.TextColor;
+                    iconBtn.IconColor = CurrentTheme.ButtonIconColor;
+                    iconBtn.FlatAppearance.MouseOverBackColor = Color.Red;
+                    break;
+                case IconButton iconBtn when iconBtn.Name == "btnMaximizeForm" || iconBtn.Name == "btnMinimizeForm":
+                    iconBtn.BackColor = CurrentTheme.FormBackColor;
+                    iconBtn.ForeColor = CurrentTheme.TextColor;
+                    iconBtn.IconColor = CurrentTheme.ButtonIconColor;
+                    iconBtn.FlatAppearance.MouseOverBackColor = CurrentTheme.FormBackColor;
+                    iconBtn.FlatAppearance.MouseDownBackColor = CurrentTheme.FormBackColor;
                     break;
                 case IconButton iconBtn:
                     iconBtn.BackColor = CurrentTheme.FormBackColor;
                     iconBtn.ForeColor = CurrentTheme.TextColor;
                     iconBtn.IconColor = CurrentTheme.ButtonIconColor;
-                    iconBtn.FlatAppearance.MouseOverBackColor = CurrentTheme.ButtonBackColor;
-                    iconBtn.FlatAppearance.MouseDownBackColor = CurrentTheme.ButtonBackColor;
-                    break;                
+                    iconBtn.FlatAppearance.MouseOverBackColor = CurrentTheme.FormBackColor;
+                    iconBtn.FlatAppearance.MouseDownBackColor = CurrentTheme.FormBackColor;
+                    break;
+                case Button btn when btn.Parent.Name == "panelTop":
+                    btn.BackColor = CurrentTheme.FormBackColor;
+                    //btn.ForeColor = CurrentTheme.TextColor;                    
+                    btn.FlatAppearance.MouseOverBackColor = CurrentTheme.FormBackColor;
+                    btn.FlatAppearance.MouseDownBackColor = CurrentTheme.FormBackColor;
+                    break;
                 case Button btn:
-                    btn.BackColor = CurrentTheme.ButtonBackColor;
+                    btn.BackColor = CurrentTheme.FormBackColor;
                     btn.ForeColor = CurrentTheme.TextColor;
-                    btn.FlatAppearance.MouseOverBackColor = CurrentTheme.ButtonBackColor;
-                    btn.FlatAppearance.MouseDownBackColor = CurrentTheme.ButtonBackColor;
+                    btn.FlatAppearance.MouseOverBackColor = CurrentTheme.FormBackColor;
+                    btn.FlatAppearance.MouseDownBackColor = CurrentTheme.FormBackColor;
                     break;
 
                 case FlatProgressBar pb when pb.Name == "pbVolume":
                     pb.RemainingBrush = CurrentTheme.FormBackColor;
-                    pb.CompletedBrush = CurrentTheme.TextColor;                    
-                    pb.MouseoverBrush = CurrentTheme.TextColor;
-                    pb.BorderColor = CurrentTheme.TextColor;
+                    pb.CompletedBrush = CurrentTheme.ButtonIconColor;                    
+                    pb.MouseoverBrush = CurrentTheme.ButtonIconColor;
+                    pb.BorderColor = CurrentTheme.ButtonIconColor;
                     break;
                 case FlatProgressBar pb when pb.Name == "pbPlayerProgress":
                     pb.CompletedBrush = CurrentTheme.ProgressColor;                    
@@ -358,10 +371,6 @@ namespace RandomVideoPlayer.Functions
                     iconBtn.BackColor = CurrentTheme.FbBackColorDark;
                     iconBtn.ForeColor = CurrentTheme.FbTextColor;
                     iconBtn.IconColor = CurrentTheme.FbTextColor;
-                    break;
-                case Button btn:
-                    btn.BackColor = CurrentTheme.ButtonBackColor;
-                    btn.ForeColor = CurrentTheme.FbTextColor;
                     break;
                 case Panel pnlTop when pnlTop.Name == "panelTop":
                     pnlTop.BackColor = CurrentTheme.FbAccentColor;

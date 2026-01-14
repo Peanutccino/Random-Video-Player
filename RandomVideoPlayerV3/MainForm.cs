@@ -1150,30 +1150,42 @@ namespace RandomVideoPlayer
                 if (result != DialogResult.OK) return;
             }
 
-            if (SettingsHandler.RecentCheckedTemp)
+            if(File.Exists(_selectedPath))
             {
-                ListHandler.latestFolderList(_selectedPath, SettingsHandler.RecentCount, ListHandler.IncludeSubfolders);
+                ListHandler.FolderList = Enumerable.Empty<string>();
+                ListHandler.TempFolderList = Enumerable.Empty<string>();
+                ListHandler.FolderList = ListHandler.FolderList.Concat(new[] { _selectedPath });
+
+                PathHandler.FolderPath = Path.GetDirectoryName(_selectedPath);
             }
             else
             {
-                ListHandler.fillFolderList(_selectedPath, ListHandler.IncludeSubfolders);
-            }
-
-            if (!(ListHandler.TempFolderList?.Any() ?? false))
-            {
-                if (!(ListHandler.FolderList?.Any() ?? false))
+                if (SettingsHandler.RecentCheckedTemp)
                 {
-                    MessageBox.Show($"Your chosen folder has no valid files to play from and there is no valid path to fall back to!\n\nThe Path was:\n{_selectedPath}");
+                    ListHandler.latestFolderList(_selectedPath, SettingsHandler.RecentCount, ListHandler.IncludeSubfolders);
+                }
+                else
+                {
+                    ListHandler.fillFolderList(_selectedPath, ListHandler.IncludeSubfolders);
+                }
+
+                if (!(ListHandler.TempFolderList?.Any() ?? false))
+                {
+                    if (!(ListHandler.FolderList?.Any() ?? false))
+                    {
+                        MessageBox.Show($"Your chosen folder has no valid files to play from and there is no valid path to fall back to!\n\nThe Path was:\n{_selectedPath}");
+                        return;
+                    }
+                    MessageBox.Show($"Your chosen folder has no valid files to play from; No action taken!\n\nThe Path was:\n{_selectedPath}");
                     return;
                 }
-                MessageBox.Show($"Your chosen folder has no valid files to play from; No action taken!\n\nThe Path was:\n{_selectedPath}");
-                return;
+                else
+                {
+                    PathHandler.FolderPath = _selectedPath;
+                    ListHandler.TempFolderList = Enumerable.Empty<string>();
+                }
             }
-            else
-            {
-                PathHandler.FolderPath = _selectedPath;
-                ListHandler.TempFolderList = Enumerable.Empty<string>();
-            }
+
 
             MainFormData.startedByFile = false;
             lblCurrentInfo.Text = PathHandler.FolderPath;
@@ -1257,21 +1269,11 @@ namespace RandomVideoPlayer
 
                 AutoSkipHandler();
 
-                //if (SettingsHandler.RTXVSREnabled)
-                //{
-                //    playerMPV.API.Command("vf", "add", MainFormData.VSRFilter);
-                //}
-                //else
-                //{
-                //    playerMPV.API.Command("vf", "del", "d3d11vpp");
-                //}
-
-
                 LoadThemeOption();
                 ThemeManager.ApplyTheme(this);
 
                 renderer.BackgroundColor = ThemeManager.CurrentTheme.ToolMenuBackColor;
-                renderer.TextColor = ThemeManager.CurrentTheme.TextColor;
+                renderer.TextColor = ThemeManager.CurrentTheme.ToolMenuTextColor;
                 renderer.HighlightColor = ThemeManager.CurrentTheme.ToolMenuHoverColor;
                 renderer.ApplyColors();
 
@@ -1474,7 +1476,7 @@ namespace RandomVideoPlayer
             renderer = new CustomRenderer()
             {
                 BackgroundColor = ThemeManager.CurrentTheme.ToolMenuBackColor,
-                TextColor = ThemeManager.CurrentTheme.TextColor,
+                TextColor = ThemeManager.CurrentTheme.ToolMenuTextColor,
                 HighlightColor = ThemeManager.CurrentTheme.ToolMenuHoverColor,
             };
             renderer.ApplyColors();
@@ -3670,7 +3672,7 @@ namespace RandomVideoPlayer
                     NoCache = true
                 };
 
-                var versionHistory = UpdateFunctions.GetVersionHistory(MainFormData.VersionHistoryUrl);
+                var versionHistory = await UpdateFunctions.GetVersionHistory(MainFormData.VersionHistoryUrl);
 
                 return new Version(versionHistory.Last().Key);
             }

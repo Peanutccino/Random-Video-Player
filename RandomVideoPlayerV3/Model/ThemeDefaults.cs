@@ -12,9 +12,9 @@ namespace RandomVideoPlayer.Model
         {
             FormBackColor = ColorTranslator.FromHtml("#FD5392"),
             TextColor = ColorTranslator.FromHtml("#000000"),
-            ButtonBackColor = ColorTranslator.FromHtml("#FD5392"),
             ButtonHighlightColor = ColorTranslator.FromHtml("#98FB98"),
             ButtonIconColor = ColorTranslator.FromHtml("#000000"),
+            ToolMenuTextColor = ColorTranslator.FromHtml("#000000"),
             ToolMenuBackColor = ColorTranslator.FromHtml("#FF94B5"),
             ToolMenuHoverColor = ColorTranslator.FromHtml("#98FB98"),
             ProgressColor = ColorTranslator.FromHtml("#F86F64"),
@@ -47,9 +47,9 @@ namespace RandomVideoPlayer.Model
         {
             FormBackColor = ColorTranslator.FromHtml("#393059"),
             TextColor = ColorTranslator.FromHtml("#B0E0E6"),
-            ButtonBackColor = ColorTranslator.FromHtml("#393059"),
             ButtonHighlightColor = ColorTranslator.FromHtml("#307BFD"),
             ButtonIconColor = ColorTranslator.FromHtml("#B0E0E6"),
+            ToolMenuTextColor = ColorTranslator.FromHtml("#B0E0E6"),
             ToolMenuBackColor = ColorTranslator.FromHtml("#574988"),
             ToolMenuHoverColor = ColorTranslator.FromHtml("#307BFD"),
             ProgressColor = ColorTranslator.FromHtml("#64EEF8"),

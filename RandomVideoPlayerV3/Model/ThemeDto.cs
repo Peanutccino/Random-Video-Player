@@ -11,9 +11,9 @@ namespace RandomVideoPlayer.Model
         public string Name { get; set; }
         public string FormBackColor { get; set; }
         public string TextColor { get; set; }
-        public string ButtonBackColor { get; set; }
         public string ButtonHighlightColor { get; set; }
         public string ButtonIconColor { get; set; }
+        public string ToolMenuTextColor { get; set; }
         public string ToolMenuBackColor { get; set; }
         public string ToolMenuHoverColor { get; set; }
         public string ProgressColor { get; set; }
@@ -43,9 +43,9 @@ namespace RandomVideoPlayer.Model
             Name = name,
             FormBackColor = ToHex(theme.FormBackColor),
             TextColor = ToHex(theme.TextColor),
-            ButtonBackColor = ToHex(theme.ButtonBackColor),
             ButtonHighlightColor = ToHex(theme.ButtonHighlightColor),
             ButtonIconColor = ToHex(theme.ButtonIconColor),
+            ToolMenuTextColor = ToHex(theme.ToolMenuTextColor),
             ToolMenuBackColor = ToHex(theme.ToolMenuBackColor),
             ToolMenuHoverColor = ToHex(theme.ToolMenuHoverColor),
             ProgressColor = ToHex(theme.ProgressColor),

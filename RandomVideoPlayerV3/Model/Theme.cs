@@ -14,9 +14,9 @@ namespace RandomVideoPlayer.Model
         #region Main
         public Color FormBackColor { get; init; }
         public Color TextColor { get; init; }
-        public Color ButtonBackColor { get; init; }
         public Color ButtonHighlightColor { get; init; }
-        public Color ButtonIconColor { get; init; }
+        public Color ButtonIconColor { get; init; } 
+        public Color ToolMenuTextColor { get; init; }
         public Color ToolMenuBackColor { get; init; }
         public Color ToolMenuHoverColor { get; init; }
         public Color ProgressColor { get; init; }

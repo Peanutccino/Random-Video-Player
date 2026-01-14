@@ -112,7 +112,7 @@ namespace RandomVideoPlayer.UserControls
                     .Where(v => new Version(v.Key) > new Version(currentVersion))
                     .ToList();
 
-                List<string> zipPaths = new List<string>();
+                List<string> zipPaths = new();
                 string extractPath = Path.Combine(Path.GetTempPath(), "update");
 
                 foreach (var version in versionsToUpdate) 
@@ -255,7 +255,7 @@ namespace RandomVideoPlayer.UserControls
                         NoCache = true
                     };
 
-                    versionHistory = UpdateFunctions.GetVersionHistory(VersionHistoryUrl);
+                    versionHistory = await UpdateFunctions.GetVersionHistory(VersionHistoryUrl);
 
                     if (versionHistory.Count == 0)
                     {

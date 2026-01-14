@@ -30,9 +30,9 @@ namespace RandomVideoPlayer.Functions
             {
                 FormBackColor = ParseColorOrDefault(dto.FormBackColor, defaults.FormBackColor),
                 TextColor = ParseColorOrDefault(dto.TextColor, defaults.TextColor),
-                ButtonBackColor = ParseColorOrDefault(dto.ButtonBackColor, defaults.ButtonBackColor),
                 ButtonHighlightColor = ParseColorOrDefault(dto.ButtonHighlightColor, defaults.ButtonHighlightColor),
                 ButtonIconColor = ParseColorOrDefault(dto.ButtonIconColor, defaults.ButtonIconColor),
+                ToolMenuTextColor = ParseColorOrDefault(dto.ToolMenuTextColor, defaults.ToolMenuTextColor),
                 ToolMenuBackColor = ParseColorOrDefault(dto.ToolMenuBackColor, defaults.ToolMenuBackColor),
                 ToolMenuHoverColor = ParseColorOrDefault(dto.ToolMenuHoverColor, defaults.ToolMenuHoverColor),
                 ProgressColor = ParseColorOrDefault(dto.ProgressColor, defaults.ProgressColor),

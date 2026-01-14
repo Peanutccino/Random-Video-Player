@@ -9,15 +9,15 @@ namespace RandomVideoPlayer.Functions
 {
     public static class UpdateFunctions
     {
-        public static Dictionary<string, string> GetVersionHistory(string versionUrl)
+        public static async Task<Dictionary<string, string>> GetVersionHistory(string versionUrl)
         {
             var versionHistory = new Dictionary<string, string>();
 
             try
             {
-                using (WebClient client = new WebClient())
+                using (HttpClient client = new())
                 {
-                    string versionData = client.DownloadString(versionUrl);
+                    string versionData = await client.GetStringAsync(versionUrl);
                     var lines = versionData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
                     foreach (var line in lines)

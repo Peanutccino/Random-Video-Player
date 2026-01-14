@@ -14,8 +14,9 @@ namespace RandomVideoPlayer.Views
     {
         #region Variables
         FormResize formResize = new FormResize();
-
+        private volatile bool _shuttingDown;
         private readonly List<FileSystemInfo> _listItemFileExplorerEntries = new();
+        private readonly SemaphoreSlim _thumbGate = new(4);
 
         private readonly Dictionary<string, int> _imageIndexCache = new(StringComparer.OrdinalIgnoreCase);
         private readonly ConcurrentDictionary<string, byte> _pendingThumbs = new();
@@ -83,18 +84,28 @@ namespace RandomVideoPlayer.Views
         public ListBrowserV2View()
         {
             InitializeComponent();
+            lvFileExplore.CreateControl();
+            lvFileExplore.HandleCreated += lvFileExplore_HandleCreated;
             InitializeUI();
             LoadSettings();
         }
 
-        private void ListBrowserV2View_Load(object sender, EventArgs e)
+        private void lvFileExplore_HandleCreated(object? sender, EventArgs e)
         {
             SwitchView(_viewState);
-            RenderDirectoryBreadcrumbs();
-            RenderFavoriteBreadcrumbs();
             LoadFolder(_selectedPath);
         }
 
+        private void ListBrowserV2View_Load(object sender, EventArgs e)
+        {
+            RenderDirectoryBreadcrumbs();
+            RenderFavoriteBreadcrumbs();
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            _shuttingDown = true;
+            base.OnFormClosing(e);
+        }
         private void btnStart_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.OK;
@@ -1054,27 +1065,45 @@ namespace RandomVideoPlayer.Views
             lvFileExplore.SelectedIndices.Clear();
             lvFileExplore.FocusedItem = null;
 
-            _selectedPath = path;
-            RenderBreadcrumbPath(path);
+            var newEntries = new List<FileSystemInfo>();
+            try
+            {
+                var dir = new DirectoryInfo(path);
+                newEntries.AddRange(dir.EnumerateDirectories());
+
+                if (ListHandler.FilterScriptEnabled)
+                {
+                    var filteredEntries = ListHandler.EnumerateEligibleVideosFromDirectory(path, false)
+                                                     .Select(p => new FileInfo(p));
+
+                    newEntries.AddRange(filteredEntries);
+                }
+                else
+                {
+                    newEntries.AddRange(dir.EnumerateFiles()
+                         .Where(f => IsAllowed(f.Extension, filteredExtensions.ToArray())));
+                }
+
+                _selectedPath = path;
+                RenderBreadcrumbPath(path);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("You do not have permission to access some entries in this directory.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lvFileExplore.EndUpdate();
+                lvFileExplore.Invalidate();
+                return;
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex, "Error loading directories in folder browser V2");
+                lvFileExplore.EndUpdate();
+                lvFileExplore.Invalidate();
+                return;
+            }
+
             _listItemFileExplorerEntries.Clear();
-
-            var dir = new DirectoryInfo(path);
-            _listItemFileExplorerEntries.AddRange(dir.EnumerateDirectories());
-
-            if (ListHandler.FilterScriptEnabled)
-            {
-                var filteredEntries = ListHandler.EnumerateEligibleVideosFromDirectory(path, false)
-                                                 .Select(p => new FileInfo(p));
-
-                _listItemFileExplorerEntries.AddRange(filteredEntries);
-            }
-            else
-            {
-                _listItemFileExplorerEntries.AddRange(dir.EnumerateFiles()
-                     .Where(f => IsAllowed(f.Extension, filteredExtensions.ToArray())));
-            }
-
-
+            _listItemFileExplorerEntries.AddRange(newEntries);
             ApplyVirtualListSize(_listItemFileExplorerEntries.Count);
             _cachedRange = (-1, -1);
             HighLightDrive(path);
@@ -1370,20 +1399,8 @@ namespace RandomVideoPlayer.Views
             }
             else
             {
-                int imageIndex = 0;
-                if (fsi is DirectoryInfo)
-                {
-                    imageIndex = 0;
-                }
-                else if (IsAllowed(fsi.Extension, ListHandler.VideoExtensions.ToArray()))
-                {
-                    imageIndex = 1;
-                }
-                else if (IsAllowed(fsi.Extension, ListHandler.ImageExtensions.ToArray()))
-                {
-                    imageIndex = 2;
-                }
-                item.ImageIndex = imageIndex;
+                int slot = DetermineImageIndex(fsi);
+                item.ImageIndex = slot;
                 QueueThumbnailLoad(fsi);
             }
 
@@ -1405,36 +1422,27 @@ namespace RandomVideoPlayer.Views
         }
         private void QueueThumbnailLoad(FileSystemInfo fsi)
         {
+            if(_shuttingDown) 
+                return;
+
             if (!_pendingThumbs.TryAdd(fsi.FullName, 0))
                 return;
 
-            _ = Task.Run(() =>
+            Task.Run(async () =>
             {
                 try
                 {
+                    await _thumbGate.WaitAsync().ConfigureAwait(false);
+
                     using var raw = BuildThumbnail(fsi);
                     Invoke(new Action(() =>
                     {
-                        int imageIndex = 0;
-                        if (fsi is DirectoryInfo)
-                        {
-                            imageIndex = 0;
-                        }
-                        else if (_thumbPreviewEnabled)
-                        {
-                            imageIndex = _thumbs.Images.Count;
-                        }
-                        else if (IsAllowed(fsi.Extension, ListHandler.VideoExtensions.ToArray()))
-                        {
-                            imageIndex = 1;
-                        }
-                        else if (IsAllowed(fsi.Extension, ListHandler.ImageExtensions.ToArray()))
-                        {
-                            imageIndex = 2;
-                        }
-                        using var fitted = FitThumbnail(raw, _thumbSize, _backColorSideDark);
+                        if(_shuttingDown) 
+                            return;
+                        int slot = DetermineImageIndex(fsi);
+                        using var fitted = FitThumbnail(raw, _thumbSize, _backColorMainDark);
                         _thumbs.Images.Add((Image)fitted.Clone());
-                        _imageIndexCache[fsi.FullName] = imageIndex;
+                        _imageIndexCache[fsi.FullName] = slot;
 
                         int idx = _listItemFileExplorerEntries.FindIndex(info => info.FullName == fsi.FullName);
                         if (idx >= 0)
@@ -1450,6 +1458,7 @@ namespace RandomVideoPlayer.Views
                 }
                 finally
                 {
+                    _thumbGate.Release();
                     _pendingThumbs.TryRemove(fsi.FullName, out _);
                 }
             });
@@ -1518,6 +1527,17 @@ namespace RandomVideoPlayer.Views
                 if (factory != null)
                     Marshal.ReleaseComObject(factory);
             }
+        }
+        private int DetermineImageIndex(FileSystemInfo fsi)
+        {
+            if (fsi is DirectoryInfo) return 0;
+            if (!_thumbPreviewEnabled)
+            {
+                if (IsAllowed(fsi.Extension, ListHandler.VideoExtensions.ToArray())) return 1;
+                if (IsAllowed(fsi.Extension, ListHandler.ImageExtensions.ToArray())) return 2;
+            }
+
+            return _thumbs.Images.Count; // slot reserved for the new thumbnail
         }
         private void ApplyVirtualListSize(int newCount)
         {

@@ -383,7 +383,7 @@ namespace RandomVideoPlayer.Model
         public static void fillFolderList(string folderpath, bool includeSubfolders, CancellationToken token = default)
         {
             try
-            {
+            {             
                 _tempfolderList = EnumerateEligibleVideosFromDirectory(folderpath, includeSubfolders, token).ToList();
 
                 if (_tempfolderList?.Any() ?? false)
