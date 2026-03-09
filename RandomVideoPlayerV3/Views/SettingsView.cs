@@ -18,19 +18,27 @@ namespace RandomVideoPlayer.Views
         {
             InitializeComponent();
 
-            UpdateDPIScaling();
-
-            //Adjust Form for Borderless Style
-            this.Padding = new Padding(fR.BorderSize);//Border size
-            this.BackColor = Color.FromArgb(179, 179, 255);//Border color
+            DPI.UpdateDPIScaling(this);
+            this.Size = DPI.GetSizeScaled(this.Size);
 
             settingsModel = new SettingsModel();
+
+            InitializeUI();
 
             InitializeNavigation();
             InitializeSettings();
             HighlightButton(sbtnPaths);
             LoadUserControl(new PathsUserControl(settingsModel));
         }
+
+        private void InitializeUI()
+        {
+            ThemeManager.ApplyThemeSettings(this);
+
+            this.Padding = new Padding(fR.BorderSize);//Border size
+            this.BackColor = ThemeManager.CurrentTheme.StBackColor;//Border color
+        }
+
         private void lblTitle_MouseDown(object sender, MouseEventArgs e)
         {
             ReleaseCapture();
@@ -71,6 +79,10 @@ namespace RandomVideoPlayer.Views
             settingsModel.AutoSkipSeconds = SettingsHandler.AutoSkipSeconds;
             settingsModel.EnableRandomVideoStartPoint = SettingsHandler.EnableRandomVideoStartPoint;
             settingsModel.RandomVideoStartPointIgnoreScripts = SettingsHandler.RandomVideoStartPointIgnoreScripts;
+            settingsModel.RandomVideoStartPointIgnoreShortVideos = SettingsHandler.RandomVideoStartPointIgnoreShortVideos;
+            settingsModel.RandomVideoStartPointShortVideoThreshold = SettingsHandler.RandomVideoStartPointShortVideoThreshold;
+            settingsModel.StartPointRangeStart = SettingsHandler.StartPointRangeStart;
+            settingsModel.StartPointRangeEnd = SettingsHandler.StartPointRangeEnd;
 
             settingsModel.DefaultPathText = PathHandler.DefaultFolder;
             settingsModel.RemovalPathText = PathHandler.RemoveFolder;
@@ -96,10 +108,7 @@ namespace RandomVideoPlayer.Views
             settingsModel.ApplyFilterToList = SettingsHandler.ApplyFilterToList;
             settingsModel.SortCreated = SettingsHandler.CreationDate;
 
-            settingsModel.AutoPlayMethod = SettingsHandler.AutoPlayMethod;
-            settingsModel.AutoPlayTimerValueStartPoint = SettingsHandler.AutoPlayTimerValueStartPoint(false);
-            settingsModel.AutoPlayTimerValueEndPoint = SettingsHandler.AutoPlayTimerValueEndPoint;
-            settingsModel.AutoPlayTimerRangeEnabled = SettingsHandler.AutoPlayTimerRangeEnabled;
+            settingsModel.LoopEnabled = SettingsHandler.LoopEnabled;
             settingsModel.CustomSeekForwardValueSmall = SettingsHandler.CustomSeekForwardValueSmall;
             settingsModel.CustomSeekBackwardValueSmall = SettingsHandler.CustomSeekBackwardValueSmall;
             settingsModel.CustomSeekForwardValueLarge = SettingsHandler.CustomSeekForwardValueLarge;
@@ -108,6 +117,21 @@ namespace RandomVideoPlayer.Views
             settingsModel.ShufflePlaylist = ListHandler.DoShuffle;
             settingsModel.ReShuffle = ListHandler.ReShuffle;
             settingsModel.RTXVSREnabled = SettingsHandler.RTXVSREnabled;
+            settingsModel.LogLevel = SettingsHandler.LogLevel;
+
+            settingsModel.AutoPlayTimerValueStartPoint = SettingsHandler.AutoPlayTimerValueStartPoint(false);
+            settingsModel.AutoPlayTimerValueEndPoint = SettingsHandler.AutoPlayTimerValueEndPoint;
+            settingsModel.AutoPlayTimerRangeEnabled = SettingsHandler.AutoPlayTimerRangeEnabled;
+            settingsModel.TimerEnabled = SettingsHandler.TimerEnabled;
+            settingsModel.TimerResetOnSeek = SettingsHandler.TimerResetOnSeek;
+
+            settingsModel.AudioNormalizerEnabled = SettingsHandler.AudioNormalizerEnabled;
+            settingsModel.FrameLen = SettingsHandler.FrameLen;
+            settingsModel.GaussSize = SettingsHandler.GaussSize;
+            settingsModel.Peak = SettingsHandler.Peak;
+            settingsModel.MaxGain = SettingsHandler.MaxGain;
+            settingsModel.TargetRMS = SettingsHandler.TargetRMS;
+            settingsModel.AltBoundary = SettingsHandler.AltBoundary;
 
             settingsModel.EnableSubtitles = SettingsHandler.SubtitlesEnabled;
             settingsModel.SubtitleSize = SettingsHandler.SubtitleFontSize;
@@ -123,11 +147,8 @@ namespace RandomVideoPlayer.Views
             settingsModel.ZoomAmount = SettingsHandler.ZoomAmount;
             settingsModel.ZoomEasingFunction = SettingsHandler.ZoomEasingFunction;
             settingsModel.PanEasingFunction = SettingsHandler.PanEasingFunction;
-            settingsModel.EnableCustomScaling = SettingsHandler.EnableCustomScaling;
-            settingsModel.CustomScaling = SettingsHandler.CustomScaling;
-            settingsModel.FolderBrowserV2Enabled = SettingsHandler.FolderBrowserV2Enabled;
-            settingsModel.ListBrowserV2Enabled = SettingsHandler.ListBrowserV2Enabled;
             settingsModel.ThumbnailPreviewEnabled = SettingsHandler.ThumbnailPreviewEnabled;
+            settingsModel.PreviewSeekBarEnabled = SettingsHandler.PreviewSeekBarEnabled;
 
             settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
             settingsModel.AlwaysAddFilesToQueue = SettingsHandler.AlwaysAddFilesToQueue;
@@ -138,6 +159,8 @@ namespace RandomVideoPlayer.Views
             settingsModel.ButtonOrder = SettingsHandler.ButtonOrder;
             settingsModel.ShowButtonToPlayFromCurrentFolder = SettingsHandler.ShowButtonStayInCurrentFolder;
             settingsModel.SelectedTheme = SettingsHandler.SelectedTheme;
+            settingsModel.EnableCustomScaling = SettingsHandler.EnableCustomScaling;
+            settingsModel.CustomScaling = SettingsHandler.CustomScaling;
 
             settingsModel.AlwaysCheckUpdate = SettingsHandler.AlwaysCheckUpdate;
         }
@@ -145,6 +168,7 @@ namespace RandomVideoPlayer.Views
         {
             sbtnPaths.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new PathsUserControl(settingsModel)); };
             sbtnPlayer.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new PlayerUserControl(settingsModel)); };
+            sbtnAudio.Click += (s,e) => { HighlightButton((IconButton)s); LoadUserControl(new AudioUserControl(settingsModel)); };
             sbtnFilterExtensions.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new FileExtensionsUserControl(settingsModel)); };
             sbtnRemember.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new RememberUserControl(settingsModel)); };
             sbtnInputs.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InputsUserControl()); };
@@ -152,6 +176,7 @@ namespace RandomVideoPlayer.Views
             sbtnProfiles.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new ProfilesUserControl(settingsModel)); };
             sbtnSync.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SyncUserControl(settingsModel)); };
             sbtnSkip.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new SkipUserControl(settingsModel)); };
+            sbtnTimer.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new TimerUserControl(settingsModel)); };
             sbtnInterface.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InterfaceUserControl(settingsModel)); };
             sbtnDragDrop.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new DragDropUserControl(settingsModel)); };
             sbtnExperimental.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new ExperimentalUserControl(settingsModel)); };
@@ -176,6 +201,10 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.AutoSkipSeconds = settingsModel.AutoSkipSeconds;
             SettingsHandler.EnableRandomVideoStartPoint = settingsModel.EnableRandomVideoStartPoint;
             SettingsHandler.RandomVideoStartPointIgnoreScripts = settingsModel.RandomVideoStartPointIgnoreScripts;
+            SettingsHandler.RandomVideoStartPointIgnoreShortVideos = settingsModel.RandomVideoStartPointIgnoreShortVideos;
+            SettingsHandler.RandomVideoStartPointShortVideoThreshold = settingsModel.RandomVideoStartPointShortVideoThreshold;
+            SettingsHandler.StartPointRangeStart = settingsModel.StartPointRangeStart;
+            SettingsHandler.StartPointRangeEnd = settingsModel.StartPointRangeEnd;
 
             PathHandler.DefaultFolder = settingsModel.DefaultPathText;
             PathHandler.TempRecentFolder = PathHandler.DefaultFolder;
@@ -193,10 +222,8 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.StartupAlwaysAsk = settingsModel.StartupAlwaysAsk;
             SettingsHandler.StartupAllDirectories = settingsModel.StartupAllDirectories;
 
-            SettingsHandler.AutoPlayMethod = settingsModel.AutoPlayMethod;
-            SettingsHandler.SetAutoPlayTimerValueStartPoint(settingsModel.AutoPlayTimerValueStartPoint);
-            SettingsHandler.AutoPlayTimerValueEndPoint = settingsModel.AutoPlayTimerValueEndPoint;
-            SettingsHandler.AutoPlayTimerRangeEnabled = settingsModel.AutoPlayTimerRangeEnabled;
+
+            SettingsHandler.LoopEnabled = settingsModel.LoopEnabled;
             SettingsHandler.CustomSeekForwardValueSmall = settingsModel.CustomSeekForwardValueSmall;
             SettingsHandler.CustomSeekBackwardValueSmall = settingsModel.CustomSeekBackwardValueSmall;
             SettingsHandler.CustomSeekForwardValueLarge = settingsModel.CustomSeekForwardValueLarge;
@@ -205,6 +232,21 @@ namespace RandomVideoPlayer.Views
             ListHandler.DoShuffle = settingsModel.ShufflePlaylist;
             ListHandler.ReShuffle = settingsModel.ReShuffle;
             SettingsHandler.RTXVSREnabled = settingsModel.RTXVSREnabled;
+            SettingsHandler.LogLevel = settingsModel.LogLevel;
+
+            SettingsHandler.SetAutoPlayTimerValueStartPoint(settingsModel.AutoPlayTimerValueStartPoint);
+            SettingsHandler.AutoPlayTimerValueEndPoint = settingsModel.AutoPlayTimerValueEndPoint;
+            SettingsHandler.AutoPlayTimerRangeEnabled = settingsModel.AutoPlayTimerRangeEnabled;
+            SettingsHandler.TimerEnabled = settingsModel.TimerEnabled;
+            SettingsHandler.TimerResetOnSeek = settingsModel.TimerResetOnSeek;
+
+            SettingsHandler.AudioNormalizerEnabled = settingsModel.AudioNormalizerEnabled;
+            SettingsHandler.FrameLen = settingsModel.FrameLen;
+            SettingsHandler.GaussSize = settingsModel.GaussSize;
+            SettingsHandler.Peak = settingsModel.Peak;
+            SettingsHandler.MaxGain = settingsModel.MaxGain;
+            SettingsHandler.TargetRMS = settingsModel.TargetRMS;
+            SettingsHandler.AltBoundary = settingsModel.AltBoundary;
 
             SettingsHandler.SubtitlesEnabled = settingsModel.EnableSubtitles;
             SettingsHandler.SubtitleFontSize = settingsModel.SubtitleSize;
@@ -220,11 +262,8 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.ZoomAmount = settingsModel.ZoomAmount;
             SettingsHandler.ZoomEasingFunction = settingsModel.ZoomEasingFunction;
             SettingsHandler.PanEasingFunction = settingsModel.PanEasingFunction;
-            SettingsHandler.EnableCustomScaling = settingsModel.EnableCustomScaling;
-            SettingsHandler.CustomScaling = settingsModel.CustomScaling;
-            SettingsHandler.FolderBrowserV2Enabled = settingsModel.FolderBrowserV2Enabled;
-            SettingsHandler.ListBrowserV2Enabled = settingsModel.ListBrowserV2Enabled;
             SettingsHandler.ThumbnailPreviewEnabled = settingsModel.ThumbnailPreviewEnabled;
+            SettingsHandler.PreviewSeekBarEnabled = settingsModel.PreviewSeekBarEnabled;
 
             SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;
             SettingsHandler.AlwaysAddFilesToQueue = settingsModel.AlwaysAddFilesToQueue;
@@ -251,6 +290,8 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.ButtonOrder = settingsModel.ButtonOrder;
             SettingsHandler.ShowButtonStayInCurrentFolder = settingsModel.ShowButtonToPlayFromCurrentFolder;
             SettingsHandler.SelectedTheme = settingsModel.SelectedTheme;
+            SettingsHandler.EnableCustomScaling = settingsModel.EnableCustomScaling;
+            SettingsHandler.CustomScaling = settingsModel.CustomScaling;
 
             SettingsHandler.AlwaysCheckUpdate = settingsModel.AlwaysCheckUpdate;
         }
@@ -259,13 +300,13 @@ namespace RandomVideoPlayer.Views
         {
             if (currentlySelectedButton != null)
             {
-                currentlySelectedButton.BackColor = Color.GhostWhite;
-                currentlySelectedButton.ForeColor = Color.Black;
-                currentlySelectedButton.IconColor = Color.Black;
+                currentlySelectedButton.BackColor = ThemeManager.CurrentTheme.StBackColorDark;
+                currentlySelectedButton.ForeColor = ThemeManager.CurrentTheme.StTextColor;
+                currentlySelectedButton.IconColor = ThemeManager.CurrentTheme.StTextColor;
             }
-            button.BackColor = Color.Indigo;
-            button.ForeColor = Color.White;
-            button.IconColor = Color.White;
+            button.BackColor = ThemeManager.CurrentTheme.StAccentColor;
+            button.ForeColor = ThemeManager.CurrentTheme.StTextColorAccent;
+            button.IconColor = ThemeManager.CurrentTheme.StTextColorAccent;
             currentlySelectedButton = button;
         }
 
@@ -292,22 +333,6 @@ namespace RandomVideoPlayer.Views
             }
             PathHandler.FileMoveFolderPath = settingsModel.FileMovePath;
             SettingsHandler.FileCopy = settingsModel.FileCopy;
-        }
-        private void UpdateDPIScaling()
-        {
-            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
-            this.Size = DPI.GetSizeScaled(this.Size);           
-
-            panelTop.Height = DPI.GetDivided(panelTop.Height);
-            lblTitle.Font = DPI.GetFontScaled(lblTitle.Font);
-            lblTitle.Size = DPI.GetSizeScaled(lblTitle.Size);
-            btnClose.Size = DPI.GetSizeScaled(btnClose.Size);            
-
-            foreach (IconButton button in panelSidebar.Controls)
-            {
-                button.Size = DPI.GetSizeScaled(button.Size);
-                button.Font = DPI.GetFontScaled(button.Font);                
-            }
         }
 
         #region WndProc Code for clean style of the Form and regaining usabality

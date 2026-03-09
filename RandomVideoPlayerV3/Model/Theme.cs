@@ -45,5 +45,18 @@ namespace RandomVideoPlayer.Model
         public Color LbHighlightColorMain { get; init; }
         public Color LbHighlightColorSide { get; init; }
         #endregion
+
+        #region Settings
+        public Color StTextColor { get; init; }
+        public Color StTextColorAccent { get; init; }
+        public Color StTextColorBack { get; init; }
+        public Color StTextColorHighlight { get; init; }     
+        public Color StBackColor {  get; init; }
+        public Color StBackColorLight { get; init; }
+        public Color StBackColorDark { get; init; }
+        public Color StAccentColor { get; init; }
+
+        public Color StHighlightColor { get; init; }
+        #endregion
     }
 }

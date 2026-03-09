@@ -28,100 +28,128 @@
         /// </summary>
         private void InitializeComponent()
         {
+            tableLayoutMain = new TableLayoutPanel();
             lblHeader = new Label();
             panel1 = new Panel();
-            lblProfile = new Label();
-            lbl2 = new Label();
             lbl1 = new Label();
+            lbl2 = new Label();
+            lblProfile = new Label();
             lbProfiles = new ListBox();
-            panel2 = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
             btnAdd = new FontAwesome.Sharp.IconButton();
             btnDelete = new FontAwesome.Sharp.IconButton();
             btnRename = new FontAwesome.Sharp.IconButton();
-            tableLayoutPanel1 = new TableLayoutPanel();
             btnSetProfile = new FontAwesome.Sharp.IconButton();
+            tableLayoutMain.SuspendLayout();
             panel1.SuspendLayout();
-            panel2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
+            // tableLayoutMain
+            // 
+            tableLayoutMain.BackColor = Color.MistyRose;
+            tableLayoutMain.ColumnCount = 1;
+            tableLayoutMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutMain.Controls.Add(lbProfiles, 0, 3);
+            tableLayoutMain.Controls.Add(lblProfile, 0, 2);
+            tableLayoutMain.Controls.Add(lblHeader, 0, 0);
+            tableLayoutMain.Controls.Add(panel1, 0, 1);
+            tableLayoutMain.Controls.Add(tableLayoutPanel1, 0, 4);
+            tableLayoutMain.Dock = DockStyle.Fill;
+            tableLayoutMain.Location = new Point(0, 0);
+            tableLayoutMain.Name = "tableLayoutMain";
+            tableLayoutMain.RowCount = 5;
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 60F));
+            tableLayoutMain.RowStyles.Add(new RowStyle());
+            tableLayoutMain.RowStyles.Add(new RowStyle());
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            tableLayoutMain.Size = new Size(524, 656);
+            tableLayoutMain.TabIndex = 0;
+            // 
             // lblHeader
             // 
-            lblHeader.Dock = DockStyle.Top;
+            lblHeader.Dock = DockStyle.Fill;
             lblHeader.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblHeader.ForeColor = Color.Indigo;
-            lblHeader.Location = new Point(0, 0);
+            lblHeader.Location = new Point(3, 0);
             lblHeader.Name = "lblHeader";
-            lblHeader.Size = new Size(509, 55);
-            lblHeader.TabIndex = 1;
+            lblHeader.Size = new Size(518, 60);
+            lblHeader.TabIndex = 7;
             lblHeader.Text = "Profiles";
             // 
             // panel1
             // 
-            panel1.Controls.Add(lblProfile);
+            panel1.BackColor = Color.LightCoral;
             panel1.Controls.Add(lbl2);
             panel1.Controls.Add(lbl1);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 55);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(3, 63);
             panel1.Name = "panel1";
-            panel1.Size = new Size(509, 92);
-            panel1.TabIndex = 2;
+            panel1.Size = new Size(518, 60);
+            panel1.TabIndex = 8;
+            // 
+            // lbl1
+            // 
+            lbl1.Dock = DockStyle.Top;
+            lbl1.Location = new Point(0, 0);
+            lbl1.Name = "lbl1";
+            lbl1.Size = new Size(518, 24);
+            lbl1.TabIndex = 1;
+            lbl1.Text = "Add, delete or rename profiles used to save preferred scripts";
+            // 
+            // lbl2
+            // 
+            lbl2.Dock = DockStyle.Top;
+            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl2.Location = new Point(0, 24);
+            lbl2.Name = "lbl2";
+            lbl2.Size = new Size(518, 24);
+            lbl2.TabIndex = 2;
+            lbl2.Text = "Currently set profile:";
             // 
             // lblProfile
             // 
             lblProfile.Dock = DockStyle.Fill;
             lblProfile.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblProfile.ForeColor = Color.Indigo;
-            lblProfile.Location = new Point(0, 40);
+            lblProfile.Location = new Point(3, 126);
             lblProfile.Name = "lblProfile";
             lblProfile.Padding = new Padding(6, 10, 0, 0);
-            lblProfile.Size = new Size(509, 52);
-            lblProfile.TabIndex = 2;
+            lblProfile.Size = new Size(518, 52);
+            lblProfile.TabIndex = 9;
             lblProfile.Text = "Default 1";
             lblProfile.TextAlign = ContentAlignment.TopCenter;
-            // 
-            // lbl2
-            // 
-            lbl2.AutoSize = true;
-            lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl2.Location = new Point(0, 15);
-            lbl2.Name = "lbl2";
-            lbl2.Padding = new Padding(6, 10, 0, 0);
-            lbl2.Size = new Size(119, 25);
-            lbl2.TabIndex = 1;
-            lbl2.Text = "Currently set profile:";
-            // 
-            // lbl1
-            // 
-            lbl1.AutoSize = true;
-            lbl1.Dock = DockStyle.Top;
-            lbl1.Location = new Point(0, 0);
-            lbl1.Name = "lbl1";
-            lbl1.Padding = new Padding(6, 0, 0, 0);
-            lbl1.Size = new Size(328, 15);
-            lbl1.TabIndex = 0;
-            lbl1.Text = "Add, delete or rename profiles used to save preferred scripts";
             // 
             // lbProfiles
             // 
             lbProfiles.Dock = DockStyle.Fill;
             lbProfiles.FormattingEnabled = true;
             lbProfiles.ItemHeight = 15;
-            lbProfiles.Location = new Point(0, 0);
+            lbProfiles.Location = new Point(3, 181);
             lbProfiles.Name = "lbProfiles";
-            lbProfiles.Size = new Size(509, 201);
-            lbProfiles.TabIndex = 0;
+            lbProfiles.Size = new Size(518, 280);
+            lbProfiles.TabIndex = 10;
             lbProfiles.SelectedIndexChanged += lbProfiles_SelectedIndexChanged;
             // 
-            // panel2
+            // tableLayoutPanel1
             // 
-            panel2.Controls.Add(lbProfiles);
-            panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(0, 147);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(509, 201);
-            panel2.TabIndex = 3;
+            tableLayoutPanel1.ColumnCount = 4;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.Controls.Add(btnSetProfile, 3, 0);
+            tableLayoutPanel1.Controls.Add(btnRename, 2, 0);
+            tableLayoutPanel1.Controls.Add(btnDelete, 1, 0);
+            tableLayoutPanel1.Controls.Add(btnAdd, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Top;
+            tableLayoutPanel1.Location = new Point(3, 467);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(518, 46);
+            tableLayoutPanel1.TabIndex = 11;
             // 
             // btnAdd
             // 
@@ -129,15 +157,16 @@
             btnAdd.FlatAppearance.BorderSize = 0;
             btnAdd.FlatStyle = FlatStyle.Flat;
             btnAdd.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnAdd.IconChar = FontAwesome.Sharp.IconChar.Plus;
+            btnAdd.IconChar = FontAwesome.Sharp.IconChar.Add;
             btnAdd.IconColor = Color.Black;
             btnAdd.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnAdd.IconSize = 28;
             btnAdd.ImageAlign = ContentAlignment.MiddleLeft;
-            btnAdd.Location = new Point(3, 3);
+            btnAdd.Location = new Point(6, 6);
+            btnAdd.Margin = new Padding(6);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(114, 34);
-            btnAdd.TabIndex = 0;
+            btnAdd.Size = new Size(117, 34);
+            btnAdd.TabIndex = 1;
             btnAdd.Text = "Add";
             btnAdd.TextAlign = ContentAlignment.MiddleRight;
             btnAdd.UseVisualStyleBackColor = true;
@@ -150,15 +179,16 @@
             btnDelete.FlatAppearance.BorderSize = 0;
             btnDelete.FlatStyle = FlatStyle.Flat;
             btnDelete.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnDelete.IconChar = FontAwesome.Sharp.IconChar.Minus;
+            btnDelete.IconChar = FontAwesome.Sharp.IconChar.Subtract;
             btnDelete.IconColor = Color.Black;
             btnDelete.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnDelete.IconSize = 28;
             btnDelete.ImageAlign = ContentAlignment.MiddleLeft;
-            btnDelete.Location = new Point(123, 3);
+            btnDelete.Location = new Point(135, 6);
+            btnDelete.Margin = new Padding(6);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(114, 34);
-            btnDelete.TabIndex = 1;
+            btnDelete.Size = new Size(117, 34);
+            btnDelete.TabIndex = 2;
             btnDelete.Text = "Delete";
             btnDelete.TextAlign = ContentAlignment.MiddleRight;
             btnDelete.UseVisualStyleBackColor = true;
@@ -176,33 +206,15 @@
             btnRename.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnRename.IconSize = 26;
             btnRename.ImageAlign = ContentAlignment.MiddleLeft;
-            btnRename.Location = new Point(243, 3);
+            btnRename.Location = new Point(264, 6);
+            btnRename.Margin = new Padding(6);
             btnRename.Name = "btnRename";
-            btnRename.Size = new Size(114, 34);
-            btnRename.TabIndex = 2;
+            btnRename.Size = new Size(117, 34);
+            btnRename.TabIndex = 3;
             btnRename.Text = "Rename";
             btnRename.TextAlign = ContentAlignment.MiddleRight;
             btnRename.UseVisualStyleBackColor = true;
             btnRename.Click += btnRename_Click;
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.ColumnCount = 4;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.5849056F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.5849056F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.5849056F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 29.2452831F));
-            tableLayoutPanel1.Controls.Add(btnSetProfile, 3, 0);
-            tableLayoutPanel1.Controls.Add(btnRename, 2, 0);
-            tableLayoutPanel1.Controls.Add(btnAdd, 0, 0);
-            tableLayoutPanel1.Controls.Add(btnDelete, 1, 0);
-            tableLayoutPanel1.Dock = DockStyle.Top;
-            tableLayoutPanel1.Location = new Point(0, 348);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(509, 40);
-            tableLayoutPanel1.TabIndex = 5;
             // 
             // btnSetProfile
             // 
@@ -211,15 +223,16 @@
             btnSetProfile.FlatAppearance.BorderSize = 0;
             btnSetProfile.FlatStyle = FlatStyle.Flat;
             btnSetProfile.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSetProfile.IconChar = FontAwesome.Sharp.IconChar.UserAlt;
+            btnSetProfile.IconChar = FontAwesome.Sharp.IconChar.UserLarge;
             btnSetProfile.IconColor = Color.Black;
             btnSetProfile.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSetProfile.IconSize = 26;
             btnSetProfile.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSetProfile.Location = new Point(363, 3);
+            btnSetProfile.Location = new Point(393, 6);
+            btnSetProfile.Margin = new Padding(6);
             btnSetProfile.Name = "btnSetProfile";
-            btnSetProfile.Size = new Size(143, 34);
-            btnSetProfile.TabIndex = 3;
+            btnSetProfile.Size = new Size(119, 34);
+            btnSetProfile.TabIndex = 4;
             btnSetProfile.Text = "Set profile";
             btnSetProfile.TextAlign = ContentAlignment.MiddleRight;
             btnSetProfile.UseVisualStyleBackColor = true;
@@ -229,32 +242,28 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(tableLayoutPanel1);
-            Controls.Add(panel2);
-            Controls.Add(panel1);
-            Controls.Add(lblHeader);
+            Controls.Add(tableLayoutMain);
             Name = "ProfilesUserControl";
-            Size = new Size(509, 609);
+            Size = new Size(524, 656);
+            tableLayoutMain.ResumeLayout(false);
             panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            panel2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
+        private TableLayoutPanel tableLayoutMain;
         private Label lblHeader;
         private Panel panel1;
-        private ListBox lbProfiles;
-        private Panel panel2;
-        private Label lblProfile;
-        private Label lbl2;
         private Label lbl1;
-        private FontAwesome.Sharp.IconButton btnRename;
-        private FontAwesome.Sharp.IconButton btnDelete;
-        private FontAwesome.Sharp.IconButton btnAdd;
+        private Label lbl2;
+        private Label lblProfile;
+        private ListBox lbProfiles;
         private TableLayoutPanel tableLayoutPanel1;
+        private FontAwesome.Sharp.IconButton btnAdd;
+        private FontAwesome.Sharp.IconButton btnDelete;
+        private FontAwesome.Sharp.IconButton btnRename;
         private FontAwesome.Sharp.IconButton btnSetProfile;
     }
 }

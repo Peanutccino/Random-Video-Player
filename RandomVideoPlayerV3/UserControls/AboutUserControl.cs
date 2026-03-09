@@ -1,4 +1,5 @@
-﻿using RandomVideoPlayer.Functions;
+﻿using FontAwesome.Sharp;
+using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
 using System.Diagnostics;
 using System.IO.Compression;
@@ -15,6 +16,15 @@ namespace RandomVideoPlayer.UserControls
         private const string VersionHistoryUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version_history.txt";
 
         private SettingsModel settings;
+        private Color _textColor;
+        private Color _backColorDark;
+        private Color _highlightColor;
+
+        private Color HoverColor(IconButton btn) => ThemeHelper.Lighten(idleColors[btn], _highlightColor, 60);
+        private Color PressedColor(IconButton btn) => ThemeHelper.Lighten(idleColors[btn], _highlightColor, 20);
+
+        private readonly Dictionary<IconButton, Color> idleColors = new();
+
         private static System.Timers.Timer blinkTimer;
         private static int colorLight = 230;
         private static int colorDark = 179;
@@ -35,7 +45,7 @@ namespace RandomVideoPlayer.UserControls
 
             rtbConsole.Font = new Font(FontFamily.GenericMonospace, 9);
 
-            UpdateDPIScaling();
+            DPI.UpdateDPIScaling(this);
 
             this.settings = settings;
 
@@ -49,11 +59,45 @@ namespace RandomVideoPlayer.UserControls
             blinkTimer = new System.Timers.Timer(20);
             blinkTimer.Elapsed += OnTimedEvent;
 
-
+            InitializeUI();
             BindControls();
             LoadSettings();
         }
+        private void InitializeUI()
+        {
+            ThemeManager.ApplyThemeSettings(this);
 
+            _textColor = ThemeManager.CurrentTheme.StTextColor;
+            _backColorDark = ThemeManager.CurrentTheme.StBackColorDark;
+            _highlightColor = ThemeManager.CurrentTheme.StHighlightColor;
+
+            WireIconButton(btnSync);
+        }
+        private void WireIconButton(IconButton btn)
+        {
+            btn.FlatAppearance.MouseOverBackColor = _backColorDark;
+            btn.FlatAppearance.MouseDownBackColor = _backColorDark;
+            btn.BackColor = _backColorDark;
+
+            idleColors[btn] = _textColor;
+            btn.IconColor = _textColor;
+
+            btn.MouseEnter += (_, _) => btn.IconColor = HoverColor(btn);
+            btn.MouseLeave += (_, _) => btn.IconColor = idleColors[btn];
+            btn.MouseDown += (_, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                    btn.IconColor = PressedColor(btn);
+            };
+            btn.MouseUp += (_, _) =>
+            {
+                btn.IconColor = btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position))
+                    ? HoverColor(btn)
+                    : idleColors[btn];
+            };
+            btn.GotFocus += (_, _) => btn.IconColor = HoverColor(btn);
+            btn.LostFocus += (_, _) => btn.IconColor = idleColors[btn];
+        }
         private void BindControls()
         {
             cbUpdateAlwaysCheck.CheckedChanged += (s, e) =>
@@ -133,7 +177,7 @@ namespace RandomVideoPlayer.UserControls
                     }
                     catch (Exception ex)
                     {
-                        Error.Log(ex, "Error during download/extraction");
+                        Error.Log(ex, "Error during download/extraction", LogLevel.Error);
                         btnGitHub.Enabled = true;
                         return;
                     }
@@ -211,7 +255,7 @@ namespace RandomVideoPlayer.UserControls
                     }
                     catch (Exception ex)
                     {
-                        Error.Log(ex, "Couldn't delete downloaded files after update was cancelled!");
+                        Error.Log(ex, "Couldn't delete downloaded files after update was cancelled!", LogLevel.Error);
                         UpdateProgress("Failed to delete downloaded files...");
                         UpdateProgress("You can delete them manually under:");
                         UpdateProgress($"{extractPath}");
@@ -237,7 +281,7 @@ namespace RandomVideoPlayer.UserControls
             catch (Exception ex)
             {
                 UpdateProgress($"An error occurred and I couldn't finish the update: {ex.Message}");
-                Error.Log(ex, "Error during update");
+                Error.Log(ex, "Error during update", LogLevel.Error);
                 btnGitHub.Enabled = true;
             }
         }
@@ -308,7 +352,7 @@ namespace RandomVideoPlayer.UserControls
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Error checking for updates");
+                Error.Log(ex, "Error checking for updates", LogLevel.Error);
                 UpdateProgress($"Error checking for updates: {ex.Message}");
             }
         }
@@ -354,7 +398,7 @@ namespace RandomVideoPlayer.UserControls
                 catch (Exception ex)
                 {
                     UpdateProgress($"Error starting download: {ex.Message}");
-                    Error.Log(ex, "Error when starting download");
+                    Error.Log(ex, "Error when starting download", LogLevel.Error);
 
                     if(File.Exists(destinationPath))
                     {
@@ -367,7 +411,7 @@ namespace RandomVideoPlayer.UserControls
                         catch (Exception deleteEx)
                         {
                             UpdateProgress($"Failed to delete incomplete file: {deleteEx.Message}");
-                            Error.Log(deleteEx, "Failed to deleted downloaded file.");
+                            Error.Log(deleteEx, "Failed to deleted downloaded file.", LogLevel.Error);
                         }
                     }
 
@@ -479,48 +523,6 @@ namespace RandomVideoPlayer.UserControls
             }
 
             btnGitHub.BackColor = Color.FromArgb(value, value, 255);
-        }
-
-
-        private void UpdateDPIScaling()
-        {
-            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
-            this.Size = DPI.GetSizeScaled(this.Size);
-
-            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
-            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
-
-            lblTitle.Font = DPI.GetFontScaled(lblTitle.Font);
-            lblSubtitle.Font = DPI.GetFontScaled(lblSubtitle.Font);
-
-            panelVersion.Height = DPI.GetDivided(panelVersion.Height);
-
-            lblCurrentVersion.Size = DPI.GetSizeScaled(lblCurrentVersion.Size);
-            lblCurrentVersion.Font = DPI.GetFontScaled(lblCurrentVersion.Font);
-
-            lblLatestVersion.Size = DPI.GetSizeScaled(lblLatestVersion.Size);
-            lblLatestVersion.Font = DPI.GetFontScaled(lblLatestVersion.Font);
-
-            btnSync.Size = DPI.GetSizeScaled(btnSync.Size);
-
-            panelBody.Height = DPI.GetDivided(panelBody.Height);
-
-            cbUpdateAlwaysCheck.Size = DPI.GetSizeScaled(cbUpdateAlwaysCheck.Size);
-            cbUpdateAlwaysCheck.Font = DPI.GetFontScaled(cbUpdateAlwaysCheck.Font);
-
-            btnGitHub.Size = DPI.GetSizeScaled(btnGitHub.Size);
-            btnGitHub.Font = DPI.GetFontScaled(btnGitHub.Font);
-            btnGitHub.Location = new Point((panelBody.Width / 2) - (btnGitHub.Width / 2), cbUpdateAlwaysCheck.Location.Y + cbUpdateAlwaysCheck.Height + 3);
-
-            btnCancel.Size = DPI.GetSizeScaled(btnCancel.Size);
-            btnCancel.Font = DPI.GetFontScaled(btnCancel.Font);
-            btnCancel.Location = new Point((panelBody.Width / 2) - (btnCancel.Width / 2), btnGitHub.Location.Y + btnGitHub.Height + 3);
-
-            rtbConsole.Size = DPI.GetSizeScaled(rtbConsole.Size);
-            rtbConsole.Font = DPI.GetFontScaled(rtbConsole.Font);
-            rtbConsole.Location = new Point(3, btnCancel.Location.Y + btnCancel.Height + 3);
-            rtbConsole.Height = panelBody.Height - rtbConsole.Location.Y - 3;
-            rtbConsole.Width = panelBody.Width - 6;
         }
     }
 }

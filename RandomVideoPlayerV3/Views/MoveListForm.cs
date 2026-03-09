@@ -332,7 +332,7 @@ namespace RandomVideoPlayer.Views
                     catch (Exception ex)
                     {
                         MessageBox.Show($"Error moving file '{sourceFilePath}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        Error.Log(ex, "Error moving file list");
+                        Error.Log(ex, "Error moving file list", LogLevel.Error);
                         lblTitle.Text = "RVP - Error moving files!";
                         fileMoveSuccess = false;
                     }
@@ -386,7 +386,7 @@ namespace RandomVideoPlayer.Views
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error undoing file '{destination}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Error.Log(ex, "Error undoing file list");
+                    Error.Log(ex, "Error undoing file list", LogLevel.Error);
                 }
             }
         }

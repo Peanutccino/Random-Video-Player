@@ -38,6 +38,16 @@ namespace RandomVideoPlayer.Model
         public string LbHighlightColorMain { get; set; }
         public string LbHighlightColorSide { get; set; }
 
+        public string StTextColor { get; set; }
+        public string StTextColorAccent { get; set; }
+        public string StTextColorBack { get; set; }
+        public string StTextColorHighlight { get; set; }
+        public string StBackColor {  get; set; }
+        public string StBackColorLight { get; set; }
+        public string StBackColorDark { get; set; }
+        public string StAccentColor {  get; set; }
+        public string StHighlightColor { get; set; }
+
         public static ThemeDto FromTheme(string name, Theme theme) => new()
         {
             Name = name,
@@ -68,7 +78,17 @@ namespace RandomVideoPlayer.Model
             LbBackColorSideDark = ToHex(theme.LbBackColorSideDark),
             LbAccentColorSide = ToHex(theme.LbAccentColorSide),
             LbHighlightColorMain = ToHex(theme.LbHighlightColorMain),
-            LbHighlightColorSide = ToHex(theme.LbHighlightColorSide)
+            LbHighlightColorSide = ToHex(theme.LbHighlightColorSide),
+
+            StTextColor = ToHex(theme.StTextColor),
+            StTextColorAccent = ToHex(theme.StTextColorAccent),
+            StTextColorBack = ToHex(theme.StTextColorBack),
+            StTextColorHighlight = ToHex(theme.StTextColorHighlight),
+            StBackColor = ToHex(theme.StBackColor),
+            StBackColorLight = ToHex(theme.StBackColorLight),
+            StBackColorDark = ToHex(theme.StBackColorDark),
+            StAccentColor = ToHex(theme.StAccentColor),
+            StHighlightColor = ToHex(theme.StHighlightColor)
         };
 
         private static string ToHex(Color color) => ColorTranslator.ToHtml(color);

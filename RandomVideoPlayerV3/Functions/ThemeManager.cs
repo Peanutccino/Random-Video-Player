@@ -61,21 +61,130 @@ namespace RandomVideoPlayer.Functions
                     btn.FlatAppearance.MouseDownBackColor = CurrentTheme.FormBackColor;
                     break;
 
-                case FlatProgressBar pb when pb.Name == "pbVolume":
-                    pb.RemainingBrush = CurrentTheme.FormBackColor;
-                    pb.CompletedBrush = CurrentTheme.ButtonIconColor;                    
-                    pb.MouseoverBrush = CurrentTheme.ButtonIconColor;
-                    pb.BorderColor = CurrentTheme.ButtonIconColor;
+                case FlatProgressBar fpb when fpb.Name == "pbVolume":
+                    fpb.RemainingBrush = CurrentTheme.FormBackColor;
+                    fpb.CompletedBrush = CurrentTheme.ButtonIconColor;                    
+                    fpb.MouseoverBrush = CurrentTheme.ButtonIconColor;
+                    fpb.BorderColor = CurrentTheme.ButtonIconColor;
                     break;
-                case FlatProgressBar pb when pb.Name == "pbPlayerProgress":
-                    pb.CompletedBrush = CurrentTheme.ProgressColor;                    
-                    pb.MouseoverBrush = CurrentTheme.ProgressHoverColor;
+                case FlatProgressBar fpb when fpb.Name == "pbPlayerProgress":
+                    fpb.CompletedBrush = CurrentTheme.ProgressColor;                    
+                    fpb.MouseoverBrush = CurrentTheme.ProgressHoverColor;
+                    break;
+                case PictureBox pb:
+                    pb.BackColor = Color.Black;
                     break;
             }
 
             foreach (Control child in root.Controls)
             {
                 ApplyTheme(child);
+            }
+        }
+        public static void ApplyThemeSettings(Control root)
+        {
+            root.BackColor = CurrentTheme.StBackColorDark;
+            root.ForeColor = CurrentTheme.StTextColor;
+
+            switch (root)
+            {
+                case IconPictureBox ipb when ipb.Parent.Name == "panelIcons":
+                    ipb.IconColor = CurrentTheme.ButtonIconColor;
+                    ipb.BackColor = CurrentTheme.FormBackColor;
+                    break;
+                case Label label when label.Name == "lblTitle":
+                    label.BackColor = CurrentTheme.StBackColor;
+                    label.ForeColor = CurrentTheme.StTextColorBack;
+                    break;
+                case Label label when label.Name == "lblHeader" || label.Name == "lblProfile" || label.Name == "lblBanner":
+                    label.ForeColor = CurrentTheme.StAccentColor;
+                    break;
+                case TableLayoutPanel tblLayoutPanel:
+                    tblLayoutPanel.BackColor = CurrentTheme.StBackColorDark;
+                    break;
+                case SplitContainer splitContainer when splitContainer.Name == "splitContainerInput":
+                    splitContainer.BackColor = CurrentTheme.StBackColorDark;
+                    break;
+                case SplitContainer splitContainer:
+                    splitContainer.BackColor = CurrentTheme.StBackColor;
+                    break;
+                case Panel panel:
+                    panel.BackColor = CurrentTheme.StBackColorDark;
+                    break;
+                case IconButton ibtn when ibtn.Name == "btnClose":
+                    ibtn.IconColor = CurrentTheme.StTextColorBack;
+                    ibtn.BackColor = CurrentTheme.StBackColor;
+                    break;
+                case IconButton ibtn when ibtn.Name == "btnSave":
+                    ibtn.IconColor = CurrentTheme.StTextColorBack;
+                    ibtn.ForeColor = CurrentTheme.StTextColorBack;
+                    ibtn.BackColor = CurrentTheme.StBackColor;
+                    break;
+                case IconButton ibtn when ibtn.Parent.Name == "panelSidebar":
+                    ibtn.BackColor = CurrentTheme.StBackColorDark;
+                    ibtn.ForeColor = CurrentTheme.StTextColor;
+                    ibtn.IconColor = CurrentTheme.StTextColor;
+                    break;
+                case IconButton ibtn:
+                    ibtn.BackColor = CurrentTheme.StBackColor;
+                    ibtn.ForeColor = CurrentTheme.StTextColorBack;
+                    ibtn.IconColor = CurrentTheme.StTextColorBack;
+                    break;
+                case Button btn:
+                    btn.BackColor = CurrentTheme.StBackColor;
+                    btn.ForeColor = CurrentTheme.StTextColorBack;
+                    break;
+                case CustomNumericUpDown cNud:
+                    cNud.BackColor = CurrentTheme.StBackColorLight;
+                    cNud.ForeColor = CurrentTheme.StTextColor;
+                    cNud.IconColor = CurrentTheme.StAccentColor;
+                    break;
+                case TextBox tb:
+                    tb.BackColor = CurrentTheme.StBackColorLight;
+                    tb.ForeColor = CurrentTheme.StTextColor;
+                    break;
+                case ComboBox combo:
+                    combo.BackColor = CurrentTheme.StBackColorLight;
+                    break;
+                case RoundedCheckBox rcb:
+                    rcb.CheckedBackColor = CurrentTheme.StHighlightColor;
+                    rcb.UncheckedBackColor = ThemeHelper.Darken(CurrentTheme.StBackColorLight);
+                    rcb.ForeColor = CurrentTheme.StTextColorHighlight;
+                    rcb.UncheckedForeColor = CurrentTheme.StTextColor;
+                    break;
+                case CustomCheckBox cb:
+                    cb.HoverColor = CurrentTheme.StHighlightColor;
+                    break;
+                case CustomRadioButton rb:
+                    rb.HoverColor = CurrentTheme.StHighlightColor;
+                    break;
+                case ListBox lb:
+                    lb.BackColor = CurrentTheme.StBackColorLight;
+                    break;
+                case ListView lv:
+                    lv.BackColor = CurrentTheme.StBackColorLight;
+                    
+                    break;
+                case RichTextBox rtb:
+                    rtb.BackColor = CurrentTheme.StBackColorLight;
+                    break;
+                case FlatSlider fs:
+                    fs.ElapsedColor = CurrentTheme.StAccentColor;
+                    fs.ThumbColor = CurrentTheme.StAccentColor;
+                    fs.RemainingColor = CurrentTheme.StTextColor;
+                    fs.HighlightColor = CurrentTheme.StHighlightColor;
+                    break;
+                case FlatRangeSlider frs:
+                    frs.ElapsedColor = CurrentTheme.StAccentColor;
+                    frs.ThumbColor = CurrentTheme.StAccentColor;
+                    frs.RemainingColor = CurrentTheme.StTextColor;
+                    frs.HighlightColor = CurrentTheme.StHighlightColor;
+                    break;
+            }
+
+            foreach (Control child in root.Controls)
+            {
+                ApplyThemeSettings(child);
             }
         }
         public static void ApplyThemeFBV2(Control root)

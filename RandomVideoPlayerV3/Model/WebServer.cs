@@ -144,7 +144,7 @@ namespace RandomVideoPlayer.Model
             catch (Exception ex)
             {
                 //Log($"Error processing request: {ex.Message}");
-                Error.Log(ex, "Error creating timecode server");
+                Error.Log(ex, "Error creating timecode server", LogLevel.Error);
                 MessageBox.Show(string.Format("Error creating timecode server:\n\n{0}", ex));
             }
             finally

@@ -19,7 +19,7 @@ namespace RandomVideoPlayer
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Failed to start application");
+                Error.Log(ex, "Failed to start application", LogLevel.Error);
                 MessageBox.Show($"Exception: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

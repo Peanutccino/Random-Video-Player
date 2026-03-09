@@ -34,7 +34,10 @@ namespace RandomVideoPlayer.Functions
         public bool sortCreationDate { get; set; } = true;
         public bool shuffle { get; set; } = true;
         public bool reShuffle { get; set; } = false;
-        public AutoPlayMethod autoPlayMethod { get; set; } = AutoPlayMethod.LoopVideo;
+
+        public bool loopEnabled { get; set; } = true;
+        public bool timerEnabled { get; set; } = false;
+        public bool timerResetOnSeek { get; set; } = true;
         public int autoPlayTimerValueStartPoint { get; set; } = 8;
         public int autoPlayTimerValueEndPoint { get; set; } = 12;
         public bool autoPlayTimerRangeEnabled { get; set; } = false;
@@ -43,6 +46,7 @@ namespace RandomVideoPlayer.Functions
         public int customSeekForwardValueLarge { get; set; } = 30;
         public int customSeekBackwardValueLarge { get; set; } = 10;
         public int videoSizeThreshold { get; set; } = 1800; //30 minutes in seconds
+        public LogLevel logLevel { get; set; } = LogLevel.Error;
 
         public string selectedProfile { get; set; } = "";
         public bool applyFilterToList { get; set; }
@@ -60,6 +64,10 @@ namespace RandomVideoPlayer.Functions
         public int autoSkipSeconds { get; set; } = 5;
         public bool enableRandomVideoStartPoint { get; set; } = false;
         public bool randomVideoStartPointIgnoreScripts { get; set; } = false;
+        public bool randomVideoStartPointIgnoreShortVideos { get; set; } = false;
+        public int randomVideoStartPointShortVideoThreshold { get; set; } = 300; 
+        public int startPointRangeStart { get; set; } = 0;
+        public int startPointRangeEnd { get; set; } = 80;
 
         public string viewStateListFileExplore { get; set; } = "Tile";
         public string viewStateFolderFileExplore { get; set; } = "Tile";
@@ -82,10 +90,10 @@ namespace RandomVideoPlayer.Functions
         public StringCollection customListConfig { get; set; } = new StringCollection();
         public string pathToMoveFolder { get; set; } = "";
         public bool fileCopy { get; set; } = true;
-        public bool[] buttonStates { get; set; } = Enumerable.Repeat(true, 8).ToArray();
-        public List<int> buttonOrder { get; set; }
-        
-        public List<int> selectedAnimations { get; set; } = new List<int> { 0, 1, 2 };
+        public bool[] buttonStates { get; set; } = Enumerable.Repeat(true, 10).ToArray();
+        public List<int> buttonOrder { get; set; } = new();
+
+        public List<int> selectedAnimations { get; set; } = new();
         public bool burnsEffectEnabled { get; set; } = false;
         public bool fadeEnabled { get; set; } = true;
         public double panAmount { get; set; } = 0.2;
@@ -118,16 +126,29 @@ namespace RandomVideoPlayer.Functions
         private static CustomSettings _instance;
         private static readonly object _lock = new object();
 
-        public bool folderBrowserV2Enabled { get; set; } = false;
-        public bool listBrowserV2Enabled { get; set; } = false;
         public bool thumbnailPreviewEnabled { get; set; } = false;
+        public bool previewSeekBarEnabled { get; set; } = false;
         public int thumbSizeFactorFolderBrowser { get; set; } = 5;
         public int thumbSizeFactorListBrowser { get; set; } = 10;
         public View fileBrowserViewState { get; set; } = View.SmallIcon;
         public View listBrowserViewState { get; set; } = View.LargeIcon;
+        public bool listBrowserToolsExpaned { get; set; } = true;
+
+        public bool audioNormalizerEnabled { get; set; } = false;
+        public int frameLen { get; set; } = 250;
+        public int gaussSize { get; set; } = 31;
+        public double peak { get; set; } = 0.5d;
+        public double maxGain { get; set; } = 6.0d;
+        public double targetRMS { get; set; } = 0.9d;
+        public bool altBoundary { get; set; } = true;
+
+
         private CustomSettings() 
         {
-            buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            if(selectedAnimations.Count == 0)
+            {
+                selectedAnimations.AddRange(new int[] { 0, 1, 2 });
+            }
         }
 
         public static CustomSettings Instance
@@ -153,7 +174,7 @@ namespace RandomVideoPlayer.Functions
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Couldn't save config");
+                Error.Log(ex, "Couldn't save config", LogLevel.Error);
             }
         }
         public static CustomSettings Load()
@@ -165,18 +186,13 @@ namespace RandomVideoPlayer.Functions
                     string json = File.ReadAllText(settingsFilePath);
                     var setttings = JsonConvert.DeserializeObject<CustomSettings>(json);
 
-                    if (setttings.buttonOrder == null)
-                    {
-                        setttings.buttonOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
-                    }
-
                     return setttings;
                 }
                 
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Couldn't load config");
+                Error.Log(ex, "Couldn't load config", LogLevel.Error);
             }
             return new CustomSettings(); // Return default settings if file does not exist
         }

@@ -6,8 +6,6 @@ namespace RandomVideoPlayer.Model
 {
     public class SettingsHandler
     {
-        public static double CurrentVersion = 1.34;
-
         private static int _volumeTemp = 50;
         private static bool _sourceSelected = false; //False = Folder | True = List
         private static bool _isPlaying = false;
@@ -280,7 +278,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool GraphEnabled
         {
             get
@@ -295,7 +292,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool ShowIconsCustomLíst
         {
             get
@@ -310,7 +306,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool ShowFullPathCustomList
         {
             get
@@ -339,7 +334,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static string ViewStateFolderFileExplore
         {
             get
@@ -354,7 +348,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static Size TileSizeFileExplore
         {
             get
@@ -383,7 +376,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static int ThumbSizeFactorFolderBrowser
         {
             get
@@ -426,7 +418,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool[] ButtonStates
         {
             get
@@ -441,7 +432,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool PlayOnDrop
         {
             get
@@ -456,7 +446,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool AlwaysAddFilesToQueue
         {
             get
@@ -499,7 +488,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static List<int> ButtonOrder
         {
             get
@@ -514,7 +502,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static double PanAmount
         {
             get
@@ -529,7 +516,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static double ZoomAmount
         {
             get
@@ -544,7 +530,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static int ZoomEasingFunction
         {
             get
@@ -559,7 +544,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static int PanEasingFunction
         {
             get
@@ -574,7 +558,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool BurnsEffectEnabled
         {
             get
@@ -631,18 +614,46 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
-        public static AutoPlayMethod AutoPlayMethod
+        public static bool LoopEnabled
         {
             get
             {
                 var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.autoPlayMethod;
+                return _settingsInstance.loopEnabled;
             }
             set
             {
                 var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.autoPlayMethod = value;
+                _settingsInstance.loopEnabled = value;
+                _settingsInstance.Save();
+            }
+
+        }
+        public static bool TimerEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.timerEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.timerEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool TimerResetOnSeek
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.timerResetOnSeek;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.timerResetOnSeek = value;
                 _settingsInstance.Save();
             }
         }
@@ -659,14 +670,12 @@ namespace RandomVideoPlayer.Model
                 return rng.Next(_settingsInstance.autoPlayTimerValueStartPoint, _settingsInstance.autoPlayTimerValueEndPoint + 1);
             }
         }
-
         public static void SetAutoPlayTimerValueStartPoint(int value)
         {
             var _settingsInstance = CustomSettings.Instance;
             _settingsInstance.autoPlayTimerValueStartPoint = value;
             _settingsInstance.Save();
         }
-
         public static int AutoPlayTimerValueEndPoint
         {
             get
@@ -681,7 +690,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool AutoPlayTimerRangeEnabled
         {
             get
@@ -725,7 +733,7 @@ namespace RandomVideoPlayer.Model
             }
         }
         public static int CustomSeekForwardValueLarge
-            {
+        {
             get
             {
                 var _settingsInstance = CustomSettings.Instance;
@@ -766,6 +774,20 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+        public static LogLevel LogLevel
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.logLevel;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.logLevel = value;
+                _settingsInstance.Save();
+            }
+        }
         public static bool SubtitlesEnabled
         {
             get
@@ -780,7 +802,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static int SubtitleFontSize
         {
             get
@@ -809,7 +830,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static string SubtitleFontType
         {
             get
@@ -824,7 +844,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static string SubtitleFontColor
         {
             get
@@ -839,7 +858,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool ShowScriptPath
         {
             get
@@ -854,7 +872,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool HandleMultiAxisScripts
         {
             get
@@ -869,7 +886,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool UsingScriptPlayer
         {
             get
@@ -884,7 +900,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool IncludeSubdirectoriesForScriptLoad
         {
             get
@@ -899,7 +914,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool EnableAutoSkip
         {
             get
@@ -914,7 +928,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool SkipVideoStart
         {
             get
@@ -929,7 +942,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool SkipAlways
         {
             get
@@ -944,7 +956,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static int AutoSkipSeconds
         {
             get
@@ -959,7 +970,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool EnableRandomVideoStartPoint
         {
             get
@@ -988,8 +998,62 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
-
+        public static bool RandomVideoStartPointIgnoreShortVideos
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.randomVideoStartPointIgnoreShortVideos;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.randomVideoStartPointIgnoreShortVideos = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int RandomVideoStartPointShortVideoThreshold
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.randomVideoStartPointShortVideoThreshold;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.randomVideoStartPointShortVideoThreshold = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int StartPointRangeStart
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.startPointRangeStart;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.startPointRangeStart = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int StartPointRangeEnd
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.startPointRangeEnd;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.startPointRangeEnd = value;
+                _settingsInstance.Save();
+            }
+        }
         public static bool ShowButtonStayInCurrentFolder
         {
             get
@@ -1004,7 +1068,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool RTXVSREnabled
         {
             get
@@ -1019,7 +1082,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool RTXHDREnabled
         {
             get
@@ -1034,7 +1096,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static string SelectedTheme
         {
             get
@@ -1049,7 +1110,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static bool EnableCustomScaling
         {
             get
@@ -1064,7 +1124,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static float CustomScaling
         {
             get
@@ -1079,36 +1138,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
-        public static bool FolderBrowserV2Enabled
-        {
-            get
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                return _settingsInstance.folderBrowserV2Enabled;
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.folderBrowserV2Enabled = value;
-                _settingsInstance.Save();
-            }
-        }
-        public static bool ListBrowserV2Enabled
-        {
-            get
-            {
-                var settingsInstance = CustomSettings.Instance;
-                return settingsInstance.listBrowserV2Enabled;
-            }
-            set
-            {
-                var _settingsInstance = CustomSettings.Instance;
-                _settingsInstance.listBrowserV2Enabled = value;
-                _settingsInstance.Save();
-            }
-        }
-
         public static bool ThumbnailPreviewEnabled
         {
             get
@@ -1123,7 +1152,20 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
+        public static bool PreviewSeekBarEnabled
+        {
+            get
+            {
+                var settingsInstance = CustomSettings.Instance;
+                return settingsInstance.previewSeekBarEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.previewSeekBarEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
         public static View FileBrowserViewState
         {
             get
@@ -1138,7 +1180,6 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
-
         public static View ListBrowserViewState
         {
             get
@@ -1150,6 +1191,118 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.listBrowserViewState = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool ListBrowserToolsExpanded
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.listBrowserToolsExpaned;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.listBrowserToolsExpaned = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool AudioNormalizerEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.audioNormalizerEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.audioNormalizerEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int FrameLen
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.frameLen;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.frameLen = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int GaussSize
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.gaussSize;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.gaussSize = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static double Peak
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.peak;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.peak = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static double MaxGain
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.maxGain;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.maxGain = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static double TargetRMS
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.targetRMS;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.targetRMS = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool AltBoundary
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.altBoundary;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.altBoundary = value;
                 _settingsInstance.Save();
             }
         }

@@ -1,4 +1,5 @@
-﻿using RandomVideoPlayer.Controls;
+﻿using FontAwesome.Sharp;
+using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
 using System.Diagnostics;
@@ -10,15 +11,84 @@ namespace RandomVideoPlayer.UserControls
     public partial class PlayerUserControl : UserControl
     {
         private SettingsModel settings;
+
+        private ContextMenuStrip contextLogLevel;
+
+        private Color _textColor;
+        private Color _backColorDark;
+        private Color _highlightColor;
+        private Color _textColorBack;
+        private Color _backColor;
+
+
+        private Color HoverColor(IconButton btn) => ThemeHelper.Lighten(idleColors[btn], _highlightColor, 60);
+        private Color PressedColor(IconButton btn) => ThemeHelper.Lighten(idleColors[btn], _highlightColor, 20);
+
+        private readonly Dictionary<IconButton, Color> idleColors = new();
         public PlayerUserControl(SettingsModel settings)
         {
             InitializeComponent();
 
-            UpdateDPIScaling();
+
 
             this.settings = settings;
+            InitializeUI();
             LoadSettings();
             BindControls();
+
+            DPI.UpdateDPIScaling(this);
+        }
+        private void InitializeUI()
+        {
+            ThemeManager.ApplyThemeSettings(this);
+
+            _textColor = ThemeManager.CurrentTheme.StTextColor;
+            _backColorDark = ThemeManager.CurrentTheme.StBackColorDark;
+            _highlightColor = ThemeManager.CurrentTheme.StHighlightColor;
+            _textColorBack = ThemeManager.CurrentTheme.StTextColorBack;
+            _backColor = ThemeManager.CurrentTheme.StBackColor;
+
+            var renderer = new CustomRenderer()
+            {
+                BackgroundColor = _backColor,
+                TextColor = _textColorBack,
+                HighlightColor = _highlightColor
+            };
+            renderer.ApplyColors();
+            contextLogLevel = new ContextMenuStrip()
+            {
+                ShowImageMargin = false,
+                ShowCheckMargin = false,
+                Renderer = renderer,
+                Font = new Font("Segoe UI Semibold", 9 / DPI.Scale, FontStyle.Bold)
+            };
+
+            WireIconButton(btnRTXHelp);
+        }
+        private void WireIconButton(IconButton btn)
+        {
+            btn.FlatAppearance.MouseOverBackColor = _backColorDark;
+            btn.FlatAppearance.MouseDownBackColor = _backColorDark;
+            btn.BackColor = _backColorDark;
+
+            idleColors[btn] = _textColor;
+            btn.IconColor = _textColor;
+
+            btn.MouseEnter += (_, _) => btn.IconColor = HoverColor(btn);
+            btn.MouseLeave += (_, _) => btn.IconColor = idleColors[btn];
+            btn.MouseDown += (_, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                    btn.IconColor = PressedColor(btn);
+            };
+            btn.MouseUp += (_, _) =>
+            {
+                btn.IconColor = btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position))
+                    ? HoverColor(btn)
+                    : idleColors[btn];
+            };
+            btn.GotFocus += (_, _) => btn.IconColor = HoverColor(btn);
+            btn.LostFocus += (_, _) => btn.IconColor = idleColors[btn];
         }
         private void LoadSettings()
         {
@@ -29,22 +99,14 @@ namespace RandomVideoPlayer.UserControls
 
             cbLeftMousePause.Checked = settings.LeftMousePause;
 
-            switch (settings.AutoPlayMethod)
+            if(settings.LoopEnabled)
             {
-                case AutoPlayMethod.LoopVideo:
-                    rbRepeatVideo.Checked = true;
-                    break;
-                case AutoPlayMethod.AutoNext:
-                    rbAutoNext.Checked = true;
-                    break;
-                case AutoPlayMethod.AutoTimer:
-                    rbAutoTimer.Checked = true;
-                    break;
+                rbRepeatVideo.Checked = true;
             }
-
-            inputTimerValueStartPoint.Value = settings.AutoPlayTimerValueStartPoint;
-            inputTimerValueEndPoint.Value = settings.AutoPlayTimerValueEndPoint;
-            cbEnableTimeRange.Checked = settings.AutoPlayTimerRangeEnabled;
+            else
+            {
+                rbAutoNext.Checked = true;
+            }
 
             inputSFS.Value = settings.CustomSeekForwardValueSmall;
             inputSBS.Value = settings.CustomSeekBackwardValueSmall;
@@ -52,7 +114,7 @@ namespace RandomVideoPlayer.UserControls
             inputSBL.Value = settings.CustomSeekBackwardValueLarge;
             inputVideoThreshold.Value = settings.VideoSizeThreshold / 60; //convert to minutes
 
-            UpdateRangeIndicator();
+            btnLogLevel.Text = settings.LogLevel.ToString();
         }
 
 
@@ -80,25 +142,8 @@ namespace RandomVideoPlayer.UserControls
 
             rbRepeatVideo.CheckedChanged += new EventHandler(RadioButton_CheckedChanged);
             rbAutoNext.CheckedChanged += new EventHandler(RadioButton_CheckedChanged);
-            rbAutoTimer.CheckedChanged += new EventHandler(RadioButton_CheckedChanged);
 
-            inputTimerValueStartPoint.ValueChanged += (s, e) =>
-            {
-                settings.AutoPlayTimerValueStartPoint = (int)inputTimerValueStartPoint.Value;
-                TimeRangeValidation(s);
-            };
 
-            inputTimerValueEndPoint.ValueChanged += (s, e) =>
-            {
-                settings.AutoPlayTimerValueEndPoint = (int)inputTimerValueEndPoint.Value;
-                TimeRangeValidation(s);
-            };
-
-            cbEnableTimeRange.CheckedChanged += (s, e) =>
-            {
-                settings.AutoPlayTimerRangeEnabled = cbEnableTimeRange.Checked;
-                UpdateRangeIndicator();
-            };
 
             inputSFS.ValueChanged += (s, e) =>
             {
@@ -120,6 +165,30 @@ namespace RandomVideoPlayer.UserControls
             {
                 settings.VideoSizeThreshold = (int)inputVideoThreshold.Value;
             };
+
+            btnLogLevel.Click += (s, e) =>
+            {
+                ContextLogLevel_Click(s, e);
+            };
+        }
+
+        private void ContextLogLevel_Click(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            var easingMethods = Enum.GetValues(typeof(LogLevel));
+
+            contextLogLevel.Items.Clear();
+            foreach (var easingMethod in easingMethods)
+            {
+                var item = contextLogLevel.Items.Add(easingMethod.ToString());
+                item.Click += (s, _) =>
+                {
+                    button.Text = easingMethod.ToString();
+
+                    settings.LogLevel = (LogLevel)Enum.Parse(typeof(LogLevel), button.Text);
+                };
+                contextLogLevel.Show(button, new Point(0, 0), ToolStripDropDownDirection.AboveRight);
+            }
         }
         private void RadioButton_CheckedChanged(object? sender, EventArgs e)
         {
@@ -127,130 +196,22 @@ namespace RandomVideoPlayer.UserControls
             {
                 rbRepeatVideo.Checked = selectedRadioButton == rbRepeatVideo;
                 rbAutoNext.Checked = selectedRadioButton == rbAutoNext;
-                rbAutoTimer.Checked = selectedRadioButton == rbAutoTimer;
 
                 switch (selectedRadioButton.Name)
                 {
                     case "rbRepeatVideo":
-                        settings.AutoPlayMethod = AutoPlayMethod.LoopVideo;
+                        settings.LoopEnabled = true;
                         break;
                     case "rbAutoNext":
-                        settings.AutoPlayMethod = AutoPlayMethod.AutoNext;
-                        break;
-                    case "rbAutoTimer":
-                        settings.AutoPlayMethod = AutoPlayMethod.AutoTimer;
+                        settings.LoopEnabled = false;
                         break;
                 }
             }
         }
 
-        private void UpdateRangeIndicator()
-        {
-            if (cbEnableTimeRange.Checked)
-            {
-                lblBetweenTime.Text = "to";
-                lblAfterTime.Visible = true;
-                inputTimerValueEndPoint.Visible = true;
-            }
-            else
-            {
-                lblBetweenTime.Text = "seconds";
-                lblAfterTime.Visible = false;
-                inputTimerValueEndPoint.Visible = false;
-            }
-        }
-        private void TimeRangeValidation(object sender)
-        {
-            int minValue = (int)inputTimerValueStartPoint.Value;
-            int maxValue = (int)inputTimerValueEndPoint.Value;
-
-            CustomNumericUpDown inputBox = sender as CustomNumericUpDown;
-
-            if (inputBox != null && inputBox == inputTimerValueStartPoint)
-            {
-                if (minValue >= maxValue)
-                {
-                    inputTimerValueEndPoint.Value = minValue + 1;
-                }
-            }
-            else if (inputBox != null && inputBox == inputTimerValueEndPoint)
-            {
-                if (maxValue <= minValue)
-                {
-                    inputTimerValueStartPoint.Value = maxValue - 1;
-                }
-            }
-
-        }
         private void btnRTXHelp_Click(object sender, EventArgs e)
         {
             Process.Start(new ProcessStartInfo("https://nvidia.custhelp.com/app/answers/detail/a_id/5448/~/rtx-video-faq") { UseShellExecute = true });
-        }
-
-        private void UpdateDPIScaling()
-        {
-            this.Size = DPI.GetSizeScaled(this.Size);
-
-            panel1.Size = DPI.GetSizeScaled(panel1.Size);
-            panel2.Size = DPI.GetSizeScaled(panel2.Size);
-            panel3.Size = DPI.GetSizeScaled(panel3.Size);
-            panel4.Size = DPI.GetSizeScaled(panel4.Size);
-            flowLayoutPanel1.Size = DPI.GetSizeScaled(flowLayoutPanel1.Size);
-            flowLayoutPanel2.Size = DPI.GetSizeScaled(flowLayoutPanel2.Size);
-            flowLayoutPanel3.Size = DPI.GetSizeScaled(flowLayoutPanel3.Size);
-
-            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
-            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
-
-            lbl1.Size = DPI.GetSizeScaled(lbl1.Size);
-            lbl1.Font = DPI.GetFontScaled(lbl1.Font);
-            lbl2.Size = DPI.GetSizeScaled(lbl2.Size);
-            lbl2.Font = DPI.GetFontScaled(lbl2.Font);
-            lbl3.Size = DPI.GetSizeScaled(lbl3.Size);
-            lbl3.Font = DPI.GetFontScaled(lbl3.Font);
-            lbl4.Size = DPI.GetSizeScaled(lbl4.Size);
-            lbl4.Font = DPI.GetFontScaled(lbl4.Font);
-            lbl5.Size = DPI.GetSizeScaled(lbl5.Size);
-            lbl5.Font = DPI.GetFontScaled(lbl5.Font);
-
-            cbLeftMousePause.Size = DPI.GetSizeScaled(cbLeftMousePause.Size);
-            cbLeftMousePause.Font = DPI.GetFontScaled(cbLeftMousePause.Font);
-
-            rbRepeatVideo.Size = DPI.GetSizeScaled(rbRepeatVideo.Size);
-            rbRepeatVideo.Font = DPI.GetFontScaled(rbRepeatVideo.Font);
-
-            rbAutoNext.Size = DPI.GetSizeScaled(rbAutoNext.Size);
-            rbAutoNext.Font = DPI.GetFontScaled(rbAutoNext.Font);
-
-            rbAutoTimer.Size = DPI.GetSizeScaled(rbAutoTimer.Size);
-            rbAutoTimer.Font = DPI.GetFontScaled(rbAutoTimer.Font);
-
-            inputTimerValueStartPoint.Size = DPI.GetSizeScaled(inputTimerValueStartPoint.Size);
-            inputTimerValueStartPoint.Font = DPI.GetFontScaled(inputTimerValueStartPoint.Font);
-
-            lblBetweenTime.Size = DPI.GetSizeScaled(lblBetweenTime.Size);
-            lblBetweenTime.Font = DPI.GetFontScaled(lblBetweenTime.Font);
-
-            inputTimerValueEndPoint.Size = DPI.GetSizeScaled(inputTimerValueEndPoint.Size);
-            inputTimerValueEndPoint.Font = DPI.GetFontScaled(inputTimerValueEndPoint.Font);
-
-            lblAfterTime.Size = DPI.GetSizeScaled(lblAfterTime.Size);
-            lblAfterTime.Font = DPI.GetFontScaled(lblAfterTime.Font);
-
-            cbEnableTimeRange.Size = DPI.GetSizeScaled(cbEnableTimeRange.Size);
-            cbEnableTimeRange.Font = DPI.GetFontScaled(cbEnableTimeRange.Font);
-
-            cbShufflePlayer.Size = DPI.GetSizeScaled(cbShufflePlayer.Size);
-            cbShufflePlayer.Font = DPI.GetFontScaled(cbShufflePlayer.Font);
-
-            cbReshuffle.Size = DPI.GetSizeScaled(cbReshuffle.Size);
-            cbReshuffle.Font = DPI.GetFontScaled(cbReshuffle.Font);
-
-            cbEnableRTXVSR.Size = DPI.GetSizeScaled(cbEnableRTXVSR.Size);
-            cbEnableRTXVSR.Font = DPI.GetFontScaled(cbEnableRTXVSR.Font);
-
-            btnRTXHelp.Size = DPI.GetSizeScaled(btnRTXHelp.Size);
-            btnRTXHelp.Font = DPI.GetFontScaled(btnRTXHelp.Font);
         }
     }
 }

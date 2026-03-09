@@ -8,10 +8,49 @@ namespace RandomVideoPlayer.Controls
         private int _value;
         private int _minimum = 0;
         private int _maximum = 100;
+        private Color _iconColor = Color.Indigo;
         private TextBox textBox;
 
         public event EventHandler ValueChanged;
+        public Color IconColor
+        {
+            get => _iconColor;
+            set
+            {
+                if (_iconColor == value)
+                    return;
 
+                _iconColor = value;
+                Invalidate();
+            }
+        }
+
+        public override Color BackColor
+        {
+            get => base.BackColor;
+            set
+            {
+                if (base.BackColor == value)
+                    return;
+
+                base.BackColor = value;
+                SyncTextBoxColors();
+                Invalidate();
+            }
+        }
+
+        public override Color ForeColor
+        {
+            get => base.ForeColor;
+            set
+            {
+                if (base.ForeColor == value)
+                    return;
+
+                base.ForeColor = value;
+                SyncTextBoxColors();
+            }
+        }
         public int Value
         {
             get => _value;
@@ -59,23 +98,30 @@ namespace RandomVideoPlayer.Controls
 
         public CustomNumericUpDown()
         {
-            this.Size = new Size(100, 30);
-            this.DoubleBuffered = true;
+            SetStyle(ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.UserPaint, true);
+
+            Size = new Size(100, 30);
+            DoubleBuffered = true;
+            base.BackColor = SystemColors.Window;
+            base.ForeColor = SystemColors.WindowText;
 
             textBox = new TextBox
             {
                 BorderStyle = BorderStyle.None,
                 TextAlign = HorizontalAlignment.Center,
-                Location = new Point(20, 1),
-                Width = this.Width - 65,
+                Location = new Point(DPI.GetDivided(20), 1),
+                Width = DPI.GetDivided(Width - 65),
+                BackColor = BackColor,
                 Text = _value.ToString()
             };
             textBox.TextChanged += TextBox_TextChanged;
             textBox.KeyPress += TextBox_KeyPress;
-            textBox.Location = new Point(DPI.GetDivided(textBox.Location.X), 1);
-            textBox.Width = DPI.GetDivided(textBox.Width);
 
-            this.Controls.Add(textBox);
+            Controls.Add(textBox);
+            SyncTextBoxColors();
         }
 
         private void TextBox_TextChanged(object sender, EventArgs e)
@@ -100,27 +146,53 @@ namespace RandomVideoPlayer.Controls
             }
         }
 
+        protected override void OnBackColorChanged(EventArgs e)
+        {
+            base.OnBackColorChanged(e);
+            SyncTextBoxColors();
+        }
+
+        protected override void OnForeColorChanged(EventArgs e)
+        {
+            base.OnForeColorChanged(e);
+            SyncTextBoxColors();
+        }
+
+        private void SyncTextBoxColors()
+        {
+            if (textBox == null)
+                return;
+
+            textBox.BackColor = BackColor;
+            textBox.ForeColor = ForeColor;
+        }
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            e.Graphics.Clear(SystemColors.Window);
+            using (var backBrush = new SolidBrush(BackColor))
+            {
+                e.Graphics.FillRectangle(backBrush, ClientRectangle);
+            }
 
-            Point[] leftArrow = {
-            new Point(0, this.Height / 2),
-            new Point(10, this.Height / 4),
-            new Point(10, 3 * this.Height / 4)
+            using (var iconBrush = new SolidBrush(IconColor))
+            {
+                Point[] leftArrow =
+                {
+                new Point(0, Height / 2),
+                new Point(10, Height / 4),
+                new Point(10, 3 * Height / 4)
             };
+                e.Graphics.FillPolygon(iconBrush, leftArrow);
 
-            e.Graphics.FillPolygon(Brushes.Indigo, leftArrow);
-
-            Point[] rightArrow = {
-            new Point(this.Width, this.Height / 2),
-            new Point(this.Width - 10, this.Height / 4),
-            new Point(this.Width - 10, 3 * this.Height / 4)
+                Point[] rightArrow =
+                {
+                new Point(Width, Height / 2),
+                new Point(Width - 10, Height / 4),
+                new Point(Width - 10, 3 * Height / 4)
             };
-
-            e.Graphics.FillPolygon(Brushes.Indigo, rightArrow);
+                e.Graphics.FillPolygon(iconBrush, rightArrow);
+            }
         }
 
         protected override void OnMouseDown(MouseEventArgs e)

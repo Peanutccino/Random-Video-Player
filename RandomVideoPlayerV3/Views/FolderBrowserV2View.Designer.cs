@@ -111,7 +111,7 @@
             btnClose.FlatAppearance.BorderSize = 0;
             btnClose.FlatAppearance.MouseOverBackColor = Color.Red;
             btnClose.FlatStyle = FlatStyle.Flat;
-            btnClose.IconChar = FontAwesome.Sharp.IconChar.Multiply;
+            btnClose.IconChar = FontAwesome.Sharp.IconChar.Close;
             btnClose.IconColor = Color.Black;
             btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 15;
@@ -349,7 +349,7 @@
             // 
             tableLayouMainSub1.BackColor = Color.Yellow;
             tableLayouMainSub1.ColumnCount = 2;
-            tableLayouMainSub1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
+            tableLayouMainSub1.ColumnStyles.Add(new ColumnStyle());
             tableLayouMainSub1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayouMainSub1.Controls.Add(tableLayoutSideBar, 0, 1);
             tableLayouMainSub1.Controls.Add(label1, 0, 0);
@@ -401,6 +401,7 @@
             lvFileExplore.ItemActivate += lvFileExplore_ItemActivate;
             lvFileExplore.RetrieveVirtualItem += lvFileExplore_RetrieveVirtualItem;
             lvFileExplore.MouseDown += lvFileExplore_MouseDown;
+            lvFileExplore.Resize += lvFileExplore_Resize;
             // 
             // columnHeader1
             // 

@@ -332,7 +332,7 @@ namespace RandomVideoPlayer.Views
                 }
                 catch (Exception ex)
                 {
-                    Error.Log(ex, "Failed to save list");
+                    Error.Log(ex, "Failed to save list", LogLevel.Error);
                     MessageBox.Show($"Failed to save list: {ex}");
                     throw;
                 }
@@ -423,7 +423,7 @@ namespace RandomVideoPlayer.Views
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Error accessing selected folder - LB lvFE_ItemActivate");
+                Error.Log(ex, "Error accessing selected folder - LB lvFE_ItemActivate", LogLevel.Error);
                 return;
             }
         }
@@ -975,7 +975,7 @@ namespace RandomVideoPlayer.Views
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Failed to load dropped files: \n\n {ex}");
-                    Error.Log(ex, "Failed to load dropped files from lvFileExplore");
+                    Error.Log(ex, "Failed to load dropped files from lvFileExplore", LogLevel.Error);
                 }
 
             }
@@ -1012,7 +1012,7 @@ namespace RandomVideoPlayer.Views
                 }
                 catch (Exception ex)
                 {
-                    Error.Log(ex, "Failed to load dropped files from winExplorer");
+                    Error.Log(ex, "Failed to load dropped files from winExplorer", LogLevel.Error);
                     MessageBox.Show($"Failed to load dropped files: \n\n {ex}");
                 }
             }
@@ -1080,7 +1080,7 @@ namespace RandomVideoPlayer.Views
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Error populating lvFileExplore in LB");
+                Error.Log(ex, "Error populating lvFileExplore in LB", LogLevel.Error);
                 throw;
             }
         }
@@ -1134,7 +1134,7 @@ namespace RandomVideoPlayer.Views
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Unable to gather directory information in LB");
+                Error.Log(ex, "Unable to gather directory information in LB", LogLevel.Error);
             }
 
             TempList.AddRange(files);
@@ -1207,7 +1207,7 @@ namespace RandomVideoPlayer.Views
                     }
                     catch (Exception ex)
                     {
-                        Error.Log(ex, "Unable to gather favorite folders in LB");
+                        Error.Log(ex, "Unable to gather favorite folders in LB", LogLevel.Error);
                         continue;
                     }
                 }

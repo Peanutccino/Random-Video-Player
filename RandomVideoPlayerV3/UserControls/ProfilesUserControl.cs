@@ -1,4 +1,5 @@
-﻿using RandomVideoPlayer.Functions;
+﻿using FontAwesome.Sharp;
+using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,85 @@ namespace RandomVideoPlayer.UserControls
     {
 
         private SettingsModel settings;
+        private Color _textColor;
+        private Color _backColorDark;
+        private Color _highlightColor;
+
+        private Color HoverColor(IconButton btn) => ThemeHelper.Lighten(idleColors[btn], _highlightColor, 60);
+        private Color PressedColor(IconButton btn) => ThemeHelper.Lighten(idleColors[btn], _highlightColor, 20);
+
+        private readonly Dictionary<IconButton, Color> idleColors = new();
         public ProfilesUserControl(SettingsModel settings)
         {
             InitializeComponent();
 
             this.settings = settings;
 
-            UpdateDPIScaling();
-
+            DPI.UpdateDPIScaling(this);
+            InitializeUI();
             LoadSettings();
+        }
+
+        private void InitializeUI()
+        {
+            ThemeManager.ApplyThemeSettings(this);
+
+            _textColor = ThemeManager.CurrentTheme.StTextColor;
+            _backColorDark = ThemeManager.CurrentTheme.StBackColorDark;
+            _highlightColor = ThemeManager.CurrentTheme.StHighlightColor;
+
+            WireIconButton(btnAdd);
+            WireIconButton(btnDelete);
+            WireIconButton(btnRename);
+            WireIconButton(btnSetProfile);
+        }
+        private void WireIconButton(IconButton btn)
+        {
+            btn.FlatAppearance.MouseOverBackColor = _backColorDark;
+            btn.FlatAppearance.MouseDownBackColor = _backColorDark;
+            btn.BackColor = _backColorDark;
+
+            idleColors[btn] = _textColor;
+            btn.IconColor = _textColor;
+            btn.ForeColor = _textColor;
+
+            btn.MouseEnter += (_, _) =>
+            {
+                btn.IconColor = HoverColor(btn);
+                btn.ForeColor = HoverColor(btn);
+            };
+            btn.MouseLeave += (_, _) =>
+            {
+                btn.IconColor = idleColors[btn];
+                btn.ForeColor = idleColors[btn];
+            };
+            btn.MouseDown += (_, e) =>
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    btn.IconColor = PressedColor(btn);
+                    btn.ForeColor = PressedColor(btn);
+                }                    
+            };
+            btn.MouseUp += (_, _) =>
+            {
+                btn.IconColor = btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position))
+                    ? HoverColor(btn)
+                    : idleColors[btn];
+                btn.ForeColor = btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position))
+                    ? HoverColor(btn)
+                    : idleColors[btn];
+            };
+            btn.GotFocus += (_, _) =>
+            {
+                btn.IconColor = HoverColor(btn);
+                btn.ForeColor = HoverColor(btn);
+            };
+            btn.LostFocus += (_, _) =>
+            {
+                btn.IconColor = idleColors[btn];
+                btn.ForeColor = idleColors[btn];
+            };
         }
         private void LoadSettings()
         {
@@ -54,7 +125,7 @@ namespace RandomVideoPlayer.UserControls
                 }
                 catch (Exception ex)
                 {
-                    Error.Log(ex, $"Couldn't create new profile file: {ex}");
+                    Error.Log(ex, $"Couldn't create new profile file: {ex}", LogLevel.Error);
                 }
             }
 
@@ -83,7 +154,7 @@ namespace RandomVideoPlayer.UserControls
                     }
                     catch (Exception ex)
                     {
-                        Error.Log(ex, $"Couldn't delete profile file: {ex}");
+                        Error.Log(ex, $"Couldn't delete profile file: {ex}", LogLevel.Error);
                     }
 
                     if (profileName == settings.SelectedProfile)
@@ -124,7 +195,7 @@ namespace RandomVideoPlayer.UserControls
                     }
                     catch (Exception ex)
                     {
-                        Error.Log(ex, $"Couldn't rename profile file: {ex}");
+                        Error.Log(ex, $"Couldn't rename profile file: {ex}", LogLevel.Error);
                     }
                 }
                 settings.ProfileList = SettingsHandler.ScriptProfileList;
@@ -166,34 +237,6 @@ namespace RandomVideoPlayer.UserControls
                 btnRename.Enabled = false;
                 btnSetProfile.Enabled = false;
             }
-        }
-        private void UpdateDPIScaling()
-        {
-            this.Size = DPI.GetSizeScaled(this.Size);
-
-            panel1.Size = DPI.GetSizeScaled(panel1.Size);
-            panel2.Size = DPI.GetSizeScaled(panel2.Size);
-
-            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
-            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
-
-            lbl1.Size = DPI.GetSizeScaled(lbl1.Size);
-            lbl1.Font = DPI.GetFontScaled(lbl1.Font);
-            lbl2.Size = DPI.GetSizeScaled(lbl2.Size);
-            lbl2.Font = DPI.GetFontScaled(lbl2.Font);
-            lblProfile.Size = DPI.GetSizeScaled(lblProfile.Size);
-            lblProfile.Font = DPI.GetFontScaled(lblProfile.Font);
-
-            lbProfiles.Font = DPI.GetFontScaled(lbProfiles.Font);
-
-            btnAdd.Size = DPI.GetSizeScaled(btnAdd.Size);
-            btnAdd.Font = DPI.GetFontScaled(btnAdd.Font);
-            btnDelete.Size = DPI.GetSizeScaled(btnDelete.Size);
-            btnDelete.Font = DPI.GetFontScaled(btnDelete.Font);
-            btnRename.Size = DPI.GetSizeScaled(btnRename.Size);
-            btnRename.Font = DPI.GetFontScaled(btnRename.Font);
-            btnSetProfile.Size = DPI.GetSizeScaled(btnSetProfile.Size);
-            btnSetProfile.Font = DPI.GetFontScaled(btnSetProfile.Font);
         }
     }
 }

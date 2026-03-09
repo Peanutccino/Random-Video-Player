@@ -57,7 +57,17 @@ namespace RandomVideoPlayer.Functions
                 LbBackColorSideDark = ParseColorOrDefault(dto.LbBackColorSideDark, defaults.LbBackColorSideDark),
                 LbAccentColorSide = ParseColorOrDefault(dto.LbAccentColorSide, defaults.LbAccentColorSide),
                 LbHighlightColorMain = ParseColorOrDefault(dto.LbHighlightColorMain, defaults.LbHighlightColorMain),
-                LbHighlightColorSide = ParseColorOrDefault(dto.LbHighlightColorSide, defaults.LbHighlightColorSide)
+                LbHighlightColorSide = ParseColorOrDefault(dto.LbHighlightColorSide, defaults.LbHighlightColorSide),
+
+                StTextColor = ParseColorOrDefault(dto.StTextColor, defaults.StTextColor),
+                StTextColorAccent = ParseColorOrDefault(dto.StTextColorAccent, defaults.StTextColorAccent),
+                StTextColorBack = ParseColorOrDefault(dto.StTextColorBack, defaults.StTextColorBack),
+                StTextColorHighlight = ParseColorOrDefault(dto.StTextColorHighlight, defaults.StTextColorHighlight),
+                StBackColor = ParseColorOrDefault(dto.StBackColor, defaults.StBackColor),
+                StBackColorLight = ParseColorOrDefault(dto.StBackColorLight, defaults.StBackColorLight),
+                StBackColorDark = ParseColorOrDefault(dto.StBackColorDark, defaults.StBackColorDark),
+                StAccentColor = ParseColorOrDefault(dto.StAccentColor, defaults.StAccentColor),
+                StHighlightColor = ParseColorOrDefault(dto.StHighlightColor, defaults.StHighlightColor)
             };
         }
 

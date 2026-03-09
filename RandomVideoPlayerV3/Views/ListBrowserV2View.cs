@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 namespace RandomVideoPlayer.Views
 {
@@ -79,20 +80,31 @@ namespace RandomVideoPlayer.Views
                         .Select(i => _listItemFileExplorerEntries[i])
                         .Select(fsi => (Entry: fsi, IsDirectory: fsi is DirectoryInfo));
 
+        private float expandedWidth = 130f;
+        private float collapsedWidth = 47f;
+        private readonly int animationSteps = 7;
+        private readonly int animationInterval = 15;
+
+        private float _targetWidth;
+        private float _startWidth;
+        private int _currentStep;
+        private bool _isExpanded = true;
+        private readonly System.Windows.Forms.Timer animationTimer;
         #endregion
 
         public ListBrowserV2View()
         {
             InitializeComponent();
-            lvFileExplore.CreateControl();
             lvFileExplore.HandleCreated += lvFileExplore_HandleCreated;
             InitializeUI();
             LoadSettings();
+
+            animationTimer = new System.Windows.Forms.Timer { Interval = animationInterval };
+            animationTimer.Tick += AnimationTimer_Tick;
         }
 
         private void lvFileExplore_HandleCreated(object? sender, EventArgs e)
         {
-            SwitchView(_viewState);
             LoadFolder(_selectedPath);
         }
 
@@ -100,6 +112,7 @@ namespace RandomVideoPlayer.Views
         {
             RenderDirectoryBreadcrumbs();
             RenderFavoriteBreadcrumbs();
+            SwitchView(_viewState);
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
@@ -203,7 +216,21 @@ namespace RandomVideoPlayer.Views
 
             RenderFavoriteBreadcrumbs();
         }
+        private void btnFunctions_Click(object sender, EventArgs e)
+        {
+            if (animationTimer.Enabled) return; // avoid overlapping animations
 
+            _targetWidth = _isExpanded ? collapsedWidth : expandedWidth;
+            _startWidth = tableLayoutCustomPanel.ColumnStyles[0].Width;
+            if (Math.Abs(_targetWidth - _startWidth) < 0.1f)
+            {
+                _isExpanded = !_isExpanded;
+                return;
+            }
+
+            _currentStep = 0;
+            animationTimer.Start();
+        }
         private void btnAddAll_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(_selectedPath)) return;
@@ -305,7 +332,7 @@ namespace RandomVideoPlayer.Views
                 }
                 catch (Exception ex)
                 {
-                    Error.Log(ex, "Failed to save list");
+                    Error.Log(ex, "Failed to save list", LogLevel.Error);
                     MessageBox.Show($"Failed to save list: {ex}");
                     throw;
                 }
@@ -382,6 +409,10 @@ namespace RandomVideoPlayer.Views
 
             _localCustomList = (bool)ListHandler.CustomList.Any() ? new List<string>(ListHandler.CustomList) : new List<string>();
 
+            _isExpanded = SettingsHandler.ListBrowserToolsExpanded;
+            SwitchButtonTextOnExpansion();
+            tableLayoutCustomPanel.ColumnStyles[0].Width = _isExpanded ? expandedWidth : collapsedWidth;
+
             DisplayCustomList();
             UpdateListInfo();
             InitializeFilterContextMenus();
@@ -389,7 +420,7 @@ namespace RandomVideoPlayer.Views
             if (formResize.SaveLastSizeLb)
             {
                 formResize.FormSizeLbSaved = new Size(formResize.FormSizeLbSaved.Width - 16, formResize.FormSizeLbSaved.Height - 39);
-                this.ClientSize = formResize.FormSizeLbSaved;
+                this.ClientSize = DPI.GetSizeScaled(formResize.FormSizeLbSaved);
             }
 
             this.Padding = new Padding(formResize.BorderSize);
@@ -411,10 +442,11 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.ListBrowserViewState = _viewState;
             ListHandler.ExtensionFilterForList = _extensionFilter;
             SettingsHandler.ShowFullPathCustomList = _showFullPathCustomList;
+            SettingsHandler.ListBrowserToolsExpanded = _isExpanded;
 
             PathHandler.TempRecentFolder = _selectedPath;
 
-            formResize.FormSizeLbSaved = formResize.TempSizeLb;
+            formResize.FormSizeLbSaved = DPI.RevertSize(formResize.TempSizeLb);
         }
         #endregion
 
@@ -483,6 +515,7 @@ namespace RandomVideoPlayer.Views
             WireIconButtonMain(btnAddFav);
             WireIconButtonMain(btnDeleteFav);
             WireIconButtonSide(btnClearList);
+            WireIconButtonMain(btnFunctions);
             WireIconButtonMain(btnAddAll);
             WireIconButtonMain(btnAddSelected);
 
@@ -507,7 +540,9 @@ namespace RandomVideoPlayer.Views
                 ForeColor = _textColor,
             };
             SetupTooltips();
-            UpdateDPIScaling(this);
+            DPI.UpdateDPIScaling(this);
+            collapsedWidth = DPI.GetDivided(collapsedWidth);
+            expandedWidth = DPI.GetDivided(expandedWidth);
         }
         private void HighLightDrive(string path)
         {
@@ -768,31 +803,6 @@ namespace RandomVideoPlayer.Views
                 roundedPanelCustomListBottom.Invalidate();
             }
         }
-        private void UpdateDPIScaling(Control root)
-        {
-            switch (root)
-            {
-                case Button btn:
-                    btn.Font = DPI.GetFontScaled(btn.Font);
-                    btn.Size = DPI.GetSizeScaled(btn.Size);
-                    break;
-                case CheckBox cb:
-                    cb.Font = DPI.GetFontScaled(cb.Font);
-                    cb.Size = DPI.GetSizeScaled(cb.Size);
-                    break;
-                case ListView lv:
-                    lv.Font = DPI.GetFontScaled(lv.Font);
-                    break;
-                case Panel pnl:
-                    pnl.Size = DPI.GetSizeScaled(pnl.Size);
-                    break;
-            }
-
-            foreach (Control child in root.Controls)
-            {
-                UpdateDPIScaling(child);
-            }
-        }
         #endregion
 
         #region Filter context menus
@@ -989,11 +999,11 @@ namespace RandomVideoPlayer.Views
             }
             catch (UnauthorizedAccessException ex)
             {
-                Error.Log(ex, "Access denied to directory in LB");
+                Error.Log(ex, "Access denied to directory in LB", LogLevel.Error);
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Unable to gather directory information in LB");
+                Error.Log(ex, "Unable to gather directory information in LB", LogLevel.Error);
             }
 
             _localCustomList.AddRange(eligibleFiles);
@@ -1096,7 +1106,7 @@ namespace RandomVideoPlayer.Views
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Error loading directories in folder browser V2");
+                Error.Log(ex, "Error loading directories in folder browser V2", LogLevel.Error);
                 lvFileExplore.EndUpdate();
                 lvFileExplore.Invalidate();
                 return;
@@ -1284,7 +1294,7 @@ namespace RandomVideoPlayer.Views
                 AutoSize = false,
                 Width = flowPanelDir.Width,
                 AutoEllipsis = true,
-                Height = 18,
+                Height = DPI.GetDivided(18),
                 ForeColor = _textColor,
                 Font = new Font("Segoe UI Semibold", 9 / DPI.Scale, FontStyle.Bold),
                 Cursor = Cursors.Hand,
@@ -1322,7 +1332,7 @@ namespace RandomVideoPlayer.Views
                 }
                 catch (Exception ex)
                 {
-                    Error.Log(ex, "Unable to gather favorite folder in FileBrowser");
+                    Error.Log(ex, "Unable to gather favorite folder in FileBrowser", LogLevel.Error);
                     continue;
                 }
             }
@@ -1338,7 +1348,7 @@ namespace RandomVideoPlayer.Views
                 AutoSize = false,
                 Width = flowPanelDir.Width,
                 AutoEllipsis = true,
-                Height = 18,
+                Height = DPI.GetDivided(18),
                 ForeColor = _textColor,
                 Font = new Font("Segoe UI Semibold", 9 / DPI.Scale, FontStyle.Bold),
                 Cursor = Cursors.Hand,
@@ -1390,6 +1400,8 @@ namespace RandomVideoPlayer.Views
         #region Image handling
         private void lvFileExplore_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
+            if (_listItemFileExplorerEntries.Count <= 0) return;
+
             var fsi = _listItemFileExplorerEntries[e.ItemIndex];
             var item = new ListViewItem(fsi.Name) { Tag = fsi };
 
@@ -1422,7 +1434,7 @@ namespace RandomVideoPlayer.Views
         }
         private void QueueThumbnailLoad(FileSystemInfo fsi)
         {
-            if(_shuttingDown) 
+            if (_shuttingDown)
                 return;
 
             if (!_pendingThumbs.TryAdd(fsi.FullName, 0))
@@ -1437,7 +1449,7 @@ namespace RandomVideoPlayer.Views
                     using var raw = BuildThumbnail(fsi);
                     Invoke(new Action(() =>
                     {
-                        if(_shuttingDown) 
+                        if (_shuttingDown)
                             return;
                         int slot = DetermineImageIndex(fsi);
                         using var fitted = FitThumbnail(raw, _thumbSize, _backColorMainDark);
@@ -1453,7 +1465,7 @@ namespace RandomVideoPlayer.Views
                 }
                 catch (Exception ex)
                 {
-                    Error.Log(ex, "Failed to create thumbnail");
+                    Error.Log(ex, "Failed to create thumbnail", LogLevel.Warning);
                     // ignore bad thumbnails, keep fallback
                 }
                 finally
@@ -1815,8 +1827,49 @@ namespace RandomVideoPlayer.Views
         }
         #endregion
 
+        #region Toolbar animation
+        private void AnimationTimer_Tick(object sender, EventArgs e)
+        {
+            _currentStep++;
+            float progress = Math.Min(1f, _currentStep / (float)animationSteps);
+            float newWidth = _startWidth + (_targetWidth - _startWidth) * progress;
+            tableLayoutCustomPanel.ColumnStyles[0].Width = newWidth;
 
+            if (progress >= 1f)
+            {
+                animationTimer.Stop();
+                tableLayoutCustomPanel.ColumnStyles[0].Width = _targetWidth;
+                _isExpanded = !_isExpanded;
+                SwitchButtonTextOnExpansion();
+            }
+        }
+        private void SwitchButtonTextOnExpansion()
+        {
+            foreach (Button button in GetButtonsInColumn(tableLayoutCustomPanel, 0))
+            {
+                button.Text = _isExpanded ? button.Tag.ToString() : "";
+            }
+        }
+        IEnumerable<Button> GetButtonsInColumn(TableLayoutPanel tlp, int column)
+        {
+            foreach (Control control in tlp.Controls)
+            {
+                if (tlp.GetColumn(control) != column) continue;
 
+                foreach (Button button in EnumerateButtons(control))
+                    yield return button;
+            }
+        }
+        IEnumerable<Button> EnumerateButtons(Control parent)
+        {
+            if (parent is Button button)
+                yield return button;
+
+            foreach (Control child in parent.Controls)
+                foreach (Button nested in EnumerateButtons(child))
+                    yield return nested;
+        }
+        #endregion
 
     }
 }

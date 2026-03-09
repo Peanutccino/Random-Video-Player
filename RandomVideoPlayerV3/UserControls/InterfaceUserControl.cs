@@ -1,8 +1,11 @@
 ﻿using FontAwesome.Sharp;
+using RandomVideoPlayer.Controls;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
+using Svg;
 using System.DirectoryServices.ActiveDirectory;
 using System.Reflection;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using Button = System.Windows.Forms.Button;
@@ -25,19 +28,63 @@ namespace RandomVideoPlayer.UserControls
         private PictureBox dragPreview;
         private int dragIndex = -1;
 
+        private ContextMenuStrip contextThemeSelection;
+        private ContextMenuStrip contextScaleSelection;
+        private List<ThemeOption> _themeOptions;
+
+        private Color _textColorBack;
+        private Color _backColor;
+        private Color _backColorLight;
+        private Color _highlightColor;
+
         public InterfaceUserControl(SettingsModel settings)
         {
             InitializeComponent();
 
-            UpdateDPIScaling();
-
             this.settings = settings;
 
-            checkboxes = new List<CheckBox> { cbDeleteButton, cbListAddButton, cbAddToFavButton, cbMoveToButton, cbShuffleButton, cbLoopButton, cbSourceSelector, cbSkipButton, cbTouchButton };
-            iconBoxes = new List<PictureBox> { iconDelete, iconListAdd_PB, iconAddToFav, iconMoveTo, iconShuffle, iconLoop, iconSourceSelector_PB, iconSkip, iconTouch };
-
+            checkboxes = new List<CheckBox> { cbDeleteButton, cbListAddButton, cbAddToFavButton, cbMoveToButton, cbShuffleButton, cbLoopButton, cbSourceSelector, cbTimerButton, cbSkipButton, cbTouchButton };
+            iconBoxes = new List<PictureBox> { iconDelete, iconListAdd_PB, iconAddToFav, iconMoveTo, iconShuffle, iconLoop, iconSourceSelector_PB, iconTimer, iconSkip, iconTouch };
+            InitializeUI();
             LoadSettings();
             BindControls();
+
+            DPI.UpdateDPIScaling(this);
+        }
+
+        private void InitializeUI()
+        {
+            ThemeManager.ApplyThemeSettings(this);
+
+            _textColorBack = ThemeManager.CurrentTheme.StTextColorBack;
+            _backColor = ThemeManager.CurrentTheme.StBackColor;
+            _backColorLight = ThemeManager.CurrentTheme.StBackColorLight;
+            _highlightColor = ThemeManager.CurrentTheme.StHighlightColor;
+
+            var renderer = new CustomRenderer()
+            {
+                BackgroundColor = _backColor,
+                TextColor = _textColorBack,
+                HighlightColor = _highlightColor
+            };
+            renderer.ApplyColors();
+            contextThemeSelection = new ContextMenuStrip()
+            {
+                ShowImageMargin = false,
+                ShowCheckMargin = false,
+                Renderer = renderer,
+                Font = new Font("Segoe UI Semibold", 9 / DPI.Scale, FontStyle.Bold)
+            };
+            contextScaleSelection = new ContextMenuStrip()
+            {
+                ShowImageMargin = false,
+                ShowCheckMargin = false,
+                Renderer = renderer,
+                Font = new Font("Segoe UI Semibold", 9 / DPI.Scale, FontStyle.Bold)
+            };
+
+            panelIcons.BackColor = ThemeManager.CurrentTheme.FormBackColor;
+            panelVisibilityToggles.BackColor = _backColorLight;
         }
 
         private void icon_MouseDown(object sender, MouseEventArgs e)
@@ -51,14 +98,13 @@ namespace RandomVideoPlayer.UserControls
                 {
                     Size = draggedPictureBox.Size,
                     Image = draggedPictureBox.Image,
-                    BackColor = Color.DeepPink,
+                    BackColor = _highlightColor,
                     Location = draggedPictureBox.Location
                 };
                 panelIcons.Controls.Add(dragPreview);
                 dragPreview.BringToFront();
             }
         }
-
         private void icon_MouseMove(object sender, MouseEventArgs e)
         {
             if (draggedPictureBox != null && e.Button == MouseButtons.Left)
@@ -124,12 +170,14 @@ namespace RandomVideoPlayer.UserControls
             cbShuffleButton.Checked = settings.ButtonStates[4];
             cbLoopButton.Checked = settings.ButtonStates[5];
             cbSourceSelector.Checked = settings.ButtonStates[6];
-            cbSkipButton.Checked = settings.ButtonStates[7];
-            cbTouchButton.Checked = settings.ButtonStates[8];
+            cbTimerButton.Checked = settings.ButtonStates[7];
+            cbSkipButton.Checked = settings.ButtonStates[8];
+            cbTouchButton.Checked = settings.ButtonStates[9];
 
             suppressCheckedChanged = false;
 
             cbShowButtonToPlayFromCurrentFolder.Checked = settings.ShowButtonToPlayFromCurrentFolder;
+            cbEnableCustomScaling.Checked = settings.EnableCustomScaling;
 
             UpdateSourceSelectorIcon();
             UpdateListEditIcon();
@@ -144,20 +192,19 @@ namespace RandomVideoPlayer.UserControls
             new KeyValuePair<string, Theme>("Light", ThemeDefaults.Light)}).ToDictionary(k => k.Key, k => k.Value);
             }
 
-            var options = themes
+            _themeOptions = themes
                 .Select(kvp => new ThemeOption(kvp.Key, kvp.Value))
                 .OrderBy(opt => opt.Name)
                 .ToList();
 
-            comboThemes.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboThemes.DisplayMember = nameof(ThemeOption.Name);
-            comboThemes.ValueMember = nameof(ThemeOption.Theme);
-            comboThemes.DataSource = options;
+            var match = _themeOptions.FirstOrDefault(o => o.Name == settings.SelectedTheme)
+                        ?? _themeOptions.First(o => o.Name == "Light");
 
-            string savedThemeName = settings.SelectedTheme;
-            var match = options.FirstOrDefault(o => o.Name == savedThemeName)
-                        ?? options.First(o => o.Name == "Light");
-            comboThemes.SelectedItem = match;
+
+            btnThemeSelector.Text = match.Name;
+
+            var scaleMatch = CustomScaling.ScalingFactors.FirstOrDefault(kvp => kvp.Value == settings.CustomScaling);
+            btnScalingSelector.Text = scaleMatch.Key;
         }
         private void BindControls()
         {
@@ -168,6 +215,7 @@ namespace RandomVideoPlayer.UserControls
             cbShuffleButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbLoopButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbSourceSelector.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
+            cbTimerButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbSkipButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
             cbTouchButton.CheckedChanged += new EventHandler(CheckBox_CheckedChanged);
 
@@ -176,96 +224,53 @@ namespace RandomVideoPlayer.UserControls
                 settings.ShowButtonToPlayFromCurrentFolder = cbShowButtonToPlayFromCurrentFolder.Checked;
             };
 
-            comboThemes.SelectedIndexChanged += (s, e) =>
+            cbEnableCustomScaling.CheckedChanged += (s, e) =>
             {
-                if (comboThemes.SelectedItem is ThemeOption selectedOption)
-                {
-                    settings.SelectedTheme = selectedOption.Name;
-                }
+                settings.EnableCustomScaling = cbEnableCustomScaling.Checked;
+            };
+
+            btnThemeSelector.Click += (s, e) =>
+            {
+                btnThemeSelector_Click(s, e);
+            };
+
+            btnScalingSelector.Click += (s, e) =>
+            {
+                btnScaleSelector_Click(s, e);
             };
         }
-        private bool suppressCheckedChanged = false;
-        private void CheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (suppressCheckedChanged) return;
 
-            settings.ButtonStates[0] = cbDeleteButton.Checked;
-            settings.ButtonStates[1] = cbListAddButton.Checked;
-            settings.ButtonStates[2] = cbAddToFavButton.Checked;
-            settings.ButtonStates[3] = cbMoveToButton.Checked;
-            settings.ButtonStates[4] = cbShuffleButton.Checked;
-            settings.ButtonStates[5] = cbLoopButton.Checked;
-            settings.ButtonStates[6] = cbSourceSelector.Checked;
-            settings.ButtonStates[7] = cbSkipButton.Checked;
-            settings.ButtonStates[8] = cbTouchButton.Checked;
-
-            //UpdateIconVisibility();
-            RepositionButtons();
-        }
-        private void InitializeDynamicButtons(int buttonCount)
+        private void btnScaleSelector_Click(object s, EventArgs e)
         {
-            for (int i = 0; i < buttonCount; i++) //Button move up
+            contextScaleSelection.Items.Clear();
+
+            foreach(var scaleValue in CustomScaling.ScalingFactors)
             {
-                FontAwesome.Sharp.IconButton button = new FontAwesome.Sharp.IconButton();
-                button.IconChar = FontAwesome.Sharp.IconChar.CircleUp;
-                button.IconFont = FontAwesome.Sharp.IconFont.Solid;
-                button.IconSize = 28;
-                button.IconColor = Color.Indigo;
-                button.FlatStyle = FlatStyle.Flat;
-                button.FlatAppearance.BorderSize = 0;
-                button.Width = 24;
-                button.Height = 28;
-                button.Margin = new Padding(3);
-
-                button.Tag = i;
-
-                button.Click += new EventHandler(ButtonUp_Click);
-                this.flowPanel.Controls.Add(button);
+                var item = contextScaleSelection.Items.Add(scaleValue.Key);
+                item.Click += (s, _) =>
+                {
+                    settings.CustomScaling = scaleValue.Value;
+                    btnScalingSelector.Text = scaleValue.Key;
+                };
             }
-            for (int i = 0; i < buttonCount; i++) //Button move down
+            contextScaleSelection.Show(btnScalingSelector, new Point(0, 0), ToolStripDropDownDirection.AboveRight);
+        }
+
+        private void btnThemeSelector_Click(object s, EventArgs e)
+        {
+            contextThemeSelection.Items.Clear();
+            
+            foreach(var theme in _themeOptions)
             {
-                FontAwesome.Sharp.IconButton button = new FontAwesome.Sharp.IconButton();
-                button.IconChar = FontAwesome.Sharp.IconChar.CircleDown;
-                button.IconFont = FontAwesome.Sharp.IconFont.Solid;
-                button.IconSize = 28;
-                button.IconColor = Color.Indigo;
-                button.FlatStyle = FlatStyle.Flat;
-                button.FlatAppearance.BorderSize = 0;
-                button.Width = 24;
-                button.Height = 28;
-                button.Margin = new Padding(3);
+                var item = contextThemeSelection.Items.Add(theme.Name);
+                item.Click += (s, _) =>
+                {
+                    btnThemeSelector.Text = theme.Name;
 
-                button.Tag = i;
-
-                button.Click += new EventHandler(ButtonDown_Click);
-                this.flowPanel.Controls.Add(button);
+                    settings.SelectedTheme = theme.Name;
+                };
+                contextThemeSelection.Show(btnThemeSelector, new Point(0, btnThemeSelector.Height), ToolStripDropDownDirection.BelowRight);
             }
-        }
-        private void ButtonUp_Click(object sender, EventArgs e)
-        {
-            Button clickedButton = sender as Button;
-            int buttonIndex = (int)clickedButton.Tag;
-
-            if (buttonIndex == 0) return;
-
-            int buttonIndexEntry = settings.ButtonOrder[buttonIndex];
-            settings.ButtonOrder.RemoveAt(buttonIndex);
-            settings.ButtonOrder.Insert(buttonIndex - 1, buttonIndexEntry);
-
-            RepositionButtons();
-        }
-        private void ButtonDown_Click(object sender, EventArgs e)
-        {
-            Button clickedButton = sender as Button;
-            int buttonIndex = (int)clickedButton.Tag;
-
-            if (buttonIndex == settings.ButtonStates.Length - 1) return;
-
-            int buttonIndexEntry = settings.ButtonOrder[buttonIndex];
-            settings.ButtonOrder.RemoveAt(buttonIndex);
-            settings.ButtonOrder.Insert(buttonIndex + 1, buttonIndexEntry);
-
-            RepositionButtons();
         }
         private void btnRestore_Click(object sender, EventArgs e)
         {
@@ -279,9 +284,29 @@ namespace RandomVideoPlayer.UserControls
             {
                 settings.ButtonStates[i] = true;
             }
-            //UpdateIconVisibility();
             LoadSettings();
         }
+
+        private bool suppressCheckedChanged = false;
+        private void CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (suppressCheckedChanged) return;
+
+            settings.ButtonStates[0] = cbDeleteButton.Checked;
+            settings.ButtonStates[1] = cbListAddButton.Checked;
+            settings.ButtonStates[2] = cbAddToFavButton.Checked;
+            settings.ButtonStates[3] = cbMoveToButton.Checked;
+            settings.ButtonStates[4] = cbShuffleButton.Checked;
+            settings.ButtonStates[5] = cbLoopButton.Checked;
+            settings.ButtonStates[6] = cbSourceSelector.Checked;
+            settings.ButtonStates[7] = cbTimerButton.Checked;
+            settings.ButtonStates[8] = cbSkipButton.Checked;
+            settings.ButtonStates[9] = cbTouchButton.Checked;
+
+            RepositionButtons();
+        }
+
+
         private void RepositionButtons()
         {
             int x = 3; //Starting x position
@@ -303,108 +328,46 @@ namespace RandomVideoPlayer.UserControls
 
             }
         }
-
-        private void UpdateIconVisibility()
-        {
-            iconDelete.Visible = settings.ButtonStates[0];
-            iconListAdd_PB.Visible = settings.ButtonStates[1];
-            iconAddToFav.Visible = settings.ButtonStates[2];
-            iconMoveTo.Visible = settings.ButtonStates[3];
-            iconShuffle.Visible = settings.ButtonStates[4];
-            iconLoop.Visible = settings.ButtonStates[5];
-            iconSourceSelector_PB.Visible = settings.ButtonStates[6];
-            iconSkip.Visible = settings.ButtonStates[7];
-            iconTouch.Visible = settings.ButtonStates[8];
-        }
-
         private void UpdateSourceSelectorIcon()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            var resourceName = "RandomVideoPlayer.Resources.SplitIconFolderHighlight.png";
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            if (SettingsHandler.SourceSelected)
             {
-                try
-                {
-                    if (stream != null)
-                    {
-                        var image = Image.FromStream(stream);
-                        iconSourceSelector_PB.Image = image;
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex, "Failed to load SplitIcon");
-                }
+                ApplyIcon(iconSourceSelector_PB, SVGTemplates.SplitIconList, ThemeManager.CurrentTheme.ButtonIconColor, ThemeManager.CurrentTheme.ButtonHighlightColor);
             }
+            else
+            {
+                ApplyIcon(iconSourceSelector_PB, SVGTemplates.SplitIconFolder, ThemeManager.CurrentTheme.ButtonIconColor, ThemeManager.CurrentTheme.ButtonHighlightColor);
+            }
+            iconSourceSelector_PB.BackColor = ThemeManager.CurrentTheme.FormBackColor;
         }
-
         private void UpdateListEditIcon()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-
-            var resourceName = "RandomVideoPlayer.Resources.list-colored-add.png";
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            if (MainFormData.presentInCustomList)
             {
-                try
-                {
-                    if (stream != null)
-                    {
-                        var image = Image.FromStream(stream);
-                        iconListAdd_PB.Image = image;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex, "Failed to load ListEdit icon");
-                }
+                ApplyIcon(iconListAdd_PB, SVGTemplates.ListRemoveIcon, ThemeManager.CurrentTheme.ButtonIconColor, Color.Red);
             }
+            else
+            {
+                ApplyIcon(iconListAdd_PB, SVGTemplates.ListAddIcon, ThemeManager.CurrentTheme.ButtonIconColor, ThemeManager.CurrentTheme.ButtonHighlightColor);
+            }
+            iconListAdd_PB.BackColor = ThemeManager.CurrentTheme.FormBackColor;
         }
         private void UpdateMoveFileIcon()
         {
             iconMoveTo.IconChar = SettingsHandler.FileCopy ? FontAwesome.Sharp.IconChar.Copy : FontAwesome.Sharp.IconChar.FileExport;
         }
-
-        private void UpdateDPIScaling()
+        private void ApplyIcon(PictureBox target, string template, Color main, Color accent)
         {
-            this.Size = DPI.GetSizeScaled(this.Size);
+            var svgMarkup = template
+                .Replace("{{main}}", ColorTranslator.ToHtml(main))
+                .Replace("{{accent}}", ColorTranslator.ToHtml(accent));
 
-            panelButtonPreview.Size = DPI.GetSizeScaled(panelButtonPreview.Size);
-            panelIcons.Size = DPI.GetSizeScaled(panelIcons.Size);
-            panelVisibilityToggles.Size = DPI.GetSizeScaled(panelVisibilityToggles.Size);
-            panel1.Size = DPI.GetSizeScaled(panel1.Size);
-            panel3.Size = DPI.GetSizeScaled(panel3.Size);
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(svgMarkup));
+            var svgDoc = SvgDocument.Open<SvgDocument>(stream); // SVG.NET
+            using var bmp = svgDoc.Draw(20, 20);
 
-            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
-            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
-
-            lbl1.Size = DPI.GetSizeScaled(lbl1.Size);
-            lbl1.Font = DPI.GetFontScaled(lbl1.Font);
-            lbl2.Size = DPI.GetSizeScaled(lbl2.Size);
-            lbl2.Font = DPI.GetFontScaled(lbl2.Font);
-            lbl3.Size = DPI.GetSizeScaled(lbl3.Size);
-            lbl3.Font = DPI.GetFontScaled(lbl3.Font);
-
-            foreach(PictureBox pictureBox in panelIcons.Controls)
-            {
-                pictureBox.Size = DPI.GetSizeScaled(pictureBox.Size);
-                pictureBox.Font = DPI.GetFontScaled(pictureBox.Font);
-            }
-            foreach(CheckBox checkBox in panelVisibilityToggles.Controls)
-            {
-                checkBox.Size = DPI.GetSizeScaled(checkBox.Size);
-                checkBox.Font = DPI.GetFontScaled(checkBox.Font);
-            }
-
-            cbShowButtonToPlayFromCurrentFolder.Size = DPI.GetSizeScaled(cbShowButtonToPlayFromCurrentFolder.Size);
-            cbShowButtonToPlayFromCurrentFolder.Font = DPI.GetFontScaled(cbShowButtonToPlayFromCurrentFolder.Font);
-
-            btnRestore.Size = DPI.GetSizeScaled(btnRestore.Size);
-            btnRestore.Font = DPI.GetFontScaled(btnRestore.Font);
-            btnRestore.Location = new Point(panelButtonPreview.Width - btnRestore.Width - 3, panelButtonPreview.Height - btnRestore.Height - 3);
+            target.Image?.Dispose();
+            target.Image = (Bitmap)bmp.Clone();
         }
     }
 }

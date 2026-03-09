@@ -31,7 +31,8 @@ namespace RandomVideoPlayer.Functions
                     new HotkeySetting { Action = "Favorite", Key = Keys.F, Modifiers = Keys.None },
                     new HotkeySetting { Action = "MoveCopyFile", Key = Keys.C, Modifiers = Keys.None },
                     new HotkeySetting { Action = "ToggleShuffle", Key = Keys.S, Modifiers = Keys.None },
-                    new HotkeySetting { Action = "SwitchPlaybackBehavior", Key = Keys.L, Modifiers = Keys.None },
+                    new HotkeySetting { Action = "ToggleLoop", Key = Keys.L, Modifiers = Keys.None },
+                    new HotkeySetting { Action = "ToggleTimer", Key = Keys.T, Modifiers = Keys.None },
                     new HotkeySetting { Action = "MutePlayer", Key = Keys.M, Modifiers = Keys.None },
                     new HotkeySetting { Action = "VolumeIncrease", Key = Keys.Up, Modifiers = Keys.None },
                     new HotkeySetting { Action = "VolumeDecrease", Key = Keys.Down, Modifiers = Keys.None },
@@ -39,6 +40,7 @@ namespace RandomVideoPlayer.Functions
                     new HotkeySetting { Action = "ToggleStatisticsOverlay", Key = Keys.J, Modifiers = Keys.Control },
                     new HotkeySetting { Action = "SeekForward", Key = Keys.Right, Modifiers = Keys.Alt },
                     new HotkeySetting { Action = "SeekBackward", Key = Keys.Left, Modifiers = Keys.Alt },
+                    new HotkeySetting { Action = "SeekRandom", Key = Keys.Up, Modifiers = Keys.Alt },
                     new HotkeySetting { Action = "SpeedIncrease", Key = Keys.Up, Modifiers = Keys.Control },
                     new HotkeySetting { Action = "SpeedDecrease", Key = Keys.Down, Modifiers = Keys.Control },
                     new HotkeySetting { Action = "SpeedReset", Key = Keys.R, Modifiers = Keys.Control },
@@ -94,7 +96,7 @@ namespace RandomVideoPlayer.Functions
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Failed to load hotkeySettings");
+                Error.Log(ex, "Failed to load hotkeySettings", LogLevel.Error);
                 return defaultSettings;
             }
 
@@ -110,7 +112,7 @@ namespace RandomVideoPlayer.Functions
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Couldn't save hotkeys.json");
+                Error.Log(ex, "Couldn't save hotkeys.json", LogLevel.Error);
             }
 
         }

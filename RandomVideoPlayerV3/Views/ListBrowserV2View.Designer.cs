@@ -85,8 +85,8 @@
             btnClearSelected = new FontAwesome.Sharp.IconButton();
             btnClearList = new FontAwesome.Sharp.IconButton();
             roundedPanelSideTop = new RandomVideoPlayer.Controls.RoundedPanel();
+            btnFunctions = new FontAwesome.Sharp.IconButton();
             btnAddAll = new FontAwesome.Sharp.IconButton();
-            label3 = new Label();
             btnAddSelected = new FontAwesome.Sharp.IconButton();
             panelTop = new Panel();
             lblTitleBar = new Label();
@@ -183,6 +183,7 @@
             btnStart.BorderRadius = 14;
             btnStart.BorderSize = 0;
             btnStart.Dock = DockStyle.Right;
+            btnStart.DynamicRadius = true;
             btnStart.FlatAppearance.BorderSize = 0;
             btnStart.FlatStyle = FlatStyle.Flat;
             btnStart.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -207,6 +208,7 @@
             btnBack.BorderRadius = 14;
             btnBack.BorderSize = 0;
             btnBack.Dock = DockStyle.Left;
+            btnBack.DynamicRadius = true;
             btnBack.FlatAppearance.BorderSize = 0;
             btnBack.FlatStyle = FlatStyle.Flat;
             btnBack.ForeColor = Color.White;
@@ -242,7 +244,7 @@
             // 
             tableLayouMainSub1.BackColor = Color.Yellow;
             tableLayouMainSub1.ColumnCount = 2;
-            tableLayouMainSub1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
+            tableLayouMainSub1.ColumnStyles.Add(new ColumnStyle());
             tableLayouMainSub1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayouMainSub1.Controls.Add(tableLayoutSideBar, 0, 1);
             tableLayouMainSub1.Controls.Add(label1, 0, 0);
@@ -253,7 +255,7 @@
             tableLayouMainSub1.Margin = new Padding(0);
             tableLayouMainSub1.Name = "tableLayouMainSub1";
             tableLayouMainSub1.RowCount = 2;
-            tableLayouMainSub1.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
+            tableLayouMainSub1.RowStyles.Add(new RowStyle());
             tableLayouMainSub1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayouMainSub1.Size = new Size(720, 611);
             tableLayouMainSub1.TabIndex = 2;
@@ -268,7 +270,7 @@
             tableLayoutSideBar.Controls.Add(flowPanelFav, 0, 3);
             tableLayoutSideBar.Controls.Add(tableLayoutFavButtons, 0, 2);
             tableLayoutSideBar.Dock = DockStyle.Fill;
-            tableLayoutSideBar.Location = new Point(0, 31);
+            tableLayoutSideBar.Location = new Point(0, 32);
             tableLayoutSideBar.Margin = new Padding(0);
             tableLayoutSideBar.Name = "tableLayoutSideBar";
             tableLayoutSideBar.RowCount = 4;
@@ -277,7 +279,7 @@
             tableLayoutSideBar.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tableLayoutSideBar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutSideBar.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutSideBar.Size = new Size(140, 580);
+            tableLayoutSideBar.Size = new Size(140, 579);
             tableLayoutSideBar.TabIndex = 4;
             // 
             // label2
@@ -313,7 +315,7 @@
             flowPanelFav.Location = new Point(0, 178);
             flowPanelFav.Margin = new Padding(0);
             flowPanelFav.Name = "flowPanelFav";
-            flowPanelFav.Size = new Size(140, 402);
+            flowPanelFav.Size = new Size(140, 401);
             flowPanelFav.TabIndex = 3;
             // 
             // tableLayoutFavButtons
@@ -374,7 +376,8 @@
             label1.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(134, 31);
+            label1.Padding = new Padding(0, 2, 0, 0);
+            label1.Size = new Size(134, 32);
             label1.TabIndex = 0;
             label1.Text = "Directories";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -385,7 +388,7 @@
             panelFileExplore.Controls.Add(lvFileExplore);
             panelFileExplore.Dock = DockStyle.Fill;
             panelFileExplore.FillColor = Color.White;
-            panelFileExplore.Location = new Point(140, 34);
+            panelFileExplore.Location = new Point(140, 35);
             panelFileExplore.Margin = new Padding(0, 3, 0, 0);
             panelFileExplore.Name = "panelFileExplore";
             panelFileExplore.Padding = new Padding(7, 7, 0, 0);
@@ -393,7 +396,7 @@
             panelFileExplore.RadiusBottomRight = 0;
             panelFileExplore.RadiusTopLeft = 16;
             panelFileExplore.RadiusTopRight = 8;
-            panelFileExplore.Size = new Size(580, 577);
+            panelFileExplore.Size = new Size(580, 576);
             panelFileExplore.TabIndex = 5;
             // 
             // lvFileExplore
@@ -407,7 +410,7 @@
             lvFileExplore.Location = new Point(7, 7);
             lvFileExplore.Name = "lvFileExplore";
             lvFileExplore.ShowItemToolTips = true;
-            lvFileExplore.Size = new Size(573, 570);
+            lvFileExplore.Size = new Size(573, 569);
             lvFileExplore.TabIndex = 0;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.VirtualMode = true;
@@ -439,7 +442,7 @@
             tableToolBar.Name = "tableToolBar";
             tableToolBar.RowCount = 1;
             tableToolBar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableToolBar.Size = new Size(580, 31);
+            tableToolBar.Size = new Size(580, 32);
             tableToolBar.TabIndex = 6;
             // 
             // panelToolbar3
@@ -452,7 +455,7 @@
             panelToolbar3.Location = new Point(435, 0);
             panelToolbar3.Margin = new Padding(0);
             panelToolbar3.Name = "panelToolbar3";
-            panelToolbar3.Size = new Size(145, 31);
+            panelToolbar3.Size = new Size(145, 32);
             panelToolbar3.TabIndex = 0;
             // 
             // btnFilterScript
@@ -467,7 +470,7 @@
             btnFilterScript.IconSize = 24;
             btnFilterScript.Location = new Point(80, 0);
             btnFilterScript.Name = "btnFilterScript";
-            btnFilterScript.Size = new Size(40, 31);
+            btnFilterScript.Size = new Size(40, 32);
             btnFilterScript.TabIndex = 27;
             btnFilterScript.UseVisualStyleBackColor = true;
             btnFilterScript.MouseDown += btnFilterScript_MouseDown;
@@ -484,7 +487,7 @@
             btnFilterImage.IconSize = 24;
             btnFilterImage.Location = new Point(40, 0);
             btnFilterImage.Name = "btnFilterImage";
-            btnFilterImage.Size = new Size(40, 31);
+            btnFilterImage.Size = new Size(40, 32);
             btnFilterImage.TabIndex = 26;
             btnFilterImage.UseVisualStyleBackColor = true;
             btnFilterImage.MouseDown += btnFilterImage_MouseDown;
@@ -501,7 +504,7 @@
             btnFilterVideo.IconSize = 24;
             btnFilterVideo.Location = new Point(0, 0);
             btnFilterVideo.Name = "btnFilterVideo";
-            btnFilterVideo.Size = new Size(40, 31);
+            btnFilterVideo.Size = new Size(40, 32);
             btnFilterVideo.TabIndex = 25;
             btnFilterVideo.UseVisualStyleBackColor = true;
             btnFilterVideo.MouseDown += btnFilterVideo_MouseDown;
@@ -516,7 +519,7 @@
             panelToolbar1.Margin = new Padding(0);
             panelToolbar1.Name = "panelToolbar1";
             panelToolbar1.Padding = new Padding(10, 0, 0, 0);
-            panelToolbar1.Size = new Size(232, 31);
+            panelToolbar1.Size = new Size(232, 32);
             panelToolbar1.TabIndex = 0;
             // 
             // lblZoomFactor
@@ -525,10 +528,11 @@
             lblZoomFactor.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblZoomFactor.Location = new Point(140, 0);
             lblZoomFactor.Name = "lblZoomFactor";
-            lblZoomFactor.Size = new Size(46, 31);
+            lblZoomFactor.Padding = new Padding(5, 0, 0, 0);
+            lblZoomFactor.Size = new Size(66, 32);
             lblZoomFactor.TabIndex = 22;
             lblZoomFactor.Text = "30%";
-            lblZoomFactor.TextAlign = ContentAlignment.MiddleCenter;
+            lblZoomFactor.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // sliderZoom
             // 
@@ -540,7 +544,7 @@
             sliderZoom.Minimum = 0;
             sliderZoom.Name = "sliderZoom";
             sliderZoom.RemainingColor = Color.FromArgb(209, 159, 156);
-            sliderZoom.Size = new Size(100, 31);
+            sliderZoom.Size = new Size(100, 32);
             sliderZoom.SmallChange = 5;
             sliderZoom.TabIndex = 17;
             sliderZoom.Text = "flatSlider1";
@@ -560,7 +564,7 @@
             btnResetSize.IconSize = 26;
             btnResetSize.Location = new Point(10, 0);
             btnResetSize.Name = "btnResetSize";
-            btnResetSize.Size = new Size(30, 31);
+            btnResetSize.Size = new Size(30, 32);
             btnResetSize.TabIndex = 16;
             btnResetSize.UseVisualStyleBackColor = true;
             btnResetSize.Click += btnResetSize_Click;
@@ -575,7 +579,7 @@
             panelToolbar2.Location = new Point(232, 0);
             panelToolbar2.Margin = new Padding(0);
             panelToolbar2.Name = "panelToolbar2";
-            panelToolbar2.Size = new Size(203, 31);
+            panelToolbar2.Size = new Size(203, 32);
             panelToolbar2.TabIndex = 1;
             // 
             // btnViewLargeGrid
@@ -590,7 +594,7 @@
             btnViewLargeGrid.IconSize = 30;
             btnViewLargeGrid.Location = new Point(80, 0);
             btnViewLargeGrid.Name = "btnViewLargeGrid";
-            btnViewLargeGrid.Size = new Size(40, 31);
+            btnViewLargeGrid.Size = new Size(40, 32);
             btnViewLargeGrid.TabIndex = 22;
             btnViewLargeGrid.UseVisualStyleBackColor = true;
             btnViewLargeGrid.Click += btnViewLargeGrid_Click;
@@ -607,7 +611,7 @@
             btnViewSmallGrid.IconSize = 30;
             btnViewSmallGrid.Location = new Point(40, 0);
             btnViewSmallGrid.Name = "btnViewSmallGrid";
-            btnViewSmallGrid.Size = new Size(40, 31);
+            btnViewSmallGrid.Size = new Size(40, 32);
             btnViewSmallGrid.TabIndex = 21;
             btnViewSmallGrid.UseVisualStyleBackColor = true;
             btnViewSmallGrid.Click += btnViewSmallGrid_Click;
@@ -624,7 +628,7 @@
             btnViewList.IconSize = 30;
             btnViewList.Location = new Point(0, 0);
             btnViewList.Name = "btnViewList";
-            btnViewList.Size = new Size(40, 31);
+            btnViewList.Size = new Size(40, 32);
             btnViewList.TabIndex = 20;
             btnViewList.UseVisualStyleBackColor = true;
             btnViewList.Click += btnViewList_Click;
@@ -886,6 +890,7 @@
             btnMoveList.Name = "btnMoveList";
             btnMoveList.Size = new Size(118, 32);
             btnMoveList.TabIndex = 27;
+            btnMoveList.Tag = "Move List";
             btnMoveList.Text = "Move List";
             btnMoveList.TextAlign = ContentAlignment.MiddleLeft;
             btnMoveList.UseVisualStyleBackColor = true;
@@ -906,6 +911,7 @@
             btnAddFromPlaylist.Name = "btnAddFromPlaylist";
             btnAddFromPlaylist.Size = new Size(118, 32);
             btnAddFromPlaylist.TabIndex = 26;
+            btnAddFromPlaylist.Tag = "Add Queue";
             btnAddFromPlaylist.Text = "Add Queue";
             btnAddFromPlaylist.TextAlign = ContentAlignment.MiddleLeft;
             btnAddFromPlaylist.UseVisualStyleBackColor = true;
@@ -917,7 +923,7 @@
             btnSaveList.FlatAppearance.BorderSize = 0;
             btnSaveList.FlatStyle = FlatStyle.Flat;
             btnSaveList.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            btnSaveList.IconChar = FontAwesome.Sharp.IconChar.FloppyDisk;
+            btnSaveList.IconChar = FontAwesome.Sharp.IconChar.Save;
             btnSaveList.IconColor = Color.Black;
             btnSaveList.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnSaveList.IconSize = 26;
@@ -926,6 +932,7 @@
             btnSaveList.Name = "btnSaveList";
             btnSaveList.Size = new Size(118, 32);
             btnSaveList.TabIndex = 25;
+            btnSaveList.Tag = "Save List";
             btnSaveList.Text = "Save List";
             btnSaveList.TextAlign = ContentAlignment.MiddleLeft;
             btnSaveList.UseVisualStyleBackColor = true;
@@ -946,6 +953,7 @@
             btnLoadList.Name = "btnLoadList";
             btnLoadList.Size = new Size(118, 32);
             btnLoadList.TabIndex = 24;
+            btnLoadList.Tag = "Load List";
             btnLoadList.Text = "Load List";
             btnLoadList.TextAlign = ContentAlignment.MiddleLeft;
             btnLoadList.UseVisualStyleBackColor = true;
@@ -966,6 +974,7 @@
             btnDelDuplicates.Name = "btnDelDuplicates";
             btnDelDuplicates.Size = new Size(118, 32);
             btnDelDuplicates.TabIndex = 23;
+            btnDelDuplicates.Tag = "Clear dups.";
             btnDelDuplicates.Text = "Clear dups.";
             btnDelDuplicates.TextAlign = ContentAlignment.MiddleLeft;
             btnDelDuplicates.UseVisualStyleBackColor = true;
@@ -977,7 +986,7 @@
             btnClearSelected.FlatAppearance.BorderSize = 0;
             btnClearSelected.FlatStyle = FlatStyle.Flat;
             btnClearSelected.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            btnClearSelected.IconChar = FontAwesome.Sharp.IconChar.MinusSquare;
+            btnClearSelected.IconChar = FontAwesome.Sharp.IconChar.SquareMinus;
             btnClearSelected.IconColor = Color.Black;
             btnClearSelected.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClearSelected.IconSize = 26;
@@ -986,6 +995,7 @@
             btnClearSelected.Name = "btnClearSelected";
             btnClearSelected.Size = new Size(118, 32);
             btnClearSelected.TabIndex = 22;
+            btnClearSelected.Tag = "Clear selected";
             btnClearSelected.Text = "Clear selected";
             btnClearSelected.TextAlign = ContentAlignment.MiddleLeft;
             btnClearSelected.UseVisualStyleBackColor = true;
@@ -997,7 +1007,7 @@
             btnClearList.FlatAppearance.BorderSize = 0;
             btnClearList.FlatStyle = FlatStyle.Flat;
             btnClearList.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            btnClearList.IconChar = FontAwesome.Sharp.IconChar.MinusSquare;
+            btnClearList.IconChar = FontAwesome.Sharp.IconChar.SquareMinus;
             btnClearList.IconColor = Color.Black;
             btnClearList.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnClearList.IconSize = 26;
@@ -1006,6 +1016,7 @@
             btnClearList.Name = "btnClearList";
             btnClearList.Size = new Size(118, 32);
             btnClearList.TabIndex = 21;
+            btnClearList.Tag = "Clear all";
             btnClearList.Text = "Clear all";
             btnClearList.TextAlign = ContentAlignment.MiddleLeft;
             btnClearList.UseVisualStyleBackColor = true;
@@ -1013,8 +1024,8 @@
             // 
             // roundedPanelSideTop
             // 
+            roundedPanelSideTop.Controls.Add(btnFunctions);
             roundedPanelSideTop.Controls.Add(btnAddAll);
-            roundedPanelSideTop.Controls.Add(label3);
             roundedPanelSideTop.Controls.Add(btnAddSelected);
             roundedPanelSideTop.Dock = DockStyle.Top;
             roundedPanelSideTop.FillColor = Color.RosyBrown;
@@ -1027,6 +1038,28 @@
             roundedPanelSideTop.RadiusTopRight = 0;
             roundedPanelSideTop.Size = new Size(130, 115);
             roundedPanelSideTop.TabIndex = 0;
+            // 
+            // btnFunctions
+            // 
+            btnFunctions.Dock = DockStyle.Top;
+            btnFunctions.FlatAppearance.BorderSize = 0;
+            btnFunctions.FlatStyle = FlatStyle.Flat;
+            btnFunctions.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnFunctions.IconChar = FontAwesome.Sharp.IconChar.Bars;
+            btnFunctions.IconColor = Color.Black;
+            btnFunctions.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            btnFunctions.IconSize = 25;
+            btnFunctions.ImageAlign = ContentAlignment.MiddleRight;
+            btnFunctions.Location = new Point(6, 0);
+            btnFunctions.Name = "btnFunctions";
+            btnFunctions.Padding = new Padding(0, 0, 1, 0);
+            btnFunctions.Size = new Size(118, 32);
+            btnFunctions.TabIndex = 19;
+            btnFunctions.Tag = "Functions";
+            btnFunctions.Text = "Functions";
+            btnFunctions.TextAlign = ContentAlignment.MiddleLeft;
+            btnFunctions.UseVisualStyleBackColor = true;
+            btnFunctions.Click += btnFunctions_Click;
             // 
             // btnAddAll
             // 
@@ -1043,21 +1076,11 @@
             btnAddAll.Name = "btnAddAll";
             btnAddAll.Size = new Size(118, 32);
             btnAddAll.TabIndex = 17;
+            btnAddAll.Tag = "Add all";
             btnAddAll.Text = "Add all";
             btnAddAll.TextAlign = ContentAlignment.MiddleLeft;
             btnAddAll.UseVisualStyleBackColor = true;
             btnAddAll.Click += btnAddAll_Click;
-            // 
-            // label3
-            // 
-            label3.Dock = DockStyle.Top;
-            label3.Font = new Font("Segoe UI Semibold", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label3.Location = new Point(6, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(118, 31);
-            label3.TabIndex = 1;
-            label3.Text = "Functions";
-            label3.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnAddSelected
             // 
@@ -1074,6 +1097,7 @@
             btnAddSelected.Name = "btnAddSelected";
             btnAddSelected.Size = new Size(118, 32);
             btnAddSelected.TabIndex = 18;
+            btnAddSelected.Tag = "Add selected";
             btnAddSelected.Text = "Add selected";
             btnAddSelected.TextAlign = ContentAlignment.MiddleLeft;
             btnAddSelected.UseVisualStyleBackColor = true;
@@ -1108,7 +1132,7 @@
             btnClose.FlatAppearance.BorderSize = 0;
             btnClose.FlatAppearance.MouseOverBackColor = Color.Red;
             btnClose.FlatStyle = FlatStyle.Flat;
-            btnClose.IconChar = FontAwesome.Sharp.IconChar.Multiply;
+            btnClose.IconChar = FontAwesome.Sharp.IconChar.Close;
             btnClose.IconColor = Color.Black;
             btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 15;
@@ -1210,7 +1234,6 @@
         private Controls.RoundedPanel roundedPanelSideBottom;
         private ListView lvCustomList;
         private ColumnHeader columnHeader2;
-        private Label label3;
         private FontAwesome.Sharp.IconButton btnAddAll;
         private FontAwesome.Sharp.IconButton btnAddSelected;
         private FontAwesome.Sharp.IconButton btnClearList;
@@ -1226,5 +1249,6 @@
         private Label lblSide3;
         private Label lblSide2;
         private Label lblSide1;
+        private FontAwesome.Sharp.IconButton btnFunctions;
     }
 }

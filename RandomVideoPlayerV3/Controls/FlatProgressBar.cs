@@ -202,8 +202,7 @@ namespace RandomVideoPlayer
             }
             catch (Exception ex)
             {
-                Error.Log(ex,"Load Funscript to display graph failed");
-                throw;
+                Error.Log(ex,"Load Funscript to display graph failed", LogLevel.Error);
             }
 
         }
@@ -285,19 +284,27 @@ namespace RandomVideoPlayer
 
             using (Pen GraphPen = new Pen(graphcolor, _graphThickness)) 
             {
-                for (int i = 0; i < actionPoints.Count - 1; i++)
+                try
                 {
-                    var startPoint = actionPoints[i];
-                    var endPoint = actionPoints[i + 1];
+                    for (int i = 0; i < actionPoints.Count - 1; i++)
+                    {
+                        var startPoint = actionPoints[i];
+                        var endPoint = actionPoints[i + 1];
 
-                    float startX = (float)startPoint.At / maxTime * Width;
-                    float startY = (1 - (float)startPoint.Pos / 100) * Height;
-                    float endX = (float)endPoint.At / maxTime * Width;
-                    float endY = (1 - (float)endPoint.Pos / 100) * Height;
+                        float startX = (float)startPoint.At / maxTime * Width;
+                        float startY = (1 - (float)startPoint.Pos / 100) * Height;
+                        float endX = (float)endPoint.At / maxTime * Width;
+                        float endY = (1 - (float)endPoint.Pos / 100) * Height;
 
-                    g.DrawLine(GraphPen, startX, startY, endX, endY);
-                    
-                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        g.DrawLine(GraphPen, startX, startY, endX, endY);
+
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Error.Log(ex,   "Error drawing funscript graph\n" +
+                                    $"Found ActionPoints: {actionPoints.Count}\n", LogLevel.Error);
                 }
             }
         }
@@ -325,16 +332,24 @@ namespace RandomVideoPlayer
                 }
 
                 // Draw the pre-rendered graph bitmap
-                if (progressBitmapToDraw != null && remainingBitmapToDraw != null)
+                try
                 {
-                    Rectangle progressRect = new Rectangle(0, 0, progressWidth, Height);
-                    e.Graphics.DrawImage(progressBitmapToDraw, progressRect, progressRect, GraphicsUnit.Pixel);
+                    if (progressBitmapToDraw != null && remainingBitmapToDraw != null)
+                    {
+                        Rectangle progressRect = new Rectangle(0, 0, progressWidth, Height);
+                        e.Graphics.DrawImage(progressBitmapToDraw, progressRect, progressRect, GraphicsUnit.Pixel);
 
-                    Rectangle remainingRect = new Rectangle(progressWidth, 0, Width - progressWidth, Height);
-                    e.Graphics.DrawImage(remainingBitmapToDraw, remainingRect, remainingRect, GraphicsUnit.Pixel);
+                        Rectangle remainingRect = new Rectangle(progressWidth, 0, Width - progressWidth, Height);
+                        e.Graphics.DrawImage(remainingBitmapToDraw, remainingRect, remainingRect, GraphicsUnit.Pixel);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Error.Log(ex, "Error drawing pre-rendered graph bitmaps", LogLevel.Error);
+                }
+
             }
-            // Draw border if ShowBorder is true
+
             if (ShowBorder)
             {
                 var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);

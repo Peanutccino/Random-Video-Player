@@ -398,7 +398,7 @@ namespace RandomVideoPlayer.Model
             catch (Exception ex)
             {
                 _folderList = Enumerable.Empty<string>();
-                Error.Log(ex, "Couldn't access folder - FillFolderList");
+                Error.Log(ex, "Couldn't access folder - FillFolderList", LogLevel.Error);
             }
         }
         /// <value>Grab only the latest (count) media files from defined directory</value> 
@@ -433,7 +433,7 @@ namespace RandomVideoPlayer.Model
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Couldn't access folder - latestFolderList");
+                Error.Log(ex, "Couldn't access folder - latestFolderList", LogLevel.Error);
             }
         }
      
@@ -526,7 +526,8 @@ namespace RandomVideoPlayer.Model
                 }
                 catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
                 {
-                    Error.Log(ex, $"Script access failed: {current}");
+                    var privateCurrent = PathAnonymizer.AnonymizeFilePath(current);
+                    Error.Log(ex, $"Script access failed: {privateCurrent}", LogLevel.Error);
                     continue;
                 }
 
@@ -549,7 +550,8 @@ namespace RandomVideoPlayer.Model
                 }
                 catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
                 {
-                    Error.Log(ex, $"Couldn't read script subDir: {current}");
+                    var privateCurrent = PathAnonymizer.AnonymizeFilePath(current);
+                    Error.Log(ex, $"Couldn't read script subDir: {privateCurrent}", LogLevel.Error);
                     continue;
                 }
 
@@ -575,7 +577,8 @@ namespace RandomVideoPlayer.Model
                 }
                 catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
                 {
-                    Error.Log(ex, $"Video access denied: {current}");
+                    var privateCurrent = PathAnonymizer.AnonymizeFilePath(current);
+                    Error.Log(ex, $"Video access denied: {privateCurrent}", LogLevel.Error);
                     continue;
                 }
 
@@ -596,7 +599,8 @@ namespace RandomVideoPlayer.Model
                 }
                 catch (Exception ex) when (ex is UnauthorizedAccessException || ex is IOException)
                 {
-                    Error.Log(ex, $"Couldn't read video subDir: {current}");
+                    var privateCurrent = PathAnonymizer.AnonymizeFilePath(current);
+                    Error.Log(ex, $"Couldn't read video subDir: {privateCurrent}", LogLevel.Error);
                     continue;
                 }
 

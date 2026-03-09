@@ -48,8 +48,10 @@
             sbtnSync = new FontAwesome.Sharp.IconButton();
             sbtnRemember = new FontAwesome.Sharp.IconButton();
             sbtnFilterExtensions = new FontAwesome.Sharp.IconButton();
+            sbtnAudio = new FontAwesome.Sharp.IconButton();
             sbtnPlayer = new FontAwesome.Sharp.IconButton();
             sbtnPaths = new FontAwesome.Sharp.IconButton();
+            sbtnTimer = new FontAwesome.Sharp.IconButton();
             panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitUI).BeginInit();
             splitUI.Panel1.SuspendLayout();
@@ -65,7 +67,7 @@
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(654, 20);
+            panelTop.Size = new Size(704, 20);
             panelTop.TabIndex = 0;
             // 
             // lblTitle
@@ -75,7 +77,7 @@
             lblTitle.Location = new Point(0, 0);
             lblTitle.Margin = new Padding(33, 0, 3, 0);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(624, 20);
+            lblTitle.Size = new Size(674, 20);
             lblTitle.TabIndex = 1;
             lblTitle.Text = "                    RVP - Settings";
             lblTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -87,11 +89,11 @@
             btnClose.FlatAppearance.BorderSize = 0;
             btnClose.FlatAppearance.MouseOverBackColor = Color.Red;
             btnClose.FlatStyle = FlatStyle.Flat;
-            btnClose.IconChar = FontAwesome.Sharp.IconChar.Multiply;
+            btnClose.IconChar = FontAwesome.Sharp.IconChar.Close;
             btnClose.IconColor = Color.Black;
             btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 15;
-            btnClose.Location = new Point(624, 0);
+            btnClose.Location = new Point(674, 0);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(30, 20);
             btnClose.TabIndex = 0;
@@ -105,14 +107,14 @@
             btnSave.FlatAppearance.BorderSize = 0;
             btnSave.FlatStyle = FlatStyle.Flat;
             btnSave.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            btnSave.IconChar = FontAwesome.Sharp.IconChar.FloppyDisk;
+            btnSave.IconChar = FontAwesome.Sharp.IconChar.Save;
             btnSave.IconColor = Color.Black;
             btnSave.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnSave.IconSize = 25;
             btnSave.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSave.Location = new Point(0, 546);
+            btnSave.Location = new Point(0, 605);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(172, 30);
+            btnSave.Size = new Size(185, 36);
             btnSave.TabIndex = 3;
             btnSave.Text = "Save and Close";
             btnSave.UseVisualStyleBackColor = false;
@@ -133,8 +135,8 @@
             // 
             splitUI.Panel2.AllowDrop = true;
             splitUI.Panel2.BackColor = Color.GhostWhite;
-            splitUI.Size = new Size(654, 576);
-            splitUI.SplitterDistance = 172;
+            splitUI.Size = new Size(704, 641);
+            splitUI.SplitterDistance = 185;
             splitUI.TabIndex = 2;
             // 
             // panelSidebar
@@ -146,18 +148,20 @@
             panelSidebar.Controls.Add(sbtnInterface);
             panelSidebar.Controls.Add(sbtnSubtitles);
             panelSidebar.Controls.Add(sbtnInputs);
+            panelSidebar.Controls.Add(sbtnTimer);
             panelSidebar.Controls.Add(sbtnSkip);
-            panelSidebar.Controls.Add(btnSave);
             panelSidebar.Controls.Add(sbtnProfiles);
             panelSidebar.Controls.Add(sbtnSync);
             panelSidebar.Controls.Add(sbtnRemember);
             panelSidebar.Controls.Add(sbtnFilterExtensions);
+            panelSidebar.Controls.Add(sbtnAudio);
+            panelSidebar.Controls.Add(btnSave);
             panelSidebar.Controls.Add(sbtnPlayer);
             panelSidebar.Controls.Add(sbtnPaths);
             panelSidebar.Dock = DockStyle.Fill;
             panelSidebar.Location = new Point(0, 0);
             panelSidebar.Name = "panelSidebar";
-            panelSidebar.Size = new Size(172, 576);
+            panelSidebar.Size = new Size(185, 641);
             panelSidebar.TabIndex = 0;
             // 
             // sbtnAbout
@@ -171,9 +175,9 @@
             sbtnAbout.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnAbout.IconSize = 30;
             sbtnAbout.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnAbout.Location = new Point(0, 480);
+            sbtnAbout.Location = new Point(0, 560);
             sbtnAbout.Name = "sbtnAbout";
-            sbtnAbout.Size = new Size(172, 40);
+            sbtnAbout.Size = new Size(185, 40);
             sbtnAbout.TabIndex = 10;
             sbtnAbout.Text = "About";
             sbtnAbout.TextAlign = ContentAlignment.TopLeft;
@@ -190,9 +194,9 @@
             sbtnExperimental.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnExperimental.IconSize = 30;
             sbtnExperimental.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnExperimental.Location = new Point(0, 440);
+            sbtnExperimental.Location = new Point(0, 520);
             sbtnExperimental.Name = "sbtnExperimental";
-            sbtnExperimental.Size = new Size(172, 40);
+            sbtnExperimental.Size = new Size(185, 40);
             sbtnExperimental.TabIndex = 11;
             sbtnExperimental.Text = "Experimental";
             sbtnExperimental.TextAlign = ContentAlignment.TopLeft;
@@ -209,9 +213,9 @@
             sbtnDragDrop.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnDragDrop.IconSize = 30;
             sbtnDragDrop.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnDragDrop.Location = new Point(0, 400);
+            sbtnDragDrop.Location = new Point(0, 480);
             sbtnDragDrop.Name = "sbtnDragDrop";
-            sbtnDragDrop.Size = new Size(172, 40);
+            sbtnDragDrop.Size = new Size(185, 40);
             sbtnDragDrop.TabIndex = 9;
             sbtnDragDrop.Text = "Drag && Drop";
             sbtnDragDrop.TextAlign = ContentAlignment.TopLeft;
@@ -228,9 +232,9 @@
             sbtnInterface.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnInterface.IconSize = 28;
             sbtnInterface.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnInterface.Location = new Point(0, 360);
+            sbtnInterface.Location = new Point(0, 440);
             sbtnInterface.Name = "sbtnInterface";
-            sbtnInterface.Size = new Size(172, 40);
+            sbtnInterface.Size = new Size(185, 40);
             sbtnInterface.TabIndex = 8;
             sbtnInterface.Text = "Interface";
             sbtnInterface.TextAlign = ContentAlignment.TopLeft;
@@ -247,9 +251,9 @@
             sbtnSubtitles.IconFont = FontAwesome.Sharp.IconFont.Solid;
             sbtnSubtitles.IconSize = 30;
             sbtnSubtitles.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnSubtitles.Location = new Point(0, 320);
+            sbtnSubtitles.Location = new Point(0, 400);
             sbtnSubtitles.Name = "sbtnSubtitles";
-            sbtnSubtitles.Size = new Size(172, 40);
+            sbtnSubtitles.Size = new Size(185, 40);
             sbtnSubtitles.TabIndex = 7;
             sbtnSubtitles.Text = "Subtitles";
             sbtnSubtitles.TextAlign = ContentAlignment.TopLeft;
@@ -266,9 +270,9 @@
             sbtnInputs.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnInputs.IconSize = 30;
             sbtnInputs.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnInputs.Location = new Point(0, 280);
+            sbtnInputs.Location = new Point(0, 360);
             sbtnInputs.Name = "sbtnInputs";
-            sbtnInputs.Size = new Size(172, 40);
+            sbtnInputs.Size = new Size(185, 40);
             sbtnInputs.TabIndex = 6;
             sbtnInputs.Text = "Inputs";
             sbtnInputs.TextAlign = ContentAlignment.TopLeft;
@@ -285,10 +289,10 @@
             sbtnSkip.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnSkip.IconSize = 28;
             sbtnSkip.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnSkip.Location = new Point(0, 240);
+            sbtnSkip.Location = new Point(0, 280);
             sbtnSkip.Name = "sbtnSkip";
             sbtnSkip.Padding = new Padding(0, 0, 1, 0);
-            sbtnSkip.Size = new Size(172, 40);
+            sbtnSkip.Size = new Size(185, 40);
             sbtnSkip.TabIndex = 5;
             sbtnSkip.Text = "Auto Skip";
             sbtnSkip.TextAlign = ContentAlignment.TopLeft;
@@ -300,15 +304,15 @@
             sbtnProfiles.FlatAppearance.BorderSize = 0;
             sbtnProfiles.FlatStyle = FlatStyle.Flat;
             sbtnProfiles.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            sbtnProfiles.IconChar = FontAwesome.Sharp.IconChar.UserAlt;
+            sbtnProfiles.IconChar = FontAwesome.Sharp.IconChar.UserLarge;
             sbtnProfiles.IconColor = Color.Black;
             sbtnProfiles.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnProfiles.IconSize = 28;
             sbtnProfiles.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnProfiles.Location = new Point(0, 200);
+            sbtnProfiles.Location = new Point(0, 240);
             sbtnProfiles.Name = "sbtnProfiles";
             sbtnProfiles.Padding = new Padding(0, 0, 1, 0);
-            sbtnProfiles.Size = new Size(172, 40);
+            sbtnProfiles.Size = new Size(185, 40);
             sbtnProfiles.TabIndex = 12;
             sbtnProfiles.Text = "Profiles";
             sbtnProfiles.TextAlign = ContentAlignment.TopLeft;
@@ -320,15 +324,15 @@
             sbtnSync.FlatAppearance.BorderSize = 0;
             sbtnSync.FlatStyle = FlatStyle.Flat;
             sbtnSync.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            sbtnSync.IconChar = FontAwesome.Sharp.IconChar.Sync;
+            sbtnSync.IconChar = FontAwesome.Sharp.IconChar.Refresh;
             sbtnSync.IconColor = Color.Black;
             sbtnSync.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnSync.IconSize = 28;
             sbtnSync.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnSync.Location = new Point(0, 160);
+            sbtnSync.Location = new Point(0, 200);
             sbtnSync.Name = "sbtnSync";
             sbtnSync.Padding = new Padding(0, 0, 1, 0);
-            sbtnSync.Size = new Size(172, 40);
+            sbtnSync.Size = new Size(185, 40);
             sbtnSync.TabIndex = 4;
             sbtnSync.Text = "Sync";
             sbtnSync.TextAlign = ContentAlignment.TopLeft;
@@ -345,10 +349,10 @@
             sbtnRemember.IconFont = FontAwesome.Sharp.IconFont.Solid;
             sbtnRemember.IconSize = 22;
             sbtnRemember.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnRemember.Location = new Point(0, 120);
+            sbtnRemember.Location = new Point(0, 160);
             sbtnRemember.Name = "sbtnRemember";
             sbtnRemember.Padding = new Padding(0, 0, 3, 0);
-            sbtnRemember.Size = new Size(172, 40);
+            sbtnRemember.Size = new Size(185, 40);
             sbtnRemember.TabIndex = 3;
             sbtnRemember.Text = "Remember";
             sbtnRemember.TextAlign = ContentAlignment.TopLeft;
@@ -365,13 +369,32 @@
             sbtnFilterExtensions.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnFilterExtensions.IconSize = 26;
             sbtnFilterExtensions.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnFilterExtensions.Location = new Point(0, 80);
+            sbtnFilterExtensions.Location = new Point(0, 120);
             sbtnFilterExtensions.Name = "sbtnFilterExtensions";
-            sbtnFilterExtensions.Size = new Size(172, 40);
+            sbtnFilterExtensions.Size = new Size(185, 40);
             sbtnFilterExtensions.TabIndex = 2;
             sbtnFilterExtensions.Text = "Filter";
             sbtnFilterExtensions.TextAlign = ContentAlignment.TopLeft;
             sbtnFilterExtensions.UseVisualStyleBackColor = true;
+            // 
+            // sbtnAudio
+            // 
+            sbtnAudio.Dock = DockStyle.Top;
+            sbtnAudio.FlatAppearance.BorderSize = 0;
+            sbtnAudio.FlatStyle = FlatStyle.Flat;
+            sbtnAudio.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            sbtnAudio.IconChar = FontAwesome.Sharp.IconChar.Headphones;
+            sbtnAudio.IconColor = Color.Black;
+            sbtnAudio.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnAudio.IconSize = 26;
+            sbtnAudio.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnAudio.Location = new Point(0, 80);
+            sbtnAudio.Name = "sbtnAudio";
+            sbtnAudio.Size = new Size(185, 40);
+            sbtnAudio.TabIndex = 13;
+            sbtnAudio.Text = "Audio";
+            sbtnAudio.TextAlign = ContentAlignment.TopLeft;
+            sbtnAudio.UseVisualStyleBackColor = true;
             // 
             // sbtnPlayer
             // 
@@ -379,14 +402,14 @@
             sbtnPlayer.FlatAppearance.BorderSize = 0;
             sbtnPlayer.FlatStyle = FlatStyle.Flat;
             sbtnPlayer.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            sbtnPlayer.IconChar = FontAwesome.Sharp.IconChar.SlidersH;
+            sbtnPlayer.IconChar = FontAwesome.Sharp.IconChar.Sliders;
             sbtnPlayer.IconColor = Color.Black;
             sbtnPlayer.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnPlayer.IconSize = 26;
             sbtnPlayer.ImageAlign = ContentAlignment.MiddleRight;
             sbtnPlayer.Location = new Point(0, 40);
             sbtnPlayer.Name = "sbtnPlayer";
-            sbtnPlayer.Size = new Size(172, 40);
+            sbtnPlayer.Size = new Size(185, 40);
             sbtnPlayer.TabIndex = 1;
             sbtnPlayer.Text = "Player";
             sbtnPlayer.TextAlign = ContentAlignment.TopLeft;
@@ -405,11 +428,31 @@
             sbtnPaths.ImageAlign = ContentAlignment.MiddleRight;
             sbtnPaths.Location = new Point(0, 0);
             sbtnPaths.Name = "sbtnPaths";
-            sbtnPaths.Size = new Size(172, 40);
+            sbtnPaths.Size = new Size(185, 40);
             sbtnPaths.TabIndex = 0;
             sbtnPaths.Text = "Paths";
             sbtnPaths.TextAlign = ContentAlignment.TopLeft;
             sbtnPaths.UseVisualStyleBackColor = true;
+            // 
+            // sbtnTimer
+            // 
+            sbtnTimer.Dock = DockStyle.Top;
+            sbtnTimer.FlatAppearance.BorderSize = 0;
+            sbtnTimer.FlatStyle = FlatStyle.Flat;
+            sbtnTimer.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            sbtnTimer.IconChar = FontAwesome.Sharp.IconChar.ClockRotateLeft;
+            sbtnTimer.IconColor = Color.Black;
+            sbtnTimer.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnTimer.IconSize = 28;
+            sbtnTimer.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnTimer.Location = new Point(0, 320);
+            sbtnTimer.Name = "sbtnTimer";
+            sbtnTimer.Padding = new Padding(0, 0, 1, 0);
+            sbtnTimer.Size = new Size(185, 40);
+            sbtnTimer.TabIndex = 14;
+            sbtnTimer.Text = "Timer";
+            sbtnTimer.TextAlign = ContentAlignment.TopLeft;
+            sbtnTimer.UseVisualStyleBackColor = true;
             // 
             // SettingsView
             // 
@@ -417,10 +460,10 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.GhostWhite;
-            ClientSize = new Size(654, 596);
+            ClientSize = new Size(704, 661);
             Controls.Add(splitUI);
             Controls.Add(panelTop);
-            MinimumSize = new Size(670, 635);
+            MinimumSize = new Size(720, 680);
             Name = "SettingsView";
             Text = "SettingsView";
             Resize += SettingsView_Resize;
@@ -455,5 +498,7 @@
         private FontAwesome.Sharp.IconButton sbtnSkip;
         private FontAwesome.Sharp.IconButton sbtnExperimental;
         private FontAwesome.Sharp.IconButton sbtnProfiles;
+        private FontAwesome.Sharp.IconButton sbtnAudio;
+        private FontAwesome.Sharp.IconButton sbtnTimer;
     }
 }

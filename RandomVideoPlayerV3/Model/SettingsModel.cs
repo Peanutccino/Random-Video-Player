@@ -29,6 +29,18 @@ namespace RandomVideoPlayer.Model
         public int AutoSkipSeconds { get; set; }
         public bool EnableRandomVideoStartPoint { get; set; }
         public bool RandomVideoStartPointIgnoreScripts { get; set; }
+        public bool RandomVideoStartPointIgnoreShortVideos { get; set; }
+        public int RandomVideoStartPointShortVideoThreshold { get; set; }
+        public int StartPointRangeStart { get; set; }
+        public int StartPointRangeEnd { get; set; }
+        #endregion
+
+        #region Timer
+        public bool TimerEnabled { get; set; }
+        public bool TimerResetOnSeek { get; set; }
+        public int AutoPlayTimerValueStartPoint { get; set; }
+        public int AutoPlayTimerValueEndPoint { get; set; }
+        public bool AutoPlayTimerRangeEnabled { get; set; }
         #endregion
 
         #region Paths
@@ -55,17 +67,25 @@ namespace RandomVideoPlayer.Model
         public bool ShufflePlaylist { get; set; }
         public bool ReShuffle { get; set; }
         public bool LeftMousePause { get; set; }
-        public AutoPlayMethod AutoPlayMethod { get; set; }
-        public int AutoPlayTimerValueStartPoint { get; set; }
-        public int AutoPlayTimerValueEndPoint { get; set; }
-        public bool AutoPlayTimerRangeEnabled { get; set; }
+        public bool LoopEnabled { get; set; }
         public int CustomSeekForwardValueSmall { get; set; }
         public int CustomSeekBackwardValueSmall { get; set; }
         public int CustomSeekForwardValueLarge { get; set; }
         public int CustomSeekBackwardValueLarge { get; set; }
         public int VideoSizeThreshold { get; set; }
         public bool RTXVSREnabled { get; set; }
-        public bool DarkModeEnabled { get; set; }        
+        public bool DarkModeEnabled { get; set; }
+        public LogLevel LogLevel { get; set; }
+        #endregion
+
+        #region Audio
+        public bool AudioNormalizerEnabled { get; set; }
+        public int FrameLen { get; set; }
+        public int GaussSize { get; set; }
+        public double Peak { get; set; }
+        public double MaxGain { get; set; }
+        public double TargetRMS { get; set; }
+        public bool AltBoundary { get; set; }
         #endregion
 
         #region FilterExtensions    
@@ -101,6 +121,8 @@ namespace RandomVideoPlayer.Model
         public List<int> ButtonOrder { get; set; }
         public bool ShowButtonToPlayFromCurrentFolder { get; set; }
         public string SelectedTheme { get; set; }
+        public bool EnableCustomScaling { get; set; }
+        public float CustomScaling { get; set; }
         #endregion
 
         #region Experimental
@@ -111,11 +133,9 @@ namespace RandomVideoPlayer.Model
         public double ZoomAmount { get; set; }
         public int ZoomEasingFunction { get; set; }
         public int PanEasingFunction { get; set; }
-        public bool EnableCustomScaling { get; set; }
-        public float CustomScaling { get; set; }
-        public bool FolderBrowserV2Enabled { get; set; }
-        public bool ListBrowserV2Enabled { get; set; }
         public bool ThumbnailPreviewEnabled { get; set; }
+        public bool PreviewSeekBarEnabled { get; set; }
+        public string PathToFFMpeg { get; set; }
         #endregion
 
         #region About

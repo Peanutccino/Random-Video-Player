@@ -34,7 +34,7 @@ namespace RandomVideoPlayer.Controls
 
             Rectangle circleRect = new Rectangle(PaddingLeft, (this.Height - CircleSize) / 2, CircleSize, CircleSize);
 
-            Color borderColor = isHovered ? HoverColor : Color.Black; 
+            Color borderColor = isHovered ? HoverColor : ForeColor; 
             using (Pen borderPen = new Pen(borderColor, 1)) 
             {
                 g.DrawEllipse(borderPen, circleRect);
@@ -50,7 +50,7 @@ namespace RandomVideoPlayer.Controls
                     CircleSize - 2 * innerPadding
                 );
 
-                Color circleColor = isHovered ? HoverColor : Color.Black; 
+                Color circleColor = isHovered ? HoverColor : ForeColor; 
                 using (Brush innerCircleBrush = new SolidBrush(circleColor))
                 {
                     g.FillEllipse(innerCircleBrush, innerCircleRect);

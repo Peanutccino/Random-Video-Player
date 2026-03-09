@@ -10,14 +10,12 @@ namespace RandomVideoPlayer.Controls
 {
     public class RoundedButton : Button
     {
-        //Fields
         private int borderSize = 0;
         private int borderRadius = 0;
+        private bool dynamicRadius = true;
         private Color borderColor = Color.PaleVioletRed;
         private Color backgroundColor = Color.MediumSlateBlue;
 
-        //Properties
-        [Category("RJ Code Advance")]
         public int BorderSize
         {
             get { return borderSize; }
@@ -28,7 +26,6 @@ namespace RandomVideoPlayer.Controls
             }
         }
 
-        [Category("RJ Code Advance")]
         public int BorderRadius
         {
             get { return borderRadius; }
@@ -39,7 +36,16 @@ namespace RandomVideoPlayer.Controls
             }
         }
 
-        [Category("RJ Code Advance")]
+        public bool DynamicRadius
+        {
+            get { return dynamicRadius; }
+            set
+            {
+                dynamicRadius = value;
+                this.Invalidate();
+            }
+        }
+
         public Color BorderColor
         {
             get { return borderColor; }
@@ -50,14 +56,12 @@ namespace RandomVideoPlayer.Controls
             }
         }
 
-        [Category("RJ Code Advance")]
         public Color BackgroundColor
         {
             get { return backgroundColor; }
             set { backgroundColor = value; }
         }
 
-        [Category("RJ Code Advance")]
         public Color TextColor
         {
             get { return this.ForeColor; }
@@ -109,23 +113,17 @@ namespace RandomVideoPlayer.Controls
                 using (Pen penBorder = new Pen(borderColor, borderSize))
                 {
                     pevent.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                    //Button surface
                     this.Region = new Region(pathSurface);
-                    //Draw surface border for HD result
                     pevent.Graphics.DrawPath(penSurface, pathSurface);
-
-                    //Button border                    
+           
                     if (borderSize >= 1)
-                        //Draw control border
                         pevent.Graphics.DrawPath(penBorder, pathBorder);
                 }
             }
             else //Normal button
             {
                 pevent.Graphics.SmoothingMode = SmoothingMode.None;
-                //Button surface
                 this.Region = new Region(rectSurface);
-                //Button border
                 if (borderSize >= 1)
                 {
                     using (Pen penBorder = new Pen(borderColor, borderSize))
@@ -148,6 +146,8 @@ namespace RandomVideoPlayer.Controls
         }
         private void Button_Resize(object sender, EventArgs e)
         {
+            borderRadius = dynamicRadius ? (this.Height / 2) : borderRadius;
+
             if (borderRadius > this.Height)
                 borderRadius = this.Height;
         }

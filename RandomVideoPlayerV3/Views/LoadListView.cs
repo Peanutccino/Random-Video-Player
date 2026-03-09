@@ -49,7 +49,7 @@ namespace RandomVideoPlayer.Views
                 }
                 catch (Exception ex)
                 {
-                    Error.Log(ex, "Failed to delete list file");
+                    Error.Log(ex, "Failed to delete list file", LogLevel.Error);
                     MessageBox.Show($"Failed to delete file {ex}");
                 }
             }

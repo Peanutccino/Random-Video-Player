@@ -18,14 +18,18 @@ namespace RandomVideoPlayer.UserControls
         {
             InitializeComponent();
 
-            UpdateDPIScaling();
+            DPI.UpdateDPIScaling(this);
             settings = HotkeyManager.LoadHotkeySettings();
+            InitializeUI();
             PopulateListView();
             PopulateFixedListView();
             blinkTimer = new System.Timers.Timer(20);
             blinkTimer.Elapsed += OnTimedEvent;
         }
-
+        private void InitializeUI()
+        {
+            ThemeManager.ApplyThemeSettings(this);
+        }
         private void PopulateListView()
         {
             lvHotkeys.Items.Clear();
@@ -147,34 +151,5 @@ namespace RandomVideoPlayer.UserControls
             {"Double Click player", "Exclusive Fullscreen" },
             {"Escape", "Exit application" }
         };
-
-        private void UpdateDPIScaling()
-        {
-            this.MinimumSize = DPI.GetSizeScaled(this.MinimumSize);
-            this.Size = DPI.GetSizeScaled(this.Size);
-
-            lblHeader.Size = DPI.GetSizeScaled(lblHeader.Size);
-            lblHeader.Font = DPI.GetFontScaled(lblHeader.Font);
-
-            lbl1.Size = DPI.GetSizeScaled(lbl1.Size);
-            lbl1.Font = DPI.GetFontScaled(lbl1.Font);
-
-            lvHotkeys.Size = DPI.GetSizeScaled(lvHotkeys.Size);
-            lvHotkeys.Font = DPI.GetFontScaled(lvHotkeys.Font);
-
-            lvFixedHotkeys.Size = DPI.GetSizeScaled(lvFixedHotkeys.Size);
-            lvFixedHotkeys.Font = DPI.GetFontScaled(lvFixedHotkeys.Font);
-
-            btnRestore.Size = DPI.GetSizeScaled(btnRestore.Size);
-            btnRestore.Font = DPI.GetFontScaled(btnRestore.Font);
-            btnRestore.Location = new Point(3, panelBottom.Height - btnRestore.Height - 3);
-
-            btnSave.Size = DPI.GetSizeScaled(btnSave.Size);
-            btnSave.Font = DPI.GetFontScaled(btnSave.Font);
-            btnSave.Location = new Point(panelBottom.Width - btnSave.Width - 3, btnRestore.Location.Y);
-
-            panelBottom.Size = DPI.GetSizeScaled(panelBottom.Size);
-            splitUI.Size = DPI.GetSizeScaled(splitUI.Size);
-        }
     }
 }

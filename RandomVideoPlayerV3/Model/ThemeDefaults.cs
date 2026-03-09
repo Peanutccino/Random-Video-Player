@@ -40,7 +40,17 @@ namespace RandomVideoPlayer.Model
             LbAccentColorSide = ColorTranslator.FromHtml("#98FB98"),
 
             LbHighlightColorMain = ColorTranslator.FromHtml("#BA5A30"),
-            LbHighlightColorSide = ColorTranslator.FromHtml("#4C916C")
+            LbHighlightColorSide = ColorTranslator.FromHtml("#4C916C"),
+
+            StTextColor = ColorTranslator.FromHtml("#000000"),
+            StTextColorAccent = ColorTranslator.FromHtml("#FFFFFF"),
+            StTextColorBack = ColorTranslator.FromHtml("#000000"),
+            StTextColorHighlight = ColorTranslator.FromHtml("#000000"),
+            StBackColor = ColorTranslator.FromHtml("#B3B3FF"),
+            StBackColorLight = ColorTranslator.FromHtml("#FFFFFF"),
+            StBackColorDark = ColorTranslator.FromHtml("#F8F8FF"),
+            StAccentColor = ColorTranslator.FromHtml("#4B0082"),
+            StHighlightColor = ColorTranslator.FromHtml("#B4FF7D")
         };
 
         public static Theme Dark { get; } = new Theme
@@ -75,7 +85,17 @@ namespace RandomVideoPlayer.Model
             LbAccentColorSide = ColorTranslator.FromHtml("#D464D9"),
 
             LbHighlightColorMain = ColorTranslator.FromHtml("#00CCA0"),
-            LbHighlightColorSide = ColorTranslator.FromHtml("#D1005B")
+            LbHighlightColorSide = ColorTranslator.FromHtml("#D1005B"),
+
+            StTextColor = ColorTranslator.FromHtml("#FFFFFF"),
+            StTextColorAccent = ColorTranslator.FromHtml("#191919"),
+            StTextColorBack = ColorTranslator.FromHtml("#FFFFFF"),
+            StTextColorHighlight = ColorTranslator.FromHtml("#000000"),
+            StBackColor = ColorTranslator.FromHtml("#D1005B"),
+            StBackColorLight = ColorTranslator.FromHtml("#453D4D"),
+            StBackColorDark = ColorTranslator.FromHtml("#38323D"),
+            StAccentColor = ColorTranslator.FromHtml("#D464D9"),
+            StHighlightColor = ColorTranslator.FromHtml("#00D176")
         };
     }
 }

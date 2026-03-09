@@ -336,7 +336,7 @@ namespace RandomVideoPlayer.Views
                     }
                     catch (Exception ex)
                     {
-                        Error.Log(ex, "Unable to gather favorite folders in FB");
+                        Error.Log(ex, "Unable to gather favorite folders in FB", LogLevel.Error);
                         continue;
                     }
                 }
@@ -374,7 +374,7 @@ namespace RandomVideoPlayer.Views
             }
             catch (Exception ex)
             {
-                Error.Log(ex, "Error populating lvFileExplore in FB");
+                Error.Log(ex, "Error populating lvFileExplore in FB", LogLevel.Error);
                 return;
             }
 
