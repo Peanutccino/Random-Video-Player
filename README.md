@@ -1,6 +1,6 @@
 ## Random Video Player - RVP
 
-![Logo](https://i.imgur.com/L1EOUnJ.png)
+![Logo](https://i.imgur.com/xmfPECn.jpeg)
 
 Hello everyone,
 
@@ -12,13 +12,14 @@ RVP doesn't stop there, though, as it's got quite the feature set:
 
 ## Features:
 * Start playing random videos from any location you define or simply your whole collection
-* Create/Edit/Save/Load custom lists with the videos you choose
+* Create/Edit/Save/Load custom playlists with the videos or images you choose
 * Open your videos with RVP to start playing right away
 * Drag&Drop videos directly on RVP to play from their directory
 * Quick and easy navigation
 * Amazing and customizable UI
 * Customizable Hotkeys and Mousecontrols for quick and easy control of the player
-* Synchronize with MultiFunPlayer while playing random videos, now with visualizer
+* Funscript compatible: Synchronize with MultiFunPlayer (MFP) or ScriptPlayer while playing random videos
+* Watch VR videos on desktop, converted to 2D space without the need of VR glasses
 
 ## Prerequisites (When compiling yourself)
 
@@ -51,6 +52,17 @@ The player uses Mpv.Net-lib- which I've modified to make use of the latest 'libm
 4. While RVP is running, press connect on MFP and it starts synchronizing
 5. You need to play videos from your folder with scripts ofc.
 6. Have Fun!
+
+## Play VR videos on Desktop
+1. When playing a VR video
+2. either:
+   * Enable VR via top menu called "VR"
+   * Enable auto-detection to let RVP automatically enable it
+3. Auto-detection usually loads the best fitting settings right away
+4. If necessary adjust settings like projection, stereo-mode, FOV etc. manually
+5. You can save custom settings so they're auto-loaded the next time
+6. Depending on your hardware power, choose a lower quality preset and/or interpolation method to boost performance
+7. Default quality preset "Balanced" should work fine most of the time for VR to Desktop conversion
   
 ## Hotkeys
 There are multiple shortcuts for ease of use:
@@ -58,9 +70,7 @@ There are multiple shortcuts for ease of use:
 * Scroll on the volume bar to increase / decrease volume
 * Double click on the player sets it to an exclusive fullscreen mode (again to revert)
 
-Most of the hotkeys can be changed in the settings:
-
-![Logo](https://i.imgur.com/9RxCiJS.png)
+Most of the hotkeys can be changed in the settings.
 
 
 ## Outro:
