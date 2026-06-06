@@ -12,6 +12,11 @@ namespace RandomVideoPlayer.Model
         public static readonly string VersionHistoryUrl = "https://raw.githubusercontent.com/Peanutccino/Random-Video-Player/master/version_history.txt";
         public static readonly string VSRFilter = "d3d11vpp=scale=2:nvidia-true-hdr:scaling-mode=nvidia";
 
+        public static bool vrEnabled { get; set; } = false;
+        public static bool? loadedVrStatus { get; set; } = null;
+        public static bool vrDragging { get; set; } = false;
+        public static Point lastMouse { get; set; }
+
         public static readonly int doubleClickDelay = 180; //Delay to wait for potential double click otherwise execute single click
 
         //Safety time to prevent event spamming

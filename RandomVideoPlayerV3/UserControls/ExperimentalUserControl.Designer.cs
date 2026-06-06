@@ -301,7 +301,7 @@
             // lbl1
             // 
             lbl1.Dock = DockStyle.Top;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl1.Location = new Point(0, 0);
             lbl1.Name = "lbl1";
             lbl1.Size = new Size(518, 24);
@@ -396,7 +396,7 @@
             // lbl7
             // 
             lbl7.Dock = DockStyle.Top;
-            lbl7.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl7.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl7.Location = new Point(0, 0);
             lbl7.Name = "lbl7";
             lbl7.Size = new Size(518, 24);
@@ -444,12 +444,12 @@
             // lbl9
             // 
             lbl9.Dock = DockStyle.Top;
-            lbl9.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl9.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl9.Location = new Point(0, 0);
             lbl9.Name = "lbl9";
             lbl9.Size = new Size(518, 24);
             lbl9.TabIndex = 2;
-            lbl9.Text = "Enable new versions:";
+            lbl9.Text = "Enable thumbnail previews:";
             // 
             // ExperimentalUserControl
             // 

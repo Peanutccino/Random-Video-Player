@@ -43,6 +43,7 @@
             sbtnInterface = new FontAwesome.Sharp.IconButton();
             sbtnSubtitles = new FontAwesome.Sharp.IconButton();
             sbtnInputs = new FontAwesome.Sharp.IconButton();
+            sbtnTimer = new FontAwesome.Sharp.IconButton();
             sbtnSkip = new FontAwesome.Sharp.IconButton();
             sbtnProfiles = new FontAwesome.Sharp.IconButton();
             sbtnSync = new FontAwesome.Sharp.IconButton();
@@ -51,7 +52,7 @@
             sbtnAudio = new FontAwesome.Sharp.IconButton();
             sbtnPlayer = new FontAwesome.Sharp.IconButton();
             sbtnPaths = new FontAwesome.Sharp.IconButton();
-            sbtnTimer = new FontAwesome.Sharp.IconButton();
+            sbtnVr = new FontAwesome.Sharp.IconButton();
             panelTop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitUI).BeginInit();
             splitUI.Panel1.SuspendLayout();
@@ -112,7 +113,7 @@
             btnSave.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnSave.IconSize = 25;
             btnSave.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSave.Location = new Point(0, 605);
+            btnSave.Location = new Point(0, 642);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(185, 36);
             btnSave.TabIndex = 3;
@@ -135,7 +136,7 @@
             // 
             splitUI.Panel2.AllowDrop = true;
             splitUI.Panel2.BackColor = Color.GhostWhite;
-            splitUI.Size = new Size(704, 641);
+            splitUI.Size = new Size(704, 678);
             splitUI.SplitterDistance = 185;
             splitUI.TabIndex = 2;
             // 
@@ -143,6 +144,7 @@
             // 
             panelSidebar.BackColor = Color.GhostWhite;
             panelSidebar.Controls.Add(sbtnAbout);
+            panelSidebar.Controls.Add(sbtnVr);
             panelSidebar.Controls.Add(sbtnExperimental);
             panelSidebar.Controls.Add(sbtnDragDrop);
             panelSidebar.Controls.Add(sbtnInterface);
@@ -161,7 +163,7 @@
             panelSidebar.Dock = DockStyle.Fill;
             panelSidebar.Location = new Point(0, 0);
             panelSidebar.Name = "panelSidebar";
-            panelSidebar.Size = new Size(185, 641);
+            panelSidebar.Size = new Size(185, 678);
             panelSidebar.TabIndex = 0;
             // 
             // sbtnAbout
@@ -175,7 +177,7 @@
             sbtnAbout.IconFont = FontAwesome.Sharp.IconFont.Auto;
             sbtnAbout.IconSize = 30;
             sbtnAbout.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnAbout.Location = new Point(0, 560);
+            sbtnAbout.Location = new Point(0, 600);
             sbtnAbout.Name = "sbtnAbout";
             sbtnAbout.Size = new Size(185, 40);
             sbtnAbout.TabIndex = 10;
@@ -277,6 +279,26 @@
             sbtnInputs.Text = "Inputs";
             sbtnInputs.TextAlign = ContentAlignment.TopLeft;
             sbtnInputs.UseVisualStyleBackColor = true;
+            // 
+            // sbtnTimer
+            // 
+            sbtnTimer.Dock = DockStyle.Top;
+            sbtnTimer.FlatAppearance.BorderSize = 0;
+            sbtnTimer.FlatStyle = FlatStyle.Flat;
+            sbtnTimer.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            sbtnTimer.IconChar = FontAwesome.Sharp.IconChar.ClockRotateLeft;
+            sbtnTimer.IconColor = Color.Black;
+            sbtnTimer.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnTimer.IconSize = 28;
+            sbtnTimer.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnTimer.Location = new Point(0, 320);
+            sbtnTimer.Name = "sbtnTimer";
+            sbtnTimer.Padding = new Padding(0, 0, 1, 0);
+            sbtnTimer.Size = new Size(185, 40);
+            sbtnTimer.TabIndex = 14;
+            sbtnTimer.Text = "Timer";
+            sbtnTimer.TextAlign = ContentAlignment.TopLeft;
+            sbtnTimer.UseVisualStyleBackColor = true;
             // 
             // sbtnSkip
             // 
@@ -434,25 +456,24 @@
             sbtnPaths.TextAlign = ContentAlignment.TopLeft;
             sbtnPaths.UseVisualStyleBackColor = true;
             // 
-            // sbtnTimer
+            // sbtnVr
             // 
-            sbtnTimer.Dock = DockStyle.Top;
-            sbtnTimer.FlatAppearance.BorderSize = 0;
-            sbtnTimer.FlatStyle = FlatStyle.Flat;
-            sbtnTimer.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            sbtnTimer.IconChar = FontAwesome.Sharp.IconChar.ClockRotateLeft;
-            sbtnTimer.IconColor = Color.Black;
-            sbtnTimer.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            sbtnTimer.IconSize = 28;
-            sbtnTimer.ImageAlign = ContentAlignment.MiddleRight;
-            sbtnTimer.Location = new Point(0, 320);
-            sbtnTimer.Name = "sbtnTimer";
-            sbtnTimer.Padding = new Padding(0, 0, 1, 0);
-            sbtnTimer.Size = new Size(185, 40);
-            sbtnTimer.TabIndex = 14;
-            sbtnTimer.Text = "Timer";
-            sbtnTimer.TextAlign = ContentAlignment.TopLeft;
-            sbtnTimer.UseVisualStyleBackColor = true;
+            sbtnVr.Dock = DockStyle.Top;
+            sbtnVr.FlatAppearance.BorderSize = 0;
+            sbtnVr.FlatStyle = FlatStyle.Flat;
+            sbtnVr.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+            sbtnVr.IconChar = FontAwesome.Sharp.IconChar.VrCardboard;
+            sbtnVr.IconColor = Color.Black;
+            sbtnVr.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnVr.IconSize = 30;
+            sbtnVr.ImageAlign = ContentAlignment.MiddleRight;
+            sbtnVr.Location = new Point(0, 560);
+            sbtnVr.Name = "sbtnVr";
+            sbtnVr.Size = new Size(185, 40);
+            sbtnVr.TabIndex = 15;
+            sbtnVr.Text = "VR";
+            sbtnVr.TextAlign = ContentAlignment.TopLeft;
+            sbtnVr.UseVisualStyleBackColor = true;
             // 
             // SettingsView
             // 
@@ -460,7 +481,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.GhostWhite;
-            ClientSize = new Size(704, 661);
+            ClientSize = new Size(704, 698);
             Controls.Add(splitUI);
             Controls.Add(panelTop);
             MinimumSize = new Size(720, 680);
@@ -500,5 +521,6 @@
         private FontAwesome.Sharp.IconButton sbtnProfiles;
         private FontAwesome.Sharp.IconButton sbtnAudio;
         private FontAwesome.Sharp.IconButton sbtnTimer;
+        private FontAwesome.Sharp.IconButton sbtnVr;
     }
 }

@@ -31,17 +31,17 @@
             tableLayoutMain = new TableLayoutPanel();
             lblHeader = new Label();
             panel1 = new Panel();
-            lbl1 = new Label();
             flowLayoutPanel1 = new FlowLayoutPanel();
             rbDropPlay = new RandomVideoPlayer.Controls.CustomRadioButton();
             rbDropQueue = new RandomVideoPlayer.Controls.CustomRadioButton();
+            lbl1 = new Label();
             panel2 = new Panel();
-            lbl2 = new Label();
-            lbl3 = new Label();
             cbAlwaysAddFilesToQueue = new RandomVideoPlayer.Controls.CustomCheckBox();
+            lbl3 = new Label();
+            lbl2 = new Label();
             panel3 = new Panel();
-            lbl4 = new Label();
             cbIncludeSubdirectories = new RandomVideoPlayer.Controls.CustomCheckBox();
+            lbl4 = new Label();
             tableLayoutMain.SuspendLayout();
             panel1.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
@@ -93,16 +93,6 @@
             panel1.Size = new Size(518, 113);
             panel1.TabIndex = 7;
             // 
-            // lbl1
-            // 
-            lbl1.Dock = DockStyle.Top;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            lbl1.Location = new Point(0, 0);
-            lbl1.Name = "lbl1";
-            lbl1.Size = new Size(518, 30);
-            lbl1.TabIndex = 1;
-            lbl1.Text = "Change behaviour when videofile or folder is dragged and dropped onto the player:";
-            // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Controls.Add(rbDropPlay);
@@ -139,6 +129,16 @@
             rbDropQueue.Text = "Add to queue";
             rbDropQueue.UseVisualStyleBackColor = true;
             // 
+            // lbl1
+            // 
+            lbl1.Dock = DockStyle.Top;
+            lbl1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl1.Location = new Point(0, 0);
+            lbl1.Name = "lbl1";
+            lbl1.Size = new Size(518, 30);
+            lbl1.TabIndex = 1;
+            lbl1.Text = "Change behaviour when videofile or folder is dragged and dropped onto the player:";
+            // 
             // panel2
             // 
             panel2.BackColor = Color.LemonChiffon;
@@ -150,26 +150,6 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(518, 113);
             panel2.TabIndex = 8;
-            // 
-            // lbl2
-            // 
-            lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            lbl2.Location = new Point(0, 0);
-            lbl2.Name = "lbl2";
-            lbl2.Size = new Size(518, 24);
-            lbl2.TabIndex = 1;
-            lbl2.Text = "Check to always add files to queue if multiple files dropped onto the player.";
-            // 
-            // lbl3
-            // 
-            lbl3.Dock = DockStyle.Top;
-            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            lbl3.Location = new Point(0, 24);
-            lbl3.Name = "lbl3";
-            lbl3.Size = new Size(518, 38);
-            lbl3.TabIndex = 2;
-            lbl3.Text = "This only affects \"Play on drop\" which would normally play the first file when multiple files are dropped on the player.";
             // 
             // cbAlwaysAddFilesToQueue
             // 
@@ -185,6 +165,26 @@
             cbAlwaysAddFilesToQueue.Text = "Always add multiple dropped files directly to queue";
             cbAlwaysAddFilesToQueue.UseVisualStyleBackColor = true;
             // 
+            // lbl3
+            // 
+            lbl3.Dock = DockStyle.Top;
+            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl3.Location = new Point(0, 24);
+            lbl3.Name = "lbl3";
+            lbl3.Size = new Size(518, 38);
+            lbl3.TabIndex = 2;
+            lbl3.Text = "This only affects \"Play on drop\" which would normally play the first file when multiple files are dropped on the player.";
+            // 
+            // lbl2
+            // 
+            lbl2.Dock = DockStyle.Top;
+            lbl2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl2.Location = new Point(0, 0);
+            lbl2.Name = "lbl2";
+            lbl2.Size = new Size(518, 24);
+            lbl2.TabIndex = 1;
+            lbl2.Text = "Check to always add files to queue if multiple files dropped onto the player.";
+            // 
             // panel3
             // 
             panel3.BackColor = Color.LightCyan;
@@ -195,16 +195,6 @@
             panel3.Name = "panel3";
             panel3.Size = new Size(518, 352);
             panel3.TabIndex = 9;
-            // 
-            // lbl4
-            // 
-            lbl4.Dock = DockStyle.Top;
-            lbl4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            lbl4.Location = new Point(0, 0);
-            lbl4.Name = "lbl4";
-            lbl4.Size = new Size(518, 24);
-            lbl4.TabIndex = 1;
-            lbl4.Text = "Choose to include found subdirectories when dropping folders:";
             // 
             // cbIncludeSubdirectories
             // 
@@ -219,6 +209,16 @@
             cbIncludeSubdirectories.TabIndex = 4;
             cbIncludeSubdirectories.Text = "Include subdirectories";
             cbIncludeSubdirectories.UseVisualStyleBackColor = true;
+            // 
+            // lbl4
+            // 
+            lbl4.Dock = DockStyle.Top;
+            lbl4.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl4.Location = new Point(0, 0);
+            lbl4.Name = "lbl4";
+            lbl4.Size = new Size(518, 24);
+            lbl4.TabIndex = 1;
+            lbl4.Text = "Choose to include found subdirectories when dropping folders:";
             // 
             // DragDropUserControl
             // 

@@ -130,5 +130,18 @@ namespace RandomVideoPlayer.Model
     </g>
 </svg>
 ";
+
+        public static readonly string TrashIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 640 640"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <path d=""M262.2,48C248.9,48 236.9,56.3 232.2,68.8L216,112L120,112C106.7,112 96,122.7 96,136C96,149.3 106.7,160 120,160L520,160C533.3,160 544,149.3 544,136C544,122.7 533.3,112 520,112L424,112L407.8,68.8C403.1,56.3 391.2,48 377.8,48L262.2,48ZM128,208L128,512C128,547.3 156.7,576 192,576L448,576C483.3,576 512,547.3 512,512L512,208L464,208L464,512C464,520.8 456.8,528 448,528L192,528C183.2,528 176,520.8 176,512L176,208L128,208ZM288,280C288,266.7 277.3,256 264,256C250.7,256 240,266.7 240,280L240,456C240,469.3 250.7,480 264,480C277.3,480 288,469.3 288,456L288,280ZM400,280C400,266.7 389.3,256 376,256C362.7,256 352,266.7 352,280L352,456C352,469.3 362.7,480 376,480C389.3,480 400,469.3 400,456L400,280Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+</svg>";
+
+        public static readonly string DeleteLeftIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 640 640"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <path d=""M576,192C576,156.7 547.3,128 512,128L205.3,128C188.3,128 172,134.7 160,146.7L9.4,297.4C3.4,303.4 0,311.5 0,320C0,328.5 3.4,336.6 9.4,342.6L160,493.3C172,505.3 188.3,512 205.3,512L512,512C547.3,512 576,483.3 576,448L576,192ZM284.1,252.1C293.5,242.7 308.7,242.7 318,252.1L351.9,286L385.8,252.1C395.2,242.7 410.4,242.7 419.7,252.1C429,261.5 429.1,276.7 419.7,286L385.8,319.9L419.7,353.8C429.1,363.2 429.1,378.4 419.7,387.7C410.3,397 395.1,397.1 385.8,387.7L351.9,353.8L318,387.7C308.6,397.1 293.4,397.1 284.1,387.7C274.8,378.3 274.7,363.1 284.1,353.8L318,319.9L284.1,286C274.7,276.6 274.7,261.4 284.1,252.1Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+</svg>";
+
+        public static readonly string SaveIvon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 640 640"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    <path d=""M160,96C124.7,96 96,124.7 96,160L96,480C96,515.3 124.7,544 160,544L480,544C515.3,544 544,515.3 544,480L544,237.3C544,220.3 537.3,204 525.3,192L448,114.7C436,102.7 419.7,96 402.7,96L160,96ZM192,192C192,174.3 206.3,160 224,160L384,160C401.7,160 416,174.3 416,192L416,256C416,273.7 401.7,288 384,288L224,288C206.3,288 192,273.7 192,256L192,192ZM320,352C355.3,352 384,380.7 384,416C384,451.3 355.3,480 320,480C284.7,480 256,451.3 256,416C256,380.7 284.7,352 320,352Z"" style=""fill:{{main}};fill-rule:nonzero;""/>
+</svg>
+";
     }
 }

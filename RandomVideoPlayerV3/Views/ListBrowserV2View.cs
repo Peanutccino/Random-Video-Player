@@ -216,6 +216,7 @@ namespace RandomVideoPlayer.Views
 
             RenderFavoriteBreadcrumbs();
         }
+
         private void btnFunctions_Click(object sender, EventArgs e)
         {
             if (animationTimer.Enabled) return; // avoid overlapping animations
@@ -231,22 +232,23 @@ namespace RandomVideoPlayer.Views
             _currentStep = 0;
             animationTimer.Start();
         }
+
         private void btnAddAll_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(_selectedPath)) return;
 
             FillCustomListFromDirectory(_selectedPath);
             DisplayCustomList();
-            UpdateListInfo();
             ListHandler.ListChanged = true;
+            UpdateListInfo();
         }
 
         private void btnAddSelected_Click(object sender, EventArgs e)
         {
             FillCustomListFromSelection();
             DisplayCustomList();
-            UpdateListInfo();
             ListHandler.ListChanged = true;
+            UpdateListInfo();
         }
 
         private void btnClearList_Click(object sender, EventArgs e)
@@ -267,6 +269,15 @@ namespace RandomVideoPlayer.Views
             {
                 _localCustomList.RemoveAt(selectedItem.Index);
                 lvCustomList.Items.Remove(selectedItem);
+            }
+            if (_localCustomList.Count == 0)
+            {
+                ListHandler.ListNameTemp = "Unspecified";
+                ListHandler.ListChanged = false;
+            }
+            else
+            {
+                ListHandler.ListChanged = true;
             }
             UpdateListInfo();
         }
@@ -334,7 +345,6 @@ namespace RandomVideoPlayer.Views
                 {
                     Error.Log(ex, "Failed to save list", LogLevel.Error);
                     MessageBox.Show($"Failed to save list: {ex}");
-                    throw;
                 }
             }
         }
@@ -360,6 +370,26 @@ namespace RandomVideoPlayer.Views
                 UpdateListInfo();
 
                 MessageBox.Show("Remember to save/overwrite the updated list!");
+            }
+        }
+
+        private void btnQuickSave_Click(object sender, EventArgs e)
+        {
+            var currentListName = ListHandler.ListNameTemp;
+            if (currentListName == "Unspecified") return;
+
+            try
+            {
+                var pathToCurrentList = PathHandler.PathToListFolder + @"\" + currentListName + ".txt";
+                File.WriteAllLines(pathToCurrentList, _localCustomList, Encoding.UTF8);
+
+                ListHandler.ListChanged = false;
+                UpdateListInfo();
+            }
+            catch (Exception ex)
+            {
+                Error.Log(ex, "Failed to quick save list", LogLevel.Error);
+                MessageBox.Show($"Failed to save list: {ex}");
             }
         }
 
@@ -533,6 +563,7 @@ namespace RandomVideoPlayer.Views
 
             ApplyIcon(btnStart, SVGTemplates.PlayIcon, _textColorMainAccent, _hoverColorMain);
             ApplyIcon(btnBack, SVGTemplates.BackIcon, _textColorMainAccent, _hoverColorMain, 24, 24);
+            ApplyIcon(btnQuickSave, SVGTemplates.SaveIvon, _textColorSideAccent, _hoverColorMain);
 
             toolTipInfo = new ToolTip()
             {
@@ -781,11 +812,20 @@ namespace RandomVideoPlayer.Views
             if (ListHandler.ListChanged)
             {
                 lblLoadedList.Text = $"{ListHandler.ListNameTemp} (Unsaved changes)";
+                if (ListHandler.ListNameTemp == "Unspecified")
+                {
+                    btnQuickSave.Visible = false;
+                }
+                else
+                {
+                    btnQuickSave.Visible = true;
+                }
+
             }
             else
             {
                 lblLoadedList.Text = $"{ListHandler.ListNameTemp}";
-
+                btnQuickSave.Visible = false;
             }
 
             if (IsVerticalScrollBarVisible(lvCustomList))

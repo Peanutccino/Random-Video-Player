@@ -147,7 +147,7 @@
             // lbl1
             // 
             lbl1.Dock = DockStyle.Top;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl1.Location = new Point(0, 0);
             lbl1.Margin = new Padding(0);
             lbl1.Name = "lbl1";
@@ -198,7 +198,7 @@
             // lbl2
             // 
             lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl2.Location = new Point(0, 0);
             lbl2.Name = "lbl2";
             lbl2.Size = new Size(518, 24);
@@ -455,7 +455,7 @@
             // lbl7
             // 
             lbl7.Dock = DockStyle.Top;
-            lbl7.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl7.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl7.Location = new Point(0, 0);
             lbl7.Name = "lbl7";
             lbl7.Size = new Size(518, 24);
@@ -519,7 +519,7 @@
             // lbl3
             // 
             lbl3.Dock = DockStyle.Top;
-            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl3.Location = new Point(0, 0);
             lbl3.Name = "lbl3";
             lbl3.Size = new Size(518, 24);
@@ -596,7 +596,7 @@
             // lbl4
             // 
             lbl4.Dock = DockStyle.Top;
-            lbl4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl4.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl4.Location = new Point(0, 0);
             lbl4.Name = "lbl4";
             lbl4.Size = new Size(518, 23);
@@ -619,10 +619,10 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            label12.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label12.Location = new Point(3, 0);
             label12.Name = "label12";
-            label12.Size = new Size(246, 15);
+            label12.Size = new Size(254, 15);
             label12.TabIndex = 3;
             label12.Text = "Choose minimum log level to log in Error.log:";
             // 

@@ -108,7 +108,7 @@
             // lbl3
             // 
             lbl3.Dock = DockStyle.Top;
-            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl3.Location = new Point(3, 228);
             lbl3.Name = "lbl3";
             lbl3.Size = new Size(518, 24);
@@ -155,7 +155,7 @@
             // lbl1
             // 
             lbl1.Dock = DockStyle.Top;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl1.Location = new Point(0, 0);
             lbl1.Name = "lbl1";
             lbl1.Size = new Size(518, 24);
@@ -303,7 +303,7 @@
             // lbl2
             // 
             lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl2.Location = new Point(0, 0);
             lbl2.Name = "lbl2";
             lbl2.Size = new Size(518, 24);

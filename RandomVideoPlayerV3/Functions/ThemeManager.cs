@@ -229,6 +229,11 @@ namespace RandomVideoPlayer.Functions
                     rbtn.ForeColor = CurrentTheme.FbTextColor;
                     rbtn.BackgroundColor = CurrentTheme.FbBackColorDark;
                     break;
+                case RoundedButton rbtn when rbtn.Name == "btnDeleteAll":
+                    rbtn.BackColor = Color.FromArgb(255,118,118);
+                    rbtn.ForeColor = Color.Black;
+                    rbtn.BackgroundColor = CurrentTheme.FbBackColorLight;
+                    break;
                 case Button btn:
                     btn.BackColor = CurrentTheme.FbBackColorLight;
                     btn.ForeColor = CurrentTheme.FbTextColor;
@@ -340,6 +345,11 @@ namespace RandomVideoPlayer.Functions
                     rbtn.ForeColor = CurrentTheme.LbTextColorMainAccent;
                     rbtn.BackgroundColor = CurrentTheme.LbBackColorMainDark;
                     break;
+                case RoundedButton rbtn when rbtn.Name == "btnQuickSave":
+                    rbtn.BackColor = CurrentTheme.LbAccentColorSide;
+                    rbtn.ForeColor = CurrentTheme.LbTextColorSideAccent;
+                    rbtn.BackgroundColor = CurrentTheme.LbBackColorSideLight;
+                    break;
                 case RoundedButton rbtn when rbtn.Name == "btnBack":
                     rbtn.BackColor = CurrentTheme.LbAccentColorMain;
                     rbtn.ForeColor = CurrentTheme.LbTextColor;
@@ -419,6 +429,10 @@ namespace RandomVideoPlayer.Functions
                     lbl.ForeColor = CurrentTheme.LbTextColor;
                     break;
                 case Label lbl when lbl.Name == "lblSide4":
+                    lbl.BackColor = CurrentTheme.LbBackColorSideLight;
+                    lbl.ForeColor = CurrentTheme.LbTextColor;
+                    break;
+                case Label lbl when lbl.Name == "lblSide5":
                     lbl.BackColor = CurrentTheme.LbBackColorSideLight;
                     lbl.ForeColor = CurrentTheme.LbTextColor;
                     break;

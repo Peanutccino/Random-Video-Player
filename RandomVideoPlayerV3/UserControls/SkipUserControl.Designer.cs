@@ -44,6 +44,10 @@
             lbl6 = new Label();
             lbl4 = new Label();
             panel4 = new Panel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            label2 = new Label();
+            inputThresholdStartPoint = new RandomVideoPlayer.Controls.CustomNumericUpDown();
+            cbIgnoreStartPointThreshold = new RandomVideoPlayer.Controls.CustomCheckBox();
             cbRandomVideoStartPointIgnoreScripts = new RandomVideoPlayer.Controls.CustomCheckBox();
             cbRandomStartPoint = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl5 = new Label();
@@ -53,19 +57,15 @@
             sliderTimeRange = new RandomVideoPlayer.Controls.FlatRangeSlider();
             lblStart = new Label();
             label1 = new Label();
-            tableLayoutPanel2 = new TableLayoutPanel();
-            cbIgnoreStartPointThreshold = new RandomVideoPlayer.Controls.CustomCheckBox();
-            inputThresholdStartPoint = new RandomVideoPlayer.Controls.CustomNumericUpDown();
-            label2 = new Label();
             tableLayoutMain.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             panel4.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
             panel5.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
-            tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutMain
@@ -144,7 +144,7 @@
             // lbl2
             // 
             lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl2.Location = new Point(0, 0);
             lbl2.Name = "lbl2";
             lbl2.Size = new Size(518, 24);
@@ -196,7 +196,7 @@
             // lbl3
             // 
             lbl3.Dock = DockStyle.Top;
-            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl3.Location = new Point(0, 0);
             lbl3.Name = "lbl3";
             lbl3.Size = new Size(518, 24);
@@ -255,7 +255,7 @@
             // lbl4
             // 
             lbl4.Dock = DockStyle.Top;
-            lbl4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl4.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl4.Location = new Point(0, 0);
             lbl4.Name = "lbl4";
             lbl4.Size = new Size(518, 24);
@@ -274,6 +274,64 @@
             panel4.Name = "panel4";
             panel4.Size = new Size(518, 137);
             panel4.TabIndex = 13;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.BackColor = Color.PaleTurquoise;
+            tableLayoutPanel2.ColumnCount = 3;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Controls.Add(label2, 2, 0);
+            tableLayoutPanel2.Controls.Add(inputThresholdStartPoint, 1, 0);
+            tableLayoutPanel2.Controls.Add(cbIgnoreStartPointThreshold, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Top;
+            tableLayoutPanel2.Location = new Point(0, 90);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Size = new Size(518, 26);
+            tableLayoutPanel2.TabIndex = 13;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(396, 5);
+            label2.Margin = new Padding(3, 5, 3, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(50, 15);
+            label2.TabIndex = 29;
+            label2.Text = "seconds";
+            // 
+            // inputThresholdStartPoint
+            // 
+            inputThresholdStartPoint.BackColor = SystemColors.Window;
+            inputThresholdStartPoint.ForeColor = SystemColors.WindowText;
+            inputThresholdStartPoint.IconColor = Color.Indigo;
+            inputThresholdStartPoint.Location = new Point(315, 3);
+            inputThresholdStartPoint.Maximum = 999;
+            inputThresholdStartPoint.Minimum = 5;
+            inputThresholdStartPoint.Name = "inputThresholdStartPoint";
+            inputThresholdStartPoint.Size = new Size(75, 19);
+            inputThresholdStartPoint.TabIndex = 21;
+            inputThresholdStartPoint.Text = "customNumericUpDown1";
+            inputThresholdStartPoint.Value = 15;
+            // 
+            // cbIgnoreStartPointThreshold
+            // 
+            cbIgnoreStartPointThreshold.BoxSize = 13;
+            cbIgnoreStartPointThreshold.Dock = DockStyle.Fill;
+            cbIgnoreStartPointThreshold.HoverColor = Color.DeepSkyBlue;
+            cbIgnoreStartPointThreshold.Location = new Point(0, 3);
+            cbIgnoreStartPointThreshold.Margin = new Padding(0, 3, 3, 3);
+            cbIgnoreStartPointThreshold.Name = "cbIgnoreStartPointThreshold";
+            cbIgnoreStartPointThreshold.Padding = new Padding(0, 3, 0, 3);
+            cbIgnoreStartPointThreshold.PaddingLeft = 12;
+            cbIgnoreStartPointThreshold.Size = new Size(309, 20);
+            cbIgnoreStartPointThreshold.TabIndex = 13;
+            cbIgnoreStartPointThreshold.Text = "Ignore random startpoint on videos shorter than:";
+            cbIgnoreStartPointThreshold.UseVisualStyleBackColor = true;
             // 
             // cbRandomVideoStartPointIgnoreScripts
             // 
@@ -308,7 +366,7 @@
             // lbl5
             // 
             lbl5.Dock = DockStyle.Top;
-            lbl5.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl5.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl5.Location = new Point(0, 0);
             lbl5.Name = "lbl5";
             lbl5.Size = new Size(518, 40);
@@ -385,70 +443,12 @@
             // label1
             // 
             label1.Dock = DockStyle.Top;
-            label1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.Location = new Point(0, 0);
             label1.Name = "label1";
             label1.Size = new Size(518, 27);
             label1.TabIndex = 6;
             label1.Text = "You can customize the time range for a random startpoint:";
-            // 
-            // tableLayoutPanel2
-            // 
-            tableLayoutPanel2.BackColor = Color.PaleTurquoise;
-            tableLayoutPanel2.ColumnCount = 3;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Controls.Add(label2, 2, 0);
-            tableLayoutPanel2.Controls.Add(inputThresholdStartPoint, 1, 0);
-            tableLayoutPanel2.Controls.Add(cbIgnoreStartPointThreshold, 0, 0);
-            tableLayoutPanel2.Dock = DockStyle.Top;
-            tableLayoutPanel2.Location = new Point(0, 90);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 1;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(518, 26);
-            tableLayoutPanel2.TabIndex = 13;
-            // 
-            // cbIgnoreStartPointThreshold
-            // 
-            cbIgnoreStartPointThreshold.BoxSize = 13;
-            cbIgnoreStartPointThreshold.Dock = DockStyle.Fill;
-            cbIgnoreStartPointThreshold.HoverColor = Color.DeepSkyBlue;
-            cbIgnoreStartPointThreshold.Location = new Point(0, 3);
-            cbIgnoreStartPointThreshold.Margin = new Padding(0, 3, 3, 3);
-            cbIgnoreStartPointThreshold.Name = "cbIgnoreStartPointThreshold";
-            cbIgnoreStartPointThreshold.Padding = new Padding(0, 3, 0, 3);
-            cbIgnoreStartPointThreshold.PaddingLeft = 12;
-            cbIgnoreStartPointThreshold.Size = new Size(309, 20);
-            cbIgnoreStartPointThreshold.TabIndex = 13;
-            cbIgnoreStartPointThreshold.Text = "Ignore random startpoint on videos shorter than:";
-            cbIgnoreStartPointThreshold.UseVisualStyleBackColor = true;
-            // 
-            // inputThresholdStartPoint
-            // 
-            inputThresholdStartPoint.BackColor = SystemColors.Window;
-            inputThresholdStartPoint.ForeColor = SystemColors.WindowText;
-            inputThresholdStartPoint.IconColor = Color.Indigo;
-            inputThresholdStartPoint.Location = new Point(315, 3);
-            inputThresholdStartPoint.Maximum = 999;
-            inputThresholdStartPoint.Minimum = 5;
-            inputThresholdStartPoint.Name = "inputThresholdStartPoint";
-            inputThresholdStartPoint.Size = new Size(75, 19);
-            inputThresholdStartPoint.TabIndex = 21;
-            inputThresholdStartPoint.Text = "customNumericUpDown1";
-            inputThresholdStartPoint.Value = 15;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(396, 5);
-            label2.Margin = new Padding(3, 5, 3, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(50, 15);
-            label2.TabIndex = 29;
-            label2.Text = "seconds";
             // 
             // SkipUserControl
             // 
@@ -466,11 +466,11 @@
             flowLayoutPanel1.ResumeLayout(false);
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
             panel5.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            tableLayoutPanel2.ResumeLayout(false);
-            tableLayoutPanel2.PerformLayout();
             ResumeLayout(false);
         }
 

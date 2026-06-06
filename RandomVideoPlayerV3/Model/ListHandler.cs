@@ -336,9 +336,19 @@ namespace RandomVideoPlayer.Model
                 return _combined;
             }
         }
+        public static bool InputIsImage(string filePath)
+        {
+            string extension = Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant();
+            return _imgExtensions.Contains(extension);
+        }
         public static List<string> ImageExtensions
         {
             get { return _imgExtensions; }
+        }
+        public static bool InputIsVideo(string filePath)
+        {
+            string extension = Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant();
+            return _vidExtensions.Contains(extension);
         }
         public static List<string> VideoExtensions
         {
@@ -380,13 +390,23 @@ namespace RandomVideoPlayer.Model
             return fileName.Substring(fileName.LastIndexOf('.') + 1);
         }
         /// <value>Grab all media files from set directory</value> 
-        public static void fillFolderList(string folderpath, bool includeSubfolders, CancellationToken token = default)
+        public static void fillFolderList(string folderpath, bool includeSubfolders, bool multiFolders = false, CancellationToken token = default)
         {
             try
-            {             
+            {
                 _tempfolderList = EnumerateEligibleVideosFromDirectory(folderpath, includeSubfolders, token).ToList();
 
-                if (_tempfolderList?.Any() ?? false)
+                if (_tempfolderList == null || !_tempfolderList.Any())
+                {
+                    return;
+                }
+                if (multiFolders)
+                {
+                    var list = _folderList.ToList();
+                    list.AddRange(_tempfolderList);
+                    _folderList = list;
+                }
+                else
                 {
                     _folderList = _tempfolderList;
                 }
@@ -402,13 +422,27 @@ namespace RandomVideoPlayer.Model
             }
         }
         /// <value>Grab only the latest (count) media files from defined directory</value> 
-        public static void latestFolderList(string folderpath, int count, bool includeSubfolders, CancellationToken token = default)
+        public static void latestFolderList(string folderpath, int count, bool includeSubfolders, bool multiFolders = false, CancellationToken token = default)
         {
             if (count <= 0) count = 10;
 
             try
             {
-                var allFiles = EnumerateEligibleVideosFromDirectory(folderpath, includeSubfolders, token).ToList();
+                _tempfolderList = EnumerateEligibleVideosFromDirectory(folderpath, includeSubfolders, token).ToList();
+
+                if (_tempfolderList == null || !_tempfolderList.Any())
+                {
+                    return;
+                }
+                if (multiFolders)
+                {
+                    var list = _folderList.ToList();
+                    list.AddRange(_tempfolderList);
+                    _folderList = list;
+                    return;
+                }
+
+                var allFiles = _tempfolderList;
 
                 if (SettingsHandler.CreationDate) //Set to sort by creation date
                 {
@@ -426,7 +460,13 @@ namespace RandomVideoPlayer.Model
                           .Take(count)
                           .ToArray();
                 }
-                if (_tempfolderList?.Any() ?? false)
+
+
+                if (_tempfolderList == null || !_tempfolderList.Any())
+                {
+                    return;
+                }
+                else
                 {
                     _folderList = _tempfolderList;
                 }
@@ -436,7 +476,41 @@ namespace RandomVideoPlayer.Model
                 Error.Log(ex, "Couldn't access folder - latestFolderList", LogLevel.Error);
             }
         }
-     
+
+        public static void SortListByNewest(int count)
+        {
+            if (_folderList == null || !_folderList.Any())
+                return;
+
+            _tempfolderList = _folderList;
+
+            if (SettingsHandler.CreationDate) //Set to sort by creation date
+            {
+                _tempfolderList = FolderList
+                      .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
+                      .OrderByDescending(s => File.GetCreationTime(s))
+                      .Take(count)
+                      .ToArray();
+            }
+            else //Set to sort by date of last modified
+            {
+                _tempfolderList = _folderList
+                          .Where(s => Extensions.Contains(Path.GetExtension(s).TrimStart('.').ToLowerInvariant()))
+                          .OrderByDescending(s => File.GetLastWriteTime(s))
+                          .Take(count)
+                          .ToArray();
+            }
+
+            if (_tempfolderList == null || !_tempfolderList.Any())
+            {
+                return;
+            }
+            else
+            {
+                _folderList = _tempfolderList;
+            }
+        }
+
 
 
         private static readonly HashSet<string> MultiAxis =

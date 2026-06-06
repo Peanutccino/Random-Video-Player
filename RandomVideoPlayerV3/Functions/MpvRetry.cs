@@ -36,5 +36,6 @@ namespace RandomVideoPlayer.Functions
                 $"Timed out after {timeoutMs} ms waiting for mpv property '{propertyName}'.",
                 lastError);
         }
+
     }
 }

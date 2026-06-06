@@ -15,6 +15,11 @@ namespace RandomVideoPlayer.Views
         FormResize formResize = new FormResize();
         private volatile bool _shuttingDown;
         private readonly List<FileSystemInfo> _listItemFileExplorerEntries = new();
+        private IEnumerable<(FileSystemInfo Entry, bool IsDirectory)> GetSelectedEntries() =>
+            lvFileExplore.SelectedIndices
+                .Cast<int>()
+                .Select(i => _listItemFileExplorerEntries[i])
+                .Select(fsi => (Entry: fsi, IsDirectory: fsi is DirectoryInfo));
         private readonly SemaphoreSlim _thumbGate = new(4);
 
         private readonly Dictionary<string, int> _imageIndexCache = new(StringComparer.OrdinalIgnoreCase);
@@ -57,6 +62,9 @@ namespace RandomVideoPlayer.Views
         private Dictionary<IconButton, bool> _filterButtons = new();
 
         private ToolTip toolTipInfo;
+
+        private readonly List<string> _selectedFolders = new();
+        private FolderBrowserCompanion? _folderBrowserCompanion;
         #endregion
 
         public FolderBrowserV2View()
@@ -67,9 +75,9 @@ namespace RandomVideoPlayer.Views
             LoadSettings();
         }
         private void lvFileExplore_HandleCreated(object? sender, EventArgs e)
-        {            
+        {
             LoadFolder(_selectedPath);
-            
+            UpdateFolderListWindow();
         }
         private void FolderBrowserV2View_Load(object sender, EventArgs e)
         {
@@ -99,6 +107,27 @@ namespace RandomVideoPlayer.Views
             if (e.Button == MouseButtons.XButton1)
             {
                 GoBack();
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                var hitTest = lvFileExplore.HitTest(e.Location);
+                if (hitTest.Item != null)
+                {
+                    lvFileExplore.FocusedItem = hitTest.Item;
+                    lvFileExplore.SelectedIndices.Clear();
+                    hitTest.Item.Selected = true;
+                    lvFileExplore.Invalidate();
+                }
+
+                if (lvFileExplore.SelectedIndices.Count == 0)
+                    return;
+
+                var fsi = _listItemFileExplorerEntries[lvFileExplore.SelectedIndices[0]];
+                if (fsi is DirectoryInfo dir && !_selectedFolders.Contains(fsi.FullName))
+                {
+                    _selectedFolders.Add(fsi.FullName);
+                }
+                UpdateFolderListWindow();
             }
         }
 
@@ -172,6 +201,7 @@ namespace RandomVideoPlayer.Views
                 return;
 
             var fsi = _listItemFileExplorerEntries[lvFileExplore.SelectedIndices[0]];
+
             if (fsi is DirectoryInfo dir)
             {
                 LoadFolder(dir.FullName);
@@ -202,7 +232,10 @@ namespace RandomVideoPlayer.Views
         {
             SwitchView(View.LargeIcon);
         }
-
+        private void btnAddFolder_Click(object sender, EventArgs e)
+        {
+            FillFolderListFromSelection();
+        }
         private void BreadcrumbPath_Click(object sender, EventArgs e)
         {
             var targetPath = (string)((Label)sender).Tag;
@@ -246,7 +279,7 @@ namespace RandomVideoPlayer.Views
             if (!string.IsNullOrWhiteSpace(_selectedPath))
             {
                 RenderBreadcrumbPath(_selectedPath);
-            }            
+            }
         }
         private void lvFileExplore_Resize(object sender, EventArgs e)
         {
@@ -283,6 +316,11 @@ namespace RandomVideoPlayer.Views
             }
 
             this.Padding = new Padding(formResize.BorderSize);
+
+            if (SettingsHandler.SelectedFolders.Count > 0)
+            {
+                _selectedFolders.AddRange(SettingsHandler.SelectedFolders);
+            }
         }
 
         private void SaveSettings()
@@ -307,6 +345,8 @@ namespace RandomVideoPlayer.Views
             PathHandler.TempRecentFolder = _selectedPath;
 
             formResize.FormSizeFbSaved = DPI.RevertSize(formResize.TempSizeFb);
+
+            SettingsHandler.SelectedFolders = _selectedFolders;
         }
         #endregion
 
@@ -354,6 +394,7 @@ namespace RandomVideoPlayer.Views
             WireIconButton(btnFilterVideo);
             WireIconButton(btnFilterImage);
             WireIconButton(btnFilterScript);
+            WireIconButton(btnAddFolder);
             WireIconButton(btnAddFav);
             WireIconButton(btnDeleteFav);
             _filterButtons.Add(btnFilterVideo, ListHandler.FilterVideoEnabled);
@@ -429,22 +470,45 @@ namespace RandomVideoPlayer.Views
 
             idleColors[btn] = ThemeManager.CurrentTheme.FbTextColor;
             btn.IconColor = ThemeManager.CurrentTheme.FbTextColor;
+            btn.ForeColor = ThemeManager.CurrentTheme.FbTextColor;
 
-            btn.MouseEnter += (_, _) => btn.IconColor = HoverColor(btn);
-            btn.MouseLeave += (_, _) => btn.IconColor = idleColors[btn];
+            btn.MouseEnter += (_, _) =>
+            {
+                btn.IconColor = HoverColor(btn);
+                btn.ForeColor = HoverColor(btn);
+            };
+            btn.MouseLeave += (_, _) =>
+            {
+                btn.IconColor = idleColors[btn];
+                btn.ForeColor = idleColors[btn];
+            };
             btn.MouseDown += (_, e) =>
             {
                 if (e.Button == MouseButtons.Left)
+                {
                     btn.IconColor = PressedColor(btn);
+                    btn.ForeColor = PressedColor(btn);
+                }                    
             };
             btn.MouseUp += (_, _) =>
             {
                 btn.IconColor = btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position))
                     ? HoverColor(btn)
                     : idleColors[btn];
+                btn.ForeColor = btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position))
+                    ? HoverColor(btn)
+                    : idleColors[btn];
             };
-            btn.GotFocus += (_, _) => btn.IconColor = HoverColor(btn);
-            btn.LostFocus += (_, _) => btn.IconColor = idleColors[btn];
+            btn.GotFocus += (_, _) =>
+            {
+                btn.IconColor = HoverColor(btn);
+                btn.ForeColor = HoverColor(btn);
+            };
+            btn.LostFocus += (_, _) =>
+            {
+                btn.IconColor = idleColors[btn];
+                btn.ForeColor = idleColors[btn];
+            };
         }
 
         private void SetHighlight(IconButton btn, bool highlight, Color? customColor = null)
@@ -512,7 +576,7 @@ namespace RandomVideoPlayer.Views
             toolTipInfo.SetToolTip(btnViewLargeGrid, "Change view to tile");
 
             toolTipInfo.SetToolTip(btnBack, "MB4 | Go back one folder");
-            toolTipInfo.SetToolTip(btnStart, "Use current folder to play from");
+            toolTipInfo.SetToolTip(btnStart, "Play current folder | Right-click multiple folders for multiselection");
             toolTipInfo.SetToolTip(btnAddFav, "Add current folder to your list of favorites");
             toolTipInfo.SetToolTip(btnDeleteFav, "Delete selected folder from your list of favorites");
 
@@ -523,6 +587,8 @@ namespace RandomVideoPlayer.Views
             toolTipInfo.SetToolTip(btnFilterVideo, "Use selected video extensions");
             toolTipInfo.SetToolTip(btnFilterImage, "Use selected image extensions");
             toolTipInfo.SetToolTip(btnFilterScript, "Play only videos that have a funscript available");
+
+            toolTipInfo.SetToolTip(btnAddFolder, "Add selected folders to list for multi-folder selection | Right-click to directly add them to list");
         }
         #endregion
 
@@ -1207,7 +1273,86 @@ namespace RandomVideoPlayer.Views
         #endregion
         #endregion
 
+        #region FolderListWindow
+        private void FillFolderListFromSelection()
+        {
+            foreach(var item in GetSelectedEntries())
+            {
+                if(item.IsDirectory && Directory.Exists(item.Entry.FullName) && !_selectedFolders.Contains(item.Entry.FullName)) 
+                {
+                    _selectedFolders.Add(item.Entry.FullName);
+                }         
+            }
+            UpdateFolderListWindow();
+        }
+        private void UpdateFolderListWindow()
+        {
+            if (_selectedFolders.Count == 0)
+            {
+                if (_folderBrowserCompanion != null && !_folderBrowserCompanion.IsDisposed)
+                {
+                    _folderBrowserCompanion.Close();
+                    _folderBrowserCompanion = null;
+                }
+                btnStart.Text = "Play selected";
+                return;
+            }
+            else
+            {
+                btnStart.Text = "Play folderlist";
+            }
 
+            if (_folderBrowserCompanion == null || _folderBrowserCompanion.IsDisposed)
+            {
+                _folderBrowserCompanion = new FolderBrowserCompanion();
 
+                _folderBrowserCompanion.DeleteFolderRequested += FolderBrowserCompanion_DeleteFolderRequested;
+                _folderBrowserCompanion.DeleteAllRequested += FolderBrowserCompanion_DeleteAllRequested;
+
+                _folderBrowserCompanion.StartPosition = FormStartPosition.Manual;
+                PositionFolderListWindow();
+
+                _folderBrowserCompanion.Show(this);
+            }
+
+            _folderBrowserCompanion.SetFolders(_selectedFolders);
+            PositionFolderListWindow();
+        }
+        private void FolderBrowserCompanion_DeleteFolderRequested(object? sender, string folderPath)
+        {
+            _selectedFolders.Remove(folderPath);
+            UpdateFolderListWindow();
+        }
+
+        private void FolderBrowserCompanion_DeleteAllRequested(object? sender, EventArgs e)
+        {
+            _selectedFolders.Clear();
+            UpdateFolderListWindow();
+        }
+
+        private void PositionFolderListWindow()
+        {
+            if (_folderBrowserCompanion == null || _folderBrowserCompanion.IsDisposed)
+                return;
+
+            int x = this.Right + 6;
+            int y = this.Top;
+
+            _folderBrowserCompanion.Location = new Point(x, y);
+            _folderBrowserCompanion.Height = this.Height;
+        }
+
+        protected override void OnMove(EventArgs e)
+        {
+            base.OnMove(e);
+            PositionFolderListWindow();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            PositionFolderListWindow();
+        }
+        #endregion
     }
 }

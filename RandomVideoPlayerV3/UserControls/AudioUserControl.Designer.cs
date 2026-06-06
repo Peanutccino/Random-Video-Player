@@ -192,7 +192,7 @@
             // 
             tableLayoutSlider.SetColumnSpan(label11, 3);
             label11.Dock = DockStyle.Fill;
-            label11.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label11.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label11.Location = new Point(3, 320);
             label11.Name = "label11";
             label11.Size = new Size(512, 32);
@@ -242,7 +242,7 @@
             // 
             tableLayoutSlider.SetColumnSpan(label9, 3);
             label9.Dock = DockStyle.Fill;
-            label9.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label9.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label9.Location = new Point(3, 256);
             label9.Name = "label9";
             label9.Size = new Size(512, 32);
@@ -292,12 +292,12 @@
             // 
             tableLayoutSlider.SetColumnSpan(label7, 3);
             label7.Dock = DockStyle.Fill;
-            label7.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label7.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label7.Location = new Point(3, 192);
             label7.Name = "label7";
             label7.Size = new Size(512, 32);
             label7.TabIndex = 12;
-            label7.Text = "Max gain factor: Lower = more conservative/less risk of noise; Higher = lift quiet dialogue more";
+            label7.Text = "Max gain factor: Lower = conservative/less risk of noise; Higher = lift quiet dialogue more";
             label7.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // lblInfoPeak
@@ -342,7 +342,7 @@
             // 
             tableLayoutSlider.SetColumnSpan(label3, 3);
             label3.Dock = DockStyle.Fill;
-            label3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label3.Location = new Point(3, 128);
             label3.Name = "label3";
             label3.Size = new Size(512, 32);
@@ -392,7 +392,7 @@
             // 
             tableLayoutSlider.SetColumnSpan(label4, 3);
             label4.Dock = DockStyle.Fill;
-            label4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label4.Location = new Point(3, 64);
             label4.Name = "label4";
             label4.Size = new Size(512, 32);
@@ -415,7 +415,7 @@
             // 
             tableLayoutSlider.SetColumnSpan(label1, 3);
             label1.Dock = DockStyle.Fill;
-            label1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
             label1.Size = new Size(512, 32);
@@ -467,10 +467,10 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label13.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label13.Location = new Point(3, 0);
             label13.Name = "label13";
-            label13.Size = new Size(156, 15);
+            label13.Size = new Size(159, 15);
             label13.TabIndex = 0;
             label13.Text = "Toggle audio normalization:";
             // 

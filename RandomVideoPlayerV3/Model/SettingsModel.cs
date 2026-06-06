@@ -138,6 +138,16 @@ namespace RandomVideoPlayer.Model
         public string PathToFFMpeg { get; set; }
         #endregion
 
+        #region VR
+        public VrRenderQuality VrQualityPreset { get; set; }
+        public VrInterpolation VrInterpolation { get; set; }
+        public bool VrAutoDetectionEnabled { get; set; }
+        public bool VrAutoDetectionDebugerEnabled { get; set; }
+        public double VrDetectionMinConfidence { get; set; }
+        public int VrMaxShiftWide { get; set; }
+        public int VrMaxShiftTall { get; set; }
+        #endregion
+
         #region About
         public bool AlwaysCheckUpdate { get; set; }
         #endregion

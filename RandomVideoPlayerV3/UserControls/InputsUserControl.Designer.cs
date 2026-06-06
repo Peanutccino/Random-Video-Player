@@ -73,7 +73,7 @@
             // lbl1
             // 
             lbl1.Dock = DockStyle.Fill;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl1.Location = new Point(3, 60);
             lbl1.Name = "lbl1";
             lbl1.Padding = new Padding(6, 0, 0, 0);

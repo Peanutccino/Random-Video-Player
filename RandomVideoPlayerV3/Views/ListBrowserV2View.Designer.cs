@@ -67,6 +67,8 @@
             roundedPanelCustomListBottom = new RandomVideoPlayer.Controls.RoundedPanel();
             panelCustomListBottom = new Panel();
             lblEntries = new Label();
+            btnQuickSave = new RandomVideoPlayer.Controls.RoundedButton();
+            lblSide5 = new Label();
             lblSide4 = new Label();
             cbFullPath = new RandomVideoPlayer.Controls.RoundedCheckBox();
             lblSide3 = new Label();
@@ -711,6 +713,8 @@
             // panelCustomListBottom
             // 
             panelCustomListBottom.Controls.Add(lblEntries);
+            panelCustomListBottom.Controls.Add(btnQuickSave);
+            panelCustomListBottom.Controls.Add(lblSide5);
             panelCustomListBottom.Controls.Add(lblSide4);
             panelCustomListBottom.Controls.Add(cbFullPath);
             panelCustomListBottom.Controls.Add(lblSide3);
@@ -729,9 +733,40 @@
             lblEntries.Location = new Point(59, 0);
             lblEntries.Name = "lblEntries";
             lblEntries.Padding = new Padding(0, 3, 0, 0);
-            lblEntries.Size = new Size(135, 21);
+            lblEntries.Size = new Size(123, 21);
             lblEntries.TabIndex = 22;
             lblEntries.Text = "100";
+            // 
+            // btnQuickSave
+            // 
+            btnQuickSave.BackColor = Color.FromArgb(247, 110, 100);
+            btnQuickSave.BackgroundColor = Color.FromArgb(209, 159, 156);
+            btnQuickSave.BorderColor = Color.PaleVioletRed;
+            btnQuickSave.BorderRadius = 10;
+            btnQuickSave.BorderSize = 0;
+            btnQuickSave.Dock = DockStyle.Right;
+            btnQuickSave.DynamicRadius = true;
+            btnQuickSave.FlatAppearance.BorderSize = 0;
+            btnQuickSave.FlatStyle = FlatStyle.Flat;
+            btnQuickSave.ForeColor = Color.White;
+            btnQuickSave.Location = new Point(182, 0);
+            btnQuickSave.Name = "btnQuickSave";
+            btnQuickSave.Size = new Size(28, 21);
+            btnQuickSave.TabIndex = 26;
+            btnQuickSave.TextColor = Color.White;
+            btnQuickSave.UseVisualStyleBackColor = false;
+            btnQuickSave.Click += btnQuickSave_Click;
+            // 
+            // lblSide5
+            // 
+            lblSide5.BackColor = Color.SandyBrown;
+            lblSide5.Dock = DockStyle.Right;
+            lblSide5.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblSide5.Location = new Point(210, 0);
+            lblSide5.Name = "lblSide5";
+            lblSide5.Padding = new Padding(0, 2, 0, 0);
+            lblSide5.Size = new Size(8, 21);
+            lblSide5.TabIndex = 27;
             // 
             // lblSide4
             // 
@@ -753,11 +788,11 @@
             cbFullPath.Dock = DockStyle.Right;
             cbFullPath.FlatAppearance.BorderSize = 0;
             cbFullPath.FlatStyle = FlatStyle.Flat;
-            cbFullPath.Location = new Point(194, 0);
+            cbFullPath.Location = new Point(218, 0);
             cbFullPath.Name = "cbFullPath";
-            cbFullPath.Size = new Size(104, 21);
+            cbFullPath.Size = new Size(80, 21);
             cbFullPath.TabIndex = 23;
-            cbFullPath.Text = "Show full path";
+            cbFullPath.Text = "Full path";
             cbFullPath.UncheckedBackColor = Color.Red;
             cbFullPath.UncheckedForeColor = Color.Black;
             cbFullPath.UseVisualStyleBackColor = false;
@@ -1250,5 +1285,7 @@
         private Label lblSide2;
         private Label lblSide1;
         private FontAwesome.Sharp.IconButton btnFunctions;
+        private Controls.RoundedButton btnQuickSave;
+        private Label lblSide5;
     }
 }

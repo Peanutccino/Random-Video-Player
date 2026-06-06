@@ -93,10 +93,11 @@
             // lbl3
             // 
             lbl3.AutoSize = true;
-            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl3.Location = new Point(3, 0);
+            lbl3.Margin = new Padding(3, 0, 3, 3);
             lbl3.Name = "lbl3";
-            lbl3.Size = new Size(367, 15);
+            lbl3.Size = new Size(392, 15);
             lbl3.TabIndex = 9;
             lbl3.Text = "Enable timer that auto plays next video in queue after set timeframe:";
             // 
@@ -106,10 +107,10 @@
             cbEnableTimer.BoxSize = 13;
             cbEnableTimer.Dock = DockStyle.Top;
             cbEnableTimer.HoverColor = Color.DeepSkyBlue;
-            cbEnableTimer.Location = new Point(3, 18);
+            cbEnableTimer.Location = new Point(3, 21);
             cbEnableTimer.Name = "cbEnableTimer";
             cbEnableTimer.PaddingLeft = 12;
-            cbEnableTimer.Size = new Size(367, 19);
+            cbEnableTimer.Size = new Size(392, 19);
             cbEnableTimer.TabIndex = 10;
             cbEnableTimer.Text = "Enable Timer";
             cbEnableTimer.UseVisualStyleBackColor = true;

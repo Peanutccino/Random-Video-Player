@@ -162,6 +162,14 @@ namespace RandomVideoPlayer.Views
             settingsModel.EnableCustomScaling = SettingsHandler.EnableCustomScaling;
             settingsModel.CustomScaling = SettingsHandler.CustomScaling;
 
+            settingsModel.VrAutoDetectionEnabled = SettingsHandler.VrAutoDetectionEnabled;
+            settingsModel.VrAutoDetectionDebugerEnabled = SettingsHandler.VrAutoDetectionDebugerEnabled;
+            settingsModel.VrDetectionMinConfidence = SettingsHandler.VrDetectionMinConfidence;
+            settingsModel.VrMaxShiftWide = SettingsHandler.VrMaxShiftWide;
+            settingsModel.VrMaxShiftTall = SettingsHandler.VrMaxShiftTall;
+            settingsModel.VrQualityPreset = SettingsHandler.VrQualityPreset;
+            settingsModel.VrInterpolation = SettingsHandler.VrInterpolation;
+
             settingsModel.AlwaysCheckUpdate = SettingsHandler.AlwaysCheckUpdate;
         }
         private void InitializeNavigation()
@@ -180,6 +188,7 @@ namespace RandomVideoPlayer.Views
             sbtnInterface.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new InterfaceUserControl(settingsModel)); };
             sbtnDragDrop.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new DragDropUserControl(settingsModel)); };
             sbtnExperimental.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new ExperimentalUserControl(settingsModel)); };
+            sbtnVr.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new VrUserControl(settingsModel)); };
             sbtnAbout.Click += (s, e) => { HighlightButton((IconButton)s); LoadUserControl(new AboutUserControl(settingsModel)); };
         }
 
@@ -292,6 +301,14 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.SelectedTheme = settingsModel.SelectedTheme;
             SettingsHandler.EnableCustomScaling = settingsModel.EnableCustomScaling;
             SettingsHandler.CustomScaling = settingsModel.CustomScaling;
+
+            SettingsHandler.VrAutoDetectionEnabled = settingsModel.VrAutoDetectionEnabled;
+            SettingsHandler.VrAutoDetectionDebugerEnabled = settingsModel.VrAutoDetectionDebugerEnabled;
+            SettingsHandler.VrDetectionMinConfidence = settingsModel.VrDetectionMinConfidence;
+            SettingsHandler.VrMaxShiftWide = settingsModel.VrMaxShiftWide;
+            SettingsHandler.VrMaxShiftTall = settingsModel.VrMaxShiftTall;
+            SettingsHandler.VrQualityPreset = settingsModel.VrQualityPreset;
+            SettingsHandler.VrInterpolation = settingsModel.VrInterpolation;
 
             SettingsHandler.AlwaysCheckUpdate = settingsModel.AlwaysCheckUpdate;
         }

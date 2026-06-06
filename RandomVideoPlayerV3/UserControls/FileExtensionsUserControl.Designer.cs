@@ -100,7 +100,7 @@
             // label4
             // 
             label4.Dock = DockStyle.Fill;
-            label4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label4.Location = new Point(3, 60);
             label4.Name = "label4";
             label4.Size = new Size(518, 24);
@@ -204,7 +204,7 @@
             // lbl1
             // 
             lbl1.Dock = DockStyle.Top;
-            lbl1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl1.Location = new Point(0, 0);
             lbl1.Name = "lbl1";
             lbl1.Size = new Size(518, 24);
@@ -297,7 +297,7 @@
             // lbl2
             // 
             lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl2.Location = new Point(0, 0);
             lbl2.Name = "lbl2";
             lbl2.Size = new Size(518, 24);
@@ -379,7 +379,7 @@
             // lbl3
             // 
             lbl3.Dock = DockStyle.Top;
-            lbl3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl3.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl3.Location = new Point(0, 34);
             lbl3.Name = "lbl3";
             lbl3.Size = new Size(518, 25);
@@ -452,7 +452,7 @@
             // lbl4
             // 
             lbl4.Dock = DockStyle.Top;
-            lbl4.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lbl4.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl4.Location = new Point(0, 0);
             lbl4.Name = "lbl4";
             lbl4.Size = new Size(518, 18);

@@ -63,10 +63,12 @@
             btnViewSmallGrid = new FontAwesome.Sharp.IconButton();
             btnViewList = new FontAwesome.Sharp.IconButton();
             panelToolbar4 = new Panel();
+            btnAddFolder = new FontAwesome.Sharp.IconButton();
             cbIncludeSubfolders = new RandomVideoPlayer.Controls.RoundedCheckBox();
             labelPlacerholder1 = new Label();
             cbUseRecent = new RandomVideoPlayer.Controls.RoundedCheckBox();
             sliderLatestCount = new RandomVideoPlayer.Controls.FlatSlider();
+            label3 = new Label();
             panelTop.SuspendLayout();
             panelPathContainer.SuspendLayout();
             tableLayoutSideBar.SuspendLayout();
@@ -90,7 +92,7 @@
             panelTop.Dock = DockStyle.Top;
             panelTop.Location = new Point(0, 0);
             panelTop.Name = "panelTop";
-            panelTop.Size = new Size(1094, 20);
+            panelTop.Size = new Size(1156, 20);
             panelTop.TabIndex = 0;
             // 
             // lblTitleBar
@@ -99,7 +101,7 @@
             lblTitleBar.Location = new Point(0, 0);
             lblTitleBar.Name = "lblTitleBar";
             lblTitleBar.Padding = new Padding(30, 0, 0, 0);
-            lblTitleBar.Size = new Size(1064, 20);
+            lblTitleBar.Size = new Size(1126, 20);
             lblTitleBar.TabIndex = 3;
             lblTitleBar.Text = "RVP - Folder Browser";
             lblTitleBar.TextAlign = ContentAlignment.MiddleCenter;
@@ -115,7 +117,7 @@
             btnClose.IconColor = Color.Black;
             btnClose.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnClose.IconSize = 15;
-            btnClose.Location = new Point(1064, 0);
+            btnClose.Location = new Point(1126, 0);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(30, 20);
             btnClose.TabIndex = 2;
@@ -137,7 +139,7 @@
             panelPathContainer.RadiusBottomRight = 17;
             panelPathContainer.RadiusTopLeft = 17;
             panelPathContainer.RadiusTopRight = 17;
-            panelPathContainer.Size = new Size(1074, 34);
+            panelPathContainer.Size = new Size(1136, 34);
             panelPathContainer.TabIndex = 1;
             // 
             // flowPanelPath
@@ -148,7 +150,7 @@
             flowPanelPath.Location = new Point(31, 2);
             flowPanelPath.Name = "flowPanelPath";
             flowPanelPath.Padding = new Padding(5, 5, 0, 0);
-            flowPanelPath.Size = new Size(892, 28);
+            flowPanelPath.Size = new Size(954, 28);
             flowPanelPath.TabIndex = 4;
             flowPanelPath.WrapContents = false;
             // 
@@ -160,12 +162,13 @@
             btnStart.BorderRadius = 14;
             btnStart.BorderSize = 0;
             btnStart.Dock = DockStyle.Right;
+            btnStart.DynamicRadius = true;
             btnStart.FlatAppearance.BorderSize = 0;
             btnStart.FlatStyle = FlatStyle.Flat;
             btnStart.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnStart.ForeColor = Color.Black;
             btnStart.ImageAlign = ContentAlignment.MiddleRight;
-            btnStart.Location = new Point(923, 2);
+            btnStart.Location = new Point(985, 2);
             btnStart.Name = "btnStart";
             btnStart.Padding = new Padding(8, 0, 8, 0);
             btnStart.Size = new Size(146, 28);
@@ -184,6 +187,7 @@
             btnBack.BorderRadius = 14;
             btnBack.BorderSize = 0;
             btnBack.Dock = DockStyle.Left;
+            btnBack.DynamicRadius = true;
             btnBack.FlatAppearance.BorderSize = 0;
             btnBack.FlatStyle = FlatStyle.Flat;
             btnBack.ForeColor = Color.White;
@@ -330,7 +334,7 @@
             tableLayoutMain.RowCount = 2;
             tableLayoutMain.RowStyles.Add(new RowStyle());
             tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutMain.Size = new Size(1094, 541);
+            tableLayoutMain.Size = new Size(1156, 541);
             tableLayoutMain.TabIndex = 7;
             // 
             // panelMainRow1
@@ -342,7 +346,7 @@
             panelMainRow1.Margin = new Padding(0);
             panelMainRow1.Name = "panelMainRow1";
             panelMainRow1.Padding = new Padding(10, 5, 10, 0);
-            panelMainRow1.Size = new Size(1094, 44);
+            panelMainRow1.Size = new Size(1156, 44);
             panelMainRow1.TabIndex = 0;
             // 
             // tableLayouMainSub1
@@ -362,7 +366,7 @@
             tableLayouMainSub1.RowCount = 2;
             tableLayouMainSub1.RowStyles.Add(new RowStyle(SizeType.Absolute, 31F));
             tableLayouMainSub1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayouMainSub1.Size = new Size(1094, 497);
+            tableLayouMainSub1.Size = new Size(1156, 497);
             tableLayouMainSub1.TabIndex = 1;
             // 
             // panelFileExplore
@@ -379,7 +383,7 @@
             panelFileExplore.RadiusBottomRight = 0;
             panelFileExplore.RadiusTopLeft = 16;
             panelFileExplore.RadiusTopRight = 0;
-            panelFileExplore.Size = new Size(954, 463);
+            panelFileExplore.Size = new Size(1016, 463);
             panelFileExplore.TabIndex = 5;
             // 
             // lvFileExplore
@@ -393,7 +397,7 @@
             lvFileExplore.Location = new Point(6, 6);
             lvFileExplore.Name = "lvFileExplore";
             lvFileExplore.ShowItemToolTips = true;
-            lvFileExplore.Size = new Size(946, 455);
+            lvFileExplore.Size = new Size(1008, 455);
             lvFileExplore.TabIndex = 0;
             lvFileExplore.UseCompatibleStateImageBehavior = false;
             lvFileExplore.VirtualMode = true;
@@ -411,10 +415,10 @@
             // 
             tableToolBar.BackColor = Color.PaleGreen;
             tableToolBar.ColumnCount = 4;
-            tableToolBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
+            tableToolBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 21F));
             tableToolBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14F));
-            tableToolBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
-            tableToolBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48F));
+            tableToolBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14F));
+            tableToolBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 51F));
             tableToolBar.Controls.Add(panelToolbar3, 2, 0);
             tableToolBar.Controls.Add(panelToolbar1, 0, 0);
             tableToolBar.Controls.Add(panelToolbar2, 1, 0);
@@ -425,7 +429,7 @@
             tableToolBar.Name = "tableToolBar";
             tableToolBar.RowCount = 1;
             tableToolBar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableToolBar.Size = new Size(954, 31);
+            tableToolBar.Size = new Size(1016, 31);
             tableToolBar.TabIndex = 6;
             // 
             // panelToolbar3
@@ -435,10 +439,10 @@
             panelToolbar3.Controls.Add(btnFilterImage);
             panelToolbar3.Controls.Add(btnFilterScript);
             panelToolbar3.Dock = DockStyle.Fill;
-            panelToolbar3.Location = new Point(352, 0);
+            panelToolbar3.Location = new Point(355, 0);
             panelToolbar3.Margin = new Padding(0);
             panelToolbar3.Name = "panelToolbar3";
-            panelToolbar3.Size = new Size(143, 31);
+            panelToolbar3.Size = new Size(142, 31);
             panelToolbar3.TabIndex = 0;
             // 
             // btnFilterVideo
@@ -451,7 +455,7 @@
             btnFilterVideo.IconColor = Color.Black;
             btnFilterVideo.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnFilterVideo.IconSize = 24;
-            btnFilterVideo.Location = new Point(23, 0);
+            btnFilterVideo.Location = new Point(22, 0);
             btnFilterVideo.Name = "btnFilterVideo";
             btnFilterVideo.Size = new Size(40, 31);
             btnFilterVideo.TabIndex = 25;
@@ -468,7 +472,7 @@
             btnFilterImage.IconColor = Color.Black;
             btnFilterImage.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnFilterImage.IconSize = 24;
-            btnFilterImage.Location = new Point(63, 0);
+            btnFilterImage.Location = new Point(62, 0);
             btnFilterImage.Name = "btnFilterImage";
             btnFilterImage.Size = new Size(40, 31);
             btnFilterImage.TabIndex = 26;
@@ -485,7 +489,7 @@
             btnFilterScript.IconColor = Color.Black;
             btnFilterScript.IconFont = FontAwesome.Sharp.IconFont.Solid;
             btnFilterScript.IconSize = 24;
-            btnFilterScript.Location = new Point(103, 0);
+            btnFilterScript.Location = new Point(102, 0);
             btnFilterScript.Name = "btnFilterScript";
             btnFilterScript.Size = new Size(40, 31);
             btnFilterScript.TabIndex = 27;
@@ -502,7 +506,7 @@
             panelToolbar1.Margin = new Padding(0);
             panelToolbar1.Name = "panelToolbar1";
             panelToolbar1.Padding = new Padding(10, 0, 0, 0);
-            panelToolbar1.Size = new Size(219, 31);
+            panelToolbar1.Size = new Size(213, 31);
             panelToolbar1.TabIndex = 0;
             // 
             // lblZoomFactor
@@ -558,10 +562,10 @@
             panelToolbar2.Controls.Add(btnViewSmallGrid);
             panelToolbar2.Controls.Add(btnViewList);
             panelToolbar2.Dock = DockStyle.Fill;
-            panelToolbar2.Location = new Point(219, 0);
+            panelToolbar2.Location = new Point(213, 0);
             panelToolbar2.Margin = new Padding(0);
             panelToolbar2.Name = "panelToolbar2";
-            panelToolbar2.Size = new Size(133, 31);
+            panelToolbar2.Size = new Size(142, 31);
             panelToolbar2.TabIndex = 1;
             // 
             // btnViewLargeGrid
@@ -618,16 +622,38 @@
             // panelToolbar4
             // 
             panelToolbar4.BackColor = Color.Wheat;
+            panelToolbar4.Controls.Add(btnAddFolder);
+            panelToolbar4.Controls.Add(label3);
             panelToolbar4.Controls.Add(cbIncludeSubfolders);
             panelToolbar4.Controls.Add(labelPlacerholder1);
             panelToolbar4.Controls.Add(cbUseRecent);
             panelToolbar4.Controls.Add(sliderLatestCount);
             panelToolbar4.Dock = DockStyle.Fill;
-            panelToolbar4.Location = new Point(495, 2);
+            panelToolbar4.Location = new Point(497, 2);
             panelToolbar4.Margin = new Padding(0, 2, 0, 2);
             panelToolbar4.Name = "panelToolbar4";
-            panelToolbar4.Size = new Size(459, 27);
+            panelToolbar4.Size = new Size(519, 27);
             panelToolbar4.TabIndex = 2;
+            // 
+            // btnAddFolder
+            // 
+            btnAddFolder.Dock = DockStyle.Right;
+            btnAddFolder.FlatAppearance.BorderSize = 0;
+            btnAddFolder.FlatStyle = FlatStyle.Flat;
+            btnAddFolder.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnAddFolder.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
+            btnAddFolder.IconColor = Color.Black;
+            btnAddFolder.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            btnAddFolder.IconSize = 22;
+            btnAddFolder.ImageAlign = ContentAlignment.TopRight;
+            btnAddFolder.Location = new Point(38, 0);
+            btnAddFolder.Name = "btnAddFolder";
+            btnAddFolder.Size = new Size(103, 27);
+            btnAddFolder.TabIndex = 34;
+            btnAddFolder.Text = "Add folder";
+            btnAddFolder.TextAlign = ContentAlignment.MiddleLeft;
+            btnAddFolder.UseVisualStyleBackColor = true;
+            btnAddFolder.Click += btnAddFolder_Click;
             // 
             // cbIncludeSubfolders
             // 
@@ -640,7 +666,7 @@
             cbIncludeSubfolders.FlatAppearance.BorderSize = 0;
             cbIncludeSubfolders.FlatStyle = FlatStyle.Flat;
             cbIncludeSubfolders.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            cbIncludeSubfolders.Location = new Point(93, 0);
+            cbIncludeSubfolders.Location = new Point(153, 0);
             cbIncludeSubfolders.Name = "cbIncludeSubfolders";
             cbIncludeSubfolders.Size = new Size(124, 27);
             cbIncludeSubfolders.TabIndex = 29;
@@ -652,7 +678,7 @@
             // labelPlacerholder1
             // 
             labelPlacerholder1.Dock = DockStyle.Right;
-            labelPlacerholder1.Location = new Point(217, 0);
+            labelPlacerholder1.Location = new Point(277, 0);
             labelPlacerholder1.Name = "labelPlacerholder1";
             labelPlacerholder1.Size = new Size(12, 27);
             labelPlacerholder1.TabIndex = 33;
@@ -666,7 +692,7 @@
             cbUseRecent.FlatAppearance.BorderSize = 0;
             cbUseRecent.FlatStyle = FlatStyle.Flat;
             cbUseRecent.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            cbUseRecent.Location = new Point(229, 0);
+            cbUseRecent.Location = new Point(289, 0);
             cbUseRecent.Name = "cbUseRecent";
             cbUseRecent.Size = new Size(130, 27);
             cbUseRecent.TabIndex = 31;
@@ -680,7 +706,7 @@
             sliderLatestCount.Dock = DockStyle.Right;
             sliderLatestCount.ElapsedColor = Color.FromArgb(247, 110, 100);
             sliderLatestCount.HighlightColor = Color.PaleGreen;
-            sliderLatestCount.Location = new Point(359, 0);
+            sliderLatestCount.Location = new Point(419, 0);
             sliderLatestCount.Maximum = 100;
             sliderLatestCount.Minimum = 10;
             sliderLatestCount.Name = "sliderLatestCount";
@@ -694,12 +720,20 @@
             sliderLatestCount.Value = 50;
             sliderLatestCount.ValueChanged += sliderLatestCount_ValueChanged;
             // 
+            // label3
+            // 
+            label3.Dock = DockStyle.Right;
+            label3.Location = new Point(141, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(12, 27);
+            label3.TabIndex = 35;
+            // 
             // FolderBrowserV2View
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(195, 129, 125);
-            ClientSize = new Size(1094, 561);
+            ClientSize = new Size(1156, 561);
             Controls.Add(tableLayoutMain);
             Controls.Add(panelTop);
             MinimumSize = new Size(1000, 600);
@@ -769,5 +803,7 @@
         private Panel panelToolbar2;
         private Panel panelToolbar4;
         private FontAwesome.Sharp.IconButton btnViewLargeGrid;
+        private FontAwesome.Sharp.IconButton btnAddFolder;
+        private Label label3;
     }
 }

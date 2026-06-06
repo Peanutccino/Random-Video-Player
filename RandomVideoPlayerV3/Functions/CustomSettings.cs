@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RandomVideoPlayer.Model;
 using System.Collections.Specialized;
 
 namespace RandomVideoPlayer.Functions
@@ -126,8 +127,8 @@ namespace RandomVideoPlayer.Functions
         private static CustomSettings _instance;
         private static readonly object _lock = new object();
 
-        public bool thumbnailPreviewEnabled { get; set; } = false;
-        public bool previewSeekBarEnabled { get; set; } = false;
+        public bool thumbnailPreviewEnabled { get; set; } = true;
+        public bool previewSeekBarEnabled { get; set; } = true;
         public int thumbSizeFactorFolderBrowser { get; set; } = 5;
         public int thumbSizeFactorListBrowser { get; set; } = 10;
         public View fileBrowserViewState { get; set; } = View.SmallIcon;
@@ -141,6 +142,14 @@ namespace RandomVideoPlayer.Functions
         public double maxGain { get; set; } = 6.0d;
         public double targetRMS { get; set; } = 0.9d;
         public bool altBoundary { get; set; } = true;
+
+        public bool vrAutoDetectionEnabled { get; set; } = false;
+        public bool vrAutoDetectionDebugerEnabled { get; set; } = false;
+        public double vrDetectionMinConfidence { get; set; } = 80;
+        public int vrMaxShiftWide { get; set; } = 16;
+        public int vrMaxShiftTall { get; set; } = 5;
+        public VrRenderQuality vrQualityPreset { get; set; } = VrRenderQuality.Balanced;
+        public VrInterpolation vrInterpolation { get; set; } = VrInterpolation.Cubic;
 
 
         private CustomSettings() 

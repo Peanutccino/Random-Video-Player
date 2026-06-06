@@ -29,17 +29,17 @@
         private void InitializeComponent()
         {
             tableLayoutMain = new TableLayoutPanel();
+            lbProfiles = new ListBox();
+            lblProfile = new Label();
             lblHeader = new Label();
             panel1 = new Panel();
-            lbl1 = new Label();
             lbl2 = new Label();
-            lblProfile = new Label();
-            lbProfiles = new ListBox();
+            lbl1 = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
-            btnAdd = new FontAwesome.Sharp.IconButton();
-            btnDelete = new FontAwesome.Sharp.IconButton();
-            btnRename = new FontAwesome.Sharp.IconButton();
             btnSetProfile = new FontAwesome.Sharp.IconButton();
+            btnRename = new FontAwesome.Sharp.IconButton();
+            btnDelete = new FontAwesome.Sharp.IconButton();
+            btnAdd = new FontAwesome.Sharp.IconButton();
             tableLayoutMain.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -67,6 +67,30 @@
             tableLayoutMain.Size = new Size(524, 656);
             tableLayoutMain.TabIndex = 0;
             // 
+            // lbProfiles
+            // 
+            lbProfiles.Dock = DockStyle.Fill;
+            lbProfiles.FormattingEnabled = true;
+            lbProfiles.ItemHeight = 15;
+            lbProfiles.Location = new Point(3, 181);
+            lbProfiles.Name = "lbProfiles";
+            lbProfiles.Size = new Size(518, 280);
+            lbProfiles.TabIndex = 10;
+            lbProfiles.SelectedIndexChanged += lbProfiles_SelectedIndexChanged;
+            // 
+            // lblProfile
+            // 
+            lblProfile.Dock = DockStyle.Fill;
+            lblProfile.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblProfile.ForeColor = Color.Indigo;
+            lblProfile.Location = new Point(3, 126);
+            lblProfile.Name = "lblProfile";
+            lblProfile.Padding = new Padding(6, 10, 0, 0);
+            lblProfile.Size = new Size(518, 52);
+            lblProfile.TabIndex = 9;
+            lblProfile.Text = "Default 1";
+            lblProfile.TextAlign = ContentAlignment.TopCenter;
+            // 
             // lblHeader
             // 
             lblHeader.Dock = DockStyle.Fill;
@@ -89,6 +113,16 @@
             panel1.Size = new Size(518, 60);
             panel1.TabIndex = 8;
             // 
+            // lbl2
+            // 
+            lbl2.Dock = DockStyle.Top;
+            lbl2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lbl2.Location = new Point(0, 24);
+            lbl2.Name = "lbl2";
+            lbl2.Size = new Size(518, 24);
+            lbl2.TabIndex = 2;
+            lbl2.Text = "Currently set profile:";
+            // 
             // lbl1
             // 
             lbl1.Dock = DockStyle.Top;
@@ -97,40 +131,6 @@
             lbl1.Size = new Size(518, 24);
             lbl1.TabIndex = 1;
             lbl1.Text = "Add, delete or rename profiles used to save preferred scripts";
-            // 
-            // lbl2
-            // 
-            lbl2.Dock = DockStyle.Top;
-            lbl2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lbl2.Location = new Point(0, 24);
-            lbl2.Name = "lbl2";
-            lbl2.Size = new Size(518, 24);
-            lbl2.TabIndex = 2;
-            lbl2.Text = "Currently set profile:";
-            // 
-            // lblProfile
-            // 
-            lblProfile.Dock = DockStyle.Fill;
-            lblProfile.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblProfile.ForeColor = Color.Indigo;
-            lblProfile.Location = new Point(3, 126);
-            lblProfile.Name = "lblProfile";
-            lblProfile.Padding = new Padding(6, 10, 0, 0);
-            lblProfile.Size = new Size(518, 52);
-            lblProfile.TabIndex = 9;
-            lblProfile.Text = "Default 1";
-            lblProfile.TextAlign = ContentAlignment.TopCenter;
-            // 
-            // lbProfiles
-            // 
-            lbProfiles.Dock = DockStyle.Fill;
-            lbProfiles.FormattingEnabled = true;
-            lbProfiles.ItemHeight = 15;
-            lbProfiles.Location = new Point(3, 181);
-            lbProfiles.Name = "lbProfiles";
-            lbProfiles.Size = new Size(518, 280);
-            lbProfiles.TabIndex = 10;
-            lbProfiles.SelectedIndexChanged += lbProfiles_SelectedIndexChanged;
             // 
             // tableLayoutPanel1
             // 
@@ -151,48 +151,27 @@
             tableLayoutPanel1.Size = new Size(518, 46);
             tableLayoutPanel1.TabIndex = 11;
             // 
-            // btnAdd
+            // btnSetProfile
             // 
-            btnAdd.Dock = DockStyle.Fill;
-            btnAdd.FlatAppearance.BorderSize = 0;
-            btnAdd.FlatStyle = FlatStyle.Flat;
-            btnAdd.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnAdd.IconChar = FontAwesome.Sharp.IconChar.Add;
-            btnAdd.IconColor = Color.Black;
-            btnAdd.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnAdd.IconSize = 28;
-            btnAdd.ImageAlign = ContentAlignment.MiddleLeft;
-            btnAdd.Location = new Point(6, 6);
-            btnAdd.Margin = new Padding(6);
-            btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(117, 34);
-            btnAdd.TabIndex = 1;
-            btnAdd.Text = "Add";
-            btnAdd.TextAlign = ContentAlignment.MiddleRight;
-            btnAdd.UseVisualStyleBackColor = true;
-            btnAdd.Click += btnAdd_Click;
-            // 
-            // btnDelete
-            // 
-            btnDelete.Dock = DockStyle.Fill;
-            btnDelete.Enabled = false;
-            btnDelete.FlatAppearance.BorderSize = 0;
-            btnDelete.FlatStyle = FlatStyle.Flat;
-            btnDelete.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnDelete.IconChar = FontAwesome.Sharp.IconChar.Subtract;
-            btnDelete.IconColor = Color.Black;
-            btnDelete.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnDelete.IconSize = 28;
-            btnDelete.ImageAlign = ContentAlignment.MiddleLeft;
-            btnDelete.Location = new Point(135, 6);
-            btnDelete.Margin = new Padding(6);
-            btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(117, 34);
-            btnDelete.TabIndex = 2;
-            btnDelete.Text = "Delete";
-            btnDelete.TextAlign = ContentAlignment.MiddleRight;
-            btnDelete.UseVisualStyleBackColor = true;
-            btnDelete.Click += btnDelete_Click;
+            btnSetProfile.Dock = DockStyle.Fill;
+            btnSetProfile.Enabled = false;
+            btnSetProfile.FlatAppearance.BorderSize = 0;
+            btnSetProfile.FlatStyle = FlatStyle.Flat;
+            btnSetProfile.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSetProfile.IconChar = FontAwesome.Sharp.IconChar.UserLarge;
+            btnSetProfile.IconColor = Color.Black;
+            btnSetProfile.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnSetProfile.IconSize = 26;
+            btnSetProfile.ImageAlign = ContentAlignment.MiddleLeft;
+            btnSetProfile.Location = new Point(393, 6);
+            btnSetProfile.Margin = new Padding(6);
+            btnSetProfile.Name = "btnSetProfile";
+            btnSetProfile.Size = new Size(119, 34);
+            btnSetProfile.TabIndex = 4;
+            btnSetProfile.Text = "Set profile";
+            btnSetProfile.TextAlign = ContentAlignment.MiddleRight;
+            btnSetProfile.UseVisualStyleBackColor = true;
+            btnSetProfile.Click += btnSetProfile_Click;
             // 
             // btnRename
             // 
@@ -216,27 +195,48 @@
             btnRename.UseVisualStyleBackColor = true;
             btnRename.Click += btnRename_Click;
             // 
-            // btnSetProfile
+            // btnDelete
             // 
-            btnSetProfile.Dock = DockStyle.Fill;
-            btnSetProfile.Enabled = false;
-            btnSetProfile.FlatAppearance.BorderSize = 0;
-            btnSetProfile.FlatStyle = FlatStyle.Flat;
-            btnSetProfile.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSetProfile.IconChar = FontAwesome.Sharp.IconChar.UserLarge;
-            btnSetProfile.IconColor = Color.Black;
-            btnSetProfile.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnSetProfile.IconSize = 26;
-            btnSetProfile.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSetProfile.Location = new Point(393, 6);
-            btnSetProfile.Margin = new Padding(6);
-            btnSetProfile.Name = "btnSetProfile";
-            btnSetProfile.Size = new Size(119, 34);
-            btnSetProfile.TabIndex = 4;
-            btnSetProfile.Text = "Set profile";
-            btnSetProfile.TextAlign = ContentAlignment.MiddleRight;
-            btnSetProfile.UseVisualStyleBackColor = true;
-            btnSetProfile.Click += btnSetProfile_Click;
+            btnDelete.Dock = DockStyle.Fill;
+            btnDelete.Enabled = false;
+            btnDelete.FlatAppearance.BorderSize = 0;
+            btnDelete.FlatStyle = FlatStyle.Flat;
+            btnDelete.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnDelete.IconChar = FontAwesome.Sharp.IconChar.Subtract;
+            btnDelete.IconColor = Color.Black;
+            btnDelete.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnDelete.IconSize = 28;
+            btnDelete.ImageAlign = ContentAlignment.MiddleLeft;
+            btnDelete.Location = new Point(135, 6);
+            btnDelete.Margin = new Padding(6);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(117, 34);
+            btnDelete.TabIndex = 2;
+            btnDelete.Text = "Delete";
+            btnDelete.TextAlign = ContentAlignment.MiddleRight;
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
+            // 
+            // btnAdd
+            // 
+            btnAdd.Dock = DockStyle.Fill;
+            btnAdd.FlatAppearance.BorderSize = 0;
+            btnAdd.FlatStyle = FlatStyle.Flat;
+            btnAdd.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnAdd.IconChar = FontAwesome.Sharp.IconChar.Add;
+            btnAdd.IconColor = Color.Black;
+            btnAdd.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnAdd.IconSize = 28;
+            btnAdd.ImageAlign = ContentAlignment.MiddleLeft;
+            btnAdd.Location = new Point(6, 6);
+            btnAdd.Margin = new Padding(6);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(117, 34);
+            btnAdd.TabIndex = 1;
+            btnAdd.Text = "Add";
+            btnAdd.TextAlign = ContentAlignment.MiddleRight;
+            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
             // 
             // ProfilesUserControl
             // 

@@ -20,6 +20,8 @@ namespace RandomVideoPlayer.Model
 
         public static int VideoRemaining { get; set; }
 
+        public static List<string> SelectedFolders { get; set; } = new();
+
         /// <value>Play from list (true) or play from folder (false).</value> 
         public static bool SourceSelected
         {
@@ -1303,6 +1305,104 @@ namespace RandomVideoPlayer.Model
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.altBoundary = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool VrAutoDetectionEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.vrAutoDetectionEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.vrAutoDetectionEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool VrAutoDetectionDebugerEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.vrAutoDetectionDebugerEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.vrAutoDetectionDebugerEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static double VrDetectionMinConfidence
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.vrDetectionMinConfidence;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.vrDetectionMinConfidence = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int VrMaxShiftWide
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.vrMaxShiftWide;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.vrMaxShiftWide = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int VrMaxShiftTall
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.vrMaxShiftTall;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.vrMaxShiftTall = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static VrRenderQuality VrQualityPreset
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.vrQualityPreset;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.vrQualityPreset = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static VrInterpolation VrInterpolation
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.vrInterpolation;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.vrInterpolation = value;
                 _settingsInstance.Save();
             }
         }

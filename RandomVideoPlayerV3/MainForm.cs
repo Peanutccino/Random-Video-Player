@@ -34,6 +34,7 @@ namespace RandomVideoPlayer
         private Rectangle areaBottom = new();
         private Rectangle areaTop = new();
 
+        private VrController vrController;
 
         public MainForm(string filePath)
         {
@@ -254,6 +255,10 @@ namespace RandomVideoPlayer
         {
             contextMenuScriptFiles.Show(btnScriptMenu, new Point(0, btnScriptMenu.Height));
         }
+        private void btnVrMenu_Click(object sender, EventArgs e)
+        {
+            contextMenuVr.Show(btnVrMenu, new Point(0, btnVrMenu.Height));
+        }
         private void lblCurrentInfo_DoubleClick(object sender, EventArgs e)
         {
             var filePath = lblCurrentInfo.Text;
@@ -314,6 +319,7 @@ namespace RandomVideoPlayer
             WireContextButton(btnAudioTrackMenu);
             WireContextButton(btnSubtitleMenu);
             WireContextButton(btnScriptMenu);
+            WireContextButton(btnVrMenu);
         }
 
         private void ApplyThemeToButtons()
@@ -457,7 +463,20 @@ namespace RandomVideoPlayer
         #region ExclusiveFullscreen
         private void panelPlayerMPV_MouseMove(object sender, MouseEventArgs e) //Used to determin Cursor position in exclusive Fullscreen mode to show or hide Panels
         {
-            if (fR.WindowExclusiveFullscreen && !MainFormData.TouchEnabled) //Only use when exclusive Fullscreen is enabled
+            if (vrController.Enabled && MainFormData.vrDragging)
+            {
+                int dx = e.X - MainFormData.lastMouse.X;
+                int dy = e.Y - MainFormData.lastMouse.Y;
+
+                MainFormData.lastMouse = e.Location;
+
+                double sensitivity = 0.15;
+
+                vrController.Pan(yawDelta: dx * sensitivity, pitchDelta: -dy * sensitivity);
+
+                Debug.WriteLine($"Mouse moved: dx={dx}, dy={dy}");
+            }
+            else if (fR.WindowExclusiveFullscreen && !MainFormData.TouchEnabled) //Only use when exclusive Fullscreen is enabled
             {
                 panelBottom.Visible = areaBottom.Contains(e.Location) ? true : false;
                 panelTop.Visible = areaTop.Contains(e.Location) ? true : false;
@@ -467,7 +486,14 @@ namespace RandomVideoPlayer
         private void panelPlayerMPV_MouseDown(object sender, MouseEventArgs e)
         {
             base.OnMouseClick(e);
-            if (e.Button == MouseButtons.Left && this.WindowState != FormWindowState.Maximized && !MainFormData.TouchEnabled)
+            if (vrController.Enabled && e.Button == MouseButtons.Left)
+            {
+                MainFormData.vrDragging = true;
+                MainFormData.lastMouse = e.Location;
+                panelPlayerMPV.Capture = true;
+                vrController.BeginInteractivePan();
+            }
+            else if (e.Button == MouseButtons.Left && this.WindowState != FormWindowState.Maximized && !MainFormData.TouchEnabled)
             {
                 _stopwatch.Restart();
 
@@ -496,6 +522,7 @@ namespace RandomVideoPlayer
             if (e.Button == MouseButtons.Left && e.Clicks >= 2 && !MainFormData.TouchEnabled) //Double Click
             {
                 _checkwatch.Stop();
+                MainFormData.vrDragging = false;
                 ToggleExclusiveFullscreen();
             }
             if (e.Button == MouseButtons.XButton1)
@@ -507,7 +534,15 @@ namespace RandomVideoPlayer
                 PlayNext();
             }
         }
-
+        private void panelPlayerMPV_MouseUp(object sender, MouseEventArgs e)
+        {
+            MainFormData.vrDragging = false;
+            if (vrController.Enabled)
+            {
+                vrController.EndInteractivePan();
+            }
+            panelPlayerMPV.Capture = false;
+        }
         private void Checkwatch_Tick(object? sender, EventArgs e)
         {
             _checkwatch.Stop();
@@ -542,6 +577,12 @@ namespace RandomVideoPlayer
                 }
                 this.Size = MainFormData.backupSize;
             }
+
+            //if (vrController.Enabled)
+            //{
+            //    vrController.ApplyVrQualityPreset(panelPlayerMPV);
+            //    vrController.Update();
+            //}
         }
         private int tempPanelBottomHeight = 75;
         private void ToggleTouchMode()
@@ -872,8 +913,7 @@ namespace RandomVideoPlayer
 
                 if (SettingsHandler.BurnsEffectEnabled)
                 {
-                    var currentFileExtension = Path.GetExtension(MainFormData.currentFile).TrimStart('.').ToLower();
-                    if (ListHandler.ImageExtensions.Contains(currentFileExtension))
+                    if (ListHandler.InputIsImage(MainFormData.currentFile))
                     {
                         MainFormData.isImage = true;
                         VideoManipulation.StartRandomAnimation(playerMPV, PlayNext);
@@ -928,7 +968,14 @@ namespace RandomVideoPlayer
 
         private void panelPlayerMPV_MouseWheel(object sender, MouseEventArgs e) //Move through video by Scrolling
         {
-            if (e.Delta > 0)
+            if (vrController.Enabled && MainFormData.vrDragging)
+            {
+                if (e.Delta > 0)
+                    vrController.Zoom(-3);
+                else
+                    vrController.Zoom(3);
+            }
+            else if (e.Delta > 0)
             {
                 SeekForward();
             }
@@ -1058,7 +1105,7 @@ namespace RandomVideoPlayer
 
             ListHandler.NeedsToPrepare = true;
 
-            PlayNext();
+            //PlayNext();
         }
         private void ToggleLoop()
         {
@@ -1155,7 +1202,46 @@ namespace RandomVideoPlayer
             SetHighlight(btnFileBrowse, false);
             if (result != DialogResult.OK) return;
 
-            if (File.Exists(_selectedPath))
+            if (SettingsHandler.SelectedFolders.Count > 0)
+            {
+                ListHandler.FolderList = Enumerable.Empty<string>();
+                ListHandler.TempFolderList = Enumerable.Empty<string>();
+
+                foreach (string folder in SettingsHandler.SelectedFolders)
+                {
+                    if (!Directory.Exists(folder)) continue;
+
+
+                    if (SettingsHandler.RecentCheckedTemp)
+                    {
+                        ListHandler.latestFolderList(folder, SettingsHandler.RecentCount, ListHandler.IncludeSubfolders, true);
+                        ListHandler.SortListByNewest(SettingsHandler.RecentCount);
+                    }
+                    else
+                    {
+                        ListHandler.fillFolderList(folder, ListHandler.IncludeSubfolders, true);
+                    }
+                }
+
+                var debugList = ListHandler.FolderList;
+
+                if (!(ListHandler.TempFolderList?.Any() ?? false))
+                {
+                    if (!(ListHandler.FolderList?.Any() ?? false))
+                    {
+                        MessageBox.Show($"Your chosen folder has no valid files to play from and there is no valid path to fall back to!\n\nThe Path was:\n{_selectedPath}");
+                        return;
+                    }
+                    MessageBox.Show($"Your chosen folder has no valid files to play from; No action taken!\n\nThe Path was:\n{_selectedPath}");
+                    return;
+                }
+                else
+                {
+                    //PathHandler.FolderPath = _selectedPath;
+                    ListHandler.TempFolderList = Enumerable.Empty<string>();
+                }
+            }
+            else if (File.Exists(_selectedPath))
             {
                 ListHandler.FolderList = Enumerable.Empty<string>();
                 ListHandler.TempFolderList = Enumerable.Empty<string>();
@@ -1396,6 +1482,12 @@ namespace RandomVideoPlayer
         private ToolStripMenuItem enableDisableShowGraphItem;
         private ToolStripMenuItem selectScriptProfiles;
         private ToolStripMenuItem savePreferredScriptSetupItem;
+        //3D menu
+        private ContextMenuStrip contextMenuVr;
+        private ToolStripMenuItem enableDisableVrItem;
+        private ToolStripMenuItem enableDisableVrAutoDetectItem;
+        private ToolStripMenuItem savePreferredVrSetupItem;
+        private ToolStripMenuItem removePreferredVrSetupItem;
 
         private bool tsmiAutoSize = true;
 
@@ -1494,9 +1586,112 @@ namespace RandomVideoPlayer
             contextMenuScriptFiles.Items.Add(new ToolStripSeparator());
             if (SettingsHandler.TimeCodeServer) enableDisableTimeServerItem.Checked = true;
             if (SettingsHandler.GraphEnabled) enableDisableShowGraphItem.Checked = true;
+
+            //Vr menu
+            contextMenuVr = new ContextMenuStrip { Renderer = renderer };
+            // 1:Create first context menu item for toggling VR mode
+            enableDisableVrItem = new ToolStripMenuItem("Enable VR")
+            {
+                AutoSize = tsmiAutoSize,
+                Font = new Font("Segoe UI", 9 / DPI.Scale),
+                TextAlign = ContentAlignment.MiddleLeft,
+                CheckOnClick = true
+            };
+            enableDisableVrItem.CheckedChanged += EnableDisableVrItem_CheckedChanged;
+            contextMenuVr.Items.Add(enableDisableVrItem);
+            // 2:Create first context menu item for toggling VR auto detect
+            enableDisableVrAutoDetectItem = new ToolStripMenuItem("Auto-Detection")
+            {
+                AutoSize = tsmiAutoSize,
+                Font = new Font("Segoe UI", 9 / DPI.Scale),
+                TextAlign = ContentAlignment.MiddleLeft,
+                CheckOnClick = true,
+                Checked = SettingsHandler.VrAutoDetectionEnabled
+            };
+            enableDisableVrAutoDetectItem.CheckedChanged += EnableDisableVrAutoDetectItem_CheckedChanged;
+            contextMenuVr.Items.Add(enableDisableVrAutoDetectItem);
+            // 3:Create context menu button to save preferred VR config
+            savePreferredVrSetupItem = new ToolStripMenuItem("Save VR settings for this video")
+            {
+                AutoSize = tsmiAutoSize,
+                Font = new Font("Segoe UI", 9 / DPI.Scale),
+                ForeColor = ThemeManager.CurrentTheme.TextColor,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Enabled = false
+            };
+            savePreferredVrSetupItem.Click += SavePreferredVrSetup_Click;
+            contextMenuVr.Items.Add(savePreferredVrSetupItem);
+            // 4:Create context menu button to remove VR config for this video
+            removePreferredVrSetupItem = new ToolStripMenuItem("Remove VR settings for this video")
+            {
+                AutoSize = tsmiAutoSize,
+                Font = new Font("Segoe UI", 9 / DPI.Scale),
+                ForeColor = Color.Red,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Enabled = false
+            };
+            removePreferredVrSetupItem.Click += RemovePreferredVrSetup_Click;
+            contextMenuVr.Items.Add(removePreferredVrSetupItem);
+
+            // Final separator
+            contextMenuVr.Items.Add(new ToolStripSeparator());
         }
 
+        private void RemovePreferredVrSetup_Click(object? sender, EventArgs e)
+        {
+            string videoPath = MainFormData.currentFile;
 
+            if (string.IsNullOrWhiteSpace(videoPath)) return;
+
+            if (VrConfigManager.RemoveConfiguration(videoPath))
+            {
+                playerMPV.ShowText("VR setup removed");
+            }
+
+            UpdateVrConfig();
+        }
+
+        private void SavePreferredVrSetup_Click(object? sender, EventArgs e)
+        {
+            string videoPath = MainFormData.currentFile;
+
+            if (string.IsNullOrWhiteSpace(videoPath)) return;
+
+            VrConfigManager.SaveVrConfig(videoPath, "enabled", MainFormData.vrEnabled.ToString());
+            VrConfigManager.SaveVrConfig(videoPath, "quality_preset", vrController.RenderQuality.ToString());
+            VrConfigManager.SaveVrConfig(videoPath, "projection", vrController.InputProjection.ToMpvValue());
+            VrConfigManager.SaveVrConfig(videoPath, "stereo", vrController.InputStereo.ToMpvValue());
+            VrConfigManager.SaveVrConfig(videoPath, "fov", vrController.InputFov.ToMpvValue());
+            VrConfigManager.SaveVrConfig(videoPath, "flipeye", vrController.FlipEye.ToString());
+
+            playerMPV.ShowText("VR setup saved");
+            MainFormData.loadedVrStatus = true;
+            UpdateVrConfig();
+        }
+
+        private void EnableDisableVrAutoDetectItem_CheckedChanged(object? sender, EventArgs e)
+        {
+            SettingsHandler.VrAutoDetectionEnabled = enableDisableVrAutoDetectItem.Checked;
+        }
+
+        private void EnableDisableVrItem_CheckedChanged(object? sender, EventArgs e)
+        {
+            if (enableDisableVrItem.Checked)
+            {
+                vrController.Enable();
+            }
+            else
+            {
+                vrController.Disable();
+            }
+            vrController.Update();
+            if (MainFormData.loadedVrStatus == null)
+            {
+                MainFormData.vrEnabled = enableDisableVrItem.Checked;
+            }
+
+            ApplyPreviewVrEyeCrop(vrController.InputStereo);
+        }
 
         private void LoadExternalSubtitles()
         {
@@ -2005,8 +2200,7 @@ namespace RandomVideoPlayer
             {
                 pbPlayerProgress.DeleteActionsPoints();
 
-                var currentFileExtension = Path.GetExtension(updatedCurrentFile).TrimStart('.').ToLower();
-                if (ListHandler.ImageExtensions.Contains(currentFileExtension)) return;
+                if (ListHandler.InputIsImage(updatedCurrentFile)) return;
 
                 UpdateFunscriptGraph();
             }
@@ -2214,6 +2408,539 @@ namespace RandomVideoPlayer
             }
         }
 
+        private void UpdateVrConfig()
+        {
+            string videoPath = MainFormData.currentFile;
+
+            bool isFirstItem = true;
+            if (InvokeRequired)
+            {
+                Invoke(new Action(UpdateVrConfig));
+            }
+            else
+            {
+                foreach (ToolStripMenuItem topItem in contextMenuVr.Items.OfType<ToolStripMenuItem>())
+                {
+                    if (topItem.Text == "Enable VR")
+                    {
+                        if (MainFormData.loadedVrStatus != null)
+                        {
+                            topItem.Checked = MainFormData.loadedVrStatus.Value;
+                        }
+                        else
+                        {
+                            topItem.Checked = MainFormData.vrEnabled;
+                        }
+
+                    }
+                    else if (topItem.Text == "Auto-Detection")
+                    {
+                        topItem.Checked = SettingsHandler.VrAutoDetectionEnabled;
+                    }
+                    else if (topItem.Text == "Save VR settings for this video")
+                    {
+                        if (!string.IsNullOrWhiteSpace(videoPath))
+                        {
+                            topItem.Enabled = true;
+                        }
+                        else
+                        {
+                            topItem.Enabled = false;
+                        }
+                    }
+                    else if (topItem.Text == "Remove VR settings for this video")
+                    {
+                        if (MainFormData.loadedVrStatus != null)
+                        {
+                            topItem.Enabled = true;
+                        }
+                        else
+                        {
+                            topItem.Enabled = false;
+                        }
+                    }
+                }
+
+                for (int i = contextMenuVr.Items.Count - 1; i >= 5; i--)
+                {
+                    contextMenuVr.Items.RemoveAt(i);
+                }
+                //Quality Preset
+                var selectQualityPresetItem = new ToolStripMenuItem("Quality preset")
+                {
+                    AutoSize = tsmiAutoSize,
+                    Font = new Font("Segoe UI", 9 / DPI.Scale),
+                    TextAlign = ContentAlignment.MiddleLeft
+                };
+                contextMenuVr.Items.Add(selectQualityPresetItem);
+
+                string preferredQualityPreset = VrConfigManager.GetVrConfig(videoPath, "quality_preset");
+                int preferredQualityPresetIndex = 0;
+
+                if (!string.IsNullOrWhiteSpace(preferredQualityPreset))
+                {
+                    preferredQualityPresetIndex = (int)Enum.Parse(typeof(VrRenderQuality), preferredQualityPreset);
+                }
+                else
+                {
+                    preferredQualityPreset = SettingsHandler.VrQualityPreset.ToString();
+                    preferredQualityPresetIndex = (int)Enum.Parse(typeof(VrRenderQuality), preferredQualityPreset);
+                }
+                int qualityPresetIndex = 0;
+                foreach (var preset in Enum.GetValues(typeof(VrRenderQuality)))
+                {
+                    var qualityPresetItem = new ToolStripMenuItem(preset.ToString())
+                    {
+                        Tag = preset,
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Segoe UI", 9 / DPI.Scale),
+                        TextAlign = ContentAlignment.MiddleLeft,
+                        CheckOnClick = true
+                    };
+                    qualityPresetItem.Click += QualityPresetItem_Click;
+
+                    if (preferredQualityPresetIndex > 0)
+                    {
+                        if (preferredQualityPresetIndex == qualityPresetIndex)
+                        {
+                            qualityPresetItem.Checked = true;
+                            isFirstItem = false;
+                        }
+                    }
+                    else if (isFirstItem)
+                    {
+                        qualityPresetItem.Checked = true;
+                        isFirstItem = false;
+                    }
+                    selectQualityPresetItem.DropDownItems.Add(qualityPresetItem);
+                    qualityPresetIndex++;
+                }
+                //Input Projection
+                var selectInputProjection = new ToolStripMenuItem("Projection")
+                {
+                    AutoSize = tsmiAutoSize,
+                    Font = new Font("Segoe UI", 9 / DPI.Scale),
+                    TextAlign = ContentAlignment.MiddleLeft
+                };
+                contextMenuVr.Items.Add(selectInputProjection);
+
+                string preferredProjection = VrConfigManager.GetVrConfig(videoPath, "projection");
+                int preferredProjectionIndex = 0;
+
+                if (!string.IsNullOrWhiteSpace(preferredProjection))
+                {
+                    if (VrInputProjectionExtension.TryFromMpvValue(preferredProjection, out var projection))
+                    {
+                        preferredProjectionIndex = (int)projection;
+                    }
+                }
+                int projectionIndex = 0;
+                foreach (VrInputProjection projection in Enum.GetValues(typeof(VrInputProjection)))
+                {
+                    var projectionItem = new ToolStripMenuItem(projection.ToDisplayName())
+                    {
+                        Tag = projection,
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Segoe UI", 9 / DPI.Scale),
+                        TextAlign = ContentAlignment.MiddleLeft,
+                        CheckOnClick = true
+                    };
+                    projectionItem.Click += ProjectionItem_Click;
+
+                    if (preferredProjectionIndex > 0)
+                    {
+                        if (preferredProjectionIndex == projectionIndex)
+                        {
+                            projectionItem.Checked = true;
+                        }
+                    }
+                    else if (projection == vrController.InputProjection)
+                    {
+                        projectionItem.Checked = true;
+                    }
+                    selectInputProjection.DropDownItems.Add(projectionItem);
+                    projectionIndex++;
+                }
+                //Input Stereo
+                var selectInputStereo = new ToolStripMenuItem("Stereo Mode")
+                {
+                    AutoSize = tsmiAutoSize,
+                    Font = new Font("Segoe UI", 9 / DPI.Scale),
+                    TextAlign = ContentAlignment.MiddleLeft
+                };
+                contextMenuVr.Items.Add(selectInputStereo);
+
+                string preferredStereo = VrConfigManager.GetVrConfig(videoPath, "stereo");
+                int preferredStereoIndex = 0;
+
+                if (!string.IsNullOrWhiteSpace(preferredStereo))
+                {
+                    if (VrInputStereoExtension.TryFromMpvValue(preferredStereo, out var stereo))
+                    {
+                        preferredStereoIndex = (int)stereo;
+                    }
+                }
+                int stereoIndex = 0;
+                foreach (VrInputStereo stereo in Enum.GetValues(typeof(VrInputStereo)))
+                {
+                    var stereoItem = new ToolStripMenuItem(stereo.ToDisplayName())
+                    {
+                        Tag = stereo,
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Segoe UI", 9 / DPI.Scale),
+                        TextAlign = ContentAlignment.MiddleLeft,
+                        CheckOnClick = true
+                    };
+                    stereoItem.Click += StereoItem_Click;
+                    if (preferredStereoIndex > 0)
+                    {
+                        if (preferredStereoIndex == stereoIndex)
+                        {
+                            stereoItem.Checked = true;
+                        }
+                    }
+                    else if (stereo == vrController.InputStereo)
+                    {
+                        stereoItem.Checked = true;
+                    }
+                    selectInputStereo.DropDownItems.Add(stereoItem);
+                    stereoIndex++;
+                }
+                //Input FOV
+                var selectInputFov = new ToolStripMenuItem("Input FOV")
+                {
+                    AutoSize = tsmiAutoSize,
+                    Font = new Font("Segoe UI", 9 / DPI.Scale),
+                    TextAlign = ContentAlignment.MiddleLeft
+                };
+                contextMenuVr.Items.Add(selectInputFov);
+
+                string preferredFov = VrConfigManager.GetVrConfig(videoPath, "fov");
+                int preferredFovIndex = 0;
+
+                if (!string.IsNullOrWhiteSpace(preferredFov))
+                {
+                    if (VrInputStereoExtension.TryFromMpvValue(preferredFov, out var fov))
+                    {
+                        preferredFovIndex = (int)fov;
+                    }
+                }
+                int fovIndex = 0;
+                foreach (VrInputFov fov in Enum.GetValues(typeof(VrInputFov)))
+                {
+                    var fovItem = new ToolStripMenuItem(fov.ToDisplayName())
+                    {
+                        Tag = fov,
+                        AutoSize = tsmiAutoSize,
+                        Font = new Font("Segoe UI", 9 / DPI.Scale),
+                        TextAlign = ContentAlignment.MiddleLeft,
+                        CheckOnClick = true
+                    };
+                    fovItem.Click += FovItem_Click;
+                    if (preferredFovIndex > 0)
+                    {
+                        if (preferredFovIndex == fovIndex)
+                        {
+                            fovItem.Checked = true;
+                        }
+                    }
+                    else if (fov == vrController.InputFov)
+                    {
+                        fovItem.Checked = true;
+                    }
+                    selectInputFov.DropDownItems.Add(fovItem);
+                    fovIndex++;
+                }
+                //Flipeye
+                var selectFlipEye = new ToolStripMenuItem("Flip eyes")
+                {
+                    AutoSize = tsmiAutoSize,
+                    Font = new Font("Segoe UI", 9 / DPI.Scale),
+                    TextAlign = ContentAlignment.MiddleLeft,
+                    CheckOnClick = true,
+                    Checked = vrController.FlipEye
+                };
+                selectFlipEye.Click += SelectFlipEye_Click;
+                contextMenuVr.Items.Add(selectFlipEye);
+
+                MainFormData.loadedVrStatus = null;
+            }
+        }
+
+        private void SelectFlipEye_Click(object? sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem clickedItem)
+                return;
+
+            vrController.FlipEye = clickedItem.Checked;
+            vrController.Update();
+        }
+
+        private void QualityPresetItem_Click(object? sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem clickedItem)
+                return;
+
+            if (clickedItem.Tag is not VrRenderQuality quality)
+                return;
+
+            var parentItem = clickedItem.OwnerItem as ToolStripMenuItem;
+            if (parentItem != null)
+            {
+                foreach (ToolStripMenuItem item in parentItem.DropDownItems)
+                {
+                    item.Checked = false;
+                }
+            }
+
+            clickedItem.Checked = true;
+
+            vrController.RenderQuality = quality;
+            vrController.ApplyVrQualityPreset(panelPlayerMPV);
+            vrController.Update();
+        }
+
+        private void FovItem_Click(object? sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem clickedItem)
+                return;
+
+            if (clickedItem.Tag is not VrInputFov fov)
+                return;
+
+            var parentItem = clickedItem.OwnerItem as ToolStripMenuItem;
+            if (parentItem != null)
+            {
+                foreach (ToolStripMenuItem item in parentItem.DropDownItems)
+                {
+                    item.Checked = false;
+                }
+            }
+
+            clickedItem.Checked = true;
+
+            vrController.InputFov = fov;
+            vrController.Update();
+
+            //UpdateVrConfig();
+        }
+
+        private void StereoItem_Click(object? sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem clickedItem)
+                return;
+
+            if (clickedItem.Tag is not VrInputStereo sterei)
+                return;
+
+            var parentItem = clickedItem.OwnerItem as ToolStripMenuItem;
+            if (parentItem != null)
+            {
+                foreach (ToolStripMenuItem item in parentItem.DropDownItems)
+                {
+                    item.Checked = false;
+                }
+            }
+
+            clickedItem.Checked = true;
+
+            vrController.InputStereo = sterei;
+            vrController.Update();
+
+            ApplyPreviewVrEyeCrop(vrController.InputStereo);
+        }
+
+        private void ProjectionItem_Click(object? sender, EventArgs e)
+        {
+            if (sender is not ToolStripMenuItem clickedItem)
+                return;
+
+            if (clickedItem.Tag is not VrInputProjection projection)
+                return;
+
+            var parentItem = clickedItem.OwnerItem as ToolStripMenuItem;
+            if (parentItem != null)
+            {
+                foreach (ToolStripMenuItem item in parentItem.DropDownItems)
+                {
+                    item.Checked = false;
+                }
+            }
+
+            clickedItem.Checked = true;
+
+            vrController.InputProjection = projection;
+            vrController.Update();
+
+            //UpdateVrConfig();
+        }
+
+        #endregion
+
+        #region VR Settings
+        private void LoadPreferredVrSetup()
+        {
+            string videoPath = MainFormData.currentFile;
+            bool foundConfig = false;
+            bool detectionSuccess = false;
+            bool foundResults = false;
+            VrDetectionResults vrDetectionResults = new();
+
+            if (string.IsNullOrWhiteSpace(videoPath)) return;
+
+            var vrEnabledString = VrConfigManager.GetVrConfig(videoPath, "enabled");
+            var qualityPresetString = VrConfigManager.GetVrConfig(videoPath, "quality_preset");
+            var inputProjection = VrConfigManager.GetVrConfig(videoPath, "projection");
+            var inputStereo = VrConfigManager.GetVrConfig(videoPath, "stereo");
+            var inputFov = VrConfigManager.GetVrConfig(videoPath, "fov");
+            var preferredFlipEye = VrConfigManager.GetVrConfig(videoPath, "flipeye");
+
+            if (SettingsHandler.VrAutoDetectionEnabled && ListHandler.InputIsVideo(videoPath))
+            {
+                var videoFrame = VrDetection.GetVideoThumbnail(videoPath, maxSize: 300);
+                if (videoFrame != null)
+                {
+                    try
+                    {
+                        vrDetectionResults = VrDetection.Detect(videoFrame);
+                        Error.Log("Detection results for '" + Path.GetFileName(videoPath) + "' : " + vrDetectionResults.ToString(), LogLevel.Debug);
+                        foundResults = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Error.Log(ex, "Couldn't generate thumb from video for detection", LogLevel.Warning);
+                    }
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(vrEnabledString))
+            {
+                MainFormData.loadedVrStatus = bool.Parse(vrEnabledString);
+                if (MainFormData.loadedVrStatus == true)
+                {
+                    vrController.Enable();
+                }
+                else
+                {
+                    vrController.Disable();
+                }
+                foundConfig = true;
+            }
+            else if (foundResults)
+            {
+                if (vrDetectionResults.Layout != VrDetectionLayout.Unknown && vrDetectionResults.Confidence >= SettingsHandler.VrDetectionMinConfidence)
+                {
+                    MainFormData.vrEnabled = true;
+                    vrController.Enable();
+                }
+                else if (vrDetectionResults.Confidence < SettingsHandler.VrDetectionMinConfidence)
+                {
+                    MainFormData.vrEnabled = false;
+                    vrController.Disable();
+                }
+            }
+            else
+            {
+                if (MainFormData.vrEnabled)
+                {
+                    vrController.Enable();
+                }
+                else
+                {
+                    vrController.Disable();
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(qualityPresetString))
+            {
+                var quality = (VrRenderQuality)Enum.Parse(typeof(VrRenderQuality), qualityPresetString);
+                vrController.RenderQuality = quality;
+            }
+            else
+            {
+                vrController.RenderQuality = SettingsHandler.VrQualityPreset; //Default value
+            }
+
+            if (VrInputProjectionExtension.TryFromMpvValue(inputProjection, out var projection))
+            {
+                vrController.InputProjection = projection;
+                foundConfig = true;
+            }
+            else
+            {
+                vrController.InputProjection = VrInputProjection.HalfEquirectangular; //Default value
+            }
+            if (VrInputFovExtension.TryFromMpvValue(inputFov, out var fov))
+            {
+                vrController.InputFov = fov;
+                foundConfig = true;
+            }
+            else
+            {
+                vrController.InputFov = VrInputFov.Fov180; //Default value
+            }
+            if (VrInputStereoExtension.TryFromMpvValue(inputStereo, out var stereo))
+            {
+                vrController.InputStereo = stereo;
+                foundConfig = true;
+            }
+            else if (foundResults)
+            {
+                if (vrDetectionResults.Layout == VrDetectionLayout.SideBySide && vrDetectionResults.Confidence >= SettingsHandler.VrDetectionMinConfidence)
+                {
+                    vrController.InputStereo = VrInputStereo.SideBySide;
+                    detectionSuccess = true;
+                }
+                else if (vrDetectionResults.Layout == VrDetectionLayout.TopBottom && vrDetectionResults.Confidence >= SettingsHandler.VrDetectionMinConfidence)
+                {
+                    //Seems to be most likely settings for TB
+                    vrController.InputStereo = VrInputStereo.TopBottom;
+                    vrController.InputProjection = VrInputProjection.Equirectangular;
+                    vrController.InputFov = VrInputFov.Fov360;
+                    detectionSuccess = true;
+                }
+            }
+            else
+            {
+                vrController.InputStereo = VrInputStereo.SideBySide; //Default value
+            }
+            if (!string.IsNullOrWhiteSpace(preferredFlipEye))
+            {
+                vrController.FlipEye = bool.Parse(preferredFlipEye);
+            }
+            else
+            {
+                vrController.FlipEye = false;
+            }
+
+            if (foundConfig)
+            {
+                playerMPV.ShowText("VR settings loaded");
+            }
+            else if (SettingsHandler.VrAutoDetectionDebugerEnabled && SettingsHandler.VrAutoDetectionEnabled)
+            {
+                string resultMsg =
+                    $"Detection results: \n" +
+                    $"Scoring: SBS-{vrDetectionResults.SbsScore:0.000} | TB-{vrDetectionResults.TopBottomScore:0.000}\n" +
+                    $"Tendency: {vrDetectionResults.Layout}\n" +
+                    $"VR propability:{vrDetectionResults.Confidence:0.0}%\n";
+                if (detectionSuccess)
+                {
+                    resultMsg += $"Auto-detected VR mode: {vrController.InputStereo.ToDisplayName()}";
+                }
+                else
+                {
+                    resultMsg += $"Failed to detect VR mode because confidence was lower than {SettingsHandler.VrDetectionMinConfidence:0.0}%";
+                }
+                playerMPV.ShowText(resultMsg, 5000);
+            }
+            else if (detectionSuccess)
+            {
+                playerMPV.ShowText($"Detected VR : {vrController.InputStereo.ToDisplayName()}");
+            }
+            ApplyPreviewVrEyeCrop(vrController.InputStereo);
+            vrController.ApplyVrQualityPreset(panelPlayerMPV);
+        }
         #endregion
 
         #region FileManipulation
@@ -2560,7 +3287,7 @@ namespace RandomVideoPlayer
             playerMPV.MediaFinished += new EventHandler(MediaFinished);
             playerMPV.MediaStartedSeeking += new EventHandler(PlayerSeeked);
             //playerMPV.VideoWidthChanged += new EventHandler<MpvPlayerVideoWidthChangedEventArgs>(ApplyRTXFeatures);
-            
+
         }
 
         private void InitializePlayer()
@@ -2573,6 +3300,8 @@ namespace RandomVideoPlayer
 
             AudioNormalizer.TuneNormalizer();
             AudioNormalizer.ToggleNormalizer(playerMPV);
+
+            vrController = new VrController(playerMPV);
         }
         #endregion
 
@@ -2624,8 +3353,7 @@ namespace RandomVideoPlayer
                 SetHighlight(btnAddToFav, MainFormData.favoriteMatch, Color.Red);
                 SetTimeServerFile(updatedCurrentFile);
 
-                var currentFileExtension = Path.GetExtension(updatedCurrentFile).TrimStart('.').ToLower();
-                if (ListHandler.ImageExtensions.Contains(currentFileExtension))
+                if (ListHandler.InputIsImage(updatedCurrentFile))
                 {
                     pbPlayerProgress.DeleteActionsPoints();
                     return;
@@ -2642,6 +3370,10 @@ namespace RandomVideoPlayer
                 ToggleSubtitles();
                 MainFormData.presentInCustomList = ListHandler.DoesCustomListContainString(updatedCurrentFile);
                 UpdateListEditIcon();
+
+                LoadPreferredVrSetup();
+                UpdateVrConfig();
+                vrController.ResetView();
             }
             else
             {
@@ -2910,7 +3642,7 @@ namespace RandomVideoPlayer
             {
                 if (thumbMPV.IsMediaLoaded)
                 {
-                    thumbMPV.SeekAsync(hoverMs / 1000);
+                    thumbMPV.API.Command("seek", (hoverMs / 1000.0).ToString(CultureInfo.InvariantCulture), "absolute+keyframes");
                     thumbMPV.Pause();
                 }
             }
@@ -3014,6 +3746,8 @@ namespace RandomVideoPlayer
             thumbMPV.API.Command("set", "terminal", "no");
             thumbMPV.API.Command("set", "idle", "yes");
             thumbMPV.API.Command("set", "pause", "yes");
+            thumbMPV.API.Command("set", "hr-seek", "no");
+            thumbMPV.API.Command("set", "hr-seek-framedrop", "yes");
             thumbMPV.API.Command("set", "load-scripts", "no");
             thumbMPV.API.Command("set", "osc", "no");
             thumbMPV.API.Command("set", "ytdl", "no");
@@ -3023,13 +3757,44 @@ namespace RandomVideoPlayer
             thumbMPV.API.Command("set", "sub", "no");
             thumbMPV.API.Command("set", "audio", "no");
             thumbMPV.API.Command("set", "demuxer-readahead-secs", "0");
-            thumbMPV.API.Command("set", "demuxer-max-bytes", "128KiB");
+            thumbMPV.API.Command("set", "demuxer-max-bytes", "8MiB");
+            thumbMPV.API.Command("set", "demuxer-max-back-bytes", "0");
             thumbMPV.API.Command("set", "sws-scaler", "fast-bilinear");
-            thumbMPV.API.Command("set", "ovc", "rawvideo");
-            thumbMPV.API.Command("set", "of", "image2");
-            thumbMPV.API.Command("set", "hwdec", "no");
-            thumbMPV.API.Command("set", "ofopts", "update=1");
-            thumbMPV.API.Command("set", "vf", $"scale=w={thumbsize}:h={thumbsize}:force_original_aspect_ratio=decrease,format=bgra");
+            thumbMPV.API.Command("set", "hwdec", "auto-safe");
+            thumbMPV.API.Command("set", "vf", "");
+            thumbMPV.API.Command("set", "scale", "bilinear");
+            thumbMPV.API.Command("set", "cscale", "bilinear");
+            thumbMPV.API.Command("set", "dscale", "bilinear");
+            thumbMPV.API.Command("set", "correct-downscaling", "no");
+            thumbMPV.API.Command("set", "sigmoid-upscaling", "no");
+            thumbMPV.API.Command("set", "deband", "no");
+        }
+
+        private void ApplyPreviewVrEyeCrop(VrInputStereo layout)
+        {
+            if (layout == VrInputStereo.SideBySide && vrController.Enabled)
+            {
+                thumbMPV.API.Command("set", "video-zoom", "1.3");
+                thumbMPV.API.Command("set", "video-pan-x", "-0.25");
+                thumbMPV.API.Command("set", "video-pan-y", "0");
+            }
+            else if (layout == VrInputStereo.TopBottom && vrController.Enabled)
+            {
+                thumbMPV.API.Command("set", "video-zoom", "1.3");
+                thumbMPV.API.Command("set", "video-pan-x", "0");
+                thumbMPV.API.Command("set", "video-pan-y", "-0.25");
+            }
+            else
+            {
+                ResetPreviewCrop();
+            }
+        }
+
+        private void ResetPreviewCrop()
+        {
+            thumbMPV.API.Command("set", "video-zoom", "0");
+            thumbMPV.API.Command("set", "video-pan-x", "0");
+            thumbMPV.API.Command("set", "video-pan-y", "0");
         }
         #endregion
 
@@ -3270,6 +4035,24 @@ namespace RandomVideoPlayer
                     case "ToggleStatisticsOverlay":
                         playerMPV.API.Command("script-binding", "stats/display-stats-toggle");
                         return true;
+                    case "StatisticsOverlayPage0":
+                        playerMPV.API.Command("script-binding", "display-page-0");
+                        return true;
+                    case "StatisticsOverlayPage1":
+                        playerMPV.API.Command("script-binding", "display-page-1");
+                        return true;
+                    case "StatisticsOverlayPage2":
+                        playerMPV.API.Command("script-binding", "display-page-2");
+                        return true;
+                    case "StatisticsOverlayPage3":
+                        playerMPV.API.Command("script-binding", "display-page-3");
+                        return true;
+                    case "StatisticsOverlayPage4":
+                        playerMPV.API.Command("script-binding", "display-page-4");
+                        return true;
+                    case "StatisticsOverlayPage5":
+                        playerMPV.API.Command("script-binding", "display-page-5");
+                        return true;
                     case "SeekForward":
                         SeekForward();
                         return true;
@@ -3355,6 +4138,7 @@ namespace RandomVideoPlayer
         private Stopwatch _stopwatch = new();
 
         private Timer _checkwatch = new();
+        private Timer _panelResizeEnd = new();
 
         private System.Timers.Timer _mouseMoveSeekTimer = new();
 
@@ -3376,9 +4160,23 @@ namespace RandomVideoPlayer
             seekTimer.AutoReset = false;
             seekTimer.Elapsed += SeekTimer_Elapsed;
 
+            _panelResizeEnd.Interval = 100;
+            _panelResizeEnd.Tick += PanelResizeEnd_Tick;
+
             _mouseMoveSeekTimer.Elapsed += _mouseMoveSeekTimer_Tick;
             _mouseMoveSeekTimer.AutoReset = false;
             _mouseMoveSeekTimer.Interval = 200;
+        }
+
+        private void PanelResizeEnd_Tick(object? sender, EventArgs e)
+        {
+            _panelResizeEnd.Stop();
+
+            if (vrController.Enabled)
+            {
+                vrController.ApplyVrQualityPreset(panelPlayerMPV);
+                vrController.Update();
+            }
         }
 
         private void _mouseMoveSeekTimer_Tick(object? sender, EventArgs e)
@@ -3874,14 +4672,14 @@ namespace RandomVideoPlayer
 
         private async Task ApplyRTXFeatures()
         {
-            if(SettingsHandler.RTXVSREnabled == false)
+            if (SettingsHandler.RTXVSREnabled == false)
             {
                 try
                 {
                     playerMPV.FilterCommand("@format-nv12", MpvPlayer.FilterType.vf, MpvPlayer.ListOptions.remove);
                     playerMPV.FilterCommand("@vsr", MpvPlayer.FilterType.vf, MpvPlayer.ListOptions.remove);
                 }
-                catch (Exception) {}
+                catch (Exception) { }
                 autoVSR = false;
                 return;
             }
@@ -3927,14 +4725,14 @@ namespace RandomVideoPlayer
             {
                 try
                 {
-                   playerMPV.FilterCommand("@vsr:d3d11vpp=scaling-mode=nvidia:scale=" + scale.ToString("0.0", CultureInfo.InvariantCulture), MpvPlayer.FilterType.vf, MpvPlayer.ListOptions.append);
-                   autoVSR = true;
+                    playerMPV.FilterCommand("@vsr:d3d11vpp=scaling-mode=nvidia:scale=" + scale.ToString("0.0", CultureInfo.InvariantCulture), MpvPlayer.FilterType.vf, MpvPlayer.ListOptions.add);
+                    autoVSR = true;
                 }
                 catch (Exception ex)
                 {
                     var videoFile = PathAnonymizer.AnonymizeFilePath(MainFormData.currentFile);
 
-                    Error.Log(ex,   $"Current file: {videoFile}\n" +
+                    Error.Log(ex, $"Current file: {videoFile}\n" +
                                     $"Videosize: {video_width}x{video_height}\n" +
                                     $"Displaysize: {display_width}x{display_height}\n" +
                                     $"Scale: {scale}\n", LogLevel.Error);
@@ -4048,6 +4846,22 @@ namespace RandomVideoPlayer
                 fR.FormSizeSaved = fR.TempSizeMain;
             }
         }
+
+        private void MainForm_ResizeEnd(object sender, EventArgs e)
+        {
+            //if (vrController.Enabled)
+            //{
+            //    vrController.ApplyVrQualityPreset(panelPlayerMPV);
+            //    vrController.Update();
+            //}
+        }
+
+        private void panelPlayerMPV_SizeChanged(object sender, EventArgs e)
+        {
+            _panelResizeEnd.Stop();
+            _panelResizeEnd.Start();
+        }
+
         private async void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MainFormData.ongoingTasks.Count > 0)
@@ -4077,6 +4891,8 @@ namespace RandomVideoPlayer
         private void btnMaximizeForm_Click(object sender, EventArgs e)
         {
             fR.MaximizeForm(this);
+
+
         }
         private void btnMinimizeForm_Click(object sender, EventArgs e)
         {
@@ -4225,11 +5041,5 @@ namespace RandomVideoPlayer
 
         #endregion
 
-        private void lblCurrentInfo_Resize(object sender, EventArgs e)
-        {
-            //var width = lblCurrentInfo.Width;
-            //var newText = PathEllipsis.EllipsizeMiddle(lblCurrentInfo.Text, lblCurrentInfo.Font, width);
-            //lblCurrentInfo.Text = newText;
-        }
     }
 }

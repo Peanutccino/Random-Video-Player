@@ -62,6 +62,7 @@ namespace RandomVideoPlayer
             lblCurrentInfo = new EllipsisAlignedLabel();
             panelTop = new Panel();
             tableLayoutPanelTop = new TableLayoutPanel();
+            btnVrMenu = new Button();
             btnExitForm = new FontAwesome.Sharp.IconButton();
             btnMaximizeForm = new FontAwesome.Sharp.IconButton();
             btnMinimizeForm = new FontAwesome.Sharp.IconButton();
@@ -609,7 +610,8 @@ namespace RandomVideoPlayer
             // tableLayoutPanelTop
             // 
             tableLayoutPanelTop.BackColor = Color.FromArgb(128, 255, 255);
-            tableLayoutPanelTop.ColumnCount = 7;
+            tableLayoutPanelTop.ColumnCount = 8;
+            tableLayoutPanelTop.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelTop.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelTop.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelTop.ColumnStyles.Add(new ColumnStyle());
@@ -617,10 +619,11 @@ namespace RandomVideoPlayer
             tableLayoutPanelTop.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelTop.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelTop.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanelTop.Controls.Add(btnExitForm, 6, 0);
-            tableLayoutPanelTop.Controls.Add(btnMaximizeForm, 5, 0);
-            tableLayoutPanelTop.Controls.Add(btnMinimizeForm, 4, 0);
-            tableLayoutPanelTop.Controls.Add(lblTitleBar, 3, 0);
+            tableLayoutPanelTop.Controls.Add(btnVrMenu, 3, 0);
+            tableLayoutPanelTop.Controls.Add(btnExitForm, 7, 0);
+            tableLayoutPanelTop.Controls.Add(btnMaximizeForm, 6, 0);
+            tableLayoutPanelTop.Controls.Add(btnMinimizeForm, 5, 0);
+            tableLayoutPanelTop.Controls.Add(lblTitleBar, 4, 0);
             tableLayoutPanelTop.Controls.Add(btnScriptMenu, 2, 0);
             tableLayoutPanelTop.Controls.Add(btnAudioTrackMenu, 1, 0);
             tableLayoutPanelTop.Controls.Add(btnSubtitleMenu, 0, 0);
@@ -629,8 +632,25 @@ namespace RandomVideoPlayer
             tableLayoutPanelTop.Name = "tableLayoutPanelTop";
             tableLayoutPanelTop.RowCount = 1;
             tableLayoutPanelTop.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanelTop.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanelTop.Size = new Size(1015, 20);
             tableLayoutPanelTop.TabIndex = 0;
+            // 
+            // btnVrMenu
+            // 
+            btnVrMenu.Dock = DockStyle.Fill;
+            btnVrMenu.FlatAppearance.BorderSize = 0;
+            btnVrMenu.FlatStyle = FlatStyle.Flat;
+            btnVrMenu.Font = new Font("Segoe UI Semibold", 7F, FontStyle.Bold);
+            btnVrMenu.ForeColor = Color.Indigo;
+            btnVrMenu.Location = new Point(132, 0);
+            btnVrMenu.Margin = new Padding(0);
+            btnVrMenu.Name = "btnVrMenu";
+            btnVrMenu.Size = new Size(30, 20);
+            btnVrMenu.TabIndex = 12;
+            btnVrMenu.Text = "VR";
+            btnVrMenu.UseVisualStyleBackColor = true;
+            btnVrMenu.Click += btnVrMenu_Click;
             // 
             // btnExitForm
             // 
@@ -689,9 +709,10 @@ namespace RandomVideoPlayer
             lblTitleBar.AutoEllipsis = true;
             lblTitleBar.Dock = DockStyle.Fill;
             lblTitleBar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
-            lblTitleBar.Location = new Point(135, 0);
+            lblTitleBar.Location = new Point(165, 0);
             lblTitleBar.Name = "lblTitleBar";
-            lblTitleBar.Size = new Size(787, 20);
+            lblTitleBar.Padding = new Padding(0, 0, 30, 0);
+            lblTitleBar.Size = new Size(757, 20);
             lblTitleBar.TabIndex = 8;
             lblTitleBar.Text = "Random Video Player ";
             lblTitleBar.TextAlign = ContentAlignment.MiddleCenter;
@@ -753,8 +774,10 @@ namespace RandomVideoPlayer
             panelPlayerMPV.Name = "panelPlayerMPV";
             panelPlayerMPV.Size = new Size(1015, 297);
             panelPlayerMPV.TabIndex = 2;
+            panelPlayerMPV.SizeChanged += panelPlayerMPV_SizeChanged;
             panelPlayerMPV.MouseDown += panelPlayerMPV_MouseDown;
             panelPlayerMPV.MouseMove += panelPlayerMPV_MouseMove;
+            panelPlayerMPV.MouseUp += panelPlayerMPV_MouseUp;
             // 
             // timerProgressUpdate
             // 
@@ -790,6 +813,7 @@ namespace RandomVideoPlayer
             Text = "RVP";
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
+            ResizeEnd += MainForm_ResizeEnd;
             DragDrop += MainForm_DragDrop;
             DragEnter += MainForm_DragEnter;
             Resize += MainForm_Resize;
@@ -849,5 +873,6 @@ namespace RandomVideoPlayer
         private FontAwesome.Sharp.IconButton btnMaximizeForm;
         private FontAwesome.Sharp.IconButton btnExitForm;
         private FontAwesome.Sharp.IconButton btnTimer;
+        private Button btnVrMenu;
     }
 }
