@@ -344,7 +344,7 @@ namespace RandomVideoPlayer.Views
                 catch (Exception ex)
                 {
                     Error.Log(ex, "Failed to save list", LogLevel.Error);
-                    MessageBox.Show($"Failed to save list: {ex}");
+                    RVPMessageBox.Show($"Failed to save list:\n\n{ex}", "Could not save list", IconChar.CircleXmark);
                 }
             }
         }
@@ -369,7 +369,7 @@ namespace RandomVideoPlayer.Views
                 DisplayCustomList();
                 UpdateListInfo();
 
-                MessageBox.Show("Remember to save/overwrite the updated list!");
+                RVPMessageBox.Show("Remember to save/overwrite the updated list!", "Reminder", IconChar.CircleInfo);
             }
         }
 
@@ -389,7 +389,7 @@ namespace RandomVideoPlayer.Views
             catch (Exception ex)
             {
                 Error.Log(ex, "Failed to quick save list", LogLevel.Error);
-                MessageBox.Show($"Failed to save list: {ex}");
+                RVPMessageBox.Show($"Failed to save list:\n\n{ex}","Error while saving", IconChar.CircleXmark);
             }
         }
 
@@ -1139,7 +1139,7 @@ namespace RandomVideoPlayer.Views
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("You do not have permission to access some entries in this directory.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                RVPMessageBox.Show("You do not have permission to access some entries in this directory.", "Access Denied", IconChar.Warning);
                 lvFileExplore.EndUpdate();
                 lvFileExplore.Invalidate();
                 return;

@@ -9,30 +9,30 @@ namespace RandomVideoPlayer
         private int _minimum = 0;
         private int _maximum = 100;
         private int _borderThickness = 1;
-        private int _graphThickness = 1;
         private bool mouseOver = false;
         private bool _showBorder = false;
+
         private Color _completedBrush = Color.DodgerBlue;
         private Color _remainingBrush = Color.Black;
         private Color _mousehoverBrush = Color.DeepSkyBlue;
         private Color _borderColor = Color.Black;
-        private Color _completedGraphBrush = Color.White;
-        private Color _remainingGraphBrush = Color.Black;
         private Color _mouseOverColor = Color.Black;
 
-        private Bitmap progressBitmapBuffer;
-        private Bitmap remainingBitmapBuffer;
-        private readonly object bitmapLock = new object();
-        private List<ActionPoint> actionPoints = new List<ActionPoint>();
+        private int? _seekValue = null;
+        private int _seekIndicatorAlpha = 80;
 
         public FlatProgressBar()
         {
             DoubleBuffered = true;
+            SetStyle(ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.UserPaint |
+                     ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.ResizeRedraw, true);
         }
 
         public int Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 if (value > Maximum)
@@ -49,7 +49,7 @@ namespace RandomVideoPlayer
         }
         public int Minimum
         {
-            get { return _minimum; }
+            get => _minimum;
             set
             {
                 _minimum = value;
@@ -59,7 +59,7 @@ namespace RandomVideoPlayer
 
         public int Maximum
         {
-            get { return _maximum; }
+            get => _maximum;
             set
             {
                 _maximum = value;
@@ -69,7 +69,7 @@ namespace RandomVideoPlayer
 
         public Color CompletedBrush
         {
-            get { return _completedBrush; }
+            get => _completedBrush;
             set
             {
                 _completedBrush = value;
@@ -79,34 +79,16 @@ namespace RandomVideoPlayer
 
         public Color RemainingBrush
         {
-            get { return _remainingBrush; }
+            get => _remainingBrush;
             set
             {
                 _remainingBrush = value;
                 Invalidate();
             }
         }
-        public Color CompletedGraphBrush
-        {
-            get { return _completedGraphBrush; }
-            set 
-            { 
-                _completedGraphBrush = value; 
-                Invalidate();
-            }
-        }
-        public Color RemainingGraphBrush
-        {
-            get { return _remainingGraphBrush; }
-            set 
-            { 
-                _remainingGraphBrush = value;
-                Invalidate();
-            }
-        }
         public Color MouseoverBrush
         {
-            get { return _mousehoverBrush; }
+            get => _mousehoverBrush;
             set
             {
                 _mousehoverBrush = value;
@@ -116,7 +98,7 @@ namespace RandomVideoPlayer
 
         public Color BorderColor
         {
-            get { return _borderColor; }
+            get => _borderColor;
             set
             {
                 _borderColor = value;
@@ -126,7 +108,7 @@ namespace RandomVideoPlayer
 
         public int BorderThickness
         {
-            get { return _borderThickness; }
+            get => _borderThickness;
             set
             {
                 _borderThickness = value;
@@ -134,16 +116,9 @@ namespace RandomVideoPlayer
             }
         }
 
-        public int GraphThickness
-        {
-            get { return _graphThickness; }
-            set { _graphThickness = value; }
-        }
-
-
         public bool ShowBorder
         {
-            get { return _showBorder; }
+            get => _showBorder; 
             set
             {
                 _showBorder = value;
@@ -151,19 +126,30 @@ namespace RandomVideoPlayer
             }
         }
 
-        public bool HasActionPoints
+        public int? SeekValue
         {
-            get
+            get => _seekValue;
+            set
             {
-                if (actionPoints.Count == 0 || actionPoints == null)
+                if (value.HasValue)
                 {
-                    return false;
+                    int v = value.Value;
+                    if (v > Maximum) v = Maximum;
+                    else if (v < Minimum) v = Minimum;
+                    _seekValue = v;
                 }
                 else
                 {
-                    return true;
+                    _seekValue = null;
                 }
+                Invalidate();
             }
+        }
+
+        public int SeekIndicatorAlpha
+        {
+            get => _seekIndicatorAlpha;
+            set { _seekIndicatorAlpha = Math.Max(0, Math.Min(255, value)); Invalidate(); }
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -184,185 +170,54 @@ namespace RandomVideoPlayer
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            PreRenderGraph(); // Re-render the graph to fit the new size
         }
 
-        public void LoadFunScript(string filePath)
-        {
-            try
-            {
-                string jsonContent = File.ReadAllText(filePath);
-                var jObject = JObject.Parse(jsonContent);
-
-                actionPoints = jObject["actions"]
-                    .Select(jt => new ActionPoint { At = (long)jt["at"], Pos = (int)jt["pos"] })
-                    .ToList();
-
-                PreRenderGraph(); // Pre-render the graph after loading new data
-            }
-            catch (Exception ex)
-            {
-                Error.Log(ex,"Load Funscript to display graph failed", LogLevel.Error);
-            }
-
-        }
-
-        public long DetectGap(long currentVideoPosition, int gapThreshhold)
-        {
-            long nextActionPoint = 0;
-
-            if (actionPoints.Count == 0 || actionPoints == null)
-            {
-                return 0;
-            }
-            else
-            {
-                for (int i = 0; i < actionPoints.Count; i++)
-                {
-                    var action = actionPoints[i];
-
-                    if (action.At > currentVideoPosition)
-                    {
-                        if (action.At > (currentVideoPosition + gapThreshhold))
-                        {
-                            nextActionPoint = action.At;
-                            break;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                }
-                return nextActionPoint;
-            }
-        }
-
-        public void DeleteActionsPoints()
-        {
-            actionPoints.Clear();
-        }
-        private void PreRenderGraph()
-        {
-            if (actionPoints == null || actionPoints.Count == 0 || this.Width == 0 || this.Height == 0)
-            {
-                return;
-            }
-
-            Bitmap progressBitmap = new Bitmap(Width, Height);
-            Bitmap remainingBitmap = new Bitmap(Width, Height);
-
-            using (Graphics g = Graphics.FromImage(progressBitmap))
-            {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.Clear(_completedBrush);
-
-                DrawFunscriptGraph(g, _completedGraphBrush);
-            }
-            using (Graphics g = Graphics.FromImage(remainingBitmap))
-            {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                g.Clear(_remainingBrush); 
-
-                DrawFunscriptGraph(g, _remainingGraphBrush); 
-            }
-
-            lock (bitmapLock)
-            {
-                progressBitmapBuffer?.Dispose();
-                remainingBitmapBuffer?.Dispose();
-                progressBitmapBuffer = progressBitmap;
-                remainingBitmapBuffer = remainingBitmap;
-            }
-        }
-        private void DrawFunscriptGraph(Graphics g, Color graphcolor)
-        {
-            if (actionPoints.Count < 2 || Maximum <= 0) return;
-
-            int maxTime = Maximum;
-
-            using (Pen GraphPen = new Pen(graphcolor, _graphThickness)) 
-            {
-                try
-                {
-                    for (int i = 0; i < actionPoints.Count - 1; i++)
-                    {
-                        var startPoint = actionPoints[i];
-                        var endPoint = actionPoints[i + 1];
-
-                        float startX = (float)startPoint.At / maxTime * Width;
-                        float startY = (1 - (float)startPoint.Pos / 100) * Height;
-                        float endX = (float)endPoint.At / maxTime * Width;
-                        float endY = (1 - (float)endPoint.Pos / 100) * Height;
-
-                        g.DrawLine(GraphPen, startX, startY, endX, endY);
-
-                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex,   "Error drawing funscript graph\n" +
-                                    $"Found ActionPoints: {actionPoints.Count}\n", LogLevel.Error);
-                }
-            }
-        }
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+
+            var g = e.Graphics;
+
             float progressPercentage = (float)Value / Maximum;
             int progressWidth = (int)(progressPercentage * Width);
 
             _mouseOverColor = mouseOver ? _mousehoverBrush : _completedBrush;
 
-            if (actionPoints.Count == 0 || actionPoints == null)
+            using (var remaining = new SolidBrush(_remainingBrush))
+                g.FillRectangle(remaining, 0, 0, Width, Height);
+
+            using (var completed = new SolidBrush(_mouseOverColor))
+                g.FillRectangle(completed, 0, 0, progressWidth, Height);
+
+            //Seek preview indicator
+            if (_seekValue.HasValue)
             {
-                e.Graphics.FillRectangle(new SolidBrush(_remainingBrush), 0, 0, Width, Height);
-                e.Graphics.FillRectangle(new SolidBrush(_mouseOverColor), 0, 0, progressWidth, Height);
-            }
-            else
-            {
-                Bitmap progressBitmapToDraw, remainingBitmapToDraw;
+                float seekPercentage = (float)_seekValue.Value / Maximum;
+                int seekX = (int)(seekPercentage * Width);
 
-                lock (bitmapLock)
-                {
-                    progressBitmapToDraw = progressBitmapBuffer;
-                    remainingBitmapToDraw = remainingBitmapBuffer;
-                }
+                int left = Math.Min(progressWidth, seekX);
+                int right = Math.Max(progressWidth, seekX);
+                int bandWidth = Math.Max(right - left, 1);
 
-                // Draw the pre-rendered graph bitmap
-                try
-                {
-                    if (progressBitmapToDraw != null && remainingBitmapToDraw != null)
-                    {
-                        Rectangle progressRect = new Rectangle(0, 0, progressWidth, Height);
-                        e.Graphics.DrawImage(progressBitmapToDraw, progressRect, progressRect, GraphicsUnit.Pixel);
+                bool seekingForward = seekX >= progressWidth;
+                Color bandColor = seekingForward ? _mousehoverBrush : _remainingBrush;
+                Color markerColor = seekingForward ? _completedBrush : _remainingBrush;
 
-                        Rectangle remainingRect = new Rectangle(progressWidth, 0, Width - progressWidth, Height);
-                        e.Graphics.DrawImage(remainingBitmapToDraw, remainingRect, remainingRect, GraphicsUnit.Pixel);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Error.Log(ex, "Error drawing pre-rendered graph bitmaps", LogLevel.Error);
-                }
+                using (var band = new SolidBrush(Color.FromArgb(_seekIndicatorAlpha, bandColor)))
+                    g.FillRectangle(band, left, 0, bandWidth, Height);
 
+                // Indicator
+                using (var marker = new Pen(Color.FromArgb(230, markerColor), 2))
+                    g.DrawLine(marker, seekX, 0, seekX, Height);
             }
 
             if (ShowBorder)
             {
                 var borderRect = new Rectangle(0, 0, Width - 1, Height - 1);
-                var pen = new Pen(_borderColor, BorderThickness);
-                e.Graphics.DrawRectangle(pen, borderRect);
+                using (var pen = new Pen(_borderColor, BorderThickness))
+                    g.DrawRectangle(pen, borderRect);
             }
         }
     }
-    public struct ActionPoint
-    {
-        public long At { get; set; } // Time in milliseconds
-        public int Pos { get; set; } // Position value
-    }
-
 
 }

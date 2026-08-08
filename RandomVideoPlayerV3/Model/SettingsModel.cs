@@ -20,6 +20,7 @@ namespace RandomVideoPlayer.Model
         public bool HandleMultiAxisScripts { get; set; }
         public bool UsingScriptPlayer { get; set; }
         public bool IncludeSubdirectoriesForScriptLoad { get; set; }
+        public string FallbackScriptFolder { get; set; }
         #endregion
 
         #region Skip
@@ -41,6 +42,8 @@ namespace RandomVideoPlayer.Model
         public int AutoPlayTimerValueStartPoint { get; set; }
         public int AutoPlayTimerValueEndPoint { get; set; }
         public bool AutoPlayTimerRangeEnabled { get; set; }
+        public int TimerVideoMaxDuration { get; set; }
+        public bool TimerVideoPlayFully { get; set; }
         #endregion
 
         #region Paths
@@ -135,6 +138,7 @@ namespace RandomVideoPlayer.Model
         public int PanEasingFunction { get; set; }
         public bool ThumbnailPreviewEnabled { get; set; }
         public bool PreviewSeekBarEnabled { get; set; }
+        public bool PreviewSeekBarGraphEnabled {  get; set; }
         public string PathToFFMpeg { get; set; }
         #endregion
 

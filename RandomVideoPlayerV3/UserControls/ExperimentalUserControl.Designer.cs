@@ -57,6 +57,7 @@
             cbEnablePreviewSB = new RandomVideoPlayer.Controls.CustomCheckBox();
             cbEnableThumbPreview = new RandomVideoPlayer.Controls.CustomCheckBox();
             lbl9 = new Label();
+            cbEnableGraphPreviewSB = new RandomVideoPlayer.Controls.CustomCheckBox();
             tableLayoutMain.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -406,6 +407,7 @@
             // panel3
             // 
             panel3.BackColor = Color.MistyRose;
+            panel3.Controls.Add(cbEnableGraphPreviewSB);
             panel3.Controls.Add(cbEnablePreviewSB);
             panel3.Controls.Add(cbEnableThumbPreview);
             panel3.Controls.Add(lbl9);
@@ -450,6 +452,19 @@
             lbl9.Size = new Size(518, 24);
             lbl9.TabIndex = 2;
             lbl9.Text = "Enable thumbnail previews:";
+            // 
+            // cbEnableGraphPreviewSB
+            // 
+            cbEnableGraphPreviewSB.BoxSize = 13;
+            cbEnableGraphPreviewSB.Dock = DockStyle.Top;
+            cbEnableGraphPreviewSB.HoverColor = Color.DeepSkyBlue;
+            cbEnableGraphPreviewSB.Location = new Point(0, 78);
+            cbEnableGraphPreviewSB.Name = "cbEnableGraphPreviewSB";
+            cbEnableGraphPreviewSB.PaddingLeft = 12;
+            cbEnableGraphPreviewSB.Size = new Size(518, 27);
+            cbEnableGraphPreviewSB.TabIndex = 8;
+            cbEnableGraphPreviewSB.Text = "Enable graph preview in seekbar";
+            cbEnableGraphPreviewSB.UseVisualStyleBackColor = true;
             // 
             // ExperimentalUserControl
             // 
@@ -500,5 +515,6 @@
         private Controls.CustomCheckBox cbEnablePreviewSB;
         private FlowLayoutPanel flowLayoutPanel3;
         private Button btnRestore;
+        private Controls.CustomCheckBox cbEnableGraphPreviewSB;
     }
 }

@@ -30,6 +30,11 @@
         {
             components = new System.ComponentModel.Container();
             tableLayoutMain = new TableLayoutPanel();
+            tableLayoutPanelPath = new TableLayoutPanel();
+            label1 = new Label();
+            tbFallbackFolderPath = new TextBox();
+            sbtnFallbackFolderBrowse = new FontAwesome.Sharp.IconButton();
+            iconInfo = new FontAwesome.Sharp.IconPictureBox();
             lblHeader = new Label();
             panel1 = new Panel();
             lbl4 = new Label();
@@ -55,7 +60,10 @@
             cbHandleMultiAxis = new RandomVideoPlayer.Controls.CustomCheckBox();
             cbShowScriptPath = new RandomVideoPlayer.Controls.CustomCheckBox();
             toolTipInfo = new ToolTip(components);
+            toolTipPopup = new ToolTip(components);
             tableLayoutMain.SuspendLayout();
+            tableLayoutPanelPath.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)iconInfo).BeginInit();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -69,22 +77,100 @@
             tableLayoutMain.BackColor = Color.Violet;
             tableLayoutMain.ColumnCount = 1;
             tableLayoutMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutMain.Controls.Add(tableLayoutPanelPath, 0, 4);
             tableLayoutMain.Controls.Add(lblHeader, 0, 0);
             tableLayoutMain.Controls.Add(panel1, 0, 1);
             tableLayoutMain.Controls.Add(tableLayoutPanel1, 0, 2);
             tableLayoutMain.Controls.Add(panel2, 0, 3);
-            tableLayoutMain.Controls.Add(panel3, 0, 4);
+            tableLayoutMain.Controls.Add(panel3, 0, 5);
             tableLayoutMain.Dock = DockStyle.Fill;
             tableLayoutMain.Location = new Point(0, 0);
             tableLayoutMain.Name = "tableLayoutMain";
-            tableLayoutMain.RowCount = 5;
+            tableLayoutMain.RowCount = 6;
             tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 60F));
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 38F));
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 34F));
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 22F));
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 34.0425529F));
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 37F));
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 42.5531921F));
+            tableLayoutMain.RowStyles.Add(new RowStyle());
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 23.4042549F));
             tableLayoutMain.Size = new Size(524, 656);
             tableLayoutMain.TabIndex = 0;
+            // 
+            // tableLayoutPanelPath
+            // 
+            tableLayoutPanelPath.BackColor = Color.Aquamarine;
+            tableLayoutPanelPath.ColumnCount = 3;
+            tableLayoutPanelPath.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 300F));
+            tableLayoutPanelPath.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanelPath.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 42F));
+            tableLayoutPanelPath.Controls.Add(label1, 0, 0);
+            tableLayoutPanelPath.Controls.Add(tbFallbackFolderPath, 0, 1);
+            tableLayoutPanelPath.Controls.Add(sbtnFallbackFolderBrowse, 2, 1);
+            tableLayoutPanelPath.Controls.Add(iconInfo, 1, 0);
+            tableLayoutPanelPath.Dock = DockStyle.Top;
+            tableLayoutPanelPath.Location = new Point(3, 480);
+            tableLayoutPanelPath.Name = "tableLayoutPanelPath";
+            tableLayoutPanelPath.RowCount = 2;
+            tableLayoutPanelPath.RowStyles.Add(new RowStyle());
+            tableLayoutPanelPath.RowStyles.Add(new RowStyle());
+            tableLayoutPanelPath.Size = new Size(518, 56);
+            tableLayoutPanelPath.TabIndex = 18;
+            tableLayoutPanelPath.Paint += tableLayoutPanelPath_Paint;
+            // 
+            // label1
+            // 
+            label1.Dock = DockStyle.Top;
+            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(3, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(294, 20);
+            label1.TabIndex = 17;
+            label1.Text = "Set directory where fallback scripts are stored:";
+            label1.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // tbFallbackFolderPath
+            // 
+            tbFallbackFolderPath.BorderStyle = BorderStyle.FixedSingle;
+            tableLayoutPanelPath.SetColumnSpan(tbFallbackFolderPath, 2);
+            tbFallbackFolderPath.Dock = DockStyle.Fill;
+            tbFallbackFolderPath.Location = new Point(6, 29);
+            tbFallbackFolderPath.Margin = new Padding(6, 3, 3, 3);
+            tbFallbackFolderPath.Name = "tbFallbackFolderPath";
+            tbFallbackFolderPath.PlaceholderText = "No path set";
+            tbFallbackFolderPath.ReadOnly = true;
+            tbFallbackFolderPath.Size = new Size(467, 23);
+            tbFallbackFolderPath.TabIndex = 15;
+            // 
+            // sbtnFallbackFolderBrowse
+            // 
+            sbtnFallbackFolderBrowse.FlatAppearance.BorderSize = 0;
+            sbtnFallbackFolderBrowse.FlatStyle = FlatStyle.Flat;
+            sbtnFallbackFolderBrowse.IconChar = FontAwesome.Sharp.IconChar.FolderOpen;
+            sbtnFallbackFolderBrowse.IconColor = Color.Black;
+            sbtnFallbackFolderBrowse.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            sbtnFallbackFolderBrowse.IconSize = 24;
+            sbtnFallbackFolderBrowse.Location = new Point(479, 29);
+            sbtnFallbackFolderBrowse.Margin = new Padding(3, 3, 10, 3);
+            sbtnFallbackFolderBrowse.Name = "sbtnFallbackFolderBrowse";
+            sbtnFallbackFolderBrowse.Size = new Size(29, 23);
+            sbtnFallbackFolderBrowse.TabIndex = 16;
+            sbtnFallbackFolderBrowse.UseVisualStyleBackColor = true;
+            sbtnFallbackFolderBrowse.Click += sbtnFallbackFolderBrowse_Click;
+            // 
+            // iconInfo
+            // 
+            iconInfo.BackColor = Color.Aquamarine;
+            iconInfo.Dock = DockStyle.Left;
+            iconInfo.ForeColor = SystemColors.ControlText;
+            iconInfo.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            iconInfo.IconColor = SystemColors.ControlText;
+            iconInfo.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconInfo.IconSize = 20;
+            iconInfo.Location = new Point(303, 3);
+            iconInfo.Name = "iconInfo";
+            iconInfo.Size = new Size(20, 20);
+            iconInfo.TabIndex = 18;
+            iconInfo.TabStop = false;
             // 
             // lblHeader
             // 
@@ -109,7 +195,7 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(3, 63);
             panel1.Name = "panel1";
-            panel1.Size = new Size(518, 207);
+            panel1.Size = new Size(518, 163);
             panel1.TabIndex = 12;
             // 
             // lbl4
@@ -167,12 +253,12 @@
             tableLayoutPanel1.Controls.Add(cbScriptGraph, 2, 0);
             tableLayoutPanel1.Controls.Add(cbTimeCodeServer, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(0, 273);
+            tableLayoutPanel1.Location = new Point(0, 229);
             tableLayoutPanel1.Margin = new Padding(0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(524, 34);
+            tableLayoutPanel1.Size = new Size(524, 37);
             tableLayoutPanel1.TabIndex = 13;
             // 
             // cbScriptGraph
@@ -184,7 +270,7 @@
             cbScriptGraph.FlatAppearance.BorderSize = 0;
             cbScriptGraph.FlatStyle = FlatStyle.Flat;
             cbScriptGraph.Location = new Point(272, 0);
-            cbScriptGraph.Margin = new Padding(0);
+            cbScriptGraph.Margin = new Padding(0, 0, 0, 3);
             cbScriptGraph.Name = "cbScriptGraph";
             cbScriptGraph.Size = new Size(170, 34);
             cbScriptGraph.TabIndex = 8;
@@ -202,7 +288,7 @@
             cbTimeCodeServer.FlatAppearance.BorderSize = 0;
             cbTimeCodeServer.FlatStyle = FlatStyle.Flat;
             cbTimeCodeServer.Location = new Point(82, 0);
-            cbTimeCodeServer.Margin = new Padding(0);
+            cbTimeCodeServer.Margin = new Padding(0, 0, 0, 3);
             cbTimeCodeServer.Name = "cbTimeCodeServer";
             cbTimeCodeServer.Size = new Size(170, 34);
             cbTimeCodeServer.TabIndex = 6;
@@ -217,9 +303,9 @@
             panel2.Controls.Add(tableLayoutDirs);
             panel2.Controls.Add(lbl5);
             panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(3, 310);
+            panel2.Location = new Point(3, 269);
             panel2.Name = "panel2";
-            panel2.Size = new Size(518, 218);
+            panel2.Size = new Size(518, 205);
             panel2.TabIndex = 14;
             // 
             // tableLayoutDirs
@@ -235,7 +321,7 @@
             tableLayoutDirs.Name = "tableLayoutDirs";
             tableLayoutDirs.RowCount = 1;
             tableLayoutDirs.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutDirs.Size = new Size(518, 194);
+            tableLayoutDirs.Size = new Size(518, 181);
             tableLayoutDirs.TabIndex = 12;
             // 
             // flowLayoutPanel1
@@ -248,7 +334,7 @@
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(473, 3);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(42, 188);
+            flowLayoutPanel1.Size = new Size(42, 175);
             flowLayoutPanel1.TabIndex = 9;
             // 
             // btnAddFolder
@@ -343,7 +429,7 @@
             lvDirectories.Location = new Point(6, 3);
             lvDirectories.Margin = new Padding(6, 3, 3, 3);
             lvDirectories.Name = "lvDirectories";
-            lvDirectories.Size = new Size(461, 188);
+            lvDirectories.Size = new Size(461, 175);
             lvDirectories.TabIndex = 8;
             lvDirectories.UseCompatibleStateImageBehavior = false;
             lvDirectories.View = View.List;
@@ -367,9 +453,9 @@
             panel3.Controls.Add(cbHandleMultiAxis);
             panel3.Controls.Add(cbShowScriptPath);
             panel3.Dock = DockStyle.Fill;
-            panel3.Location = new Point(3, 534);
+            panel3.Location = new Point(3, 542);
             panel3.Name = "panel3";
-            panel3.Size = new Size(518, 119);
+            panel3.Size = new Size(518, 111);
             panel3.TabIndex = 15;
             // 
             // cbIncludeSubdirectoriesForScriptLoad
@@ -425,6 +511,14 @@
             cbShowScriptPath.Text = "Show full file path in script context menu";
             cbShowScriptPath.UseVisualStyleBackColor = true;
             // 
+            // toolTipPopup
+            // 
+            toolTipPopup.AutoPopDelay = 5000;
+            toolTipPopup.InitialDelay = 50;
+            toolTipPopup.IsBalloon = true;
+            toolTipPopup.OwnerDraw = true;
+            toolTipPopup.ReshowDelay = 100;
+            // 
             // SyncUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -434,6 +528,9 @@
             Name = "SyncUserControl";
             Size = new Size(524, 656);
             tableLayoutMain.ResumeLayout(false);
+            tableLayoutPanelPath.ResumeLayout(false);
+            tableLayoutPanelPath.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)iconInfo).EndInit();
             panel1.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
@@ -471,5 +568,11 @@
         private Controls.CustomCheckBox cbUsingScriptPlayer;
         private Controls.CustomCheckBox cbIncludeSubdirectoriesForScriptLoad;
         private ToolTip toolTipInfo;
+        private TableLayoutPanel tableLayoutPanelPath;
+        private TextBox tbFallbackFolderPath;
+        private FontAwesome.Sharp.IconButton sbtnFallbackFolderBrowse;
+        private Label label1;
+        private ToolTip toolTipPopup;
+        private FontAwesome.Sharp.IconPictureBox iconInfo;
     }
 }

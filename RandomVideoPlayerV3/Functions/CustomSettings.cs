@@ -59,10 +59,23 @@ namespace RandomVideoPlayer.Functions
         public bool usingScriptPlayer { get; set; } = false;
         public bool includeSubdirectoriesForScriptLoad { get; set; } = true;
 
+        public bool fallbackEnabled { get; set; } = false;
+        public bool fallbackAlwaysUseFallback { get; set; } = false;
+        public bool fallbackLoadRandomScript { get; set; } = true;
+        public bool fallbackUseSelectedScript { get; set; } = false;
+        public string fallbackScriptFolder { get; set; } = string.Empty;
+        public string fallbackSelectedScript { get; set; } = string.Empty;
+        public bool fallbackStartAtFirst {  get; set; } = true;
+        public bool fallbackStartAtRandom { get; set; } = false;
+        public bool fallbackContinueSeemlessly { get; set; } = true;
+        public bool fallbackReloadOnEachVideo { get; set; } = false;
+
         public bool enableAutoSkip { get; set; } = false;
         public bool skipVideoStart { get; set; } = true;
         public bool skipAlways { get; set; } = false;
         public int autoSkipSeconds { get; set; } = 5;
+        public int TimerVideoMaxDuration { get; set; } = 120; 
+        public bool TimerPlayVideoFully { get; set; } = false;
         public bool enableRandomVideoStartPoint { get; set; } = false;
         public bool randomVideoStartPointIgnoreScripts { get; set; } = false;
         public bool randomVideoStartPointIgnoreShortVideos { get; set; } = false;
@@ -129,6 +142,7 @@ namespace RandomVideoPlayer.Functions
 
         public bool thumbnailPreviewEnabled { get; set; } = true;
         public bool previewSeekBarEnabled { get; set; } = true;
+        public bool previewSeekBarGraphEnabled { get; set; } = true;
         public int thumbSizeFactorFolderBrowser { get; set; } = 5;
         public int thumbSizeFactorListBrowser { get; set; } = 10;
         public View fileBrowserViewState { get; set; } = View.SmallIcon;

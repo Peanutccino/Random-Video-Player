@@ -37,6 +37,9 @@ namespace RandomVideoPlayer.UserControls
             cbEnableTimer.Checked = settings.TimerEnabled;
             cbResetTimerOnSeek.Checked = settings.TimerResetOnSeek;
 
+            inputTimerMaxVideoDuration.Value = settings.TimerVideoMaxDuration;
+            cbEnablePlayFully.Checked = settings.TimerVideoPlayFully;
+
             UpdateRangeIndicator();
         }
 
@@ -68,6 +71,19 @@ namespace RandomVideoPlayer.UserControls
             cbResetTimerOnSeek.CheckedChanged += (s, e) =>
             {
                 settings.TimerResetOnSeek = cbResetTimerOnSeek.Checked;
+            };
+
+            inputTimerMaxVideoDuration.ValueChanged += (s, e) =>
+            {
+                settings.TimerVideoMaxDuration = (int)inputTimerMaxVideoDuration.Value;
+
+                TimeSpan time = TimeSpan.FromSeconds(settings.TimerVideoMaxDuration);
+                lblMaxDurationTime.Text = $"( {(int)time.TotalMinutes}:{time.Seconds:D2} minutes)";
+            };
+
+            cbEnablePlayFully.CheckedChanged += (s, e) =>
+            {
+                settings.TimerVideoPlayFully = cbEnablePlayFully.Checked;
             };
         }
 

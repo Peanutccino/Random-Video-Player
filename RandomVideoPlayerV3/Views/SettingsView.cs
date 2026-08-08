@@ -72,6 +72,7 @@ namespace RandomVideoPlayer.Views
             settingsModel.HandleMultiAxisScripts = SettingsHandler.HandleMultiAxisScripts;
             settingsModel.UsingScriptPlayer = SettingsHandler.UsingScriptPlayer;
             settingsModel.IncludeSubdirectoriesForScriptLoad = SettingsHandler.IncludeSubdirectoriesForScriptLoad;
+            settingsModel.FallbackScriptFolder = SettingsHandler.FallbackScriptFolder;
 
             settingsModel.EnableAutoSkip = SettingsHandler.EnableAutoSkip;
             settingsModel.SkipVideoStart = SettingsHandler.SkipVideoStart;
@@ -124,6 +125,8 @@ namespace RandomVideoPlayer.Views
             settingsModel.AutoPlayTimerRangeEnabled = SettingsHandler.AutoPlayTimerRangeEnabled;
             settingsModel.TimerEnabled = SettingsHandler.TimerEnabled;
             settingsModel.TimerResetOnSeek = SettingsHandler.TimerResetOnSeek;
+            settingsModel.TimerVideoMaxDuration = SettingsHandler.TimerVideoMaxDuration;
+            settingsModel.TimerVideoPlayFully = SettingsHandler.TimerPlayVideoFully;
 
             settingsModel.AudioNormalizerEnabled = SettingsHandler.AudioNormalizerEnabled;
             settingsModel.FrameLen = SettingsHandler.FrameLen;
@@ -149,6 +152,7 @@ namespace RandomVideoPlayer.Views
             settingsModel.PanEasingFunction = SettingsHandler.PanEasingFunction;
             settingsModel.ThumbnailPreviewEnabled = SettingsHandler.ThumbnailPreviewEnabled;
             settingsModel.PreviewSeekBarEnabled = SettingsHandler.PreviewSeekBarEnabled;
+            settingsModel.PreviewSeekBarGraphEnabled = SettingsHandler.PreviewSeekBarGraphEnabled;
 
             settingsModel.PlayOnDrop = SettingsHandler.PlayOnDrop;
             settingsModel.AlwaysAddFilesToQueue = SettingsHandler.AlwaysAddFilesToQueue;
@@ -203,6 +207,7 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.HandleMultiAxisScripts = settingsModel.HandleMultiAxisScripts;
             SettingsHandler.UsingScriptPlayer = settingsModel.UsingScriptPlayer;
             SettingsHandler.IncludeSubdirectoriesForScriptLoad = settingsModel.IncludeSubdirectoriesForScriptLoad;
+            SettingsHandler.FallbackScriptFolder = settingsModel.FallbackScriptFolder;
 
             SettingsHandler.EnableAutoSkip = settingsModel.EnableAutoSkip;
             SettingsHandler.SkipVideoStart = settingsModel.SkipVideoStart;
@@ -248,6 +253,8 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.AutoPlayTimerRangeEnabled = settingsModel.AutoPlayTimerRangeEnabled;
             SettingsHandler.TimerEnabled = settingsModel.TimerEnabled;
             SettingsHandler.TimerResetOnSeek = settingsModel.TimerResetOnSeek;
+            SettingsHandler.TimerVideoMaxDuration = settingsModel.TimerVideoMaxDuration;
+            SettingsHandler.TimerPlayVideoFully = settingsModel.TimerVideoPlayFully;
 
             SettingsHandler.AudioNormalizerEnabled = settingsModel.AudioNormalizerEnabled;
             SettingsHandler.FrameLen = settingsModel.FrameLen;
@@ -273,6 +280,7 @@ namespace RandomVideoPlayer.Views
             SettingsHandler.PanEasingFunction = settingsModel.PanEasingFunction;
             SettingsHandler.ThumbnailPreviewEnabled = settingsModel.ThumbnailPreviewEnabled;
             SettingsHandler.PreviewSeekBarEnabled = settingsModel.PreviewSeekBarEnabled;
+            SettingsHandler.PreviewSeekBarGraphEnabled = settingsModel.PreviewSeekBarGraphEnabled;
 
             SettingsHandler.PlayOnDrop = settingsModel.PlayOnDrop;
             SettingsHandler.AlwaysAddFilesToQueue = settingsModel.AlwaysAddFilesToQueue;

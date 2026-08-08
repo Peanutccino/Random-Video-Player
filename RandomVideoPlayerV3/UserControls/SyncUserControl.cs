@@ -1,6 +1,7 @@
 ﻿using FontAwesome.Sharp;
 using RandomVideoPlayer.Functions;
 using RandomVideoPlayer.Model;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 
 namespace RandomVideoPlayer.UserControls
@@ -42,6 +43,12 @@ namespace RandomVideoPlayer.UserControls
             WireIconButton(btnDeleteFolder);
             WireIconButton(btnItemDown);
             WireIconButton(btnItemUp);
+            WireIconButton(sbtnFallbackFolderBrowse);
+
+            iconInfo.ResetForeColor();
+            iconInfo.IconColor = _textColor;
+            iconInfo.ForeColor = _textColor;
+
         }
         private void WireIconButton(IconButton btn)
         {
@@ -80,6 +87,7 @@ namespace RandomVideoPlayer.UserControls
             cbHandleMultiAxis.Checked = settings.HandleMultiAxisScripts;
             cbUsingScriptPlayer.Checked = settings.UsingScriptPlayer;
             cbIncludeSubdirectoriesForScriptLoad.Checked = settings.IncludeSubdirectoriesForScriptLoad;
+            tbFallbackFolderPath.Text = settings.FallbackScriptFolder;
         }
 
         private void BindControls()
@@ -117,7 +125,8 @@ namespace RandomVideoPlayer.UserControls
 
         private void btnAddFolder_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            var folderBrowserDialog = new FolderBrowserDialog();
+
             folderBrowserDialog.UseDescriptionForTitle = true;
             folderBrowserDialog.Description = "Select a folder to add";
             var result = folderBrowserDialog.ShowDialog();
@@ -149,6 +158,7 @@ namespace RandomVideoPlayer.UserControls
         {
             MoveSelectedItem(1);
         }
+
         private void btnAddLocal_Click(object sender, EventArgs e)
         {
             bool localExists = lvDirectories.Items.Cast<ListViewItem>().Any(item => item.Text.Equals("local", StringComparison.OrdinalIgnoreCase));
@@ -159,6 +169,20 @@ namespace RandomVideoPlayer.UserControls
                 settings.ScriptDirectories.Add("local");
             }
         }
+        private void sbtnFallbackFolderBrowse_Click(object sender, EventArgs e)
+        {
+            var fbDialog = new FolderBrowserDialog();
+
+            fbDialog.InitialDirectory = PathHandler.DefaultFolder;
+
+            DialogResult result = fbDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                tbFallbackFolderPath.Text = fbDialog.SelectedPath;
+                settings.FallbackScriptFolder = tbFallbackFolderPath.Text;
+            }
+        }
+
         private void MoveSelectedItem(int direction)
         {
             if (lvDirectories.SelectedItems.Count == 0) return;
@@ -188,6 +212,15 @@ namespace RandomVideoPlayer.UserControls
             toolTipInfo.SetToolTip(btnItemUp, "Move the selected folder up");
             toolTipInfo.SetToolTip(btnItemDown, "Move the selected folder down");
             toolTipInfo.SetToolTip(btnAddLocal, "Add the local placeholder to the list");
+            toolTipPopup.SetToolTip(iconInfo, "You can right-click the progressbar to seek script position manually when running on a fallback script!\n\n" +
+                "Settings are located in the script menu (top-left of the main player)");
         }
+
+        private void tableLayoutPanelPath_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
     }
 }

@@ -195,16 +195,13 @@
             pbMoveProgress.BorderColor = Color.ForestGreen;
             pbMoveProgress.BorderThickness = 1;
             pbMoveProgress.CompletedBrush = Color.PaleGreen;
-            pbMoveProgress.CompletedGraphBrush = Color.White;
             pbMoveProgress.ForeColor = Color.MintCream;
-            pbMoveProgress.GraphThickness = 1;
             pbMoveProgress.Location = new Point(3, 168);
             pbMoveProgress.Maximum = 100;
             pbMoveProgress.Minimum = 0;
             pbMoveProgress.MouseoverBrush = Color.PaleGreen;
             pbMoveProgress.Name = "pbMoveProgress";
             pbMoveProgress.RemainingBrush = Color.MintCream;
-            pbMoveProgress.RemainingGraphBrush = Color.Black;
             pbMoveProgress.ShowBorder = false;
             pbMoveProgress.Size = new Size(554, 24);
             pbMoveProgress.TabIndex = 5;

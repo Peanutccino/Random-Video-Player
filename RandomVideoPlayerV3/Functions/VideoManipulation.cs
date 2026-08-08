@@ -84,11 +84,12 @@ namespace RandomVideoPlayer.Functions
             {
                 ThreadHelper.SetText(f, ctrl, "");
                 player.Speed = 1.0;
+                MainFormData.playbackRate = "";
                 return;
             }
 
-            double[] playbackSpeeds = { 0.125, 0.25, 0.5, 0.75, 1.0, 1.2, 1.5, 2.0, 4.0 };
-            string[] playbackSpeedStrings = { "0.125", "0.25", "0.5", "0.75", "1.0", "1.2", "1.5", "2.0", "4.0" }; //Because I couldn't figure another way to display the values as is
+            double[] playbackSpeeds = { 0.125, 0.25, 0.5, 0.75, 1.0, 1.2, 1.5, 1.75, 2.0, 4.0 };
+            string[] playbackSpeedStrings = { "0.125", "0.25", "0.5", "0.75", "1.0", "1.2", "1.5", "1.75", "2.0", "4.0" }; //Because I couldn't figure another way to display the values as is
 
             double currentSpeed = player.Speed;
 
@@ -109,6 +110,8 @@ namespace RandomVideoPlayer.Functions
             }
 
             player.Speed = playbackSpeeds[currentIndex];
+
+            MainFormData.playbackRate = playbackSpeedStrings[currentIndex];
 
             ThreadHelper.SetText(f, ctrl, $"x{playbackSpeedStrings[currentIndex]} -");
         }

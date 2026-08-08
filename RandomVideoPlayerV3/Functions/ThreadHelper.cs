@@ -58,5 +58,20 @@ namespace RandomVideoPlayer.Functions
                 button.Visible = visible;
             }
         }
+
+        public static void SetControlVisible(Control control, bool visible)
+        {
+            if (control.InvokeRequired)
+            {
+                control.BeginInvoke(new Action(() =>
+                {
+                    control.Visible = visible;
+                }));
+            }
+            else
+            {
+                control.Visible = visible;
+            }
+        }
     }
 }

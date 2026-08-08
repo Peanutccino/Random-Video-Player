@@ -34,7 +34,6 @@ namespace RandomVideoPlayer
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             panelBottom = new Panel();
             tableLayoutBottomPanel = new TableLayoutPanel();
-            pbPlayerProgress = new FlatProgressBar();
             tableLayoutButtons = new TableLayoutPanel();
             btnTimer = new FontAwesome.Sharp.IconButton();
             pbVolume = new FlatProgressBar();
@@ -60,6 +59,8 @@ namespace RandomVideoPlayer
             lblDurationInfo = new Label();
             lblSpeed = new Label();
             lblCurrentInfo = new EllipsisAlignedLabel();
+            panelProgresBar = new Panel();
+            pbPlayerProgress = new FlatProgressBar();
             panelTop = new Panel();
             tableLayoutPanelTop = new TableLayoutPanel();
             btnVrMenu = new Button();
@@ -77,10 +78,12 @@ namespace RandomVideoPlayer
             timeVolumeCheck = new System.Windows.Forms.Timer(components);
             toolTipUI = new ToolTip(components);
             timerAutoSkipCheck = new System.Windows.Forms.Timer(components);
+            timerScriptProgressionUpdate = new System.Windows.Forms.Timer(components);
             panelBottom.SuspendLayout();
             tableLayoutBottomPanel.SuspendLayout();
             tableLayoutButtons.SuspendLayout();
             tableLayoutBottomLabel.SuspendLayout();
+            panelProgresBar.SuspendLayout();
             panelTop.SuspendLayout();
             tableLayoutPanelTop.SuspendLayout();
             SuspendLayout();
@@ -100,11 +103,12 @@ namespace RandomVideoPlayer
             tableLayoutBottomPanel.BackColor = Color.Yellow;
             tableLayoutBottomPanel.ColumnCount = 1;
             tableLayoutBottomPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutBottomPanel.Controls.Add(pbPlayerProgress, 0, 0);
             tableLayoutBottomPanel.Controls.Add(tableLayoutButtons, 0, 1);
             tableLayoutBottomPanel.Controls.Add(tableLayoutBottomLabel, 0, 2);
+            tableLayoutBottomPanel.Controls.Add(panelProgresBar, 0, 0);
             tableLayoutBottomPanel.Dock = DockStyle.Fill;
             tableLayoutBottomPanel.Location = new Point(0, 0);
+            tableLayoutBottomPanel.Margin = new Padding(0, 0, 0, 3);
             tableLayoutBottomPanel.Name = "tableLayoutBottomPanel";
             tableLayoutBottomPanel.RowCount = 3;
             tableLayoutBottomPanel.RowStyles.Add(new RowStyle());
@@ -112,32 +116,6 @@ namespace RandomVideoPlayer
             tableLayoutBottomPanel.RowStyles.Add(new RowStyle());
             tableLayoutBottomPanel.Size = new Size(1015, 80);
             tableLayoutBottomPanel.TabIndex = 0;
-            // 
-            // pbPlayerProgress
-            // 
-            pbPlayerProgress.BorderColor = Color.Black;
-            pbPlayerProgress.BorderThickness = 1;
-            pbPlayerProgress.CompletedBrush = Color.FromArgb(248, 111, 100);
-            pbPlayerProgress.CompletedGraphBrush = Color.Black;
-            pbPlayerProgress.Dock = DockStyle.Fill;
-            pbPlayerProgress.GraphThickness = 1;
-            pbPlayerProgress.Location = new Point(0, 0);
-            pbPlayerProgress.Margin = new Padding(0, 0, 0, 3);
-            pbPlayerProgress.Maximum = 60;
-            pbPlayerProgress.Minimum = 0;
-            pbPlayerProgress.MouseoverBrush = Color.FromArgb(250, 164, 158);
-            pbPlayerProgress.Name = "pbPlayerProgress";
-            pbPlayerProgress.RemainingBrush = Color.Black;
-            pbPlayerProgress.RemainingGraphBrush = Color.MistyRose;
-            pbPlayerProgress.ShowBorder = false;
-            pbPlayerProgress.Size = new Size(1015, 17);
-            pbPlayerProgress.TabIndex = 1;
-            pbPlayerProgress.Text = "flatProgressBar1";
-            pbPlayerProgress.Value = 0;
-            pbPlayerProgress.MouseDown += pbPlayerProgress_MouseDown;
-            pbPlayerProgress.MouseLeave += pbPlayerProgress_MouseLeave;
-            pbPlayerProgress.MouseMove += pbPlayerProgress_MouseMove;
-            pbPlayerProgress.MouseUp += pbPlayerProgress_MouseUp;
             // 
             // tableLayoutButtons
             // 
@@ -185,13 +163,13 @@ namespace RandomVideoPlayer
             tableLayoutButtons.Controls.Add(btnPrevious, 1, 0);
             tableLayoutButtons.Controls.Add(btnPlay, 0, 0);
             tableLayoutButtons.Dock = DockStyle.Fill;
-            tableLayoutButtons.Location = new Point(0, 20);
+            tableLayoutButtons.Location = new Point(0, 23);
             tableLayoutButtons.Margin = new Padding(0);
             tableLayoutButtons.Name = "tableLayoutButtons";
             tableLayoutButtons.RowCount = 1;
             tableLayoutButtons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutButtons.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutButtons.Size = new Size(1015, 40);
+            tableLayoutButtons.Size = new Size(1015, 37);
             tableLayoutButtons.TabIndex = 2;
             // 
             // btnTimer
@@ -206,7 +184,7 @@ namespace RandomVideoPlayer
             btnTimer.Location = new Point(596, 3);
             btnTimer.Margin = new Padding(10, 3, 10, 3);
             btnTimer.Name = "btnTimer";
-            btnTimer.Size = new Size(30, 34);
+            btnTimer.Size = new Size(30, 31);
             btnTimer.TabIndex = 35;
             btnTimer.UseVisualStyleBackColor = true;
             btnTimer.Click += btnTimer_Click;
@@ -216,9 +194,7 @@ namespace RandomVideoPlayer
             pbVolume.BorderColor = Color.Black;
             pbVolume.BorderThickness = 5;
             pbVolume.CompletedBrush = Color.Black;
-            pbVolume.CompletedGraphBrush = Color.White;
             pbVolume.Dock = DockStyle.Fill;
-            pbVolume.GraphThickness = 1;
             pbVolume.Location = new Point(904, 8);
             pbVolume.Margin = new Padding(3, 8, 3, 9);
             pbVolume.Maximum = 100;
@@ -226,9 +202,10 @@ namespace RandomVideoPlayer
             pbVolume.MouseoverBrush = Color.Black;
             pbVolume.Name = "pbVolume";
             pbVolume.RemainingBrush = Color.FromArgb(253, 83, 146);
-            pbVolume.RemainingGraphBrush = Color.Black;
+            pbVolume.SeekIndicatorAlpha = 80;
+            pbVolume.SeekValue = null;
             pbVolume.ShowBorder = true;
-            pbVolume.Size = new Size(108, 23);
+            pbVolume.Size = new Size(108, 20);
             pbVolume.TabIndex = 34;
             pbVolume.Text = "flatProgressBar1";
             pbVolume.Value = 50;
@@ -247,7 +224,7 @@ namespace RandomVideoPlayer
             btnMuteToggle.Location = new Point(858, 3);
             btnMuteToggle.Margin = new Padding(3, 3, 10, 3);
             btnMuteToggle.Name = "btnMuteToggle";
-            btnMuteToggle.Size = new Size(33, 34);
+            btnMuteToggle.Size = new Size(33, 31);
             btnMuteToggle.TabIndex = 33;
             btnMuteToggle.UseVisualStyleBackColor = true;
             btnMuteToggle.Click += btnMuteToggle_Click;
@@ -264,7 +241,7 @@ namespace RandomVideoPlayer
             btnSettings.Location = new Point(815, 3);
             btnSettings.Margin = new Padding(3, 3, 10, 3);
             btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(30, 34);
+            btnSettings.Size = new Size(30, 31);
             btnSettings.TabIndex = 32;
             btnSettings.UseVisualStyleBackColor = true;
             btnSettings.Click += btnSettings_Click;
@@ -281,7 +258,7 @@ namespace RandomVideoPlayer
             btnStartFromFile.Location = new Point(777, 3);
             btnStartFromFile.Margin = new Padding(3, 3, 5, 3);
             btnStartFromFile.Name = "btnStartFromFile";
-            btnStartFromFile.Size = new Size(30, 34);
+            btnStartFromFile.Size = new Size(30, 31);
             btnStartFromFile.TabIndex = 31;
             btnStartFromFile.UseVisualStyleBackColor = true;
             btnStartFromFile.Click += btnStartFromFile_Click;
@@ -298,7 +275,7 @@ namespace RandomVideoPlayer
             btnAddToQueue.Location = new Point(739, 3);
             btnAddToQueue.Margin = new Padding(3, 3, 5, 3);
             btnAddToQueue.Name = "btnAddToQueue";
-            btnAddToQueue.Size = new Size(30, 34);
+            btnAddToQueue.Size = new Size(30, 31);
             btnAddToQueue.TabIndex = 30;
             btnAddToQueue.UseVisualStyleBackColor = true;
             btnAddToQueue.Visible = false;
@@ -316,7 +293,7 @@ namespace RandomVideoPlayer
             btnTouch.Location = new Point(696, 3);
             btnTouch.Margin = new Padding(10, 3, 10, 3);
             btnTouch.Name = "btnTouch";
-            btnTouch.Size = new Size(30, 34);
+            btnTouch.Size = new Size(30, 31);
             btnTouch.TabIndex = 28;
             btnTouch.UseVisualStyleBackColor = true;
             btnTouch.Click += btnTouch_Click;
@@ -333,7 +310,7 @@ namespace RandomVideoPlayer
             btnAutoSkip.Location = new Point(646, 3);
             btnAutoSkip.Margin = new Padding(10, 3, 10, 3);
             btnAutoSkip.Name = "btnAutoSkip";
-            btnAutoSkip.Size = new Size(30, 34);
+            btnAutoSkip.Size = new Size(30, 31);
             btnAutoSkip.TabIndex = 27;
             btnAutoSkip.UseVisualStyleBackColor = true;
             btnAutoSkip.Click += btnAutoSkip_Click;
@@ -348,7 +325,7 @@ namespace RandomVideoPlayer
             btnSourceSelector.Margin = new Padding(10, 3, 10, 3);
             btnSourceSelector.Name = "btnSourceSelector";
             btnSourceSelector.Padding = new Padding(0, 0, 0, 1);
-            btnSourceSelector.Size = new Size(30, 34);
+            btnSourceSelector.Size = new Size(30, 31);
             btnSourceSelector.TabIndex = 26;
             btnSourceSelector.UseVisualStyleBackColor = true;
             btnSourceSelector.Click += btnSourceSelector_Click;
@@ -365,7 +342,7 @@ namespace RandomVideoPlayer
             btnRepeat.Location = new Point(496, 3);
             btnRepeat.Margin = new Padding(10, 3, 10, 3);
             btnRepeat.Name = "btnRepeat";
-            btnRepeat.Size = new Size(30, 34);
+            btnRepeat.Size = new Size(30, 31);
             btnRepeat.TabIndex = 25;
             btnRepeat.UseVisualStyleBackColor = true;
             btnRepeat.Click += btnRepeat_Click;
@@ -382,7 +359,7 @@ namespace RandomVideoPlayer
             btnShuffle.Location = new Point(446, 3);
             btnShuffle.Margin = new Padding(10, 3, 10, 3);
             btnShuffle.Name = "btnShuffle";
-            btnShuffle.Size = new Size(30, 34);
+            btnShuffle.Size = new Size(30, 31);
             btnShuffle.TabIndex = 24;
             btnShuffle.UseVisualStyleBackColor = true;
             btnShuffle.Click += btnShuffle_Click;
@@ -400,7 +377,7 @@ namespace RandomVideoPlayer
             btnMoveTo.Location = new Point(396, 3);
             btnMoveTo.Margin = new Padding(10, 3, 10, 3);
             btnMoveTo.Name = "btnMoveTo";
-            btnMoveTo.Size = new Size(30, 34);
+            btnMoveTo.Size = new Size(30, 31);
             btnMoveTo.TabIndex = 23;
             btnMoveTo.UseVisualStyleBackColor = true;
             btnMoveTo.MouseDown += btnMoveTo_MouseDown;
@@ -418,7 +395,7 @@ namespace RandomVideoPlayer
             btnAddToFav.Location = new Point(346, 3);
             btnAddToFav.Margin = new Padding(10, 3, 10, 3);
             btnAddToFav.Name = "btnAddToFav";
-            btnAddToFav.Size = new Size(30, 34);
+            btnAddToFav.Size = new Size(30, 31);
             btnAddToFav.TabIndex = 22;
             btnAddToFav.UseVisualStyleBackColor = true;
             btnAddToFav.Click += btnAddToFav_Click;
@@ -434,7 +411,7 @@ namespace RandomVideoPlayer
             btnListAdd.Margin = new Padding(10, 3, 10, 3);
             btnListAdd.Name = "btnListAdd";
             btnListAdd.Padding = new Padding(0, 0, 0, 1);
-            btnListAdd.Size = new Size(30, 34);
+            btnListAdd.Size = new Size(30, 31);
             btnListAdd.TabIndex = 21;
             btnListAdd.UseVisualStyleBackColor = true;
             btnListAdd.MouseDown += btnListAdd_MouseDown;
@@ -452,7 +429,7 @@ namespace RandomVideoPlayer
             btnRemove.Location = new Point(246, 3);
             btnRemove.Margin = new Padding(10, 3, 10, 3);
             btnRemove.Name = "btnRemove";
-            btnRemove.Size = new Size(30, 34);
+            btnRemove.Size = new Size(30, 31);
             btnRemove.TabIndex = 19;
             btnRemove.UseVisualStyleBackColor = true;
             btnRemove.Click += btnRemove_Click;
@@ -469,7 +446,7 @@ namespace RandomVideoPlayer
             btnListBrowser.Location = new Point(196, 3);
             btnListBrowser.Margin = new Padding(10, 3, 10, 3);
             btnListBrowser.Name = "btnListBrowser";
-            btnListBrowser.Size = new Size(30, 34);
+            btnListBrowser.Size = new Size(30, 31);
             btnListBrowser.TabIndex = 18;
             btnListBrowser.UseVisualStyleBackColor = true;
             btnListBrowser.Click += btnListBrowser_Click;
@@ -486,7 +463,7 @@ namespace RandomVideoPlayer
             btnFileBrowse.Location = new Point(146, 3);
             btnFileBrowse.Margin = new Padding(10, 3, 10, 3);
             btnFileBrowse.Name = "btnFileBrowse";
-            btnFileBrowse.Size = new Size(30, 34);
+            btnFileBrowse.Size = new Size(30, 31);
             btnFileBrowse.TabIndex = 17;
             btnFileBrowse.UseVisualStyleBackColor = true;
             btnFileBrowse.Click += btnFileBrowse_Click;
@@ -504,7 +481,7 @@ namespace RandomVideoPlayer
             btnNext.Location = new Point(96, 3);
             btnNext.Margin = new Padding(10, 3, 10, 3);
             btnNext.Name = "btnNext";
-            btnNext.Size = new Size(30, 34);
+            btnNext.Size = new Size(30, 31);
             btnNext.TabIndex = 5;
             btnNext.UseVisualStyleBackColor = true;
             btnNext.Click += btnNext_Click;
@@ -522,7 +499,7 @@ namespace RandomVideoPlayer
             btnPrevious.Location = new Point(46, 3);
             btnPrevious.Margin = new Padding(10, 3, 10, 3);
             btnPrevious.Name = "btnPrevious";
-            btnPrevious.Size = new Size(30, 34);
+            btnPrevious.Size = new Size(30, 31);
             btnPrevious.TabIndex = 4;
             btnPrevious.UseVisualStyleBackColor = true;
             btnPrevious.Click += btnPrevious_Click;
@@ -538,7 +515,7 @@ namespace RandomVideoPlayer
             btnPlay.IconSize = 30;
             btnPlay.Location = new Point(3, 3);
             btnPlay.Name = "btnPlay";
-            btnPlay.Size = new Size(30, 34);
+            btnPlay.Size = new Size(30, 31);
             btnPlay.TabIndex = 2;
             btnPlay.UseVisualStyleBackColor = true;
             btnPlay.Click += btnPlay_Click;
@@ -582,6 +559,7 @@ namespace RandomVideoPlayer
             lblSpeed.Name = "lblSpeed";
             lblSpeed.Size = new Size(0, 20);
             lblSpeed.TabIndex = 16;
+            lblSpeed.TextAlign = ContentAlignment.BottomRight;
             // 
             // lblCurrentInfo
             // 
@@ -596,6 +574,42 @@ namespace RandomVideoPlayer
             lblCurrentInfo.Text = "Current Folder";
             lblCurrentInfo.TextAlign = ContentAlignment.BottomLeft;
             lblCurrentInfo.DoubleClick += lblCurrentInfo_DoubleClick;
+            // 
+            // panelProgresBar
+            // 
+            panelProgresBar.BackColor = Color.Cornsilk;
+            panelProgresBar.Controls.Add(pbPlayerProgress);
+            panelProgresBar.Dock = DockStyle.Fill;
+            panelProgresBar.Location = new Point(0, 0);
+            panelProgresBar.Margin = new Padding(0, 0, 0, 3);
+            panelProgresBar.Name = "panelProgresBar";
+            panelProgresBar.Size = new Size(1015, 20);
+            panelProgresBar.TabIndex = 4;
+            // 
+            // pbPlayerProgress
+            // 
+            pbPlayerProgress.BorderColor = Color.Black;
+            pbPlayerProgress.BorderThickness = 1;
+            pbPlayerProgress.CompletedBrush = Color.FromArgb(248, 111, 100);
+            pbPlayerProgress.Dock = DockStyle.Fill;
+            pbPlayerProgress.Location = new Point(0, 0);
+            pbPlayerProgress.Margin = new Padding(0, 0, 0, 3);
+            pbPlayerProgress.Maximum = 60;
+            pbPlayerProgress.Minimum = 0;
+            pbPlayerProgress.MouseoverBrush = Color.FromArgb(250, 164, 158);
+            pbPlayerProgress.Name = "pbPlayerProgress";
+            pbPlayerProgress.RemainingBrush = Color.Black;
+            pbPlayerProgress.SeekIndicatorAlpha = 80;
+            pbPlayerProgress.SeekValue = null;
+            pbPlayerProgress.ShowBorder = false;
+            pbPlayerProgress.Size = new Size(1015, 20);
+            pbPlayerProgress.TabIndex = 1;
+            pbPlayerProgress.Text = "flatProgressBar1";
+            pbPlayerProgress.Value = 0;
+            pbPlayerProgress.MouseDown += pbPlayerProgress_MouseDown;
+            pbPlayerProgress.MouseLeave += pbPlayerProgress_MouseLeave;
+            pbPlayerProgress.MouseMove += pbPlayerProgress_MouseMove;
+            pbPlayerProgress.MouseUp += pbPlayerProgress_MouseUp;
             // 
             // panelTop
             // 
@@ -795,6 +809,12 @@ namespace RandomVideoPlayer
             timerAutoSkipCheck.Interval = 1000;
             timerAutoSkipCheck.Tick += timerAutoSkipCheck_Tick;
             // 
+            // timerScriptProgressionUpdate
+            // 
+            timerScriptProgressionUpdate.Enabled = true;
+            timerScriptProgressionUpdate.Interval = 200;
+            timerScriptProgressionUpdate.Tick += timerScriptProgressionUpdate_Tick;
+            // 
             // MainForm
             // 
             AllowDrop = true;
@@ -822,6 +842,7 @@ namespace RandomVideoPlayer
             tableLayoutButtons.ResumeLayout(false);
             tableLayoutBottomLabel.ResumeLayout(false);
             tableLayoutBottomLabel.PerformLayout();
+            panelProgresBar.ResumeLayout(false);
             panelTop.ResumeLayout(false);
             tableLayoutPanelTop.ResumeLayout(false);
             ResumeLayout(false);
@@ -874,5 +895,7 @@ namespace RandomVideoPlayer
         private FontAwesome.Sharp.IconButton btnExitForm;
         private FontAwesome.Sharp.IconButton btnTimer;
         private Button btnVrMenu;
+        private Panel panelProgresBar;
+        private System.Windows.Forms.Timer timerScriptProgressionUpdate;
     }
 }

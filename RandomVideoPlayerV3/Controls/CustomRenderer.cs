@@ -33,7 +33,7 @@ namespace RandomVideoPlayer.Controls
 
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             var updatedArrowRectangleSize = new Size((int)(e.ArrowRectangle.Width / DPI.Scale), (int)(e.ArrowRectangle.Height / DPI.Scale));
-            var updatedArrowRectangleLocation = new Point((int)(e.ArrowRectangle.X * DPI.Scale),(int)(e.ArrowRectangle.Y * DPI.Scale));
+            var updatedArrowRectangleLocation = new Point((int)(e.ArrowRectangle.X * DPI.Scale), (int)(e.ArrowRectangle.Y * DPI.Scale));
             var r = new Rectangle(updatedArrowRectangleLocation, updatedArrowRectangleSize);
             r.Inflate(-2, -6); //-2 -6
             e.Graphics.DrawLines(pen, new Point[]{
@@ -44,17 +44,46 @@ namespace RandomVideoPlayer.Controls
 
         protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
         {
-            Pen pen = new Pen(TextColor);
-
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            var updatedImageRectangleSize = new Size((int)(e.ImageRectangle.Width / DPI.Scale), (int)(e.ImageRectangle.Height / DPI.Scale));
-            var updatedImageRectangleLocation = new Point((int)(e.ImageRectangle.X * DPI.Scale), (int)(e.ImageRectangle.Y * DPI.Scale));  
-            var r = new Rectangle(updatedImageRectangleLocation, updatedImageRectangleSize);
-            r.Inflate(-4, -6); //-4 -6
-            e.Graphics.DrawLines(pen, new Point[]{
-            new Point(r.Left, r.Bottom - r.Height /2),
-            new Point(r.Left + r.Width /3,  r.Bottom),
-            new Point(r.Right, r.Top)});
+
+            var updatedImageRectangleSize = new Size(
+                (int)(e.ImageRectangle.Width / DPI.Scale),
+                (int)(e.ImageRectangle.Height / DPI.Scale));
+
+            var updatedImageRectangleLocation = new Point(
+                (int)(e.ImageRectangle.X * DPI.Scale),
+                (int)(e.ImageRectangle.Y * DPI.Scale));
+
+            var r = new Rectangle(
+                updatedImageRectangleLocation,
+                updatedImageRectangleSize);
+
+            if (e.Item is RadioToolStripMenuItem)
+            {
+                int diameter = 5;
+
+                var circle = new Rectangle(
+                    r.Left + (r.Width - diameter) / 2,
+                    r.Top + (r.Height - diameter) / 2,
+                    diameter,
+                    diameter);
+
+                using var brush = new SolidBrush(TextColor);
+                e.Graphics.FillEllipse(brush, circle);
+            }
+            else
+            {
+                r.Inflate(-4, -6);
+
+                using var pen = new Pen(TextColor);
+
+                e.Graphics.DrawLines(pen, new[]
+                {
+                    new Point(r.Left, r.Bottom - r.Height / 2),
+                    new Point(r.Left + r.Width / 3, r.Bottom),
+                    new Point(r.Right, r.Top)
+                });
+            }
         }
 
         protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)

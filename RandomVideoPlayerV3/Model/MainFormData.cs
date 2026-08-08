@@ -33,7 +33,16 @@ namespace RandomVideoPlayer.Model
         public static bool playingSingleFile { get; set; } = false;
         public static string draggedFilePath { get; set; }
 
+        public static bool fallbackActive { get; set; } = false;
+        public static bool fallbackTimerActive { get; set; } = false;
+
+        public static int scriptDurationMS { get; set; } = 0;
+        public static int scriptPositionMs { get; set; } = 0;
+        public static bool flaggedForAutoNext { get; set; } = false;
+        public static bool flaggedForAutoNextLoopState { get; set; } = false;
+
         public static int durationMS { get; set; } = 0;
+        public static string playbackRate { get; set; } = "1.0";
         public static string currentFile { get; set; }
         public static bool favoriteMatch { get; set; } = false;
         public static bool presentInCustomList { get; set; } = false;
@@ -48,7 +57,6 @@ namespace RandomVideoPlayer.Model
 
         public static List<string> tempFavorites = new List<string>();
         public static List<Task> ongoingTasks = new List<Task>();
-        public static List<string> ongoingFileProcesses = new List<string>();
-      
+        public static List<string> ongoingFileProcesses = new List<string>();      
     }
 }

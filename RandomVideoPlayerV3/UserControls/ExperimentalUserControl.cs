@@ -79,6 +79,7 @@ namespace RandomVideoPlayer.UserControls
 
             cbEnableThumbPreview.Checked = settings.ThumbnailPreviewEnabled;
             cbEnablePreviewSB.Checked = settings.PreviewSeekBarEnabled;
+            cbEnableGraphPreviewSB.Checked = settings.PreviewSeekBarGraphEnabled;
         }
 
         private void BindControls()
@@ -126,6 +127,11 @@ namespace RandomVideoPlayer.UserControls
             cbEnablePreviewSB.CheckedChanged += (s, e) =>
             {
                 settings.PreviewSeekBarEnabled = cbEnablePreviewSB.Checked;
+            };
+
+            cbEnableGraphPreviewSB.CheckedChanged += (s, e) =>
+            {
+                settings.PreviewSeekBarGraphEnabled = cbEnableGraphPreviewSB.Checked;
             };
 
             btnZoomEffects.Click += (s, e) =>

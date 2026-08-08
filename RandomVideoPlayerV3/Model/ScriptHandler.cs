@@ -1,15 +1,22 @@
-﻿using RandomVideoPlayer.Functions;
+﻿using Microsoft.VisualBasic.FileIO;
+using Mpv.NET.API;
+using Mpv.NET.Player;
+using RandomVideoPlayer.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shell;
+using SearchOption = System.IO.SearchOption;
 
 namespace RandomVideoPlayer.Model
 {
     public static class ScriptHandler
     {
+        private static readonly string FallbackFileName = "Fallback_Running";
+        public static string FallbackFilePath { get; set; } = "";
+        public static string FallbackScriptPath { get; set; } = "";
         public static string CurrentlySelectedScript { get; set; } = "";
 
         public static Dictionary<string, string> CurrentlySelectedMultiAxisScript = new Dictionary<string, string>
@@ -26,6 +33,9 @@ namespace RandomVideoPlayer.Model
         };
 
         public static List<string> scriptFilesFound = new List<string>();
+        public static int ScriptCount = 0;
+        public static int FallbackScriptCount = 0;
+
         private static List<string> multiAxis = new List<string>
         { ".surge", ".sway", ".suck", ".twist", ".roll", ".pitch", ".vib", ".pump", ".raw" };
 
@@ -47,6 +57,72 @@ namespace RandomVideoPlayer.Model
             private set { multiAxisScriptsFound = value; }
         }
 
+        public async static Task FillAndLoad(MpvPlayer player)
+        {
+            await RevertDefaultScript();
+            await RevertDefaultMultiAxisScript();
+
+            if (SettingsHandler.TimeCodeServer)
+            {
+                await FillScriptList(MainFormData.currentFile);
+
+                string videoPath = MainFormData.playingSingleFile ? MainFormData.draggedFilePath : MainFormData.currentFile;
+                string preferredScript = string.Empty;
+                int preferredScriptIndex = 0;
+
+                MainFormData.fallbackActive = false;
+
+                if ((SettingsHandler.FallbackAlwaysUseFallback || ScriptCount <= 0) && FallbackScriptCount > 0 && SettingsHandler.FallbackEnabled)
+                {
+                    int preferredFallbackScriptIndex = ScriptCount; //Start index of fallback scripts
+
+                    if (!string.IsNullOrWhiteSpace(SettingsHandler.FallbackSelectedScript))
+                    {
+                        preferredScript = SettingsHandler.FallbackSelectedScript;
+                        preferredScriptIndex = scriptFilesFound.FindIndex(file => file == preferredScript);
+                    }
+
+                    preferredScriptIndex = preferredScriptIndex < 0 ? preferredFallbackScriptIndex : preferredScriptIndex;
+
+                    player.ShowText("Loading fallback");
+
+                    MainFormData.fallbackActive = true;
+
+                    var fallbackFileName = "Fallback_Running.mp4";
+
+                    await LoadScript(preferredScriptIndex, MainFormData.currentFile);
+                }
+                else if (ScriptCount > 0)
+                {
+                    preferredScript = ScriptConfigManager.GetVideoConfig(videoPath, "script");
+
+                    if (!string.IsNullOrWhiteSpace(preferredScript))
+                    {
+                        preferredScriptIndex = scriptFilesFound.FindIndex(file => file == preferredScript);
+                        preferredScriptIndex = preferredScriptIndex < 0 ? 0 : preferredScriptIndex;
+                    }
+
+                    await LoadScript(preferredScriptIndex, MainFormData.currentFile);
+                }
+                           
+
+                foreach (var multiAxisScript in MultiAxisScriptsFound)
+                {
+                    if (multiAxisScript.Value.ScriptFiles.Count <= 0) continue;
+                    string multiAxis = multiAxisScript.Key;
+                    string preferredMultiAxisScript = ScriptConfigManager.GetVideoConfig(videoPath, multiAxis);
+                    int preferredMultiAxisScriptIndex = 0;
+
+                    if (!string.IsNullOrWhiteSpace(preferredMultiAxisScript))
+                    {
+                        preferredMultiAxisScriptIndex = FindMatchingScriptFileIndex(multiAxis, preferredMultiAxisScript);
+                    }
+
+                    await LoadMultiAxisScript(preferredMultiAxisScriptIndex, MainFormData.currentFile, multiAxis);
+                }
+            }
+        }
+
         public async static Task FillScriptList(string videoPath)
         {
             ResetScriptList();
@@ -62,6 +138,8 @@ namespace RandomVideoPlayer.Model
 
             foreach (var dir in ListHandler.ScriptDirectories)
             {
+                if(string.IsNullOrWhiteSpace(videoDirectory)) continue;
+
                 string searchRoot = dir.Equals("local", StringComparison.OrdinalIgnoreCase) ? videoDirectory : dir;
 
                 if (string.IsNullOrWhiteSpace(searchRoot)) continue;
@@ -103,6 +181,20 @@ namespace RandomVideoPlayer.Model
                     }
                 }
             }
+
+            ScriptCount = scriptFilesFound.Count;
+
+            if (!string.IsNullOrWhiteSpace(SettingsHandler.FallbackScriptFolder))
+            {
+                var fallbackScriptFiles = Directory.GetFiles(SettingsHandler.FallbackScriptFolder, "*.funscript", SearchOption.TopDirectoryOnly).ToList();
+
+                foreach (var file in fallbackScriptFiles)
+                {
+                    scriptFilesFound.Add(file);
+                }
+
+                FallbackScriptCount = fallbackScriptFiles.Count;
+            }
         }
 
         private static string tempScriptBackupPath;
@@ -129,6 +221,14 @@ namespace RandomVideoPlayer.Model
             else
             {
                 var scriptLocalPath = Path.Combine(videoFileDirectory, videoFileNameWithoutExt + ".funscript");
+
+                if (MainFormData.fallbackActive)
+                {
+                    scriptLocalPath = Path.Combine(videoFileDirectory, FallbackFileName + ".funscript");
+                    FallbackFilePath = Path.Combine(videoFileDirectory, FallbackFileName + ".mp4");
+                    FallbackScriptPath = scriptLocalPath;
+                }
+
                 tempScriptLocalPath = scriptLocalPath;
 
                 await CreateBackupScript(scriptLocalPath, videoFileDirectory, videoFileNameWithoutExt);
@@ -297,6 +397,7 @@ namespace RandomVideoPlayer.Model
 
         private static void ResetScriptList()
         {
+            FallbackScriptCount = 0;
             scriptFilesFound.Clear();
             CurrentlySelectedScript = "";
             CurrentlySelectedMultiAxisScript = CurrentlySelectedMultiAxisScript.ToDictionary(k => k.Key, k => "");

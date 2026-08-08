@@ -1,4 +1,5 @@
 ﻿using RandomVideoPlayer.Model;
+using RandomVideoPlayer.Views;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -16,7 +17,13 @@ namespace RandomVideoPlayer.Functions
         public static VrDetectionResults Detect(Bitmap frame)
         {
             if (frame == null)
-                throw new ArgumentNullException(nameof(frame));
+            {
+                Error.Log($"Frame for VrDetection was null. The frame was {frame}", LogLevel.Error);
+                return new VrDetectionResults
+                {
+                    Layout = VrDetectionLayout.Unknown
+                };
+            }
 
             if (frame.Width < 64 || frame.Height < 64)
             {
@@ -367,7 +374,6 @@ namespace RandomVideoPlayer.Functions
             const double ideal = 2.00;
             const double lowerLimit = 1.70;
             const double upperLimit = 2.20;
-            //const double maxPenalty = 0.50;
 
             double normalizedDifference;
 

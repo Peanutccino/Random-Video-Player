@@ -568,6 +568,7 @@
             btnRTXHelp.Size = new Size(23, 24);
             btnRTXHelp.TabIndex = 5;
             btnRTXHelp.UseVisualStyleBackColor = true;
+            btnRTXHelp.Click += btnRTXHelp_Click;
             // 
             // lbl5
             // 

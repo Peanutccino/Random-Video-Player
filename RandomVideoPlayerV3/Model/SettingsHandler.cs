@@ -1144,8 +1144,8 @@ namespace RandomVideoPlayer.Model
         {
             get
             {
-                var settingsInstance = CustomSettings.Instance;
-                return settingsInstance.thumbnailPreviewEnabled;
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.thumbnailPreviewEnabled;
             }
             set
             {
@@ -1158,13 +1158,27 @@ namespace RandomVideoPlayer.Model
         {
             get
             {
-                var settingsInstance = CustomSettings.Instance;
-                return settingsInstance.previewSeekBarEnabled;
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.previewSeekBarEnabled;
             }
             set
             {
                 var _settingsInstance = CustomSettings.Instance;
                 _settingsInstance.previewSeekBarEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool PreviewSeekBarGraphEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.previewSeekBarGraphEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.previewSeekBarGraphEnabled = value;
                 _settingsInstance.Save();
             }
         }
@@ -1406,5 +1420,177 @@ namespace RandomVideoPlayer.Model
                 _settingsInstance.Save();
             }
         }
+
+        public static bool FallbackEnabled
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackEnabled;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackEnabled = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool FallbackAlwaysUseFallback
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackAlwaysUseFallback;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackAlwaysUseFallback = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool FallbackLoadRandomScript
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackLoadRandomScript;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackLoadRandomScript = value;
+                _settingsInstance.Save();
+            }
+
+        }
+        public static bool FallbackUseSelectedScript
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackUseSelectedScript;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackUseSelectedScript = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static string FallbackScriptFolder
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackScriptFolder;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackScriptFolder = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static string FallbackSelectedScript
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackSelectedScript;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackSelectedScript = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool FallbackStartAtFirst
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackStartAtFirst;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackStartAtFirst = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool FallbackStartAtRandom
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackStartAtRandom;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackStartAtRandom = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool FallbackContinueSeemlessly
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackContinueSeemlessly;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackContinueSeemlessly = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool FallbackReloadOnEachVideo
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.fallbackReloadOnEachVideo;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.fallbackReloadOnEachVideo = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static int TimerVideoMaxDuration
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.TimerVideoMaxDuration;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.TimerVideoMaxDuration = value;
+                _settingsInstance.Save();
+            }
+        }
+        public static bool TimerPlayVideoFully
+        {
+            get
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                return _settingsInstance.TimerPlayVideoFully;
+            }
+            set
+            {
+                var _settingsInstance = CustomSettings.Instance;
+                _settingsInstance.TimerPlayVideoFully = value;
+                _settingsInstance.Save();
+            }
+        }
+
+        //END
     }
 }

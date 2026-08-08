@@ -25,7 +25,8 @@ namespace RandomVideoPlayer.Model
         public string Position { get; set; } = "";      // = 5
         public string Duration { get; set; } = "";      // = 6
         public string VolumeLevel { get; set; } = "5";  // = 7  || Fixed as it's not needed
-        public byte Playbackrate { get; set; } = 1;     // = 8  || Maybe sync
+        public string Playbackrate { get; set; } = "1";     // = 8  || Maybe sync
+        public string SysTimeMS { get; set; } = "0";  // = 9  || Maybe sync
         //HTML data
         private string pageData =
             "<!DOCTYPE>\n" +
@@ -43,6 +44,7 @@ namespace RandomVideoPlayer.Model
             "       <p id=\"duration\">{6}</p>\n" +
             "       <p id=\"volumelevel\">{7}</p>\n" +
             "       <p id=\"playbackrate\">{8}</p>\n" +
+            "       <p id=\"sys_time_in_ms\">{9}</p>\n" +
             "</body></html>";
 
         public WebServer()
@@ -119,7 +121,7 @@ namespace RandomVideoPlayer.Model
             {
                 if (request.RawUrl.Equals("/variables.html", StringComparison.OrdinalIgnoreCase))
                 {
-                    byte[] data = Encoding.UTF8.GetBytes(String.Format(pageData, File, FilePathArg, Filepath, FileDir, State, Position, Duration, VolumeLevel, Playbackrate));
+                    byte[] data = Encoding.UTF8.GetBytes(String.Format(pageData, File, FilePathArg, Filepath, FileDir, State, Position, Duration, VolumeLevel, Playbackrate, SysTimeMS));
                     context.Response.ContentType = "text/html";
                     context.Response.ContentLength64 = data.LongLength;
 

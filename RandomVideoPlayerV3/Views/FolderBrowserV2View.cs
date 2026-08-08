@@ -429,7 +429,6 @@ namespace RandomVideoPlayer.Views
                 }
             }
         }
-
         private void SwitchView(View targetView)
         {
             lvFileExplore.BeginUpdate();
@@ -685,7 +684,7 @@ namespace RandomVideoPlayer.Views
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("You do not have permission to access some entries in this directory.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                RVPMessageBox.Show("You do not have permission to access some entries in this directory.", "Access Denied", IconChar.Warning);
                 lvFileExplore.EndUpdate();
                 lvFileExplore.Invalidate();
                 return;

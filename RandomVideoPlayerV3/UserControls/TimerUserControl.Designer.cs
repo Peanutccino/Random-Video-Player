@@ -42,10 +42,19 @@
             inputTimerValueEndPoint = new RandomVideoPlayer.Controls.CustomNumericUpDown();
             lblBetweenTime = new Label();
             inputTimerValueStartPoint = new RandomVideoPlayer.Controls.CustomNumericUpDown();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            cbEnablePlayFully = new RandomVideoPlayer.Controls.CustomCheckBox();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            lblMaxDurationTime = new Label();
+            label2 = new Label();
+            label4 = new Label();
+            inputTimerMaxVideoDuration = new RandomVideoPlayer.Controls.CustomNumericUpDown();
             tableLayoutMain.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutMain
@@ -55,14 +64,16 @@
             tableLayoutMain.Controls.Add(lblHeader, 0, 0);
             tableLayoutMain.Controls.Add(flowLayoutPanel1, 0, 1);
             tableLayoutMain.Controls.Add(panel1, 0, 2);
+            tableLayoutMain.Controls.Add(tableLayoutPanel2, 0, 3);
             tableLayoutMain.Dock = DockStyle.Fill;
             tableLayoutMain.Location = new Point(0, 0);
             tableLayoutMain.Name = "tableLayoutMain";
-            tableLayoutMain.RowCount = 4;
+            tableLayoutMain.RowCount = 5;
             tableLayoutMain.RowStyles.Add(new RowStyle());
             tableLayoutMain.RowStyles.Add(new RowStyle());
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutMain.Size = new Size(524, 656);
             tableLayoutMain.TabIndex = 0;
             // 
@@ -124,7 +135,7 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(3, 169);
             panel1.Name = "panel1";
-            panel1.Size = new Size(518, 239);
+            panel1.Size = new Size(518, 157);
             panel1.TabIndex = 20;
             // 
             // cbResetTimerOnSeek
@@ -238,6 +249,104 @@
             inputTimerValueStartPoint.Text = "customNumericUpDown1";
             inputTimerValueStartPoint.Value = 15;
             // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.BackColor = Color.YellowGreen;
+            tableLayoutPanel2.ColumnCount = 1;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Controls.Add(cbEnablePlayFully, 0, 1);
+            tableLayoutPanel2.Controls.Add(tableLayoutPanel3, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(3, 332);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 3;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
+            tableLayoutPanel2.Size = new Size(518, 157);
+            tableLayoutPanel2.TabIndex = 21;
+            // 
+            // cbEnablePlayFully
+            // 
+            cbEnablePlayFully.BoxSize = 13;
+            cbEnablePlayFully.Dock = DockStyle.Top;
+            cbEnablePlayFully.HoverColor = Color.DeepSkyBlue;
+            cbEnablePlayFully.Location = new Point(3, 35);
+            cbEnablePlayFully.Name = "cbEnablePlayFully";
+            cbEnablePlayFully.PaddingLeft = 12;
+            cbEnablePlayFully.Size = new Size(512, 24);
+            cbEnablePlayFully.TabIndex = 23;
+            cbEnablePlayFully.Text = "Play videos shorter than defined fully, even when it should skip";
+            cbEnablePlayFully.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.BackColor = Color.Plum;
+            tableLayoutPanel3.ColumnCount = 4;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.Controls.Add(lblMaxDurationTime, 3, 0);
+            tableLayoutPanel3.Controls.Add(label2, 0, 0);
+            tableLayoutPanel3.Controls.Add(label4, 2, 0);
+            tableLayoutPanel3.Controls.Add(inputTimerMaxVideoDuration, 1, 0);
+            tableLayoutPanel3.Dock = DockStyle.Top;
+            tableLayoutPanel3.Location = new Point(3, 3);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 1;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.Size = new Size(512, 26);
+            tableLayoutPanel3.TabIndex = 21;
+            // 
+            // lblMaxDurationTime
+            // 
+            lblMaxDurationTime.AutoSize = true;
+            lblMaxDurationTime.Location = new Point(300, 1);
+            lblMaxDurationTime.Margin = new Padding(3, 1, 3, 3);
+            lblMaxDurationTime.Name = "lblMaxDurationTime";
+            lblMaxDurationTime.Size = new Size(88, 15);
+            lblMaxDurationTime.TabIndex = 25;
+            lblMaxDurationTime.Text = "( 2:40 minutes )";
+            lblMaxDurationTime.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(3, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(154, 15);
+            label2.TabIndex = 24;
+            label2.Text = "Define max video duration: ";
+            label2.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(244, 1);
+            label4.Margin = new Padding(3, 1, 3, 3);
+            label4.Name = "label4";
+            label4.Size = new Size(50, 15);
+            label4.TabIndex = 21;
+            label4.Text = "seconds";
+            label4.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // inputTimerMaxVideoDuration
+            // 
+            inputTimerMaxVideoDuration.BackColor = SystemColors.Window;
+            inputTimerMaxVideoDuration.ForeColor = SystemColors.WindowText;
+            inputTimerMaxVideoDuration.IconColor = Color.Indigo;
+            inputTimerMaxVideoDuration.Location = new Point(163, 0);
+            inputTimerMaxVideoDuration.Margin = new Padding(3, 0, 3, 3);
+            inputTimerMaxVideoDuration.Maximum = 900;
+            inputTimerMaxVideoDuration.Minimum = 10;
+            inputTimerMaxVideoDuration.Name = "inputTimerMaxVideoDuration";
+            inputTimerMaxVideoDuration.Size = new Size(75, 19);
+            inputTimerMaxVideoDuration.TabIndex = 20;
+            inputTimerMaxVideoDuration.Text = "customNumericUpDown1";
+            inputTimerMaxVideoDuration.Value = 15;
+            // 
             // TimerUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -251,6 +360,9 @@
             panel1.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -270,5 +382,12 @@
         private Label label1;
         private Controls.CustomCheckBox cbEnableTimeRange;
         private Controls.CustomCheckBox cbResetTimerOnSeek;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Controls.CustomCheckBox cbEnablePlayFully;
+        private TableLayoutPanel tableLayoutPanel3;
+        private Label label2;
+        private Label label4;
+        private Controls.CustomNumericUpDown inputTimerMaxVideoDuration;
+        private Label lblMaxDurationTime;
     }
 }

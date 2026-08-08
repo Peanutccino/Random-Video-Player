@@ -67,7 +67,7 @@ namespace RandomVideoPlayer.Controls
 
         public NoPaddingLabel()
         {
-
+            
         }
 
         protected override void OnPaint(PaintEventArgs e)
