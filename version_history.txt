@@ -16,3 +16,4 @@
 1.62 https://github.com/Peanutccino/Random-Video-Player/releases/download/v1.62/RVP-v1.62_UpdateOnly.zip
 1.63 https://github.com/Peanutccino/Random-Video-Player/releases/download/v1.63/RVP-v1.63_UpdateOnly.zip
 1.64 https://github.com/Peanutccino/Random-Video-Player/releases/download/v1.64/RVP-v1.64_UpdateOnly.zip
+1.65 https://github.com/Peanutccino/Random-Video-Player/releases/download/v1.65/RVP_v1.65_UpdateOnly.zip
