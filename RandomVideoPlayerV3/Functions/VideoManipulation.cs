@@ -84,7 +84,7 @@ namespace RandomVideoPlayer.Functions
             {
                 ThreadHelper.SetText(f, ctrl, "");
                 player.Speed = 1.0;
-                MainFormData.playbackRate = "";
+                MainFormData.playbackRate = "1.0";
                 return;
             }
 

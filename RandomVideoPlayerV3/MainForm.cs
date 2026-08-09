@@ -3911,6 +3911,8 @@ namespace RandomVideoPlayer
                             var randomStartPoint = random.Next(0, MainFormData.scriptDurationMS);
                             MainFormData.scriptPositionMs = randomStartPoint;
                         }
+
+                        playerMPV.ShowText("Fallback active");
                     }
                     funscriptProgressBar.Heatmap?.Dispose();
                     funscriptProgressBar.Heatmap = heatmap;

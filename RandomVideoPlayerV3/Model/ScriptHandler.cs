@@ -84,7 +84,7 @@ namespace RandomVideoPlayer.Model
 
                     preferredScriptIndex = preferredScriptIndex < 0 ? preferredFallbackScriptIndex : preferredScriptIndex;
 
-                    player.ShowText("Loading fallback");
+                    //player.ShowText("Loading fallback");
 
                     MainFormData.fallbackActive = true;
 
